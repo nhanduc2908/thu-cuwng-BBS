@@ -184,3 +184,5 @@ Quy trình nhập tạo hồ sơ động vật ở trạng thái chờ kiểm tr
 sang đang bán, cần theo dõi chuyển sang cách ly, cần điều trị chuyển sang điều trị;
 lô tự hoàn tất khi mọi cá thể đã có kiểm tra đầu vào. Dữ liệu lô và lịch sử kiểm tra
 được giữ lại thay vì xóa khi nhà cung cấp ngừng hoạt động.
+#   t h u - c u w n g - B B S  
+ 
