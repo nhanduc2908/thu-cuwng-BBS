@@ -294,6 +294,120 @@ class Database:
                     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
                 );
 
+                CREATE TABLE IF NOT EXISTS pet_profiles (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    customer_id INTEGER NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+                    name TEXT NOT NULL,
+                    species TEXT NOT NULL DEFAULT 'Chó',
+                    breed_name TEXT NOT NULL DEFAULT '',
+                    breed_profile_id INTEGER REFERENCES breed_profiles(id) ON DELETE SET NULL,
+                    birth_date TEXT NOT NULL DEFAULT '',
+                    sex TEXT NOT NULL DEFAULT 'Chưa rõ'
+                        CHECK (sex IN ('Đực', 'Cái', 'Chưa rõ')),
+                    color TEXT NOT NULL DEFAULT '',
+                    weight_kg REAL CHECK (weight_kg IS NULL OR weight_kg >= 0),
+                    activity_level TEXT NOT NULL DEFAULT 'Trung bình',
+                    environment_type TEXT NOT NULL DEFAULT 'Trong nhà',
+                    body_condition TEXT NOT NULL DEFAULT 'Bình thường',
+                    health_status TEXT NOT NULL DEFAULT 'Bình thường',
+                    microchip_id TEXT NOT NULL DEFAULT '',
+                    notes TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS customer_feedback (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    customer_id INTEGER NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+                    pet_id INTEGER REFERENCES pet_profiles(id) ON DELETE CASCADE,
+                    source TEXT NOT NULL DEFAULT 'WEB'
+                        CHECK (source IN ('WEB', 'APP', 'STAFF', 'CALL', 'OTHER')),
+                    channel TEXT NOT NULL DEFAULT 'GENERAL'
+                        CHECK (channel IN ('GENERAL', 'SALE', 'SERVICE', 'HEALTH', 'FEEDING', 'OTHER')),
+                    rating INTEGER NOT NULL DEFAULT 0 CHECK (rating BETWEEN 0 AND 5),
+                    title TEXT NOT NULL DEFAULT '',
+                    message TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS recommendation_requests (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    customer_id INTEGER REFERENCES customers(id) ON DELETE SET NULL,
+                    pet_id INTEGER REFERENCES pet_profiles(id) ON DELETE SET NULL,
+                    request_type TEXT NOT NULL DEFAULT 'PRODUCT_RECOMMENDATION',
+                    request_context TEXT NOT NULL DEFAULT '{}',
+                    status TEXT NOT NULL DEFAULT 'PENDING'
+                        CHECK (status IN ('PENDING', 'PROCESSING', 'COMPLETED', 'FAILED')),
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS recommendation_results (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    request_id INTEGER NOT NULL REFERENCES recommendation_requests(id) ON DELETE CASCADE,
+                    result_type TEXT NOT NULL DEFAULT 'PRODUCT_PACKAGE'
+                        CHECK (result_type IN ('PRODUCT_PACKAGE', 'SERVICE_PACKAGE', 'HEALTH_PLAN', 'COMBO')),
+                    result_payload TEXT NOT NULL DEFAULT '{}',
+                    score REAL NOT NULL DEFAULT 0,
+                    ranked_position INTEGER NOT NULL DEFAULT 0,
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS recommendation_result_items (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    result_id INTEGER NOT NULL REFERENCES recommendation_results(id) ON DELETE CASCADE,
+                    item_type TEXT NOT NULL DEFAULT 'PRODUCT'
+                        CHECK (item_type IN ('PRODUCT', 'SERVICE', 'FOOD', 'SUPPLEMENT', 'OTHER')),
+                    item_id INTEGER,
+                    item_name TEXT NOT NULL DEFAULT '',
+                    score REAL NOT NULL DEFAULT 0,
+                    reason TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS recommendation_model_registry (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    model_name TEXT NOT NULL,
+                    version TEXT NOT NULL DEFAULT 'v1',
+                    status TEXT NOT NULL DEFAULT 'DRAFT'
+                        CHECK (status IN ('DRAFT', 'EVALUATING', 'APPROVED', 'REJECTED', 'ARCHIVED')),
+                    metric_snapshot TEXT NOT NULL DEFAULT '{}',
+                    notes TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS recommendation_model_deployments (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    model_name TEXT NOT NULL,
+                    version TEXT NOT NULL,
+                    environment TEXT NOT NULL DEFAULT 'staging'
+                        CHECK (environment IN ('staging', 'production', 'shadow', 'rollback')),
+                    deployed_by TEXT NOT NULL DEFAULT 'system',
+                    status TEXT NOT NULL DEFAULT 'ACTIVE'
+                        CHECK (status IN ('ACTIVE', 'INACTIVE', 'ROLLED_BACK', 'FAILED')),
+                    deployed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS recommendation_governance_logs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    model_name TEXT NOT NULL,
+                    version TEXT NOT NULL,
+                    policy_state TEXT NOT NULL DEFAULT '{}',
+                    approved INTEGER NOT NULL DEFAULT 0 CHECK (approved IN (0, 1)),
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS recommendation_feedback_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    request_id INTEGER REFERENCES recommendation_requests(id) ON DELETE SET NULL,
+                    item_id INTEGER,
+                    event_type TEXT NOT NULL DEFAULT 'RATING'
+                        CHECK (event_type IN ('RATING', 'PURCHASE', 'BOOKING', 'RETURN', 'REJECTED', 'LIKE')),
+                    score REAL NOT NULL DEFAULT 0,
+                    note TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
                 CREATE TABLE IF NOT EXISTS membership_plans (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     code TEXT NOT NULL UNIQUE,
@@ -769,6 +883,14 @@ class Database:
                     ON audit_logs(occurred_at DESC);
                 CREATE INDEX IF NOT EXISTS idx_audit_logs_actor
                     ON audit_logs(actor_id, occurred_at DESC);
+                CREATE INDEX IF NOT EXISTS idx_pet_profiles_customer
+                    ON pet_profiles(customer_id, created_at DESC);
+                CREATE INDEX IF NOT EXISTS idx_customer_feedback_pet
+                    ON customer_feedback(pet_id, created_at DESC);
+                CREATE INDEX IF NOT EXISTS idx_recommendation_requests_customer
+                    ON recommendation_requests(customer_id, created_at DESC);
+                CREATE INDEX IF NOT EXISTS idx_recommendation_results_request
+                    ON recommendation_results(request_id, ranked_position);
 
                 CREATE INDEX IF NOT EXISTS idx_import_batches_supplier_date
                     ON import_batches(supplier_id, import_date);

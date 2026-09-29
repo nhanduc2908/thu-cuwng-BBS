@@ -67,6 +67,54 @@ class RecommendationRepository:
             (item_id,),
         ).fetchone()
 
+    def create_request(
+        self,
+        customer_id: int | None,
+        pet_id: int | None,
+        request_type: str = "PRODUCT_RECOMMENDATION",
+        context: dict[str, Any] | None = None,
+    ) -> int:
+        payload = context or {}
+        cursor = self.connection.execute(
+            """
+            INSERT INTO recommendation_requests
+                (customer_id, pet_id, request_type, request_context, status)
+            VALUES (?, ?, ?, ?, 'PENDING')
+            """,
+            (customer_id, pet_id, request_type, str(payload)),
+        )
+        return int(cursor.lastrowid)
+
+    def record_result(
+        self,
+        request_id: int,
+        result_type: str,
+        result_payload: dict[str, Any] | list[dict[str, Any]] | str,
+        score: float = 0,
+        ranked_position: int = 0,
+    ) -> int:
+        if not isinstance(result_payload, str):
+            result_payload = str(result_payload)
+        cursor = self.connection.execute(
+            """
+            INSERT INTO recommendation_results
+                (request_id, result_type, result_payload, score, ranked_position)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (request_id, result_type, result_payload, float(score), int(ranked_position)),
+        )
+        return int(cursor.lastrowid)
+
+    def list_requests(self, customer_id: int | None = None) -> list[sqlite3.Row]:
+        if customer_id is None:
+            return self.connection.execute(
+                "SELECT * FROM recommendation_requests ORDER BY created_at DESC"
+            ).fetchall()
+        return self.connection.execute(
+            "SELECT * FROM recommendation_requests WHERE customer_id = ? ORDER BY created_at DESC",
+            (customer_id,),
+        ).fetchall()
+
     def save_profile(self, item_id: int, values: dict[str, Any]) -> None:
         category = str(values.get("recommendation_category", ""))
         if category not in RECOMMENDATION_CATEGORIES:

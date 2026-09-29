@@ -66,3 +66,72 @@ class CustomerRepository:
                 (*fields, customer_id),
             )
             return customer_id
+
+    def list_pets(self, customer_id: int | None = None) -> list[sqlite3.Row]:
+        if customer_id is None:
+            return self.connection.execute(
+                "SELECT * FROM pet_profiles ORDER BY created_at DESC"
+            ).fetchall()
+        return self.connection.execute(
+            "SELECT * FROM pet_profiles WHERE customer_id = ? ORDER BY created_at DESC",
+            (customer_id,),
+        ).fetchall()
+
+    def get_pet(self, pet_id: int) -> sqlite3.Row | None:
+        return self.connection.execute(
+            "SELECT * FROM pet_profiles WHERE id = ?",
+            (pet_id,),
+        ).fetchone()
+
+    def save_pet(
+        self, values: dict[str, Any], pet_id: int | None = None
+    ) -> int:
+        required_fields = ["customer_id", "name", "species"]
+        for field in required_fields:
+            if field not in values or str(values[field]).strip() == "":
+                raise ValueError(f"Trường {field} là bắt buộc.")
+
+        payload = (
+            int(values["customer_id"]),
+            str(values["name"]).strip(),
+            str(values.get("species", "Chó")).strip(),
+            str(values.get("breed_name", "")).strip(),
+            values.get("breed_profile_id"),
+            str(values.get("birth_date", "")).strip(),
+            str(values.get("sex", "Chưa rõ")).strip(),
+            str(values.get("color", "")).strip(),
+            values.get("weight_kg"),
+            str(values.get("activity_level", "Trung bình")).strip(),
+            str(values.get("environment_type", "Trong nhà")).strip(),
+            str(values.get("body_condition", "Bình thường")).strip(),
+            str(values.get("health_status", "Bình thường")).strip(),
+            str(values.get("microchip_id", "")).strip(),
+            str(values.get("notes", "")).strip(),
+        )
+
+        with self.connection:
+            if pet_id is None:
+                cursor = self.connection.execute(
+                    """
+                    INSERT INTO pet_profiles (
+                        customer_id, name, species, breed_name, breed_profile_id, birth_date,
+                        sex, color, weight_kg, activity_level, environment_type,
+                        body_condition, health_status, microchip_id, notes
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    payload,
+                )
+                return int(cursor.lastrowid)
+
+            self.connection.execute(
+                """
+                UPDATE pet_profiles SET
+                    customer_id = ?, name = ?, species = ?, breed_name = ?, breed_profile_id = ?,
+                    birth_date = ?, sex = ?, color = ?, weight_kg = ?, activity_level = ?,
+                    environment_type = ?, body_condition = ?, health_status = ?,
+                    microchip_id = ?, notes = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+                """,
+                (*payload, pet_id),
+            )
+            return pet_id
