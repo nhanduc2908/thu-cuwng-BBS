@@ -37,8 +37,12 @@ def build_pet_nutrition_profile(pet_profile: Dict[str, Any]) -> Dict[str, Any]:
     weight_kg = _safe_float(pet_profile.get("weight_kg") or pet_profile.get("weight") or 0.0)
     activity = str(pet_profile.get("activity_level", "MEDIUM")).upper()
     body_condition = str(pet_profile.get("body_condition", "NORMAL")).upper()
-    allergies = set(str(pet_profile.get("allergies", "")).split(","))
-    allergies = {item.strip() for item in allergies if item.strip()}
+    health_condition = str(pet_profile.get("health_condition", "HEALTHY")).upper()
+    allergies_raw = pet_profile.get("allergies", "")
+    if isinstance(allergies_raw, (list, tuple, set)):
+        allergies = {str(item).strip() for item in allergies_raw if str(item).strip()}
+    else:
+        allergies = {item.strip() for item in str(allergies_raw).split(",") if item.strip()}
 
     protein_level = "HIGH" if weight_kg >= 20 or activity in {"HIGH", "VERY_HIGH"} else "MODERATE"
     fat_level = "MODERATE"
@@ -61,12 +65,21 @@ def build_pet_nutrition_profile(pet_profile: Dict[str, Any]) -> Dict[str, Any]:
         fat_level = "MODERATE"
         protein_level = "HIGH"
 
+    if health_condition in {"DIABETIC", "PANCREATITIS", "SENSITIVE_STOMACH"}:
+        fiber_level = "HIGH"
+        fat_level = "LOW"
+    if health_condition in {"KIDNEY", "RENAL"}:
+        protein_level = "LOW"
+    if health_condition in {"DERMATITIS", "ALLERGIC"}:
+        allergies.add("COMMON_ALLERGEN")
+
     return {
         "species": species,
         "age_months": age_months,
         "weight_kg": weight_kg,
         "activity_level": activity,
         "body_condition": body_condition,
+        "health_condition": health_condition,
         "protein_level": protein_level,
         "fat_level": fat_level,
         "fiber_level": fiber_level,
@@ -103,6 +116,12 @@ def _score_food(pet_profile: Dict[str, Any], food: Dict[str, Any]) -> float:
     food_allergens = {str(item).strip() for item in food.get("allergens", []) if str(item).strip()}
     if pet_allergies and food_allergens and pet_allergies & food_allergens:
         score -= 50
+
+    health_condition = str(pet_profile.get("health_condition", "HEALTHY")).upper()
+    if health_condition in {"KIDNEY", "RENAL"} and str(food.get("food_type", "")).upper() in {"WET", "SOFT"}:
+        score += 8
+    if health_condition in {"DIABETIC", "PANCREATITIS"} and 'GRAIN' not in {str(item).upper() for item in food.get('allergens', [])}:
+        score += 5
 
     food_nutrition = food.get("nutrition", {})
     protein_percent = _safe_float(food_nutrition.get("protein_percent"), 0.0)

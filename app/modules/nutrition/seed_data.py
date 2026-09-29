@@ -155,9 +155,94 @@ CAT_PRODUCTS = [
 ]
 
 
+def build_extended_food_products():
+    dog_recipe_templates = [
+        ('Chicken', 24, 13, 8, 3.5, ['Chicken']),
+        ('Beef', 25, 14, 9, 3.8, ['Beef']),
+        ('Fish', 23, 12, 10, 4.0, ['Fish']),
+        ('Lamb', 26, 15, 8, 3.6, ['Lamb']),
+        ('Turkey', 24, 13, 7, 3.5, ['Turkey']),
+        ('Salmon', 27, 15, 9, 3.9, ['Salmon']),
+    ]
+    cat_recipe_templates = [
+        ('Chicken', 30, 15, 8, 3.0, ['Chicken']),
+        ('Salmon', 31, 16, 7, 3.2, ['Fish']),
+        ('Tuna', 29, 14, 8, 3.0, ['Fish']),
+        ('Turkey', 30, 15, 7, 3.1, ['Turkey']),
+        ('Lamb', 28, 13, 9, 3.4, ['Lamb']),
+        ('Duck', 32, 17, 7, 3.2, ['Duck']),
+    ]
+
+    extra = []
+    brand_sets = [
+        'Royal Canin', 'Hill\'s Science Diet', 'Purina Pro Plan', 'Blue Buffalo',
+        'Wellness', 'Nutro', 'Iams', 'Acana', 'Eukanuba', 'Farmina', 'Pedigree', 'James Wellbeloved',
+    ]
+    for brand in brand_sets:
+        for idx, (protein_name, protein, fat, fiber, energy, allergens) in enumerate(dog_recipe_templates, start=1):
+            extra.append({
+                'species': 'DOG',
+                'brand': brand,
+                'product_name': f'{brand} {protein_name} Adult Dog Formula {idx}',
+                'food_type': 'DRY' if idx % 2 else 'WET',
+                'life_stage': 'ADULT',
+                'breed_size': 'ALL',
+                'product_code': f'{brand[:4].upper()}-{protein_name.upper()}-{idx:02d}',
+                'nutrition': {
+                    'calories_kcal_per_kg': 3300 + idx * 40,
+                    'protein_percent': protein,
+                    'fat_percent': fat,
+                    'carbohydrate_percent': 32 + idx,
+                    'fiber_percent': fiber,
+                    'moisture_percent': 8 + (idx % 3),
+                    'ash_percent': 6.2,
+                    'energy_density': energy,
+                    'omega_3': 0.6 + idx * 0.05,
+                    'omega_6': 1.8 + idx * 0.1,
+                    'taurine': 0.0,
+                    'calcium': 0.9 + idx * 0.05,
+                    'phosphorus': 0.75 + idx * 0.04,
+                    'zinc': 0.09 + idx * 0.008,
+                },
+                'allergens': allergens,
+            })
+
+    for brand in brand_sets[:10]:
+        for idx, (protein_name, protein, fat, fiber, energy, allergens) in enumerate(cat_recipe_templates, start=1):
+            extra.append({
+                'species': 'CAT',
+                'brand': brand,
+                'product_name': f'{brand} {protein_name} Adult Cat Formula {idx}',
+                'food_type': 'DRY' if idx % 2 else 'WET',
+                'life_stage': 'ADULT',
+                'breed_size': 'ALL',
+                'product_code': f'{brand[:4].upper()}-CAT-{protein_name.upper()}-{idx:02d}',
+                'nutrition': {
+                    'calories_kcal_per_kg': 3300 + idx * 50,
+                    'protein_percent': protein,
+                    'fat_percent': fat,
+                    'carbohydrate_percent': 25 + idx,
+                    'fiber_percent': fiber,
+                    'moisture_percent': 8 + (idx % 3),
+                    'ash_percent': 6.0,
+                    'energy_density': energy,
+                    'omega_3': 0.7 + idx * 0.05,
+                    'omega_6': 2.0 + idx * 0.1,
+                    'taurine': 0.12 + idx * 0.01,
+                    'calcium': 0.9 + idx * 0.05,
+                    'phosphorus': 0.75 + idx * 0.04,
+                    'zinc': 0.09 + idx * 0.006,
+                },
+                'allergens': allergens,
+            })
+
+    return extra
+
+
 def seed_sample_foods() -> None:
     repo = FoodNutritionRepository()
-    for item in DOG_PRODUCTS + CAT_PRODUCTS:
+    all_products = DOG_PRODUCTS + CAT_PRODUCTS + build_extended_food_products()
+    for item in all_products:
         food_id = repo.add_food(
             species=item['species'],
             brand=item['brand'],
