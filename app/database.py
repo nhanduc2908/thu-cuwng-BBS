@@ -365,6 +365,109 @@ class Database:
                     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
                 );
 
+                CREATE TABLE IF NOT EXISTS food_catalog (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    species TEXT NOT NULL,
+                    brand TEXT NOT NULL DEFAULT '',
+                    product_name TEXT NOT NULL,
+                    food_type TEXT NOT NULL DEFAULT 'DRY',
+                    life_stage TEXT NOT NULL DEFAULT 'ADULT',
+                    breed_size TEXT NOT NULL DEFAULT '',
+                    target_weight_kg REAL,
+                    product_code TEXT NOT NULL DEFAULT '',
+                    is_active INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0, 1)),
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS food_nutrition (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    food_id INTEGER NOT NULL REFERENCES food_catalog(id) ON DELETE CASCADE,
+                    calories_kcal_per_kg REAL,
+                    protein_percent REAL,
+                    fat_percent REAL,
+                    carbohydrate_percent REAL,
+                    fiber_percent REAL,
+                    moisture_percent REAL,
+                    ash_percent REAL,
+                    energy_density REAL,
+                    omega_3 REAL,
+                    omega_6 REAL,
+                    taurine REAL,
+                    calcium REAL,
+                    phosphorus REAL,
+                    sodium REAL,
+                    potassium REAL,
+                    zinc REAL,
+                    iron REAL,
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS food_ingredients (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    food_id INTEGER NOT NULL REFERENCES food_catalog(id) ON DELETE CASCADE,
+                    ingredient_name TEXT NOT NULL,
+                    ingredient_group TEXT NOT NULL DEFAULT 'PROTEIN',
+                    percentage REAL,
+                    note TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS food_allergens (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    food_id INTEGER NOT NULL REFERENCES food_catalog(id) ON DELETE CASCADE,
+                    allergen_name TEXT NOT NULL,
+                    severity TEXT NOT NULL DEFAULT 'MEDIUM'
+                        CHECK (severity IN ('LOW', 'MEDIUM', 'HIGH')),
+                    note TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS food_life_stage_rules (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    food_id INTEGER NOT NULL REFERENCES food_catalog(id) ON DELETE CASCADE,
+                    life_stage TEXT NOT NULL,
+                    age_min_months REAL,
+                    age_max_months REAL,
+                    target_weight_kg REAL,
+                    recommendation TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS food_species_rules (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    food_id INTEGER NOT NULL REFERENCES food_catalog(id) ON DELETE CASCADE,
+                    species TEXT NOT NULL,
+                    note TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS food_health_rules (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    food_id INTEGER NOT NULL REFERENCES food_catalog(id) ON DELETE CASCADE,
+                    condition_name TEXT NOT NULL,
+                    recommended INTEGER NOT NULL DEFAULT 0 CHECK (recommended IN (0, 1)),
+                    note TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS nutrition_profiles (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    pet_id INTEGER REFERENCES pet_profiles(id) ON DELETE CASCADE,
+                    species TEXT NOT NULL,
+                    breed_name TEXT NOT NULL DEFAULT '',
+                    age_months INTEGER,
+                    weight_kg REAL,
+                    activity_level TEXT NOT NULL DEFAULT 'MEDIUM',
+                    body_condition TEXT NOT NULL DEFAULT 'NORMAL',
+                    protein_level TEXT NOT NULL DEFAULT 'MODERATE',
+                    fat_level TEXT NOT NULL DEFAULT 'MODERATE',
+                    fiber_level TEXT NOT NULL DEFAULT 'MODERATE',
+                    omega_3_required INTEGER NOT NULL DEFAULT 0 CHECK (omega_3_required IN (0, 1)),
+                    energy_level TEXT NOT NULL DEFAULT 'MODERATE',
+                    notes TEXT NOT NULL DEFAULT '',
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
                 CREATE TABLE IF NOT EXISTS recommendation_model_registry (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     model_name TEXT NOT NULL,
