@@ -2,6 +2,19 @@ from pathlib import Path
 import sqlite3
 from typing import Any
 
+
+DEFAULT_DATABASE_PATH = Path.home() / "AppData" / "Local" / "PetStoreManagement" / "pet_store.db"
+
+
+def get_db_connection(path: str | Path | None = None) -> sqlite3.Connection:
+    target = Path(path) if path is not None else DEFAULT_DATABASE_PATH
+    target.parent.mkdir(parents=True, exist_ok=True)
+    connection = sqlite3.connect(target)
+    connection.row_factory = sqlite3.Row
+    connection.execute("PRAGMA foreign_keys = ON")
+    return connection
+
+
 from app.modules.animals.constants import (
     ANIMAL_PROFILE_FIELDS,
     ANIMAL_STATUSES,

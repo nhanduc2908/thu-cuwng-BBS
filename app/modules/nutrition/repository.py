@@ -1,15 +1,24 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from app.database import get_db_connection
+from app.database import Database, get_db_connection
 
 
 class FoodNutritionRepository:
     """Repository for food catalog, nutrient facts, and nutrition guidance."""
 
     def __init__(self, conn=None):
-        self.conn = conn or get_db_connection()
+        if conn is not None:
+            self.conn = conn
+            return
+
+        database_path = Path.home() / 'AppData' / 'Local' / 'PetStoreManagement' / 'pet_store.db'
+        try:
+            self.conn = Database(database_path).connection
+        except Exception:
+            self.conn = get_db_connection(database_path)
 
     def add_food(self, *, species: str, brand: str, product_name: str, food_type: str = 'DRY',
                  life_stage: str = 'ADULT', breed_size: str = '', target_weight_kg: Optional[float] = None,
