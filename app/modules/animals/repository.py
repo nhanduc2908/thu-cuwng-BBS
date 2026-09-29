@@ -1,7 +1,91 @@
 import sqlite3
 from typing import Any
 
+from app.modules.animals.breed_catalog import BREED_CATALOG
 from app.modules.animals.constants import ANIMAL_PROFILE_FIELDS
+
+
+class BreedRepository:
+    def __init__(self, connection: sqlite3.Connection) -> None:
+        self.connection = connection
+
+    def seed_default_catalog(self) -> int:
+        inserted = 0
+        with self.connection:
+            for breed in BREED_CATALOG:
+                profile = {
+                    "species": breed.get("species", ""),
+                    "breed_name": breed.get("breed_name", ""),
+                    "breed_name_en": breed.get("breed_name_en", breed.get("breed_name", "")),
+                    "origin_country": breed.get("origin_country", ""),
+                    "origin_region": breed.get("origin_region", ""),
+                    "climate": breed.get("climate", ""),
+                    "suitable_environment": breed.get("suitable_environment", ""),
+                    "exercise_level": breed.get("exercise_level", ""),
+                    "activity_level": breed.get("activity_level", breed.get("exercise_level", "")),
+                    "energy_level": breed.get("energy_level", breed.get("exercise_level", "")),
+                    "protein_preferences": breed.get("protein_preferences", "Gà, cá, bò"),
+                    "texture_preferences": breed.get("texture_preferences", "Hạt, pate"),
+                    "flavor_preferences": breed.get("flavor_preferences", "Gà, cá"),
+                    "treat_preferences": breed.get("treat_preferences", "Jerky, bánh thưởng"),
+                    "heat_tolerance": breed.get("heat_tolerance", ""),
+                    "cold_tolerance": breed.get("cold_tolerance", ""),
+                    "size": breed.get("size", ""),
+                    "adult_weight_kg": breed.get("adult_weight_kg", breed.get("adult_weight_kg", "")),
+                    "lifespan_years": breed.get("lifespan_years", ""),
+                    "suitable_home": breed.get("suitable_home", ""),
+                    "exercise_requirement": breed.get("exercise_requirement", breed.get("suitable_environment", "")),
+                    "preferred_home": breed.get("preferred_home", breed.get("suitable_home", "")),
+                    "temperature_range": breed.get("temperature_range", breed.get("climate", "")),
+                }
+                columns = (
+                    "species",
+                    "breed_name",
+                    "breed_name_en",
+                    "origin_country",
+                    "origin_region",
+                    "climate",
+                    "suitable_environment",
+                    "exercise_level",
+                    "activity_level",
+                    "energy_level",
+                    "protein_preferences",
+                    "texture_preferences",
+                    "flavor_preferences",
+                    "treat_preferences",
+                    "heat_tolerance",
+                    "cold_tolerance",
+                    "size",
+                    "adult_weight_kg",
+                    "lifespan_years",
+                    "suitable_home",
+                    "exercise_requirement",
+                    "preferred_home",
+                    "temperature_range",
+                )
+                placeholders = ", ".join("?" for _ in columns)
+                values = tuple(profile[column] for column in columns)
+                self.connection.execute(
+                    f"INSERT OR IGNORE INTO breed_profiles ({', '.join(columns)}) VALUES ({placeholders})",
+                    values,
+                )
+                inserted += 1
+        return inserted
+
+    def list_breeds(self, species: str | None = None) -> list[sqlite3.Row]:
+        if species is None:
+            query = "SELECT * FROM breed_profiles ORDER BY species, breed_name"
+            params: tuple[Any, ...] = ()
+        else:
+            query = "SELECT * FROM breed_profiles WHERE species = ? ORDER BY breed_name"
+            params = (species,)
+        return self.connection.execute(query, params).fetchall()
+
+    def get_breed(self, species: str, breed_name: str) -> sqlite3.Row | None:
+        return self.connection.execute(
+            "SELECT * FROM breed_profiles WHERE species = ? AND breed_name = ?",
+            (species, breed_name),
+        ).fetchone()
 
 
 class AnimalRepository:

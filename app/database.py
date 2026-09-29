@@ -6,7 +6,7 @@ from app.modules.animals.constants import (
     ANIMAL_PROFILE_FIELDS,
     ANIMAL_STATUSES,
 )
-from app.modules.animals.repository import AnimalRepository
+from app.modules.animals.repository import AnimalRepository, BreedRepository
 from app.modules.audit.repository import AuditRepository
 from app.modules.auth.repository import AuthRepository
 from app.modules.care.constants import (
@@ -40,6 +40,7 @@ class Database:
         self.auth = AuthRepository(self.connection)
         self.audit = AuditRepository(self.connection)
         self.animals = AnimalRepository(self.connection)
+        self.breeds = BreedRepository(self.connection)
         self.health = HealthRepository(self.connection)
         self.care = CareRepository(self.connection)
         self.dashboard = DashboardRepository(self.connection)
@@ -54,6 +55,7 @@ class Database:
         self.services = ServicesRepository(self.connection, self.memberships)
         self.reports = ReportRepository(self.connection)
         self.notifications = NotificationRepository(self.connection)
+        self.breeds.seed_default_catalog()
         self.inventory.seed_catalog()
         self.inventory.seed_feeding_profiles()
         self.services.seed_catalog()
@@ -96,6 +98,34 @@ class Database:
                     behavior TEXT NOT NULL DEFAULT '',
                     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS breed_profiles (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    species TEXT NOT NULL,
+                    breed_name TEXT NOT NULL,
+                    breed_name_en TEXT NOT NULL,
+                    origin_country TEXT NOT NULL DEFAULT '',
+                    origin_region TEXT NOT NULL DEFAULT '',
+                    climate TEXT NOT NULL DEFAULT '',
+                    suitable_environment TEXT NOT NULL DEFAULT '',
+                    exercise_level TEXT NOT NULL DEFAULT '',
+                    activity_level TEXT NOT NULL DEFAULT '',
+                    energy_level TEXT NOT NULL DEFAULT '',
+                    protein_preferences TEXT NOT NULL DEFAULT '',
+                    texture_preferences TEXT NOT NULL DEFAULT '',
+                    flavor_preferences TEXT NOT NULL DEFAULT '',
+                    treat_preferences TEXT NOT NULL DEFAULT '',
+                    heat_tolerance TEXT NOT NULL DEFAULT '',
+                    cold_tolerance TEXT NOT NULL DEFAULT '',
+                    size TEXT NOT NULL DEFAULT '',
+                    adult_weight_kg TEXT NOT NULL DEFAULT '',
+                    lifespan_years TEXT NOT NULL DEFAULT '',
+                    suitable_home TEXT NOT NULL DEFAULT '',
+                    exercise_requirement TEXT NOT NULL DEFAULT '',
+                    preferred_home TEXT NOT NULL DEFAULT '',
+                    temperature_range TEXT NOT NULL DEFAULT '',
+                    UNIQUE (species, breed_name)
                 );
 
                 CREATE TABLE IF NOT EXISTS animal_intake_receipts (
