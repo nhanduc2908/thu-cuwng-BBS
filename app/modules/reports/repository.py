@@ -18,6 +18,10 @@ class ReportRepository:
                    i.minimum_stock, i.is_active
             FROM inventory_items i
             LEFT JOIN inventory_batches b ON b.item_id = i.id
+            WHERE i.is_demo = 0 OR EXISTS (
+                SELECT 1 FROM inventory_batches seeded_batch
+                WHERE seeded_batch.item_id = i.id
+            )
             GROUP BY i.id ORDER BY i.name COLLATE NOCASE
             """
         ).fetchall()
@@ -31,7 +35,11 @@ class ReportRepository:
                    COALESCE((SELECT SUM(p.amount) FROM payments p
                              WHERE p.order_id = o.id), 0) AS paid_amount,
                    (SELECT COUNT(*) FROM order_items i
-                    WHERE i.order_id = o.id) AS item_count
+                    WHERE i.order_id = o.id)
+                   + (SELECT COUNT(*) FROM sales_product_items pi
+                      WHERE pi.order_id = o.id AND pi.combo_id IS NULL)
+                   + (SELECT COUNT(DISTINCT pi.combo_id) FROM sales_product_items pi
+                      WHERE pi.order_id = o.id AND pi.combo_id IS NOT NULL) AS item_count
             FROM sales_orders o
             JOIN customers c ON c.id = o.customer_id
             WHERE o.ordered_at BETWEEN ? AND ?

@@ -70,12 +70,56 @@ class AuthRepository:
             )
         return user_id
 
+    def create_default_admin(self) -> int:
+        if self.user_count() != 0:
+            raise ValueError("Tài khoản quản trị ban đầu đã được thiết lập.")
+        salt, password_hash = hash_password("admin", allow_short=True)
+        with self.connection:
+            cursor = self.connection.execute(
+                """
+                INSERT INTO users
+                    (username, display_name, password_salt, password_hash, role,
+                     must_change_password)
+                VALUES ('admin', 'Quản trị cửa hàng', ?, ?, 'ADMIN', 1)
+                """,
+                (salt, password_hash),
+            )
+            return int(cursor.lastrowid)
+
+    def reset_admin_password(self, username: str = "admin") -> int:
+        normalized_username = username.strip().casefold()
+        if not normalized_username:
+            raise ValueError("Tên đăng nhập quản trị không được để trống.")
+        user = self.connection.execute(
+            """
+            SELECT id FROM users
+            WHERE username = ? AND role = 'ADMIN'
+            """,
+            (normalized_username,),
+        ).fetchone()
+        if user is None:
+            raise ValueError(
+                f"Không tìm thấy tài khoản quản trị '{normalized_username}'."
+            )
+        salt, password_hash = hash_password("admin", allow_short=True)
+        with self.connection:
+            self.connection.execute(
+                """
+                UPDATE users SET password_salt = ?, password_hash = ?,
+                    is_active = 1, must_change_password = 1,
+                    password_changed_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+                """,
+                (salt, password_hash, user["id"]),
+            )
+        return int(user["id"])
+
     def authenticate(self, username: str, password: str) -> dict[str, Any] | None:
         normalized_username = username.strip().casefold()
         user = self.connection.execute(
             """
             SELECT id, username, display_name, password_salt, password_hash,
-                   role, is_active
+                   role, is_active, must_change_password
             FROM users WHERE username = ?
             """,
             (normalized_username,),
@@ -93,6 +137,7 @@ class AuthRepository:
             "username": user["username"],
             "display_name": user["display_name"],
             "role": user["role"],
+            "must_change_password": bool(user["must_change_password"]),
         }
 
     def has_permission(self, user_id: int, permission: str) -> bool:
@@ -160,7 +205,8 @@ class AuthRepository:
             self.connection.execute(
                 """
                 UPDATE users SET password_salt = ?, password_hash = ?,
-                    password_changed_at = CURRENT_TIMESTAMP
+                    password_changed_at = CURRENT_TIMESTAMP,
+                    must_change_password = 0
                 WHERE id = ?
                 """,
                 (salt, password_hash, user_id),

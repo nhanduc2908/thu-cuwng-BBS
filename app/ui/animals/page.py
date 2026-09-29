@@ -18,6 +18,7 @@ from app.database import Database
 from app.modules.animals.constants import ANIMAL_STATUSES
 from app.ui.animals.dialogs import AnimalDialog
 from app.ui.common import STATUS_LABELS, make_table, notify_error, set_cell
+from app.ui.photo_preview import show_photo_preview
 
 
 class AnimalsPage(QWidget):
@@ -51,7 +52,17 @@ class AnimalsPage(QWidget):
         filters.addWidget(self.status_filter, 1)
         layout.addLayout(filters)
         self.table = make_table(
-            ["Mã", "Tên", "Loài / Giống", "Giới tính", "Cân nặng", "Giá bán", "Trạng thái", "Sức khỏe"]
+            [
+                "Mã",
+                "Tên",
+                "Loài / Giống",
+                "Giới tính",
+                "Cân nặng",
+                "Giá bán",
+                "Trạng thái",
+                "Sức khỏe",
+                "Tiếp nhận",
+            ]
         )
         layout.addWidget(self.table)
         buttons = QHBoxLayout()
@@ -63,10 +74,15 @@ class AnimalsPage(QWidget):
         delete_button.setObjectName("dangerButton")
         delete_button.clicked.connect(self.delete_animal)
         self.delete_button = delete_button
+        self.photo_button = QPushButton("Xem ảnh nhận bé")
+        self.photo_button.clicked.connect(self.show_intake_photo)
+        self.photo_button.setEnabled(False)
+        buttons.addWidget(self.photo_button)
         buttons.addWidget(edit_button)
         buttons.addWidget(delete_button)
         layout.addLayout(buttons)
         self.table.doubleClicked.connect(self.edit_animal)
+        self.table.currentCellChanged.connect(self._selection_changed)
         self.refresh()
 
     def set_manage_enabled(self, enabled: bool) -> None:
@@ -93,12 +109,51 @@ class AnimalsPage(QWidget):
             set_cell(self.table, row_number, 5, f"{animal['sale_price']:,.0f} ₫")
             set_cell(self.table, row_number, 6, STATUS_LABELS[animal["status"]])
             set_cell(self.table, row_number, 7, animal["health_status"])
+            set_cell(
+                self.table,
+                row_number,
+                8,
+                "Đã nhận"
+                if animal["received_at"]
+                else "Không qua quy trình nhập",
+            )
+        self._selection_changed()
 
     def selected_animal_id(self) -> int | None:
         row = self.table.currentRow()
         if row < 0 or self.table.item(row, 0) is None:
             return None
         return self.table.item(row, 0).data(Qt.ItemDataRole.UserRole)
+
+    def _selection_changed(self, *_: Any) -> None:
+        animal_id = self.selected_animal_id()
+        animal = self.database.get_animal(animal_id) if animal_id else None
+        self.photo_button.setEnabled(
+            animal is not None and bool(animal["received_at"])
+        )
+
+    def show_intake_photo(self) -> None:
+        animal_id = self.selected_animal_id()
+        if animal_id is None:
+            return
+        receipt = self.database.get_intake_receipt(animal_id)
+        if receipt is None:
+            QMessageBox.information(
+                self, "Chưa có ảnh", "Hồ sơ này chưa có chứng từ ảnh tiếp nhận."
+            )
+            return
+        animal = self.database.get_animal(animal_id)
+        if animal is None:
+            self.refresh()
+            return
+        try:
+            show_photo_preview(
+                self,
+                f"Ảnh tiếp nhận — {animal['animal_code']} · {animal['name']}",
+                receipt["photo_data"],
+            )
+        except ValueError as error:
+            notify_error(self, error)
 
     def add_animal(self) -> None:
         dialog = AnimalDialog(self)

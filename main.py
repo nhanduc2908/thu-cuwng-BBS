@@ -1,10 +1,11 @@
-"""Start the Pet Store Management desktop application."""
+"""Start the PetCare desktop application and initialize local authentication."""
 
 from __future__ import annotations
 
 import logging
 import os
 from pathlib import Path
+import sqlite3
 import sys
 from typing import Sequence
 
@@ -24,11 +25,11 @@ except ModuleNotFoundError as error:
     raise SystemExit(1) from error
 
 from app.database import Database
-from app.ui.auth.dialogs import AdminSetupDialog, LoginDialog
+from app.ui.auth.dialogs import ChangePasswordDialog, LoginDialog
 from app.ui.main_window import MainWindow
 
 
-APP_NAME = "Quản lý thú cưng"
+APP_NAME = "PetCare - Quản lý thú cưng"
 APP_DATA_DIRECTORY = "PetStoreManagement"
 DATABASE_FILENAME = "pet_store.db"
 
@@ -60,19 +61,16 @@ def create_application(arguments: Sequence[str] | None = None) -> QApplication:
 
 
 def setup_first_admin(database: Database) -> bool:
-    """Prompt for the first administrator; return False when setup is cancelled."""
+    """Create the documented first-run account with mandatory password rotation."""
     if database.user_count() != 0:
         return True
 
-    dialog = AdminSetupDialog()
-    if dialog.exec() != AdminSetupDialog.DialogCode.Accepted:
-        return False
-
-    credentials = dialog.values()
-    database.create_initial_admin(
-        credentials["username"],
-        credentials["display_name"],
-        credentials["password"],
+    database.create_default_admin()
+    QMessageBox.information(
+        None,
+        "Tài khoản đã tạo",
+        "Tài khoản lần đầu: admin / admin.\n"
+        "Bạn sẽ phải đặt mật khẩu mới ngay sau khi đăng nhập.",
     )
     return True
 
@@ -87,6 +85,24 @@ def authenticate_user(database: Database) -> dict[str, object] | None:
         username, password = dialog.credentials()
         user = database.authenticate(username, password)
         if user is not None:
+            if user["must_change_password"]:
+                change_dialog = ChangePasswordDialog(required=True)
+                if change_dialog.exec() != ChangePasswordDialog.DialogCode.Accepted:
+                    return None
+                current_password, new_password = change_dialog.values()
+                try:
+                    database.change_password(
+                        int(user["id"]),
+                        current_password,
+                        new_password,
+                        int(user["id"]),
+                    )
+                except (ValueError, sqlite3.Error) as error:
+                    QMessageBox.warning(
+                        None, "Không thể đổi mật khẩu", str(error)
+                    )
+                    continue
+                user["must_change_password"] = False
             return user
 
         database.record_audit(
@@ -103,7 +119,10 @@ def authenticate_user(database: Database) -> dict[str, object] | None:
 
 
 def show_startup_error(error: Exception) -> None:
-    LOGGER.exception("Không thể khởi động ứng dụng", exc_info=error)
+    LOGGER.error(
+        "Không thể khởi động ứng dụng",
+        exc_info=(type(error), error, error.__traceback__),
+    )
     QMessageBox.critical(
         None,
         "Không thể khởi động",
@@ -114,11 +133,36 @@ def show_startup_error(error: Exception) -> None:
 def main(arguments: Sequence[str] | None = None) -> int:
     """Initialize storage and authentication, then run the main window."""
     logging.basicConfig(level=logging.INFO)
+    command_arguments = list(arguments) if arguments is not None else sys.argv[1:]
+    if command_arguments == ["--reset-admin"]:
+        database: Database | None = None
+        try:
+            path = database_path()
+            if not path.is_file():
+                raise FileNotFoundError(
+                    f"Không tìm thấy cơ sở dữ liệu hiện có: {path}"
+                )
+            database = Database(path)
+            database.reset_admin_login("admin")
+        except Exception as error:
+            print(f"Không thể khôi phục tài khoản admin: {error}", file=sys.stderr)
+            return 1
+        finally:
+            if database is not None:
+                database.close()
+        print(
+            "Đã đặt lại tài khoản quản trị về admin/admin. "
+            "Khi đăng nhập, ứng dụng sẽ yêu cầu đặt mật khẩu mới."
+        )
+        return 0
+
     application = create_application(arguments)
     database: Database | None = None
 
     try:
-        database = Database(database_path())
+        path = database_path()
+        LOGGER.info("Khởi động %s; SQLite: %s", APP_NAME, path)
+        database = Database(path)
         if not setup_first_admin(database):
             database.close()
             return 0

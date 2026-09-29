@@ -23,6 +23,7 @@ from app.ui.common import make_table, set_cell
 from app.ui.sales.dialogs import (
     CustomerDialog,
     PaymentDialog,
+    ProductSalesOrderDialog,
     RefundDepositDialog,
     ReservationDialog,
     SalesOrderDialog,
@@ -132,19 +133,24 @@ class SalesPage(QWidget):
         layout = QVBoxLayout(page)
         toolbar = QHBoxLayout()
         toolbar.addWidget(
-            QLabel("Động vật chỉ được chuyển sang “Đã bán” khi thanh toán đủ.")
+            QLabel(
+                "Đơn có thể gồm động vật hoặc sản phẩm/combo; thanh toán đủ mới hoàn tất và xuất tồn."
+            )
         )
         toolbar.addStretch()
         self.create_order_button = QPushButton(
             "+ Tạo đơn", objectName="primaryButton"
         )
         self.create_order_button.clicked.connect(self.create_order)
+        self.create_product_order_button = QPushButton("+ Bán sản phẩm / combo")
+        self.create_product_order_button.clicked.connect(self.create_product_order)
         self.payment_button = QPushButton("Ghi nhận thanh toán")
         self.payment_button.clicked.connect(self.add_payment)
         self.cancel_order_button = QPushButton("Hủy đơn chưa thanh toán")
         self.cancel_order_button.clicked.connect(self.cancel_order)
         for button in (
             self.create_order_button,
+            self.create_product_order_button,
             self.payment_button,
             self.cancel_order_button,
         ):
@@ -155,7 +161,7 @@ class SalesPage(QWidget):
                 "Mã đơn",
                 "Ngày",
                 "Khách hàng",
-                "Số con",
+                "Số dòng",
                 "Tổng tiền",
                 "Đã trả",
                 "Còn lại",
@@ -165,7 +171,7 @@ class SalesPage(QWidget):
         self.orders_table.currentCellChanged.connect(self._order_selection_changed)
         layout.addWidget(self.orders_table, 3)
         self.order_items_table = make_table(
-            ["Mã động vật", "Tên", "Loài", "Đơn giá"]
+            ["Loại", "Mã SKU / động vật", "Tên hàng", "Loài / danh mục", "Số lượng", "Đơn giá"]
         )
         layout.addWidget(self.order_items_table, 2)
         self.payments_table = make_table(
@@ -183,6 +189,7 @@ class SalesPage(QWidget):
             self.refund_button,
             self.release_button,
             self.create_order_button,
+            self.create_product_order_button,
             self.payment_button,
             self.cancel_order_button,
         ):
@@ -357,12 +364,31 @@ class SalesPage(QWidget):
         )
         if order_id is None:
             return
-        for row, item in enumerate(self.database.list_order_items(order_id)):
-            self.order_items_table.insertRow(row)
-            set_cell(self.order_items_table, row, 0, item["animal_code"])
-            set_cell(self.order_items_table, row, 1, item["animal_name"])
-            set_cell(self.order_items_table, row, 2, item["species"])
-            set_cell(self.order_items_table, row, 3, f"{item['unit_price']:,.0f} ₫")
+        animal_items = self.database.list_order_items(order_id)
+        product_items = self.database.list_order_product_items(order_id)
+        self.order_items_table.setRowCount(len(animal_items) + len(product_items))
+        row = 0
+        for item in animal_items:
+            set_cell(self.order_items_table, row, 0, "Động vật")
+            set_cell(self.order_items_table, row, 1, item["animal_code"])
+            set_cell(self.order_items_table, row, 2, item["animal_name"])
+            set_cell(self.order_items_table, row, 3, item["species"])
+            set_cell(self.order_items_table, row, 4, "1")
+            set_cell(self.order_items_table, row, 5, f"{item['unit_price']:,.0f} ₫")
+            row += 1
+        for item in product_items:
+            set_cell(
+                self.order_items_table,
+                row,
+                0,
+                "Combo" if item["combo_id"] is not None else "Sản phẩm",
+            )
+            set_cell(self.order_items_table, row, 1, item["item_code"])
+            set_cell(self.order_items_table, row, 2, item["item_name"])
+            set_cell(self.order_items_table, row, 3, item["unit"])
+            set_cell(self.order_items_table, row, 4, f"{item['quantity']:g}")
+            set_cell(self.order_items_table, row, 5, f"{item['unit_price']:,.0f} ₫")
+            row += 1
         payments = self.database.list_order_payments(order_id)
         self.payments_table.setRowCount(len(payments))
         for row, payment in enumerate(payments):
@@ -498,6 +524,24 @@ class SalesPage(QWidget):
         try:
             self.database.create_sales_order(dialog.values())
         except (sqlite3.Error, ValueError) as error:
+            self._show_error(error)
+            return
+        self.refresh_orders()
+
+    def create_product_order(self) -> None:
+        customers = self.database.list_customers()
+        if not customers:
+            QMessageBox.information(
+                self, "Chưa có khách hàng", "Hãy thêm khách hàng trước khi bán sản phẩm."
+            )
+            self.tabs.setCurrentWidget(self.customers_tab)
+            return
+        dialog = ProductSalesOrderDialog(self, self.database, customers)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        try:
+            self.database.create_product_sales_order(dialog.values())
+        except (sqlite3.Error, ValueError, PermissionError) as error:
             self._show_error(error)
             return
         self.refresh_orders()

@@ -19,7 +19,12 @@ class NotificationRepository:
                        THEN b.quantity_remaining ELSE 0 END), 0) AS usable_quantity
             FROM inventory_items i
             LEFT JOIN inventory_batches b ON b.item_id = i.id
-            WHERE i.is_active = 1
+            WHERE i.is_active = 1 AND (
+                i.is_demo = 0 OR EXISTS (
+                    SELECT 1 FROM inventory_batches seeded_batch
+                    WHERE seeded_batch.item_id = i.id
+                )
+            )
             GROUP BY i.id
             HAVING usable_quantity <= i.minimum_stock
             """

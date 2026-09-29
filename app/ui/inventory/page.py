@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QMessageBox,
     QPushButton,
+    QInputDialog,
     QVBoxLayout,
     QWidget,
 )
@@ -22,8 +23,17 @@ from app.ui.common import make_table, set_cell
 from app.ui.inventory.dialogs import (
     ConsumeStockDialog,
     InventoryItemDialog,
+    FeedingAgeRulesDialog,
+    FeedingRecommendationsDialog,
+    ProductComboManagementDialog,
     ReceiveStockDialog,
 )
+from app.ui.inventory.recommendations_dialogs import (
+    RecommendationProfileDialog,
+    RecommendationsDialog,
+)
+from app.ui.inventory.advisor_dialog import PetAdvisorDialog
+from app.ui.inventory.evaluation_dialog import RecommendationEvaluationDialog
 
 
 class InventoryPage(QWidget):
@@ -53,21 +63,65 @@ class InventoryPage(QWidget):
         self.consume_button.clicked.connect(self.consume_stock)
         self.active_button = QPushButton("Ngừng hoạt động")
         self.active_button.clicked.connect(self.toggle_active)
+        self.combos_button = QPushButton("Quản lý combo")
+        self.combos_button.clicked.connect(self.manage_combos)
+        self.feeding_rules_button = QPushButton("Quy tắc độ tuổi thức ăn")
+        self.feeding_rules_button.clicked.connect(self.manage_feeding_rules)
+        self.feeding_recommend_button = QPushButton(
+            "🍽 Gợi ý thức ăn theo tuổi"
+        )
+        self.feeding_recommend_button.clicked.connect(
+            self.open_feeding_recommendations
+        )
         for button in (
             self.add_button,
             self.edit_button,
             self.receive_button,
             self.consume_button,
             self.active_button,
+            self.combos_button,
+            self.feeding_rules_button,
+            self.feeding_recommend_button,
         ):
             toolbar.addWidget(button)
         layout.addLayout(toolbar)
+        recommendation_toolbar = QHBoxLayout()
+        recommendation_toolbar.addWidget(
+            QLabel(
+                "🐾 Cá nhân hóa gợi ý theo loài, tuổi, nhu cầu và tồn kho"
+            )
+        )
+        recommendation_toolbar.addStretch()
+        self.configure_recommendation_button = QPushButton("Cấu hình sản phẩm gợi ý")
+        self.configure_recommendation_button.clicked.connect(
+            self.configure_recommendation_profile
+        )
+        self.remove_recommendation_button = QPushButton("Gỡ cấu hình gợi ý")
+        self.remove_recommendation_button.clicked.connect(
+            self.remove_recommendation_profile
+        )
+        self.recommend_button = QPushButton(
+            "✨ Gợi ý theo hồ sơ bé", objectName="primaryButton"
+        )
+        self.recommend_button.clicked.connect(self.open_recommendations)
+        self.advisor_button = QPushButton("🤖 AI PetCare Advisor")
+        self.advisor_button.clicked.connect(self.open_advisor)
+        self.evaluation_button = QPushButton("📊 Đánh giá AI")
+        self.evaluation_button.clicked.connect(self.open_recommendation_evaluation)
+        recommendation_toolbar.addWidget(self.configure_recommendation_button)
+        recommendation_toolbar.addWidget(self.remove_recommendation_button)
+        recommendation_toolbar.addWidget(self.recommend_button)
+        recommendation_toolbar.addWidget(self.advisor_button)
+        recommendation_toolbar.addWidget(self.evaluation_button)
+        layout.addLayout(recommendation_toolbar)
 
         self.items_table = make_table(
             [
                 "Mã",
-                "Vật tư",
-                "Loại",
+                "Sản phẩm",
+                "Danh mục",
+                "Giá bán",
+                "Giá hội viên",
                 "Tồn dùng được",
                 "Tổng tồn",
                 "Tối thiểu",
@@ -98,8 +152,12 @@ class InventoryPage(QWidget):
             self.receive_button,
             self.consume_button,
             self.active_button,
+            self.combos_button,
+            self.feeding_rules_button,
         ):
             button.setVisible(enabled)
+        self.configure_recommendation_button.setVisible(enabled)
+        self.remove_recommendation_button.setVisible(enabled)
 
     def selected_item_id(self) -> int | None:
         row = self.items_table.currentRow()
@@ -122,42 +180,60 @@ class InventoryPage(QWidget):
             )
             if item["id"] == selected_id:
                 selected_row = row
-            set_cell(self.items_table, row, 1, item["name"])
+            display_name = item["name"]
+            if item["pack_size"]:
+                display_name += f" · {item['pack_size']}"
+            set_cell(self.items_table, row, 1, display_name)
             set_cell(
                 self.items_table,
                 row,
                 2,
-                INVENTORY_CATEGORY_LABELS[item["category"]],
+                item["catalog_category"]
+                or INVENTORY_CATEGORY_LABELS[item["category"]],
             )
             set_cell(
                 self.items_table,
                 row,
                 3,
-                f"{item['usable_quantity']:g} {item['unit']}",
+                f"{item['retail_price']:,.0f} ₫" if item["retail_price"] else "—",
             )
             set_cell(
                 self.items_table,
                 row,
                 4,
-                f"{item['stock_quantity']:g} {item['unit']}",
+                f"{item['member_price']:,.0f} ₫"
+                if item["member_price"] is not None
+                else "Theo hạng",
             )
             set_cell(
                 self.items_table,
                 row,
                 5,
-                f"{item['minimum_stock']:g} {item['unit']}",
+                f"{item['usable_quantity']:g} {item['unit']}",
             )
             set_cell(
                 self.items_table,
                 row,
                 6,
-                f"{item['expired_quantity']:g} {item['unit']}",
+                f"{item['stock_quantity']:g} {item['unit']}",
             )
-            set_cell(self.items_table, row, 7, item["unit"])
+            set_cell(
+                self.items_table,
+                row,
+                7,
+                f"{item['minimum_stock']:g} {item['unit']}",
+            )
             set_cell(
                 self.items_table,
                 row,
                 8,
+                f"{item['expired_quantity']:g} {item['unit']}",
+            )
+            set_cell(self.items_table, row, 9, item["unit"])
+            set_cell(
+                self.items_table,
+                row,
+                10,
                 "Đang dùng" if item["is_active"] else "Ngừng",
             )
         if selected_row >= 0:
@@ -199,6 +275,19 @@ class InventoryPage(QWidget):
             if item is not None and not item["is_active"]
             else "Ngừng hoạt động"
         )
+        profile = (
+            self.database.get_recommendation_profile(item_id)
+            if item_id is not None
+            else None
+        )
+        self.configure_recommendation_button.setEnabled(
+            self.manage_enabled and item is not None
+        )
+        self.remove_recommendation_button.setEnabled(
+            self.manage_enabled
+            and profile is not None
+            and profile["recommendation_category"] is not None
+        )
         self.batches_table.setRowCount(0)
         self.movements_table.setRowCount(0)
         if item_id is None:
@@ -230,7 +319,9 @@ class InventoryPage(QWidget):
                 self.movements_table,
                 row,
                 1,
-                INVENTORY_MOVEMENT_LABELS[movement["movement_type"]],
+                INVENTORY_MOVEMENT_LABELS.get(
+                    movement["movement_type"], movement["movement_type"]
+                ),
             )
             set_cell(self.movements_table, row, 2, movement["batch_code"])
             set_cell(
@@ -245,6 +336,121 @@ class InventoryPage(QWidget):
             set_cell(self.movements_table, row, 4, animal)
             set_cell(self.movements_table, row, 5, movement["reference"])
             set_cell(self.movements_table, row, 6, movement["note"])
+
+    def manage_combos(self) -> None:
+        dialog = ProductComboManagementDialog(self, self.database)
+        dialog.exec()
+
+    def manage_feeding_rules(self) -> None:
+        dialog = FeedingAgeRulesDialog(self, self.database)
+        dialog.exec()
+
+    def open_feeding_recommendations(self) -> None:
+        try:
+            animals = self.database.list_animals()
+        except (sqlite3.Error, ValueError, PermissionError) as error:
+            QMessageBox.warning(self, "Không thể tải hồ sơ", str(error))
+            return
+        if not animals:
+            QMessageBox.information(
+                self,
+                "Chưa có hồ sơ",
+                "Hãy tạo hồ sơ động vật trước khi lọc thức ăn theo tuổi.",
+            )
+            return
+        labels = [
+            f"{animal['animal_code']} · {animal['name']} · "
+            f"{animal['species']} · {animal['breed'] or 'chưa rõ giống'}"
+            for animal in animals
+        ]
+        selected, accepted = QInputDialog.getItem(
+            self, "Gợi ý thức ăn", "Chọn hồ sơ thú cưng", labels, 0, False
+        )
+        if not accepted:
+            return
+        animal = animals[labels.index(selected)]
+        water_level = ""
+        diet_type = ""
+        species = animal["species"].casefold()
+        if "cá" in species or "fish" in species:
+            water_level, accepted = QInputDialog.getItem(
+                self,
+                "Phân loại cá",
+                "Tầng nước (nếu biết)",
+                ["Không lọc", "Mặt nước", "Tầng giữa", "Đáy"],
+                0,
+                False,
+            )
+            if not accepted:
+                return
+            water_level = "" if water_level == "Không lọc" else water_level
+            diet_type, accepted = QInputDialog.getItem(
+                self,
+                "Phân loại cá",
+                "Kiểu ăn (nếu biết)",
+                ["Không lọc", "Ăn thực vật", "Ăn tạp", "Ăn thịt"],
+                0,
+                False,
+            )
+            if not accepted:
+                return
+            diet_type = "" if diet_type == "Không lọc" else diet_type
+        try:
+            results = self.database.get_feeding_recommendations(
+                animal["id"], water_level, diet_type
+            )
+        except (sqlite3.Error, ValueError, PermissionError) as error:
+            QMessageBox.warning(self, "Không thể lọc thức ăn", str(error))
+            return
+        FeedingRecommendationsDialog(self, animal, results).exec()
+        self.refresh_items()
+
+    def configure_recommendation_profile(self) -> None:
+        item_id = self.selected_item_id()
+        if item_id is None:
+            return
+        item = self.database.get_inventory_item(item_id)
+        profile = self.database.get_recommendation_profile(item_id)
+        if item is None:
+            self.refresh_items()
+            return
+        dialog = RecommendationProfileDialog(self, item, profile)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        try:
+            self.database.save_recommendation_profile(item_id, dialog.values())
+        except (sqlite3.Error, ValueError, PermissionError) as error:
+            self._show_error(error)
+            return
+        self._selection_changed()
+
+    def remove_recommendation_profile(self) -> None:
+        item_id = self.selected_item_id()
+        if item_id is None:
+            return
+        answer = QMessageBox.question(
+            self,
+            "Gỡ cấu hình gợi ý",
+            "Gỡ sản phẩm khỏi hệ thống gợi ý? Thông tin tồn kho không bị xóa.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+        )
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+        try:
+            self.database.delete_recommendation_profile(item_id)
+        except (sqlite3.Error, ValueError, PermissionError) as error:
+            self._show_error(error)
+            return
+        self._selection_changed()
+
+    def open_recommendations(self) -> None:
+        RecommendationsDialog(self, self.database).exec()
+
+    def open_advisor(self) -> None:
+        PetAdvisorDialog(self, self.database).exec()
+
+    def open_recommendation_evaluation(self) -> None:
+        RecommendationEvaluationDialog(self, self.database).exec()
 
     def add_item(self) -> None:
         dialog = InventoryItemDialog(self)

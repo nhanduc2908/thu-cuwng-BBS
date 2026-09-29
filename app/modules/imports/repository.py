@@ -70,11 +70,14 @@ class ImportRepository:
             """
             SELECT a.id, a.animal_code, a.name, a.species, a.breed,
                    a.purchase_price, a.status,
+                   r.received_at, r.received_by,
+                   (r.animal_id IS NOT NULL) AS receipt_confirmed,
                    i.result AS inspection_result,
                    i.inspected_at,
                    i.checked_by
             FROM import_batch_animals ba
             JOIN animals a ON a.id = ba.animal_id
+            LEFT JOIN animal_intake_receipts r ON r.animal_id = a.id
             LEFT JOIN inspections i ON i.id = (
                 SELECT latest.id FROM inspections latest
                 WHERE latest.animal_id = a.id AND latest.batch_id = ba.batch_id
@@ -106,6 +109,32 @@ class ImportRepository:
                 raise ValueError("Không tìm thấy lô nhập.")
             if batch["status"] != "OPEN":
                 raise ValueError("Chỉ có thể thêm động vật vào lô đang tiếp nhận.")
+            photo_data = values.get("photo_data")
+            if not isinstance(photo_data, bytes) or not photo_data:
+                raise ValueError("Cần đính kèm ảnh xác nhận bé đã được tiếp nhận.")
+            if len(photo_data) > 8 * 1024 * 1024:
+                raise ValueError("Ảnh tiếp nhận vượt quá giới hạn 8 MB.")
+            photo_mime = str(values.get("photo_mime", "")).strip().lower()
+            if photo_mime not in {"image/jpeg", "image/png", "image/webp"}:
+                raise ValueError("Định dạng ảnh tiếp nhận không được hỗ trợ.")
+            signatures = {
+                "image/jpeg": photo_data.startswith(b"\xff\xd8\xff"),
+                "image/png": photo_data.startswith(b"\x89PNG\r\n\x1a\n"),
+                "image/webp": (
+                    photo_data.startswith(b"RIFF")
+                    and photo_data[8:12] == b"WEBP"
+                ),
+            }
+            if not signatures[photo_mime]:
+                raise ValueError("Nội dung ảnh không khớp với định dạng đã chọn.")
+            received_by = str(values.get("received_by", "")).strip()
+            confirmation = str(values.get("confirmation", "")).strip()
+            if not received_by:
+                raise ValueError("Cần ghi nhận nhân viên tiếp nhận.")
+            if not confirmation:
+                raise ValueError(
+                    "Cần xác nhận bé đã được bàn giao và có mặt tại cửa hàng."
+                )
             cursor = self.connection.execute(
                 """
                 INSERT INTO animals
@@ -136,6 +165,14 @@ class ImportRepository:
                 VALUES (?, ?, ?)
                 """,
                 (batch_id, animal_id, float(values.get("purchase_price", 0))),
+            )
+            self.connection.execute(
+                """
+                INSERT INTO animal_intake_receipts
+                    (animal_id, received_by, photo_mime, photo_data, confirmation)
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                (animal_id, received_by, photo_mime, photo_data, confirmation),
             )
             return animal_id
 

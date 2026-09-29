@@ -26,6 +26,7 @@ from app.ui.imports.dialogs import (
     InspectionHistoryDialog,
     SupplierDialog,
 )
+from app.ui.photo_preview import show_photo_preview
 
 
 class ImportsPage(QWidget):
@@ -59,6 +60,27 @@ class ImportsPage(QWidget):
         layout.addWidget(self.tabs)
         self.refresh_suppliers()
         self.refresh_batches()
+
+    def show_intake_photo(self) -> None:
+        animal_id = self.selected_import_animal_id()
+        if animal_id is None:
+            return
+        receipt = self.database.get_intake_receipt(animal_id)
+        if receipt is None:
+            QMessageBox.information(
+                self, "Chưa có ảnh", "Hồ sơ này chưa có chứng từ ảnh tiếp nhận."
+            )
+            return
+        try:
+            animal = self.database.get_animal(animal_id)
+            title = (
+                f"Ảnh tiếp nhận — {animal['animal_code']} · {animal['name']}"
+                if animal
+                else "Ảnh tiếp nhận"
+            )
+            show_photo_preview(self, title, receipt["photo_data"])
+        except ValueError as error:
+            self._show_error(error)
 
     def _build_suppliers_tab(self) -> QWidget:
         page = QWidget()
@@ -122,15 +144,28 @@ class ImportsPage(QWidget):
         self.inspect_button.clicked.connect(self.inspect_animal)
         self.history_button = QPushButton("Lịch sử kiểm tra")
         self.history_button.clicked.connect(self.show_inspection_history)
+        self.receipt_photo_button = QPushButton("Ảnh tiếp nhận")
+        self.receipt_photo_button.clicked.connect(self.show_intake_photo)
         for button in (
             self.add_animal_button,
             self.inspect_button,
             self.history_button,
+            self.receipt_photo_button,
         ):
             item_header.addWidget(button)
         layout.addLayout(item_header)
         self.batch_animals_table = make_table(
-            ["Mã", "Tên", "Loài/giống", "Giá nhập", "Kết quả kiểm tra", "Trạng thái"]
+            [
+                "Mã",
+                "Tên",
+                "Loài/giống",
+                "Giá nhập",
+                "Xác nhận nhận bé",
+                "Thời điểm",
+                "Nhân viên",
+                "Kết quả kiểm tra",
+                "Trạng thái",
+            ]
         )
         self.batch_animals_table.currentCellChanged.connect(
             self._import_animal_selection_changed
@@ -280,17 +315,37 @@ class ImportsPage(QWidget):
                 3,
                 f"{animal['purchase_price']:,.0f} ₫",
             )
-            result = animal["inspection_result"]
             set_cell(
                 self.batch_animals_table,
                 row,
                 4,
-                INSPECTION_RESULT_LABELS.get(result, "Chưa kiểm tra"),
+                "Đã nhận · có ảnh"
+                if animal["receipt_confirmed"]
+                else "Chưa xác nhận",
             )
             set_cell(
                 self.batch_animals_table,
                 row,
                 5,
+                animal["received_at"] or "—",
+            )
+            set_cell(
+                self.batch_animals_table,
+                row,
+                6,
+                animal["received_by"] or "—",
+            )
+            result = animal["inspection_result"]
+            set_cell(
+                self.batch_animals_table,
+                row,
+                7,
+                INSPECTION_RESULT_LABELS.get(result, "Chưa kiểm tra"),
+            )
+            set_cell(
+                self.batch_animals_table,
+                row,
+                8,
                 self._animal_status_label(animal["status"]),
             )
         self._import_animal_selection_changed()
@@ -300,6 +355,12 @@ class ImportsPage(QWidget):
             self.selected_import_animal_id() is not None
         )
         self.history_button.setVisible(
+            self.selected_import_animal_id() is not None
+        )
+        self.receipt_photo_button.setEnabled(
+            self.selected_import_animal_id() is not None
+        )
+        self.receipt_photo_button.setVisible(
             self.selected_import_animal_id() is not None
         )
 
@@ -382,7 +443,7 @@ class ImportsPage(QWidget):
         if batch_id is None:
             QMessageBox.information(self, "Chọn lô nhập", "Chọn lô cần ghi nhận động vật.")
             return
-        dialog = ImportAnimalDialog(self)
+        dialog = ImportAnimalDialog(self, self.database.current_actor_name())
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
         try:

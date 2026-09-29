@@ -182,6 +182,62 @@ def test_existing_animal_database_is_migrated(tmp_path):
         assert "diet" in columns
         assert "microchip_id" in columns
         assert "behavior" in columns
+        assert "must_change_password" in {
+            row["name"]
+            for row in migrated.connection.execute("PRAGMA table_info(users)")
+        }
+        membership_columns = {
+            row["name"]
+            for row in migrated.connection.execute(
+                "PRAGMA table_info(membership_plans)"
+            )
+        }
+        assert {
+            "billing_mode",
+            "included_visits",
+            "service_category",
+        } <= membership_columns
+        assert migrated.connection.execute(
+            """
+            SELECT name FROM sqlite_master
+            WHERE type = 'table' AND name = 'service_appointments'
+            """
+        ).fetchone()
+        assert "cycle_number" in {
+            row["name"]
+            for row in migrated.connection.execute(
+                "PRAGMA table_info(membership_service_uses)"
+            )
+        }
+        inventory_columns = {
+            row["name"]
+            for row in migrated.connection.execute(
+                "PRAGMA table_info(inventory_items)"
+            )
+        }
+        assert {
+            "animal_subspecies",
+            "age_min_months",
+            "age_max_months",
+            "life_stage",
+            "food_type",
+            "suitable_weight_min",
+            "vitamin_c_content",
+            "water_level",
+            "diet_type",
+        } <= inventory_columns
+        assert migrated.connection.execute(
+            """
+            SELECT name FROM sqlite_master
+            WHERE type = 'table' AND name = 'feeding_age_rules'
+            """
+        ).fetchone()
+        assert migrated.connection.execute(
+            """
+            SELECT name FROM sqlite_master
+            WHERE type = 'table' AND name = 'animal_intake_receipts'
+            """
+        ).fetchone()
         assert migrated.connection.execute(
             "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'care_checklists'"
         ).fetchone()
@@ -313,6 +369,15 @@ def import_batch_values(supplier_id, code="IMP-2026-001"):
     }
 
 
+def intake_evidence():
+    return {
+        "photo_data": b"\xff\xd8\xffpet intake photo",
+        "photo_mime": "image/jpeg",
+        "received_by": "Nhân viên tiếp nhận",
+        "confirmation": "Đã nhận bé tại cửa hàng",
+    }
+
+
 def test_supplier_batch_intake_and_passing_inspection(database):
     supplier_id = database.save_supplier(supplier_values())
     batch_id = database.create_import_batch(import_batch_values(supplier_id))
@@ -325,13 +390,20 @@ def test_supplier_batch_intake_and_passing_inspection(database):
             "breed": "Mèo ta",
             "purchase_price": 1_000_000,
             "sale_price": 2_000_000,
+            **intake_evidence(),
         },
     )
 
     animal = database.get_animal(animal_id)
     assert animal["status"] == "PENDING_INSPECTION"
     assert animal["supplier_name"] == "Nhà cung cấp thú cưng"
+    assert animal["received_at"]
+    assert animal["received_by"] == "Nhân viên tiếp nhận"
+    receipt = database.get_intake_receipt(animal_id)
+    assert receipt["photo_data"] == b"\xff\xd8\xffpet intake photo"
+    assert receipt["confirmation"] == "Đã nhận bé tại cửa hàng"
     assert database.list_import_batches()[0]["animal_count"] == 1
+    assert database.list_import_animals(batch_id)[0]["receipt_confirmed"]
     assert database.list_import_animals(batch_id)[0]["inspection_result"] is None
 
     database.record_inspection(
@@ -366,7 +438,12 @@ def test_import_inspection_routes_animal_to_care_status(
     batch_id = database.create_import_batch(import_batch_values(supplier_id))
     animal_id = database.add_import_animal(
         batch_id,
-        {"animal_code": "PET-IMP-002", "name": "Miu", "species": "Mèo"},
+        {
+            "animal_code": "PET-IMP-002",
+            "name": "Miu",
+            "species": "Mèo",
+            **intake_evidence(),
+        },
     )
 
     database.record_inspection(
@@ -409,10 +486,50 @@ def test_imports_reject_inactive_supplier_and_cancel_empty_batches(database):
     )
     database.add_import_animal(
         populated_batch_id,
-        {"animal_code": "PET-IMP-004", "name": "Milo", "species": "Mèo"},
+        {
+            "animal_code": "PET-IMP-004",
+            "name": "Milo",
+            "species": "Mèo",
+            **intake_evidence(),
+        },
     )
     with pytest.raises(ValueError, match="đã có động vật"):
         database.cancel_import_batch(populated_batch_id)
+
+
+def test_intake_requires_photo_confirmation_and_staff_member(database):
+    supplier_id = database.save_supplier(supplier_values())
+    batch_id = database.create_import_batch(import_batch_values(supplier_id))
+    with pytest.raises(ValueError, match="ảnh xác nhận"):
+        database.add_import_animal(
+            batch_id,
+            {"animal_code": "PET-NO-PHOTO", "name": "Miu", "species": "Mèo"},
+        )
+    assert database.list_import_animals(batch_id) == []
+
+    with pytest.raises(ValueError, match="xác nhận bé"):
+        database.add_import_animal(
+            batch_id,
+            {
+                "animal_code": "PET-NO-CONFIRM",
+                "name": "Miu",
+                "species": "Mèo",
+                **{**intake_evidence(), "confirmation": ""},
+            },
+        )
+    assert database.list_import_animals(batch_id) == []
+
+    with pytest.raises(ValueError, match="không khớp"):
+        database.add_import_animal(
+            batch_id,
+            {
+                "animal_code": "PET-BAD-PHOTO",
+                "name": "Miu",
+                "species": "Mèo",
+                **{**intake_evidence(), "photo_data": b"not an image"},
+            },
+        )
+    assert database.list_import_animals(batch_id) == []
 
 
 def test_first_admin_password_authentication_permissions_and_audit(database):
@@ -455,6 +572,38 @@ def test_first_admin_password_authentication_permissions_and_audit(database):
             "UPDATE audit_logs SET details = 'tampered' WHERE id = ?",
             (events[0]["id"],),
         )
+
+
+def test_default_admin_and_local_recovery_require_password_change(database):
+    default_admin_id = database.create_default_admin()
+    user = database.authenticate("ADMIN", "admin")
+    assert user["id"] == default_admin_id
+    assert user["must_change_password"] is True
+    with pytest.raises(ValueError, match="đã được thiết lập"):
+        database.create_default_admin()
+
+    database.change_password(
+        default_admin_id,
+        "admin",
+        "StrongPass!2026",
+        default_admin_id,
+    )
+    user = database.authenticate("admin", "StrongPass!2026")
+    assert user["must_change_password"] is False
+
+    database.create_user(
+        "backup-admin", "Quản trị dự phòng", "OtherPass!2026", "ADMIN"
+    )
+    database.auth.set_user_active(default_admin_id, False)
+    database.reset_admin_login()
+    recovered_user = database.authenticate("admin", "admin")
+    assert recovered_user["id"] == default_admin_id
+    assert recovered_user["must_change_password"] is True
+    assert database.has_permission(default_admin_id, "users.manage")
+    assert any(
+        event["action"] == "ADMIN_PASSWORD_RESET"
+        for event in database.audit.list_events()
+    )
 
 
 def test_last_active_admin_cannot_be_demoted_or_disabled(database):

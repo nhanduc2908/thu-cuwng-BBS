@@ -1,17 +1,21 @@
 import sqlite3
 from typing import Any
 
-from PySide6.QtCore import QDate
+from PySide6.QtCore import QByteArray, QBuffer, QDate, QFileInfo, QIODevice, Qt
+from PySide6.QtGui import QImageReader, QPixmap
 from PySide6.QtWidgets import (
+    QCheckBox,
     QComboBox,
     QDateEdit,
     QDialog,
     QDialogButtonBox,
     QDoubleSpinBox,
+    QFileDialog,
     QFormLayout,
     QLabel,
     QLineEdit,
     QMessageBox,
+    QPushButton,
     QTextEdit,
     QVBoxLayout,
     QWidget,
@@ -143,14 +147,34 @@ class ImportBatchDialog(QDialog):
 
 
 class ImportAnimalDialog(QDialog):
-    def __init__(self, parent: QWidget) -> None:
+    MAX_PHOTO_BYTES = 8 * 1024 * 1024
+    MAX_SOURCE_BYTES = 20 * 1024 * 1024
+
+    def __init__(self, parent: QWidget, received_by: str = "") -> None:
         super().__init__(parent)
-        self.setWindowTitle("Ghi nhận động vật trong lô nhập")
-        self.setMinimumWidth(440)
+        self.setWindowTitle("Tiếp nhận bé vào cửa hàng")
+        self.setMinimumSize(560, 700)
+        self.photo_data: bytes | None = None
+        self.received_by = received_by.strip()
         layout = QVBoxLayout(self)
         layout.addWidget(
-            QLabel("Sau khi lưu, động vật sẽ ở trạng thái “Chờ kiểm tra”.")
+            QLabel(
+                "Chụp ảnh bé tại thời điểm bàn giao và xác nhận hiện diện tại cửa hàng. "
+                "Hồ sơ sẽ được ghi nhận ngay; kiểm tra sức khỏe thực hiện riêng."
+            )
         )
+        self.photo_preview = QLabel("Chưa có ảnh tiếp nhận")
+        self.photo_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.photo_preview.setMinimumHeight(180)
+        self.photo_preview.setStyleSheet(
+            "background: #f4f0e6; border: 1px dashed #b8c7bd; border-radius: 10px;"
+        )
+        layout.addWidget(self.photo_preview)
+        photo_row = QVBoxLayout()
+        self.photo_button = QPushButton("Chọn ảnh vừa chụp…")
+        self.photo_button.clicked.connect(self.choose_photo)
+        photo_row.addWidget(self.photo_button)
+        layout.addLayout(photo_row)
         form = QFormLayout()
         self.code = QLineEdit()
         self.code.setPlaceholderText("Ví dụ: PET-2026-001")
@@ -185,12 +209,81 @@ class ImportAnimalDialog(QDialog):
         ):
             form.addRow(label, widget)
         layout.addLayout(form)
+        self.received_by_label = QLabel(self.received_by or "Chưa xác định")
+        form.addRow("Nhân viên tiếp nhận", self.received_by_label)
+        self.confirmation = QCheckBox(
+            "Tôi xác nhận bé đã được bàn giao và đang có mặt tại cửa hàng."
+        )
+        layout.addWidget(self.confirmation)
         buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel
         )
         buttons.accepted.connect(self._validate)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
+
+    def choose_photo(self) -> None:
+        path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Chọn ảnh tiếp nhận",
+            "",
+            "Ảnh (*.jpg *.jpeg *.png *.webp)",
+        )
+        if not path:
+            return
+        if QFileInfo(path).size() > self.MAX_SOURCE_BYTES:
+            QMessageBox.warning(
+                self, "Ảnh quá lớn", "Ảnh gốc không được vượt quá 20 MB."
+            )
+            return
+        reader = QImageReader(path)
+        reader.setAutoTransform(True)
+        size = reader.size()
+        if size.isValid() and size.width() * size.height() > 40_000_000:
+            QMessageBox.warning(
+                self, "Ảnh có độ phân giải quá lớn", "Ảnh không được vượt quá 40 megapixel."
+            )
+            return
+        image = reader.read()
+        if image.isNull():
+            QMessageBox.warning(
+                self, "Ảnh không hợp lệ", reader.errorString() or "Không thể đọc ảnh."
+            )
+            return
+        image = image.scaled(
+            1600,
+            1600,
+            Qt.AspectRatioMode.KeepAspectRatio,
+            Qt.TransformationMode.SmoothTransformation,
+        )
+        encoded = QByteArray()
+        buffer = QBuffer(encoded)
+        if not buffer.open(QIODevice.OpenModeFlag.WriteOnly):
+            raise OSError("Không thể chuẩn bị vùng nhớ để xử lý ảnh.")
+        try:
+            if not image.save(buffer, "JPEG", 85):
+                raise ValueError("Không thể mã hóa ảnh tiếp nhận.")
+        finally:
+            buffer.close()
+        photo_data = bytes(encoded)
+        if len(photo_data) > self.MAX_PHOTO_BYTES:
+            QMessageBox.warning(
+                self, "Ảnh quá lớn", "Ảnh sau xử lý vượt quá giới hạn 8 MB."
+            )
+            return
+        self.photo_data = photo_data
+        pixmap = QPixmap()
+        if not pixmap.loadFromData(photo_data):
+            raise ValueError("Ảnh vừa chọn không thể hiển thị.")
+        self.photo_preview.setPixmap(
+            pixmap.scaled(
+                420,
+                220,
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation,
+            )
+        )
+        self.photo_button.setText("Đổi ảnh tiếp nhận…")
 
     def _validate(self) -> None:
         if (
@@ -200,6 +293,23 @@ class ImportAnimalDialog(QDialog):
         ):
             QMessageBox.warning(
                 self, "Thiếu thông tin", "Mã, tên và loài động vật là bắt buộc."
+            )
+            return
+        if self.photo_data is None:
+            QMessageBox.warning(
+                self, "Thiếu ảnh tiếp nhận", "Hãy chọn ảnh chụp bé tại thời điểm bàn giao."
+            )
+            return
+        if not self.confirmation.isChecked():
+            QMessageBox.warning(
+                self, "Chưa xác nhận", "Hãy xác nhận bé đã có mặt tại cửa hàng."
+            )
+            return
+        if not self.received_by:
+            QMessageBox.warning(
+                self,
+                "Thiếu nhân viên",
+                "Không xác định được nhân viên đang đăng nhập để ghi nhận tiếp nhận.",
             )
             return
         self.accept()
@@ -215,6 +325,10 @@ class ImportAnimalDialog(QDialog):
             "purchase_price": self.purchase_price.value(),
             "sale_price": self.sale_price.value(),
             "origin": self.origin.text().strip(),
+            "photo_data": self.photo_data,
+            "photo_mime": "image/jpeg",
+            "received_by": self.received_by,
+            "confirmation": self.confirmation.text(),
         }
 
 

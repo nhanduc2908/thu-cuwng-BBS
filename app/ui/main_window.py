@@ -34,6 +34,8 @@ from app.ui.customers.page import CustomersPage
 from app.ui.reservations.page import ReservationsPage
 from app.ui.suppliers.page import SuppliersPage
 from app.ui.platform.page import PlatformPage
+from app.ui.memberships.page import MembershipPage
+from app.ui.services.page import ServicesPage
 
 
 class MainWindow(QMainWindow):
@@ -63,11 +65,11 @@ class MainWindow(QMainWindow):
         sidebar_layout = QVBoxLayout(sidebar)
         sidebar_layout.setContentsMargins(16, 24, 16, 18)
         sidebar_layout.setSpacing(7)
-        brand = QLabel("PET STORE")
+        brand = QLabel("🐾 PET STORE")
         brand.setObjectName("brand")
         sidebar_layout.addWidget(brand)
         sidebar_layout.addWidget(
-            QLabel("QUẢN LÝ CỬA HÀNG · 15 PHÂN HỆ", objectName="sideCaption")
+            QLabel("CHĂM SÓC TỪ TÂM · 17 PHÂN HỆ", objectName="sideCaption")
         )
         sidebar_layout.addSpacing(18)
 
@@ -95,6 +97,14 @@ class MainWindow(QMainWindow):
         self.inventory = InventoryPage(database)
         self.reports = ReportsPage(database)
         self.operations = OperationsPage(database)
+        self.memberships = MembershipPage(
+            database, self._has_permission("membership.manage")
+        )
+        self.services = ServicesPage(
+            database,
+            self._has_permission("services.manage"),
+            self._has_permission("services.catalog.manage"),
+        )
         for page in (
             self.platform,
             self.access,
@@ -111,6 +121,8 @@ class MainWindow(QMainWindow):
             self.inventory,
             self.reports,
             self.operations,
+            self.memberships,
+            self.services,
         ):
             self.pages.addWidget(page)
 
@@ -127,6 +139,8 @@ class MainWindow(QMainWindow):
             ("KHÁCH HÀNG & BÁN HÀNG", "customers", "Khách hàng", 9, "sales.view"),
             ("KHÁCH HÀNG & BÁN HÀNG", "reservations", "Đặt trước & giữ chỗ", 10, "sales.view"),
             ("KHÁCH HÀNG & BÁN HÀNG", "sales", "Đơn hàng & thanh toán", 11, "sales.view"),
+            ("KHÁCH HÀNG & BÁN HÀNG", "memberships", "Hội viên & bill", 15, "membership.view"),
+            ("KHÁCH HÀNG & BÁN HÀNG", "services", "Dịch vụ & lịch hẹn", 16, "services.view"),
             ("VẬT TƯ & PHÂN TÍCH", "inventory", "Thức ăn & thuốc", 12, "inventory.view"),
             ("VẬT TƯ & PHÂN TÍCH", "reports", "Báo cáo", 13, "reports.view"),
             ("VẬT TƯ & PHÂN TÍCH", "operations", "Cảnh báo & sao lưu", 14, "notifications.view"),
@@ -187,58 +201,89 @@ class MainWindow(QMainWindow):
             QLabel("Quản lý nội bộ\nLưu trữ SQLite", objectName="sideFooter")
         )
         root.addWidget(sidebar)
-        root.addWidget(self.pages, 1)
+        content = QWidget()
+        content_layout = QVBoxLayout(content)
+        content_layout.setContentsMargins(0, 0, 0, 0)
+        content_layout.setSpacing(0)
+        topbar = QFrame(objectName="appTopbar")
+        topbar_layout = QHBoxLayout(topbar)
+        topbar_layout.setContentsMargins(26, 12, 26, 12)
+        topbar_layout.addWidget(
+            QLabel("PETCARE  /  QUẢN LÝ CỬA HÀNG", objectName="topbarBrand")
+        )
+        topbar_layout.addStretch()
+        topbar_layout.addWidget(
+            QLabel(
+                f"Xin chào, {self.current_user['display_name']}\n"
+                f"{ROLE_LABELS.get(self.current_user['role'], self.current_user['role'])}",
+                objectName="topbarUser",
+            )
+        )
+        content_layout.addWidget(topbar)
+        content_layout.addWidget(self.pages, 1)
+        root.addWidget(content, 1)
         self.setCentralWidget(container)
         self.setStyleSheet(
             """
-            QMainWindow, QWidget { background: #f5f7f6; color: #23332f; font-size: 14px; }
-            #sidebar { background: #173d35; }
+            QMainWindow, QWidget { background: #f7f5ef; color: #293b33; font-size: 14px; }
+            #sidebar { background: #204637; }
             #navigationScroll, #navigationScroll > QWidget > QWidget {
                 background: transparent; border: 0;
             }
             #navGroupLabel {
-                color: #87aa9c; font-size: 9px; font-weight: 700;
+                color: #a7c3b4; font-size: 9px; font-weight: 700;
                 letter-spacing: 1px; padding: 12px 8px 3px;
             }
             #brand { color: white; font-size: 23px; font-weight: 700; padding: 2px 4px; }
-            #sideCaption { color: #a9c6bd; font-size: 10px; padding: 0 5px; }
-            #sideFooter { color: #a9c6bd; padding: 8px 5px; }
+            #sideCaption { color: #c2d7cb; font-size: 10px; padding: 0 5px; }
+            #sideFooter { color: #c2d7cb; padding: 8px 5px; }
+            #appTopbar { background: #fffdf8; border-bottom: 1px solid #e9e3d7; }
+            #topbarBrand { color: #648071; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+            #topbarUser { color: #28483a; font-weight: 600; }
             QPushButton#navButton {
                 background: transparent; color: #e5efeb; text-align: left;
                 border: 0; border-radius: 7px; padding: 11px 12px;
             }
-            QPushButton#navButton:hover { background: #28574c; }
+            QPushButton#navButton:hover { background: #315d4c; }
             QPushButton#navButton[active="true"] {
-                background: #d9eee3; color: #173d35; font-weight: 700;
+                background: #f1dfc8; color: #533f2e; font-weight: 700;
             }
-            QLabel#pageTitle { font-size: 25px; font-weight: 700; color: #1b3f36; }
-            QLabel#sectionTitle { font-size: 17px; font-weight: 600; margin-top: 16px; }
+            QLabel#pageTitle { font-size: 25px; font-weight: 700; color: #244b3b; }
+            QLabel#sectionTitle { font-size: 17px; font-weight: 600; margin-top: 16px; color: #355c49; }
             QFrame#statCard {
-                background: white; border: 1px solid #e6ece9; border-radius: 10px;
+                background: #fffdf9; border: 1px solid #ece5d9; border-radius: 12px;
             }
             QLabel#statValue { font-size: 30px; font-weight: 700; }
             QPushButton {
-                background: white; border: 1px solid #d5dfda; border-radius: 6px;
+                background: #fffdf9; border: 1px solid #ded8cc; border-radius: 7px;
                 padding: 8px 13px;
             }
-            QPushButton:hover { background: #edf3f0; }
+            QPushButton:hover { background: #f5eee3; }
             QPushButton#primaryButton {
-                background: #287b68; color: white; border: 0; font-weight: 600;
+                background: #d7775c; color: white; border: 0; font-weight: 600;
                 padding: 9px 14px;
             }
-            QPushButton#primaryButton:hover { background: #1c6555; }
+            QPushButton#primaryButton:hover { background: #bd6047; }
             QPushButton#dangerButton { color: #ae3e3e; }
             QLineEdit, QComboBox, QDateEdit, QTimeEdit, QDoubleSpinBox, QTextEdit {
-                background: white; border: 1px solid #d5dfda; border-radius: 5px;
+                background: #fffdf9; border: 1px solid #ded8cc; border-radius: 6px;
                 padding: 7px;
             }
             QTableWidget {
-                background: white; alternate-background-color: #f7faf8;
-                border: 1px solid #e1e8e4; border-radius: 7px; gridline-color: #edf1ef;
+                background: #fffdf9; alternate-background-color: #f8f5ee;
+                border: 1px solid #e8e1d5; border-radius: 9px; gridline-color: #f0ece4;
+                selection-background-color: #e7f0e8; selection-color: #244b3b;
             }
             QHeaderView::section {
-                background: #edf3f0; border: 0; padding: 9px; font-weight: 600;
+                background: #f1ede4; color: #45614f; border: 0; padding: 9px; font-weight: 700;
             }
+            QTabBar::tab {
+                background: #eee9df; padding: 9px 16px; margin-right: 3px;
+                border-top-left-radius: 7px; border-top-right-radius: 7px;
+            }
+            QTabBar::tab:selected { background: #fffdf9; color: #bd6047; font-weight: 700; }
+            QCheckBox { spacing: 8px; color: #355c49; }
+            QCheckBox::indicator { width: 18px; height: 18px; }
             """
         )
         self.dashboard.refresh()
@@ -262,6 +307,9 @@ class MainWindow(QMainWindow):
             self._has_permission("inventory.manage")
         )
         self.operations.set_settings_enabled(self._has_permission("settings.manage"))
+        self.memberships.set_manage_enabled(
+            self._has_permission("membership.manage")
+        )
         self.suppliers.set_manage_enabled(self._has_permission("imports.manage"))
         self.customers.set_manage_enabled(self._has_permission("sales.manage"))
         self.reservations.set_manage_enabled(self._has_permission("sales.manage"))

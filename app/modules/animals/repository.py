@@ -16,22 +16,34 @@ class AnimalRepository:
         if search.strip():
             pattern = f"%{search.strip()}%"
             conditions.append(
-                "(animal_code LIKE ? OR name LIKE ? OR species LIKE ? OR breed LIKE ?)"
+                "(a.animal_code LIKE ? OR a.name LIKE ? OR a.species LIKE ? OR a.breed LIKE ?)"
             )
             parameters.extend((pattern, pattern, pattern, pattern))
         if status:
-            conditions.append("status = ?")
+            conditions.append("a.status = ?")
             parameters.append(status)
 
         where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
         return self.connection.execute(
-            f"SELECT * FROM animals {where_clause} ORDER BY id DESC",
+            f"""
+            SELECT a.*, r.received_at, r.received_by
+            FROM animals a
+            LEFT JOIN animal_intake_receipts r ON r.animal_id = a.id
+            {where_clause}
+            ORDER BY a.id DESC
+            """,
             parameters,
         ).fetchall()
 
     def get_animal(self, animal_id: int) -> sqlite3.Row | None:
         return self.connection.execute(
-            "SELECT * FROM animals WHERE id = ?", (animal_id,)
+            """
+            SELECT a.*, r.received_at, r.received_by
+            FROM animals a
+            LEFT JOIN animal_intake_receipts r ON r.animal_id = a.id
+            WHERE a.id = ?
+            """,
+            (animal_id,),
         ).fetchone()
 
     def save_animal(self, values: dict[str, Any], animal_id: int | None = None) -> int:

@@ -163,13 +163,25 @@ class CreateUserDialog(QDialog):
 
 
 class ChangePasswordDialog(QDialog):
-    def __init__(self, parent: QWidget | None = None) -> None:
+    def __init__(
+        self, parent: QWidget | None = None, *, required: bool = False
+    ) -> None:
         super().__init__(parent)
-        self.setWindowTitle("Đổi mật khẩu")
+        self.setWindowTitle("Đặt mật khẩu mới" if required else "Đổi mật khẩu")
         layout = QVBoxLayout(self)
+        if required:
+            layout.addWidget(
+                QLabel(
+                    "Tài khoản đang dùng mật khẩu tạm admin. "
+                    "Bạn phải đặt mật khẩu mới trước khi tiếp tục."
+                )
+            )
         form = QFormLayout()
         self.current_password = QLineEdit()
         self.current_password.setEchoMode(QLineEdit.EchoMode.Password)
+        if required:
+            self.current_password.setText("admin")
+            self.current_password.setReadOnly(True)
         self.new_password = QLineEdit()
         self.new_password.setEchoMode(QLineEdit.EchoMode.Password)
         self.confirm_password = QLineEdit()

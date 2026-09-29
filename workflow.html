@@ -3,126 +3,153 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#153c35">
-  <title>Sơ đồ workflow — Quản lý thú cưng</title>
+  <meta name="theme-color" content="#16483b">
+  <meta name="description" content="Sơ đồ vận hành các phân hệ của PetCare — ứng dụng quản lý cửa hàng thú cưng.">
+  <title>Workflow vận hành — PetCare</title>
   <style>
     :root {
       color-scheme: light;
-      --ink: #20352f;
-      --muted: #64756f;
-      --line: #d7e3dd;
-      --canvas: #f3f7f4;
-      --green: #24715d;
-      --green-soft: #e7f4ed;
-      --blue: #3468a0;
-      --blue-soft: #eaf2fc;
-      --amber: #9a6417;
-      --amber-soft: #fff4dc;
-      --red: #a34343;
-      --red-soft: #fff0ef;
-      --violet: #6952a1;
-      --violet-soft: #f2edfb;
-      --shadow: 0 16px 44px rgb(23 56 45 / 8%);
+      --ink: #18352d;
+      --muted: #60766d;
+      --line: #dbe7e0;
+      --paper: #fff;
+      --canvas: #f1f6f2;
+      --green: #24745d;
+      --green-dark: #16483b;
+      --green-soft: #e7f4ec;
+      --blue: #386b9e;
+      --blue-soft: #eaf2fb;
+      --amber: #986517;
+      --amber-soft: #fff5df;
+      --red: #a34b45;
+      --red-soft: #fff0ed;
+      --violet: #6d579e;
+      --violet-soft: #f2edfa;
+      --shadow: 0 18px 46px rgb(22 61 47 / 8%);
       font-family: "Segoe UI", "Noto Sans", Arial, sans-serif;
       color: var(--ink);
       background: var(--canvas);
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
     }
 
-    * { box-sizing: border-box; }
-    body { margin: 0; min-width: 320px; }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { min-width: 320px; margin: 0; }
     button { font: inherit; }
-    .hero {
-      color: #f7fbf8;
-      background:
-        radial-gradient(ellipse at 85% 5%, rgb(104 171 137 / 34%), transparent 38%),
-        linear-gradient(125deg, #12372f, #1e5949 62%, #28715a);
-      padding: 42px max(24px, calc((100vw - 1240px) / 2)) 34px;
+    code {
+      border-radius: 5px;
+      padding: 2px 5px;
+      color: #205842;
+      background: #e9f3ed;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: .92em;
     }
-    .hero-inner { max-width: 1240px; margin: 0 auto; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 48px 24px 38px;
+      color: #f8fcf9;
+      background:
+        radial-gradient(ellipse at 83% 4%, rgb(132 195 157 / 30%), transparent 34%),
+        radial-gradient(ellipse at 5% 100%, rgb(42 110 83 / 50%), transparent 45%),
+        linear-gradient(125deg, #12392f, #1b5947 58%, #2a785c);
+    }
+    .hero-inner, main, footer { width: min(1220px, 100%); margin-inline: auto; }
     .eyebrow {
       margin: 0 0 12px;
-      color: #b8d8c8;
-      font-size: 12px;
+      color: #b9dcc9;
+      font-size: 11px;
       font-weight: 800;
       letter-spacing: .16em;
       text-transform: uppercase;
     }
-    h1 { max-width: 780px; margin: 0; font-size: clamp(30px, 5vw, 48px); line-height: 1.1; }
-    .intro { max-width: 780px; margin: 14px 0 0; color: #d1e3da; line-height: 1.65; }
-    .hero-meta { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 23px; }
-    .hero-meta span {
-      padding: 7px 11px;
-      border: 1px solid rgb(225 245 235 / 23%);
-      border-radius: 999px;
-      color: #e2f0e8;
-      background: rgb(255 255 255 / 7%);
-      font-size: 12px;
+    h1 {
+      max-width: 820px;
+      margin: 0;
+      font-size: clamp(31px, 5.3vw, 52px);
+      letter-spacing: -.035em;
+      line-height: 1.08;
     }
-    main { max-width: 1240px; margin: 0 auto; padding: 24px; }
+    .intro {
+      max-width: 760px;
+      margin: 16px 0 0;
+      color: #d7e9df;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 23px; }
+    .hero-meta span {
+      border: 1px solid rgb(229 246 236 / 24%);
+      border-radius: 999px;
+      padding: 7px 11px;
+      color: #e8f5ed;
+      background: rgb(255 255 255 / 7%);
+      font-size: 11px;
+      font-weight: 650;
+    }
+    main { padding: 22px 24px 34px; }
     .toolbar {
       position: sticky;
+      z-index: 10;
       top: 0;
-      z-index: 20;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: nowrap;
-      gap: 14px;
-      margin: -24px -24px 18px;
-      padding: 12px 24px;
-      border-bottom: 1px solid rgb(215 227 221 / 85%);
-      background: rgb(243 247 244 / 94%);
+      gap: 12px;
+      margin: -22px -24px 18px;
+      border-bottom: 1px solid rgb(215 229 220 / 90%);
+      padding: 10px 24px;
+      background: rgb(241 246 242 / 94%);
       backdrop-filter: blur(14px);
     }
     .tabs {
       display: flex;
       min-width: 0;
-      flex: 1 1 0;
-      flex-wrap: nowrap;
-      gap: 7px;
+      flex: 1;
+      gap: 6px;
       overflow-x: auto;
+      scrollbar-color: #b8cfc0 transparent;
       scrollbar-width: thin;
-      scrollbar-color: #b8ccc0 transparent;
     }
     .tab, .print-button {
       min-height: 38px;
+      flex: 0 0 auto;
       border: 1px solid var(--line);
       border-radius: 9px;
       padding: 7px 11px;
       color: var(--ink);
-      background: white;
+      background: #fff;
       cursor: pointer;
-      transition: .16s ease;
+      white-space: nowrap;
+      transition: border-color .15s ease, transform .15s ease, background .15s ease;
     }
-    .tab { flex: 0 0 auto; white-space: nowrap; }
-    .tab:hover, .print-button:hover { border-color: #98bba8; transform: translateY(-1px); }
-    .tab:focus-visible, .print-button:focus-visible {
-      outline: 3px solid rgb(36 113 93 / 32%);
+    .tab:hover, .print-button:hover { transform: translateY(-1px); border-color: #9bbba8; }
+    .tab:focus-visible, .print-button:focus-visible, a:focus-visible {
+      outline: 3px solid rgb(36 116 93 / 35%);
       outline-offset: 2px;
     }
     .tab[aria-selected="true"] {
       border-color: var(--green);
-      color: white;
+      color: #fff;
       background: var(--green);
     }
-    .toolbar-actions { display: flex; flex: 0 0 auto; align-items: center; gap: 10px; }
-    .panel-counter {
-      min-width: 46px;
+    .toolbar-actions { display: flex; flex: 0 0 auto; align-items: center; gap: 8px; }
+    .counter {
+      min-width: 44px;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
       font-variant-numeric: tabular-nums;
-      font-weight: 700;
+      font-weight: 800;
       text-align: center;
     }
-    .print-button { flex: 0 0 auto; font-weight: 700; }
-    .flow-panel {
-      border: 1px solid #e0e9e3;
+    .print-button { font-weight: 750; }
+    .panel {
+      border: 1px solid #e0eae3;
       border-radius: 18px;
       padding: clamp(18px, 3vw, 30px);
-      background: white;
+      background: var(--paper);
       box-shadow: var(--shadow);
     }
-    .flow-panel[hidden] { display: none; }
+    .panel[hidden] { display: none; }
     .panel-heading {
       display: flex;
       align-items: flex-start;
@@ -130,564 +157,674 @@
       gap: 20px;
       margin-bottom: 23px;
     }
-    .panel-heading h2 { margin: 0; font-size: clamp(21px, 3vw, 28px); }
-    .panel-heading p { max-width: 650px; margin: 7px 0 0; color: var(--muted); line-height: 1.55; }
-    .panel-index {
-      flex: 0 0 auto;
+    .panel-heading h2 { margin: 0; font-size: clamp(21px, 3vw, 29px); letter-spacing: -.02em; }
+    .panel-heading p { max-width: 760px; margin: 8px 0 0; color: var(--muted); line-height: 1.6; }
+    .panel-number {
       display: grid;
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
       place-items: center;
       border-radius: 13px;
       color: var(--green);
       background: var(--green-soft);
-      font-weight: 800;
+      font-weight: 850;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
     }
     .step {
       position: relative;
       min-width: 0;
-      max-width: none;
-      flex: 1 1 0;
-      border: 1px solid #e3ebe6;
+      border: 1px solid #e1eae4;
       border-radius: 13px;
-      padding: 14px 15px;
+      padding: 15px;
       background: #fff;
-      box-shadow: 0 3px 10px rgb(23 56 45 / 3%);
-      transition: transform .16s ease, box-shadow .16s ease;
+      box-shadow: 0 3px 12px rgb(26 59 44 / 3%);
+      transition: transform .15s ease, box-shadow .15s ease;
     }
-    .step:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgb(23 56 45 / 8%);
-    }
+    .step:hover { transform: translateY(-2px); box-shadow: 0 9px 20px rgb(26 59 44 / 8%); }
     .step h3 { margin: 0; font-size: 14px; line-height: 1.4; }
-    .step p { margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .step p { margin: 7px 0 0; color: var(--muted); font-size: 12px; line-height: 1.58; }
     .step .tag {
       display: inline-flex;
       margin-top: 10px;
-      padding: 4px 7px;
       border-radius: 6px;
-      color: #49675b;
-      background: #edf4ef;
+      padding: 4px 7px;
+      color: #476a58;
+      background: #edf5ef;
       font-size: 10px;
       font-weight: 800;
-      letter-spacing: .03em;
+      letter-spacing: .035em;
       text-transform: uppercase;
     }
-    .step.start, .step.finish { border-color: #b7d7c5; background: var(--green-soft); }
-    .step.action { border-color: #c5d6ec; background: var(--blue-soft); }
-    .step.decision { border-color: #eed49b; background: var(--amber-soft); }
-    .step.warning { border-color: #efc5c1; background: var(--red-soft); }
-    .step.system { border-color: #d8ccef; background: var(--violet-soft); }
-    .flow-row {
-      display: flex;
-      align-items: stretch;
-      justify-content: center;
-      gap: 12px;
-    }
-    .arrow {
-      align-self: center;
-      flex: 0 0 25px;
-      color: #78a08c;
-      font-size: 23px;
-      font-weight: 700;
-      text-align: center;
-    }
-    .flow-stack { display: grid; gap: 12px; }
-    .branch-title {
-      margin: 18px 0 10px;
+    .start, .finish { border-color: #b9d9c6; background: var(--green-soft); }
+    .action { border-color: #c8d9ed; background: var(--blue-soft); }
+    .decision { border-color: #eed69f; background: var(--amber-soft); }
+    .warning { border-color: #efc6c1; background: var(--red-soft); }
+    .system { border-color: #d9cdef; background: var(--violet-soft); }
+    .section-label {
+      margin: 23px 0 10px;
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: .08em;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .1em;
       text-transform: uppercase;
     }
     .branches {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 13px;
+      gap: 12px;
     }
     .branch {
+      min-width: 0;
       border: 1px solid var(--line);
       border-radius: 13px;
-      padding: 14px;
+      padding: 13px;
       background: #fbfdfb;
     }
     .branch-label {
       display: inline-flex;
       margin-bottom: 10px;
-      padding: 4px 8px;
       border-radius: 999px;
+      padding: 5px 9px;
       color: var(--green);
       background: var(--green-soft);
-      font-size: 11px;
-      font-weight: 800;
+      font-size: 10px;
+      font-weight: 850;
     }
-    .branch-label.warn { color: var(--amber); background: var(--amber-soft); }
-    .branch-label.stop { color: var(--red); background: var(--red-soft); }
-    .branch .step { min-width: 0; max-width: none; }
-    .branch .down-arrow { padding: 5px 0; color: #78a08c; font-size: 20px; text-align: center; }
+    .branch-label.amber { color: var(--amber); background: var(--amber-soft); }
+    .branch-label.red { color: var(--red); background: var(--red-soft); }
+    .branch .step { padding: 13px; }
+    .down { padding: 5px 0; color: #7da18c; font-size: 19px; text-align: center; }
     .merge {
       width: fit-content;
-      margin: 15px auto 0;
-      border: 1px dashed #a8c2b3;
+      max-width: 100%;
+      margin: 16px auto 0;
+      border: 1px dashed #aac6b4;
       border-radius: 999px;
       padding: 9px 14px;
-      color: #456657;
+      color: #436653;
       background: #f4faf6;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 750;
+      line-height: 1.5;
       text-align: center;
     }
-    .rule-note {
-      margin-top: 19px;
-      border-left: 3px solid #d6ad56;
+    .note {
+      margin-top: 17px;
+      border-left: 3px solid #d5ae5b;
       border-radius: 0 9px 9px 0;
       padding: 11px 14px;
-      color: #665431;
-      background: #fff9ea;
+      color: #655334;
+      background: #fff9e9;
       font-size: 12px;
-      line-height: 1.6;
+      line-height: 1.65;
     }
-    .legend { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 20px; color: var(--muted); font-size: 11px; }
-    .legend span { display: inline-flex; align-items: center; gap: 7px; }
-    .swatch { width: 12px; height: 12px; border: 1px solid #d5e0d9; border-radius: 4px; background: white; }
-    .swatch.green { border-color: #b7d7c5; background: var(--green-soft); }
-    .swatch.blue { border-color: #c5d6ec; background: var(--blue-soft); }
-    .swatch.amber { border-color: #eed49b; background: var(--amber-soft); }
-    .swatch.red { border-color: #efc5c1; background: var(--red-soft); }
-    .swatch.violet { border-color: #d8ccef; background: var(--violet-soft); }
+    .note.red-note { border-color: #d6877e; color: #71423e; background: var(--red-soft); }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .info-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      background: #f9fcfa;
+    }
+    .info-card h3 { margin: 0; font-size: 13px; }
+    .info-card p, .info-card li { color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .info-card p { margin: 6px 0 0; }
+    .info-card ul { margin: 7px 0 0; padding-left: 18px; }
     .architecture {
       display: grid;
       grid-template-columns: 1fr auto 1fr auto 1fr;
       align-items: center;
-      gap: 14px;
-      margin-top: 22px;
+      gap: 12px;
+      margin-top: 17px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      background: #f9fcfa;
     }
-    .architecture .step { min-width: 0; max-width: none; text-align: center; }
-    .arch-arrow { color: #78a08c; font-size: 24px; text-align: center; }
-    footer { max-width: 1240px; margin: 0 auto; padding: 0 24px 28px; color: var(--muted); font-size: 12px; }
+    .arch-node { text-align: center; }
+    .arch-node strong { display: block; font-size: 13px; }
+    .arch-node span { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .arch-arrow { color: #79a08b; font-size: 20px; font-weight: 800; }
+    .legend { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 20px; color: var(--muted); font-size: 11px; }
+    .legend span { display: inline-flex; align-items: center; gap: 7px; }
+    .swatch { width: 12px; height: 12px; border: 1px solid #d6e1da; border-radius: 4px; background: #fff; }
+    .swatch.green { border-color: #b9d9c6; background: var(--green-soft); }
+    .swatch.blue { border-color: #c8d9ed; background: var(--blue-soft); }
+    .swatch.amber { border-color: #eed69f; background: var(--amber-soft); }
+    .swatch.red { border-color: #efc6c1; background: var(--red-soft); }
+    .swatch.violet { border-color: #d9cdef; background: var(--violet-soft); }
+    footer { padding: 0 24px 28px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+    footer p { margin: 0; }
 
-    @media (max-width: 1040px) and (min-width: 701px) {
-      .flow-row:has(> article.step:nth-of-type(2)) {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 18px minmax(0, 1fr);
-        gap: 8px;
-      }
-      .flow-row:has(> article.step:nth-of-type(3)) {
-        display: grid;
-        grid-template-columns:
-          minmax(0, 1fr) 18px minmax(0, 1fr) 18px minmax(0, 1fr);
-        gap: 8px;
-      }
-      .flow-row:has(> article.step:nth-of-type(4)) {
-        display: grid;
-        grid-template-columns:
-          minmax(0, 1fr) 18px minmax(0, 1fr) 18px
-          minmax(0, 1fr) 18px minmax(0, 1fr);
-        gap: 8px;
-      }
-      .flow-row .arrow { flex: initial; font-size: 19px; }
-      .flow-row .step { padding: 12px 11px; }
-      .flow-row .step h3 { font-size: 13px; }
-      .flow-row .step p { font-size: 11px; }
+    @media (max-width: 920px) {
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .branches, .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .toolbar { align-items: stretch; flex-direction: column; }
+      .toolbar-actions { justify-content: flex-end; }
     }
-
-    @media (max-width: 800px) {
-      main { padding: 16px; }
-      .toolbar { margin: -16px -16px 16px; padding: 10px 16px; }
-      .flow-row { flex-direction: column; gap: 9px; }
-      .flow-row > .step { max-width: none; }
-      .arrow { transform: rotate(90deg); }
-      .branches { grid-template-columns: 1fr; }
-      .architecture { grid-template-columns: 1fr; }
-      .arch-arrow { transform: rotate(90deg); }
-      .panel-heading { margin-bottom: 18px; }
-    }
-    @media (max-width: 560px) {
-      .hero { padding: 30px 18px 24px; }
-      .eyebrow { font-size: 10px; letter-spacing: .12em; }
+    @media (max-width: 620px) {
+      .hero { padding: 34px 18px 28px; }
       .intro { font-size: 14px; }
-      .hero-meta { gap: 6px; margin-top: 16px; }
-      .hero-meta span { padding: 6px 8px; font-size: 10px; }
-      main { padding: 12px; }
-      .toolbar { margin: -12px -12px 13px; padding: 9px 12px; gap: 8px; }
-      .tabs { gap: 6px; }
-      .tab { min-height: 35px; padding: 6px 9px; font-size: 12px; }
-      .toolbar-actions { gap: 6px; }
-      .panel-counter { min-width: 38px; font-size: 11px; }
-      .print-button { min-height: 35px; padding: 6px 8px; font-size: 11px; }
-      .flow-panel { border-radius: 14px; padding: 16px; }
+      main { padding: 14px 12px 24px; }
+      .toolbar { margin: -14px -12px 13px; padding: 9px 12px; gap: 7px; }
+      .tab { min-height: 35px; padding: 6px 9px; font-size: 11px; }
+      .counter { display: none; }
+      .print-button { min-height: 35px; padding: 6px 9px; font-size: 11px; }
+      .panel { border-radius: 14px; padding: 16px; }
+      .panel-heading { margin-bottom: 17px; }
+      .steps, .branches, .cards { grid-template-columns: 1fr; }
+      .architecture { grid-template-columns: 1fr; gap: 7px; }
+      .arch-arrow { transform: rotate(90deg); }
+      .merge { border-radius: 12px; }
+      footer { padding-inline: 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
     }
     @media print {
-      :root { background: white; }
-      .hero { padding: 18px 24px; print-color-adjust: exact; }
-      .hero h1 { font-size: 28px; }
-      main { max-width: none; padding: 12px 0; }
-      .toolbar, footer { display: none; }
-      .flow-panel, .flow-panel[hidden] {
+      :root { background: #fff; }
+      body { background: #fff; }
+      .hero { padding: 18px 22px; print-color-adjust: exact; }
+      .hero h1 { font-size: 27px; }
+      .intro { margin-top: 7px; font-size: 12px; }
+      .hero-meta { margin-top: 10px; }
+      main { width: 100%; padding: 10px 0; }
+      .toolbar, footer { display: none !important; }
+      .panel, .panel[hidden] {
         display: block !important;
-        margin: 0 0 14px;
-        padding: 14px;
+        margin: 0 0 10px;
+        border-radius: 0;
+        padding: 12px;
         box-shadow: none;
-        break-inside: avoid;
+        break-inside: auto;
       }
-      .panel-heading { margin-bottom: 12px; }
-      .step, .branch { break-inside: avoid; print-color-adjust: exact; }
-      .branches { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .panel-heading { margin-bottom: 11px; }
+      .panel-heading h2 { font-size: 18px; }
+      .panel-heading p, .step p, .info-card p, .info-card li { font-size: 10px; }
+      .step, .branch, .info-card { break-inside: avoid; print-color-adjust: exact; }
+      .step { padding: 10px; }
+      .branches, .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .architecture { break-inside: avoid; }
+      .merge { margin-top: 9px; }
+      @page { margin: 12mm; }
     }
   </style>
 </head>
 <body>
   <header class="hero">
     <div class="hero-inner">
-      <p class="eyebrow">Pet Store Management · Python / PySide6 / SQLite</p>
-      <h1>Sơ đồ workflow hệ thống quản lý thú cưng</h1>
+      <p class="eyebrow">PetCare · Python / PySide6 / SQLite</p>
+      <h1>Workflow vận hành cửa hàng thú cưng</h1>
       <p class="intro">
-        Luồng vận hành từ đăng nhập và tiếp nhận động vật đến chăm sóc, đặt chỗ,
-        bán hàng, quản lý vật tư, báo cáo và sao lưu. Chọn từng tab để xem chi tiết;
-        có thể in hoặc lưu thành PDF ngay từ trình duyệt.
+        Sơ đồ hướng dẫn các luồng thực tế trong ứng dụng desktop: từ đăng nhập,
+        tiếp nhận và chăm sóc động vật đến bán hàng, dịch vụ, quản lý kho và sao lưu.
+        Chọn chủ đề để xem từng quy trình; có thể in hoặc lưu toàn bộ thành PDF.
       </p>
-      <div class="hero-meta" aria-label="Thông tin kiến trúc">
-        <span>Ứng dụng desktop</span>
-        <span>PySide6 GUI</span>
-        <span>SQLite cục bộ</span>
+      <div class="hero-meta" aria-label="Thông tin hệ thống">
+        <span>Ứng dụng desktop cục bộ</span>
+        <span>17 phân hệ</span>
+        <span>SQLite · Không cần backend</span>
         <span>Phân quyền theo vai trò</span>
-        <span>15 module chức năng</span>
+        <span>Catalog demo · Tồn ban đầu bằng 0</span>
       </div>
     </div>
   </header>
 
   <main>
-    <div class="toolbar">
-      <div class="tabs" role="tablist" aria-label="Các workflow">
-        <button class="tab" id="tab-overview" role="tab" aria-controls="flow-overview" aria-selected="true">Tổng thể</button>
-        <button class="tab" id="tab-intake" role="tab" aria-controls="flow-intake" aria-selected="false">Tiếp nhận</button>
-        <button class="tab" id="tab-care" role="tab" aria-controls="flow-care" aria-selected="false">Chăm sóc</button>
-        <button class="tab" id="tab-sales" role="tab" aria-controls="flow-sales" aria-selected="false">Đặt chỗ & bán</button>
-        <button class="tab" id="tab-stock" role="tab" aria-controls="flow-stock" aria-selected="false">Tồn kho</button>
-        <button class="tab" id="tab-operations" role="tab" aria-controls="flow-operations" aria-selected="false">Báo cáo & vận hành</button>
+    <nav class="toolbar" aria-label="Điều hướng workflow">
+      <div class="tabs" role="tablist" aria-label="Các quy trình">
+        <button class="tab" id="tab-overview" role="tab" aria-controls="panel-overview" aria-selected="true" tabindex="0">Tổng thể</button>
+        <button class="tab" id="tab-security" role="tab" aria-controls="panel-security" aria-selected="false" tabindex="-1">Đăng nhập & quyền</button>
+        <button class="tab" id="tab-intake" role="tab" aria-controls="panel-intake" aria-selected="false" tabindex="-1">Nhập & tiếp nhận</button>
+        <button class="tab" id="tab-care" role="tab" aria-controls="panel-care" aria-selected="false" tabindex="-1">Sức khỏe & chăm sóc</button>
+        <button class="tab" id="tab-sales" role="tab" aria-controls="panel-sales" aria-selected="false" tabindex="-1">Khách & bán hàng</button>
+        <button class="tab" id="tab-inventory" role="tab" aria-controls="panel-inventory" aria-selected="false" tabindex="-1">Kho & thức ăn</button>
+        <button class="tab" id="tab-services" role="tab" aria-controls="panel-services" aria-selected="false" tabindex="-1">Dịch vụ & hội viên</button>
+        <button class="tab" id="tab-recommendations" role="tab" aria-controls="panel-recommendations" aria-selected="false" tabindex="-1">Gợi ý sản phẩm</button>
+        <button class="tab" id="tab-operations" role="tab" aria-controls="panel-operations" aria-selected="false" tabindex="-1">Báo cáo & vận hành</button>
       </div>
       <div class="toolbar-actions">
-        <span class="panel-counter" id="panel-counter" role="status" aria-live="polite">1 / 6</span>
-        <button class="print-button" type="button" onclick="window.print()">In / lưu PDF</button>
+        <span class="counter" id="panel-counter" role="status" aria-live="polite">1 / 9</span>
+        <button class="print-button" type="button" id="print-button">In / lưu PDF</button>
       </div>
-    </div>
+    </nav>
 
-    <section class="flow-panel" id="flow-overview" role="tabpanel" aria-labelledby="tab-overview">
+    <section class="panel" id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">
       <div class="panel-heading">
         <div>
-          <h2>Workflow tổng thể</h2>
-          <p>Điểm vào của nhân viên, các nhóm nghiệp vụ và vòng đời dữ liệu chính của một cá thể động vật.</p>
+          <h2>Toàn cảnh hệ thống</h2>
+          <p>Ứng dụng desktop lưu dữ liệu tại máy cửa hàng. Mỗi phân hệ thao tác trên cùng cơ sở dữ liệu và quyền được kiểm tra ở tầng dữ liệu.</p>
         </div>
-        <span class="panel-index">01</span>
+        <span class="panel-number">01</span>
       </div>
-      <div class="flow-row">
+      <div class="steps">
         <article class="step start">
-          <h3>Khởi chạy ứng dụng</h3>
-          <p><code>main.py</code> mở SQLite trong thư mục dữ liệu người dùng.</p>
-          <span class="tag">Khởi động</span>
+          <h3>Khởi chạy</h3>
+          <p><code>main.py</code> khởi tạo giao diện PySide6, SQLite, schema và dữ liệu catalog mẫu.</p>
+          <span class="tag">Windows desktop</span>
         </article>
-        <span class="arrow" aria-hidden="true">→</span>
-        <article class="step decision">
-          <h3>Đã có tài khoản?</h3>
-          <p>Lần đầu: tạo tài khoản quản trị. Các lần sau: chuyển đến đăng nhập.</p>
-          <span class="tag">Xác thực</span>
-        </article>
-        <span class="arrow" aria-hidden="true">→</span>
         <article class="step action">
-          <h3>Đăng nhập & kiểm tra quyền</h3>
-          <p>Vai trò quyết định trang và hành động được phép; thao tác ghi được lưu audit.</p>
-          <span class="tag">RBAC + Audit</span>
+          <h3>Đăng nhập an toàn</h3>
+          <p>Tài khoản xác thực bằng mật khẩu đã băm; người dùng thấy các phân hệ phù hợp vai trò.</p>
+          <span class="tag">Tài khoản & quyền</span>
         </article>
-        <span class="arrow" aria-hidden="true">→</span>
         <article class="step system">
-          <h3>Dashboard & điều hướng</h3>
-          <p>PySide6 mở các trang nghiệp vụ; repository truy cập dữ liệu SQLite.</p>
-          <span class="tag">Giao diện desktop</span>
+          <h3>Thao tác nghiệp vụ</h3>
+          <p>Hồ sơ, kho, bán hàng, lịch hẹn và báo cáo dùng chung SQLite cục bộ.</p>
+          <span class="tag">17 phân hệ</span>
+        </article>
+        <article class="step finish">
+          <h3>Lưu vết & sao lưu</h3>
+          <p>Thao tác quan trọng có audit; quản trị viên tạo bản sao lưu và kiểm soát tệp dữ liệu.</p>
+          <span class="tag">Kiểm soát vận hành</span>
         </article>
       </div>
-
-      <p class="branch-title">Các luồng nghiệp vụ liên kết</p>
+      <div class="architecture" aria-label="Kiến trúc ứng dụng">
+        <div class="arch-node"><strong>PySide6 UI</strong><span>17 trang nghiệp vụ · desktop</span></div>
+        <span class="arch-arrow" aria-hidden="true">→</span>
+        <div class="arch-node"><strong>Repositories & services</strong><span>Kiểm tra quy tắc và quyền truy cập</span></div>
+        <span class="arch-arrow" aria-hidden="true">→</span>
+        <div class="arch-node"><strong>SQLite</strong><span>Hồ sơ, giao dịch, lịch sử và cấu hình</span></div>
+      </div>
+      <p class="section-label">Các vòng đời nghiệp vụ chính</p>
       <div class="branches">
         <div class="branch">
-          <span class="branch-label">Hồ sơ động vật</span>
-          <div class="step action"><h3>Nhập hồ sơ 25 đặc điểm</h3><p>Định danh, nguồn gốc, nhận dạng, sức khỏe và nhu cầu chăm sóc.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step system"><h3>Chuồng trại & lịch sử</h3><p>Kiểm tra sức chứa/loài, ghi nhận gán hoặc chuyển chuồng.</p></div>
-        </div>
-        <div class="branch">
-          <span class="branch-label warn">Theo dõi hằng ngày</span>
-          <div class="step action"><h3>Sức khỏe & chăm sóc</h3><p>Hồ sơ khám, lịch nhiệm vụ và checklist theo cá thể/ngày.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step system"><h3>Thức ăn & thuốc</h3><p>Xuất sử dụng theo lô còn hạn; có thể liên kết với cá thể.</p></div>
+          <span class="branch-label">Động vật tại cửa hàng</span>
+          <div class="step action"><h3>Nhà cung cấp → lô nhập</h3><p>Tạo hồ sơ cá thể và lưu chứng từ ảnh xác nhận đã nhận bé.</p></div>
+          <div class="down">↓</div>
+          <div class="step system"><h3>Kiểm tra → chăm sóc</h3><p>Ghi kết quả đầu vào, sức khỏe, chuồng và nhiệm vụ chăm sóc.</p></div>
         </div>
         <div class="branch">
           <span class="branch-label">Khách hàng & thương mại</span>
-          <div class="step action"><h3>Khách → giữ chỗ → đơn bán</h3><p>Ghi nhận tiền cọc, thanh toán, công nợ và hoàn tiền.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step finish"><h3>Lịch sử được giữ lại</h3><p>Đơn đủ tiền chuyển cá thể sang Đã bán; không xóa hồ sơ.</p></div>
+          <div class="step action"><h3>Khách → đặt chỗ / đơn</h3><p>Ghi cọc, thanh toán, hội viên hoặc dịch vụ gắn khách và thú cưng.</p></div>
+          <div class="down">↓</div>
+          <div class="step finish"><h3>Hoàn tất có kiểm soát</h3><p>Trạng thái bán và thanh toán được lưu cùng lịch sử; tồn chỉ trừ đúng thời điểm.</p></div>
         </div>
-      </div>
-
-      <div class="architecture" aria-label="Kiến trúc phần mềm">
-        <div class="step system"><h3>PySide6 UI</h3><p>Trang chức năng, dialog và điều hướng.</p></div>
-        <span class="arch-arrow" aria-hidden="true">⇄</span>
-        <div class="step action"><h3>Database Facade + Repositories</h3><p>Quy tắc nghiệp vụ, kiểm tra quyền và nhật ký.</p></div>
-        <span class="arch-arrow" aria-hidden="true">⇄</span>
-        <div class="step start"><h3>SQLite</h3><p>Hồ sơ, lịch sử sức khỏe, đơn bán và tồn kho.</p></div>
+        <div class="branch">
+          <span class="branch-label">Vật tư & phân tích</span>
+          <div class="step action"><h3>SKU → nhập lô thật</h3><p>Catalog mẫu không tự tạo số lượng tồn; nhân viên ghi lô hàng thực nhận.</p></div>
+          <div class="down">↓</div>
+          <div class="step system"><h3>Gợi ý, cảnh báo, báo cáo</h3><p>Dữ liệu tồn và hồ sơ hỗ trợ vận hành; không thay thế quyết định chuyên môn.</p></div>
+        </div>
       </div>
       <div class="legend" aria-label="Chú giải màu">
         <span><i class="swatch green"></i>Bắt đầu / hoàn tất</span>
-        <span><i class="swatch blue"></i>Thao tác</span>
-        <span><i class="swatch amber"></i>Điều kiện / quyết định</span>
-        <span><i class="swatch red"></i>Cảnh báo / ngoại lệ</span>
-        <span><i class="swatch violet"></i>Hệ thống / lưu trữ</span>
+        <span><i class="swatch blue"></i>Nhân viên thao tác</span>
+        <span><i class="swatch violet"></i>Hệ thống xử lý</span>
+        <span><i class="swatch amber"></i>Điều kiện cần kiểm tra</span>
+        <span><i class="swatch red"></i>Cảnh báo / từ chối</span>
       </div>
     </section>
 
-    <section class="flow-panel" id="flow-intake" role="tabpanel" aria-labelledby="tab-intake" hidden>
+    <section class="panel" id="panel-security" role="tabpanel" aria-labelledby="tab-security" tabindex="0" hidden>
       <div class="panel-heading">
         <div>
-          <h2>Nhà cung cấp & tiếp nhận động vật</h2>
-          <p>Mỗi cá thể được kiểm tra riêng; kết quả phân luồng trạng thái và được giữ trong lịch sử lô nhập.</p>
+          <h2>Đăng nhập, phân quyền & nhật ký</h2>
+          <p>Ứng dụng tạo hoặc xác thực tài khoản tại máy. Vai trò giới hạn các trang và hành động, đồng thời tầng dữ liệu kiểm tra lại quyền ghi.</p>
         </div>
-        <span class="panel-index">02</span>
+        <span class="panel-number">02</span>
       </div>
-      <div class="flow-row">
-        <article class="step start"><h3>Chọn nhà cung cấp</h3><p>Chỉ nhà cung cấp đang hoạt động mới được tạo lô.</p><span class="tag">Nhà cung cấp</span></article>
-        <span class="arrow" aria-hidden="true">→</span>
-        <article class="step action"><h3>Tạo lô nhập</h3><p>Ghi mã lô, ngày nhập và thông tin nhà cung cấp.</p><span class="tag">Lô OPEN</span></article>
-        <span class="arrow" aria-hidden="true">→</span>
-        <article class="step action"><h3>Tạo hồ sơ cá thể</h3><p>Ghi mã, tên, loài, giá và thông tin nguồn gốc.</p><span class="tag">PENDING_INSPECTION</span></article>
-        <span class="arrow" aria-hidden="true">→</span>
-        <article class="step decision"><h3>Kiểm tra đầu vào</h3><p>Ghi kết quả, triệu chứng, người kiểm tra và ghi chú.</p><span class="tag">Inspection</span></article>
+      <div class="steps">
+        <article class="step start"><h3>Mở ứng dụng</h3><p>SQLite mặc định nằm trong <code>%LOCALAPPDATA%\PetStoreManagement\pet_store.db</code>.</p></article>
+        <article class="step decision"><h3>Chưa có tài khoản?</h3><p>Lần thiết lập đầu tạo <code>admin / admin</code>. Mật khẩu tạm chỉ để khởi tạo.</p></article>
+        <article class="step action"><h3>Đăng nhập & chọn quyền</h3><p>Vai trò xác định menu; thao tác bị cấm sẽ không được lưu ở repository.</p></article>
+        <article class="step finish"><h3>Đổi mật khẩu tạm</h3><p>Đăng nhập bằng mật khẩu tạm yêu cầu đặt mật khẩu mới ít nhất 10 ký tự trước khi vào hệ thống.</p></article>
       </div>
-      <p class="branch-title">Kết quả kiểm tra quyết định trạng thái tiếp theo</p>
+      <p class="section-label">Quản trị tài khoản</p>
       <div class="branches">
         <div class="branch">
-          <span class="branch-label">Đạt</span>
-          <div class="step finish"><h3>Đưa vào kinh doanh</h3><p>Trạng thái cá thể: AVAILABLE · sức khỏe Bình thường.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step action"><h3>Sắp xếp chỗ ở</h3><p>Chọn chuồng tương thích loài và còn sức chứa.</p></div>
+          <span class="branch-label">Quản trị viên</span>
+          <div class="step action"><h3>Tạo tài khoản nhân viên</h3><p>Nhập tên đăng nhập, tên hiển thị, mật khẩu và vai trò cần thiết.</p></div>
+          <div class="down">↓</div>
+          <div class="step system"><h3>Quản lý vai trò & trạng thái</h3><p>Có thể đổi quyền hoặc khóa/mở tài khoản; không cho khóa quản trị viên hoạt động cuối cùng.</p></div>
         </div>
         <div class="branch">
-          <span class="branch-label warn">Cần theo dõi</span>
-          <div class="step decision"><h3>Cách ly</h3><p>Trạng thái: QUARANTINE · sức khỏe Theo dõi.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step action"><h3>Tái kiểm tra</h3><p>Ghi lần kiểm tra mới; chỉ đưa ra kinh doanh khi phù hợp.</p></div>
+          <span class="branch-label amber">Quên mật khẩu admin</span>
+          <div class="step action"><h3>Chạy khôi phục tại máy được phép</h3><p><code>.\.venv\Scripts\python.exe main.py --reset-admin</code></p></div>
+          <div class="down">↓</div>
+          <div class="step warning"><h3>Đăng nhập admin/admin</h3><p>Lệnh chỉ khôi phục tài khoản quản trị <code>admin</code>, mở khóa và bắt buộc đặt mật khẩu mới.</p></div>
         </div>
         <div class="branch">
-          <span class="branch-label stop">Cần điều trị</span>
-          <div class="step warning"><h3>Chuyển sang điều trị</h3><p>Trạng thái: TREATMENT · sức khỏe Đang điều trị.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step action"><h3>Chăm sóc & khám</h3><p>Theo dõi điều trị trong hồ sơ sức khỏe và nhiệm vụ chăm sóc.</p></div>
+          <span class="branch-label">Audit & bảo mật</span>
+          <div class="step system"><h3>Lưu sự kiện</h3><p>Ghi nhận người thao tác, hành động, hồ sơ liên quan và thời điểm; nhật ký bất biến.</p></div>
+          <div class="down">↓</div>
+          <div class="step warning"><h3>Bảo vệ dữ liệu</h3><p>Không chia sẻ thư mục database; sao lưu định kỳ và không giữ mật khẩu tạm.</p></div>
         </div>
       </div>
-      <div class="merge">Khi mọi cá thể trong lô đã được kiểm tra → lô nhập có thể hoàn tất</div>
-      <div class="rule-note">Không thể thêm cá thể vào lô đã đóng/hủy. Hồ sơ lô và các lần kiểm tra được giữ lại để truy vết; không xóa lịch sử khi nhà cung cấp ngừng hoạt động.</div>
+      <div class="note red-note">Lệnh khôi phục mật khẩu là thao tác quản trị cục bộ. Chỉ chạy trên máy và tài khoản Windows có quyền truy cập dữ liệu cửa hàng. Mật khẩu được lưu dạng hash PBKDF2-HMAC-SHA256 kèm salt, không lưu dạng rõ.</div>
     </section>
 
-    <section class="flow-panel" id="flow-care" role="tabpanel" aria-labelledby="tab-care" hidden>
+    <section class="panel" id="panel-intake" role="tabpanel" aria-labelledby="tab-intake" tabindex="0" hidden>
       <div class="panel-heading">
         <div>
-          <h2>Sức khỏe, chăm sóc & chuồng trại</h2>
-          <p>Chu trình lặp theo cá thể để theo dõi tình trạng, môi trường sống, công việc và kết quả chăm sóc.</p>
+          <h2>Nhà cung cấp, lô nhập & tiếp nhận bé</h2>
+          <p>Hồ sơ nhập gắn cá thể với lô và chứng từ. Ảnh nhận bé, người xác nhận và thời điểm xác nhận được lưu để tra cứu.</p>
         </div>
-        <span class="panel-index">03</span>
+        <span class="panel-number">03</span>
       </div>
-      <div class="flow-row">
-        <article class="step start"><h3>Chọn cá thể</h3><p>Mở hồ sơ, xem trạng thái, vị trí và đặc điểm chăm sóc.</p></article>
-        <span class="arrow" aria-hidden="true">→</span>
-        <article class="step action"><h3>Kiểm tra / lập lịch</h3><p>Tạo việc chăm sóc và lịch khám; phân công nhân viên.</p></article>
-        <span class="arrow" aria-hidden="true">→</span>
-        <article class="step action"><h3>Thực hiện checklist</h3><p>25 mục theo dõi: ăn uống, thể trạng, vệ sinh, hành vi, vaccine, thuốc…</p></article>
-        <span class="arrow" aria-hidden="true">→</span>
-        <article class="step decision"><h3>Đánh giá kết quả</h3><p>Ghi OK, cần chú ý hoặc không áp dụng; thêm ghi chú/người kiểm tra.</p></article>
+      <div class="steps">
+        <article class="step action"><h3>Quản lý nhà cung cấp</h3><p>Lưu mã, liên hệ và trạng thái nhà cung cấp dùng cho lô nhập.</p></article>
+        <article class="step action"><h3>Tạo lô nhập</h3><p>Ghi mã lô, nhà cung cấp, ngày nhận và thông tin nhập hàng.</p></article>
+        <article class="step action"><h3>Tạo hồ sơ cá thể</h3><p>Nhập mã, tên, loài, giống, nguồn gốc, giá và các đặc điểm nhận dạng.</p></article>
+        <article class="step decision"><h3>Xác nhận đã nhận bé</h3><p>Chụp/chọn ảnh chứng từ, xác nhận, nhân viên và thời điểm tiếp nhận.</p></article>
       </div>
-      <p class="branch-title">Nếu phát hiện bất thường</p>
+      <p class="section-label">Kiểm tra đầu vào</p>
       <div class="branches">
         <div class="branch">
-          <span class="branch-label">Theo dõi</span>
-          <div class="step action"><h3>Lưu checklist & nhắc việc</h3><p>Giữ hồ sơ theo ngày; việc chưa hoàn thành xuất hiện trong cảnh báo đến hạn.</p></div>
+          <span class="branch-label">Đủ hồ sơ xác nhận</span>
+          <div class="step system"><h3>Kiểm tra đầu vào</h3><p>Ghi kết quả kiểm tra và thông tin người thực hiện; xem được lịch sử từng cá thể.</p></div>
+          <div class="down">↓</div>
+          <div class="step finish"><h3>Đưa vào quy trình vận hành</h3><p>Cập nhật trạng thái theo kết quả được nhân viên có thẩm quyền xác nhận.</p></div>
         </div>
         <div class="branch">
-          <span class="branch-label warn">Cần khám</span>
-          <div class="step decision"><h3>Tạo hồ sơ sức khỏe</h3><p>Ghi ngày khám, chẩn đoán, điều trị, bác sĩ thú y và ghi chú.</p></div>
+          <span class="branch-label amber">Cần theo dõi / cách ly</span>
+          <div class="step warning"><h3>Không đưa vào bán ngay</h3><p>Ghi chú tình trạng cần chú ý; tạo hồ sơ sức khỏe hoặc kế hoạch chăm sóc tiếp theo.</p></div>
+          <div class="down">↓</div>
+          <div class="step action"><h3>Đánh giá lại theo thực tế</h3><p>Nhân viên cập nhật lịch sử kiểm tra; kết luận chuyên môn thuộc bác sĩ thú y.</p></div>
         </div>
         <div class="branch">
-          <span class="branch-label stop">Cần cách ly / điều trị</span>
-          <div class="step warning"><h3>Cập nhật trạng thái & kế hoạch</h3><p>Đưa vào cách ly hoặc điều trị; theo dõi liên tục đến lần đánh giá tiếp theo.</p></div>
+          <span class="branch-label red">Thiếu ảnh / xác nhận</span>
+          <div class="step warning"><h3>Từ chối hoàn tất tiếp nhận</h3><p>Không tạo chứng từ tiếp nhận hợp lệ nếu thiếu ảnh hợp lệ hoặc nội dung xác nhận.</p></div>
+          <div class="down">↓</div>
+          <div class="step action"><h3>Bổ sung rồi lưu lại</h3><p>Ảnh được lưu cùng hồ sơ để xem tại trang nhập hoặc hồ sơ động vật.</p></div>
         </div>
       </div>
-      <p class="branch-title">Kiểm tra chuồng trước khi phân bổ hoặc chuyển chỗ</p>
-      <div class="flow-row">
-        <article class="step action"><h3>Chọn chuồng đang hoạt động</h3><p>Đối chiếu loài được tiếp nhận.</p></article>
-        <span class="arrow" aria-hidden="true">→</span>
-        <article class="step decision"><h3>Còn sức chứa & tương thích?</h3><p>Không vượt số lượng tối đa của chuồng.</p></article>
-        <span class="arrow" aria-hidden="true">→</span>
-        <article class="step finish"><h3>Gán / chuyển & ghi lịch sử</h3><p>Cập nhật vị trí hiện tại và lưu thời điểm phân chuồng.</p></article>
-      </div>
-      <div class="rule-note">Checklist là công cụ theo dõi vận hành, không thay thế chẩn đoán hoặc chỉ định điều trị của bác sĩ thú y.</div>
+      <div class="merge">Lô nhập → cá thể riêng biệt → ảnh & xác nhận → kiểm tra đầu vào → hồ sơ vận hành có truy vết</div>
     </section>
 
-    <section class="flow-panel" id="flow-sales" role="tabpanel" aria-labelledby="tab-sales" hidden>
+    <section class="panel" id="panel-care" role="tabpanel" aria-labelledby="tab-care" tabindex="0" hidden>
       <div class="panel-heading">
         <div>
-          <h2>Khách hàng, đặt chỗ & bán hàng</h2>
-          <p>Luồng giữ chỗ hoặc bán trực tiếp; tiền cọc được chuyển vào đơn khi đặt chỗ được chuyển đổi.</p>
+          <h2>Hồ sơ, chuồng trại, sức khỏe & chăm sóc</h2>
+          <p>Hồ sơ cá thể theo dõi trạng thái, nơi ở, lịch sử khám và nhiệm vụ chăm sóc. Checklist vận hành hỗ trợ ghi nhận, không thay thế đánh giá thú y.</p>
         </div>
-        <span class="panel-index">04</span>
+        <span class="panel-number">04</span>
       </div>
-      <div class="flow-row">
-        <article class="step start"><h3>Tạo / chọn khách hàng</h3><p>Mã khách, liên hệ, địa chỉ và lịch sử giao dịch.</p></article>
-        <span class="arrow" aria-hidden="true">→</span>
-        <article class="step decision"><h3>Chọn hình thức</h3><p>Bán trực tiếp hoặc giữ chỗ trước.</p></article>
+      <div class="steps">
+        <article class="step start"><h3>Hồ sơ động vật</h3><p>Tìm theo mã/tên/loài/giống; xem trạng thái, cân nặng, sức khỏe và tình trạng tiếp nhận.</p></article>
+        <article class="step action"><h3>Chuồng trại</h3><p>Kiểm tra sức chứa và loài được chấp nhận trước khi gán hoặc chuyển vị trí.</p></article>
+        <article class="step action"><h3>Sức khỏe</h3><p>Ghi ngày khám, tình trạng, chẩn đoán, điều trị, bác sĩ và ghi chú theo hồ sơ.</p></article>
+        <article class="step action"><h3>Kế hoạch chăm sóc</h3><p>Tạo công việc theo lịch, phân công nhân viên và đánh dấu hoàn thành.</p></article>
       </div>
-      <p class="branch-title">Hai nhánh xử lý</p>
+      <p class="section-label">Vòng theo dõi hằng ngày</p>
       <div class="branches">
         <div class="branch">
-          <span class="branch-label">Giữ chỗ trước</span>
-          <div class="step action"><h3>Chọn cá thể AVAILABLE</h3><p>Ghi khách, ngày hết hạn và tiền cọc nếu đã nhận.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step decision"><h3>Khách tiếp tục mua?</h3><p>Đặt chỗ gắn với đúng khách hàng.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step finish"><h3>Tạo đơn → chuyển cọc thành payment</h3><p>Reservation chuyển CONVERTED; đơn phản ánh tiền đã thu.</p></div>
+          <span class="branch-label">Công việc định kỳ</span>
+          <div class="step action"><h3>Lập lịch cho từng cá thể</h3><p>Ghi thời điểm, nội dung công việc, người phụ trách và ghi chú.</p></div>
+          <div class="down">↓</div>
+          <div class="step finish"><h3>Đánh dấu hoàn thành</h3><p>Trạng thái nhiệm vụ hiển thị trong danh sách chăm sóc và tổng quan vận hành.</p></div>
         </div>
         <div class="branch">
-          <span class="branch-label">Bán trực tiếp</span>
-          <div class="step action"><h3>Tạo đơn nhiều cá thể</h3><p>Chỉ chọn AVAILABLE hoặc cá thể đang giữ cho đúng khách.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step decision"><h3>Ghi nhận thanh toán</h3><p>Tiền mặt, chuyển khoản, thẻ hoặc phương thức khác.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step system"><h3>Theo dõi số dư</h3><p>Thanh toán một phần → giữ đơn PARTIALLY_PAID.</p></div>
+          <span class="branch-label amber">Checklist 25 mục</span>
+          <div class="step action"><h3>Chọn cá thể & ngày đánh giá</h3><p>Ghi trạng thái từng mục cùng ghi chú và người kiểm tra.</p></div>
+          <div class="down">↓</div>
+          <div class="step system"><h3>Lưu / cập nhật đánh giá</h3><p>Một cá thể, ngày và người kiểm tra được cập nhật theo bản ghi checklist.</p></div>
         </div>
         <div class="branch">
-          <span class="branch-label warn">Không tiếp tục / quá hạn</span>
-          <div class="step warning"><h3>Hoàn tiền cọc bên ngoài</h3><p>Ghi nhận hoàn tiền sau khi đã thực hiện khoản hoàn.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step decision"><h3>Đã hoàn đủ cọc?</h3><p>Hệ thống không giải phóng chỗ khi còn tiền cọc chưa hoàn.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step action"><h3>Giải phóng giữ chỗ</h3><p>Đơn mở chưa thanh toán có thể hủy; đã trả tiền cần quy trình hoàn tiền.</p></div>
+          <span class="branch-label red">Có bất thường sức khỏe</span>
+          <div class="step warning"><h3>Ghi nhận & báo người phụ trách</h3><p>Không suy diễn chẩn đoán từ checklist hay gợi ý sản phẩm.</p></div>
+          <div class="down">↓</div>
+          <div class="step action"><h3>Đưa bác sĩ thú y đánh giá</h3><p>Quyết định xét nghiệm, điều trị và dùng thuốc do chuyên gia phụ trách.</p></div>
         </div>
       </div>
-      <div class="merge">Thanh toán đủ → đơn PAID → cá thể SOLD · Hồ sơ và lịch sử bán vẫn được giữ</div>
-      <div class="rule-note">Không thể vượt số dư còn phải thu. Đơn đã có thanh toán một phần không thuộc luồng hủy “chưa thanh toán”; cần xử lý khoản tiền trước khi giải quyết đơn.</div>
+      <div class="note">Các cảnh báo hoạt động, checklist và hồ sơ sức khỏe là công cụ quản lý nội bộ. Không dùng dữ liệu demo hay gợi ý catalog để thay thế chẩn đoán, liều lượng hoặc hướng dẫn điều trị.</div>
     </section>
 
-    <section class="flow-panel" id="flow-stock" role="tabpanel" aria-labelledby="tab-stock" hidden>
+    <section class="panel" id="panel-sales" role="tabpanel" aria-labelledby="tab-sales" tabindex="0" hidden>
       <div class="panel-heading">
         <div>
-          <h2>Quản lý thức ăn & thuốc theo lô</h2>
-          <p>Số lượng khả dụng được tính từ các lô còn hạn; xuất kho ưu tiên hạn gần nhất (FEFO).</p>
+          <h2>Khách hàng, đặt chỗ, đơn hàng & thanh toán</h2>
+          <p>Giao dịch động vật và sản phẩm/combo gắn với khách hàng. Tiền cọc, thanh toán từng phần và số dư được lưu thành lịch sử riêng.</p>
         </div>
-        <span class="panel-index">05</span>
+        <span class="panel-number">05</span>
       </div>
-      <div class="flow-row">
-        <article class="step start"><h3>Tạo vật tư</h3><p>Mã, tên, nhóm thức ăn/thuốc, đơn vị tính và ngưỡng tồn tối thiểu.</p></article>
-        <span class="arrow" aria-hidden="true">→</span>
-        <article class="step action"><h3>Nhập kho theo lô</h3><p>Mã lô, số lượng, giá nhập, hạn sử dụng và chứng từ.</p></article>
-        <span class="arrow" aria-hidden="true">→</span>
-        <article class="step system"><h3>Cập nhật tồn & sổ nhập</h3><p>Lưu tồn riêng theo lô; không nhập lô có ngày hết hạn trong quá khứ.</p></article>
-        <span class="arrow" aria-hidden="true">→</span>
-        <article class="step action"><h3>Xuất sử dụng</h3><p>Chọn số lượng, có thể liên kết cá thể và ghi phiếu/ghi chú.</p></article>
+      <div class="steps">
+        <article class="step action"><h3>Tạo / chọn khách hàng</h3><p>Hồ sơ khách dùng chung cho giữ chỗ, đơn bán, hội viên và lịch dịch vụ.</p></article>
+        <article class="step action"><h3>Chọn hàng bán</h3><p>Chọn cá thể đủ điều kiện hoặc sản phẩm/combo còn khả dụng.</p></article>
+        <article class="step system"><h3>Tính giá & giữ tồn</h3><p>Áp dụng giá hiệu lực; đơn mở giữ lượng hàng để tránh bán vượt tồn.</p></article>
+        <article class="step action"><h3>Ghi nhận thanh toán</h3><p>Nhân viên ghi số tiền thực nhận, ngày, phương thức và tham chiếu nếu có.</p></article>
       </div>
-      <p class="branch-title">Kiểm tra trước khi xuất</p>
+      <p class="section-label">Nhánh đặt chỗ và kết thúc đơn</p>
       <div class="branches">
         <div class="branch">
-          <span class="branch-label">Đủ tồn dùng được</span>
-          <div class="step finish"><h3>Xuất theo FEFO</h3><p>Trừ từ lô còn hạn gần nhất; nếu qua nhiều lô, tạo dòng giao dịch cho từng lô.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step system"><h3>Lưu nhật ký xuất</h3><p>Ghi ngày, lô, lượng dùng, cá thể và chứng từ nếu có.</p></div>
+          <span class="branch-label">Giữ chỗ động vật</span>
+          <div class="step action"><h3>Chọn cá thể & khách</h3><p>Ghi khoản cọc, thời hạn và điều kiện giữ chỗ.</p></div>
+          <div class="down">↓</div>
+          <div class="step decision"><h3>Khách mua cá thể?</h3><p>Khi chuyển đặt chỗ thành đơn, khoản cọc được chuyển thành payment của đơn.</p></div>
+          <div class="down">↓</div>
+          <div class="step finish"><h3>Đơn thanh toán đủ</h3><p>Giao dịch hoàn tất; trạng thái cá thể chuyển SOLD và lịch sử được giữ.</p></div>
         </div>
         <div class="branch">
-          <span class="branch-label stop">Tồn không đủ</span>
-          <div class="step warning"><h3>Từ chối toàn bộ giao dịch</h3><p>Không xuất một phần; số dư các lô được giữ nguyên khi thiếu hàng.</p></div>
+          <span class="branch-label">Thanh toán chưa đủ</span>
+          <div class="step decision"><h3>Còn số dư phải thu?</h3><p>Thanh toán một phần được ghi nhận, nhưng đơn chưa ở trạng thái thanh toán hoàn tất.</p></div>
+          <div class="down">↓</div>
+          <div class="step action"><h3>Ghi thêm khoản đã nhận</h3><p>Hệ thống không cho vượt số tiền còn phải thu.</p></div>
+          <div class="down">↓</div>
+          <div class="step system"><h3>Hoàn tất khi đủ tiền</h3><p>Chỉ khi thanh toán đủ mới xác nhận hoàn tất và thực hiện trừ kho.</p></div>
         </div>
         <div class="branch">
-          <span class="branch-label warn">Có lô hết hạn</span>
-          <div class="step warning"><h3>Không dùng lô hết hạn</h3><p>Tách riêng tồn hết hạn khỏi tồn dùng được và phát cảnh báo để xử lý.</p></div>
+          <span class="branch-label red">Hủy / hoàn cọc</span>
+          <div class="step warning"><h3>Ghi nhận khoản hoàn đã thực hiện</h3><p>Ứng dụng lưu xác nhận nghiệp vụ, không tự chuyển tiền ra ngân hàng.</p></div>
+          <div class="down">↓</div>
+          <div class="step decision"><h3>Còn cọc chưa hoàn?</h3><p>Không giải phóng giữ chỗ nếu khoản cọc chưa được xử lý đầy đủ.</p></div>
+          <div class="down">↓</div>
+          <div class="step action"><h3>Giải phóng / hủy theo điều kiện</h3><p>Đơn đã thanh toán một phần cần xử lý tiền trước khi hủy.</p></div>
         </div>
       </div>
-      <div class="merge">Ngưỡng tồn thấp hoặc hạn trong 30 ngày → xuất hiện trong màn hình Cảnh báo & vận hành</div>
+      <div class="merge">Tồn kho được giữ khi đơn còn mở · trừ kho theo FEFO khi thanh toán đủ · mọi khoản tiền có lịch sử riêng</div>
     </section>
 
-    <section class="flow-panel" id="flow-operations" role="tabpanel" aria-labelledby="tab-operations" hidden>
+    <section class="panel" id="panel-inventory" role="tabpanel" aria-labelledby="tab-inventory" tabindex="0" hidden>
       <div class="panel-heading">
         <div>
-          <h2>Báo cáo, cảnh báo, phân quyền & sao lưu</h2>
-          <p>Các chức năng xuyên suốt giúp kiểm soát dữ liệu, công việc đến hạn và khả năng phục hồi.</p>
+          <h2>Catalog, kho theo lô & hồ sơ thức ăn</h2>
+          <p>Catalog SKU tách biệt số tồn. Tồn khả dụng tính từ lô chưa hết hạn; xuất dùng và bán hàng không sử dụng lô đã hết hạn.</p>
         </div>
-        <span class="panel-index">06</span>
+        <span class="panel-number">06</span>
       </div>
+      <div class="steps">
+        <article class="step action"><h3>Quản lý SKU</h3><p>Mã, danh mục, loài, giá, thương hiệu, quy cách, thành phần và thông tin sản phẩm.</p></article>
+        <article class="step action"><h3>Nhập lô thật</h3><p>Ghi mã lô, số lượng, giá nhập, hạn sử dụng và tham chiếu chứng từ.</p></article>
+        <article class="step system"><h3>Tính tồn dùng được</h3><p>Lô hết hạn được loại khỏi số lượng sử dụng; cảnh báo tồn thấp/hạn gần.</p></article>
+        <article class="step action"><h3>Xuất / bán hàng</h3><p>Xuất dùng có thể gắn cá thể; bán hàng/combo ghi nhận giao dịch theo đơn.</p></article>
+      </div>
+      <p class="section-label">Điều kiện xuất kho</p>
       <div class="branches">
         <div class="branch">
-          <span class="branch-label">Cảnh báo vận hành</span>
-          <div class="step system"><h3>Tổng hợp các tín hiệu</h3><p>Tồn dưới mức tối thiểu · lô hết hạn/sắp hết hạn · việc chăm sóc đến hạn · lượt giữ chỗ quá hạn.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step action"><h3>Nhân viên rà soát</h3><p>Liên hệ khách, xử lý hoàn cọc, bổ sung vật tư hoặc hoàn tất công việc chăm sóc.</p></div>
+          <span class="branch-label">Đủ lượng dùng được</span>
+          <div class="step finish"><h3>Xuất theo FEFO</h3><p>Ưu tiên lô còn hạn gần nhất; nhiều lô tạo lịch sử theo từng lô.</p></div>
+          <div class="down">↓</div>
+          <div class="step system"><h3>Lưu sổ nhập / xuất</h3><p>Ghi ngày, số lượng, mã lô, cá thể và tham chiếu nếu có.</p></div>
         </div>
         <div class="branch">
-          <span class="branch-label">Báo cáo</span>
-          <div class="step action"><h3>Chọn loại & khoảng ngày</h3><p>Tồn kho · bán hàng/thanh toán · hồ sơ sức khỏe.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step finish"><h3>Xem bảng & xuất CSV</h3><p>Lưu báo cáo để đối chiếu hoặc làm việc bên ngoài ứng dụng.</p></div>
+          <span class="branch-label red">Thiếu tồn dùng được</span>
+          <div class="step warning"><h3>Từ chối giao dịch</h3><p>Không xuất vượt số tồn khả dụng; số dư lô được giữ nguyên khi giao dịch thất bại.</p></div>
         </div>
         <div class="branch">
-          <span class="branch-label">Quản trị & lưu trữ</span>
-          <div class="step decision"><h3>Vai trò và quyền</h3><p>Admin/quản lý/nhân viên; quyền được kiểm tra ở giao diện và thao tác ghi.</p></div>
-          <div class="down-arrow" aria-hidden="true">↓</div>
-          <div class="step system"><h3>Audit log & sao lưu</h3><p>Ghi dấu thao tác; admin/quản lý chọn thư mục và tạo bản sao SQLite nhất quán.</p></div>
+          <span class="branch-label amber">Catalog demo</span>
+          <div class="step warning"><h3>Không tự tạo tồn</h3><p>SKU và combo mẫu cần cửa hàng xác minh giá, thành phần, barcode và cấu hình trước khi dùng.</p></div>
         </div>
       </div>
-      <div class="architecture" aria-label="Luồng xử lý dữ liệu">
-        <div class="step start"><h3>Người dùng</h3><p>Đăng nhập, chọn module và thao tác theo vai trò.</p></div>
-        <span class="arch-arrow" aria-hidden="true">→</span>
-        <div class="step action"><h3>Kiểm tra quyền & nghiệp vụ</h3><p>Hợp lệ mới ghi; lỗi/vi phạm quy tắc được thông báo.</p></div>
-        <span class="arch-arrow" aria-hidden="true">→</span>
-        <div class="step system"><h3>SQLite + audit</h3><p>Lưu dữ liệu nghiệp vụ và nhật ký kiểm soát.</p></div>
+      <p class="section-label">Metadata thức ăn & quy tắc tuổi</p>
+      <div class="cards">
+        <article class="info-card"><h3>Thông tin sản phẩm</h3><p>Loài/phân loài, tháng tuổi, life stage, loại thức ăn, cỡ giống, cân nặng phù hợp, protein, mục đích, vitamin C theo nhãn.</p></article>
+        <article class="info-card"><h3>Đặc thù theo loài</h3><p>Cá có thể lọc thêm tầng nước và kiểu ăn. Chim, cá, rùa và thú ngoại lai cần xác nhận đúng phân loài.</p></article>
+        <article class="info-card"><h3>Quy tắc cấu hình được</h3><p>Quy tắc tuổi được quản lý trong ứng dụng. Metadata mẫu dùng phân loại catalog, không tạo khẩu phần hay phác đồ.</p></article>
       </div>
+      <div class="note red-note">Không suy ra liều dùng, lượng ăn, tần suất hay lịch cho ăn từ dữ liệu demo. Kiểm tra nhãn sản phẩm và xin tư vấn bác sĩ thú y khi cần; thuốc/vaccine không thuộc luồng gợi ý dinh dưỡng.</div>
+    </section>
+
+    <section class="panel" id="panel-services" role="tabpanel" aria-labelledby="tab-services" tabindex="0" hidden>
+      <div class="panel-heading">
+        <div>
+          <h2>Dịch vụ, lịch hẹn, hội viên & bill</h2>
+          <p>Catalog dịch vụ không làm thay đổi tồn kho thức ăn. Lịch hẹn gắn khách hàng, hồ sơ thú cưng, gói, nhân viên và trạng thái thực hiện.</p>
+        </div>
+        <span class="panel-number">07</span>
+      </div>
+      <div class="steps">
+        <article class="step action"><h3>Chọn khách & thú cưng</h3><p>Hồ sơ thú cưng phục vụ lịch hẹn là dữ liệu khách, độc lập với cá thể tồn kho/bán.</p></article>
+        <article class="step action"><h3>Chọn gói & thời gian</h3><p>Gói có loài, loại lông, cân nặng, thời lượng, giá và phụ phí cấu hình.</p></article>
+        <article class="step system"><h3>Xem báo giá</h3><p>Tính giá gốc, ưu đãi hội viên và phụ phí theo quy tắc trước khi lưu.</p></article>
+        <article class="step finish"><h3>Phân công & đặt lịch</h3><p>Ghi lịch, nhân viên phụ trách và thông tin cần lưu ý.</p></article>
+      </div>
+      <p class="section-label">Trạng thái lịch hẹn và hội viên</p>
+      <div class="branches">
+        <div class="branch">
+          <span class="branch-label">Thực hiện dịch vụ</span>
+          <div class="step system"><h3>Đặt lịch → tiếp nhận</h3><p>Trạng thái: đã đặt lịch, đã tiếp nhận, đang thực hiện.</p></div>
+          <div class="down">↓</div>
+          <div class="step finish"><h3>Hoàn thành</h3><p>Ghi bill dịch vụ; nhân viên ghi thanh toán tại phân hệ hội viên & bill.</p></div>
+        </div>
+        <div class="branch">
+          <span class="branch-label amber">Lượt trả trước</span>
+          <div class="step decision"><h3>Lịch bị hủy / khách không đến?</h3><p>Không trừ lượt cho lịch hủy hoặc không đến.</p></div>
+          <div class="down">↓</div>
+          <div class="step system"><h3>Chỉ trừ lượt khi hoàn thành</h3><p>Ghi sử dụng dịch vụ sau khi trạng thái hoàn tất.</p></div>
+        </div>
+        <div class="branch">
+          <span class="branch-label">Hội viên & thanh toán</span>
+          <div class="step action"><h3>Tạo gói & bill</h3><p>Hỗ trợ trả trước theo lượt, giảm giá hội viên hoặc định kỳ.</p></div>
+          <div class="down">↓</div>
+          <div class="step decision"><h3>Bill đã thanh toán đủ?</h3><p>Thẻ/gói chỉ kích hoạt hoặc gia hạn khi thanh toán đủ.</p></div>
+          <div class="down">↓</div>
+          <div class="step warning"><h3>Định kỳ do nhân viên xử lý</h3><p>Không có tự thu tiền hoặc tự gia hạn; kỳ tiếp theo được lập thủ công.</p></div>
+        </div>
+      </div>
+      <div class="note">Có 240 gói dịch vụ và 40 gói hội viên mẫu. Giá, phạm vi áp dụng và phụ phí là dữ liệu tham khảo cần cửa hàng rà soát trước khi áp dụng cho khách thật.</div>
+    </section>
+
+    <section class="panel" id="panel-recommendations" role="tabpanel" aria-labelledby="tab-recommendations" tabindex="0" hidden>
+      <div class="panel-heading">
+        <div>
+          <h2>Gợi ý sản phẩm & PetCare Advisor</h2>
+          <p>Bộ gợi ý chạy ngoại tuyến trên dữ liệu cửa hàng: hồ sơ thú cưng, tag sản phẩm, sở thích đã xác nhận và lượng tồn khả dụng.</p>
+        </div>
+        <span class="panel-number">08</span>
+      </div>
+      <div class="steps">
+        <article class="step action"><h3>Chọn hồ sơ thú cưng</h3><p>Dùng loài, tuổi, giống, cân nặng, nhu cầu và dị ứng được lưu trong hồ sơ.</p></article>
+        <article class="step system"><h3>Lọc điều kiện phù hợp</h3><p>Loài, tuổi, cân nặng, dị ứng, mục đích và tồn khả dụng; loại thuốc khỏi gợi ý tự động.</p></article>
+        <article class="step system"><h3>Xếp hạng có giải thích</h3><p>Điểm và lý do hiển thị theo tag được cấu hình, hành vi và lịch sử mua có sẵn.</p></article>
+        <article class="step action"><h3>Nhân viên xác nhận</h3><p>Kiểm tra sản phẩm/nhãn, ngân sách và tồn thực tế trước khi tư vấn hoặc bán.</p></article>
+      </div>
+      <p class="section-label">Advisor ngoại tuyến</p>
+      <div class="branches">
+        <div class="branch">
+          <span class="branch-label">Tư vấn theo luật cục bộ</span>
+          <div class="step system"><h3>Đọc dữ liệu cấu hình</h3><p>Không gửi hồ sơ khách hàng ra dịch vụ AI bên ngoài.</p></div>
+          <div class="down">↓</div>
+          <div class="step action"><h3>Giải thích theo căn cứ</h3><p>Hiển thị tag khớp và đường dẫn kiến thức đã cấu hình; thiếu tag thì không khẳng định phù hợp.</p></div>
+        </div>
+        <div class="branch">
+          <span class="branch-label">Combo theo ngân sách</span>
+          <div class="step action"><h3>Chọn mức chi & mục đích</h3><p>Tìm tổ hợp SKU còn hàng theo giá và mục tiêu nhân viên chọn.</p></div>
+          <div class="down">↓</div>
+          <div class="step decision"><h3>Kiểm tra lại trước bán</h3><p>Giá và tồn có thể đổi; đơn hàng là nguồn ghi nhận thanh toán/chốt kho.</p></div>
+        </div>
+        <div class="branch">
+          <span class="branch-label amber">Sở thích & đánh giá</span>
+          <div class="step action"><h3>Lưu thích / tránh</h3><p>Chỉ lưu sau khi nhân viên xác nhận phản hồi của khách.</p></div>
+          <div class="down">↓</div>
+          <div class="step system"><h3>Đánh giá ranking ngoại tuyến</h3><p>Dùng dữ liệu đủ điều kiện; kết quả đo hiệu quả sắp xếp, không phải độ an toàn thú y.</p></div>
+        </div>
+      </div>
+      <div class="note red-note">Gợi ý không phải chẩn đoán hay kê đơn. Với vấn đề sức khỏe, dị ứng nghiêm trọng, loài ngoại lai hoặc sản phẩm chưa có nhãn rõ ràng, cần xác minh với bác sĩ thú y/chuyên gia phù hợp.</div>
+    </section>
+
+    <section class="panel" id="panel-operations" role="tabpanel" aria-labelledby="tab-operations" tabindex="0" hidden>
+      <div class="panel-heading">
+        <div>
+          <h2>Báo cáo, cảnh báo, sao lưu & giới hạn vận hành</h2>
+          <p>Các phân hệ hỗ trợ giám sát hoạt động cửa hàng trên dữ liệu lưu tại máy. Nhân viên xác minh sự kiện thật trước khi ghi giao dịch hoặc xử lý cảnh báo.</p>
+        </div>
+        <span class="panel-number">09</span>
+      </div>
+      <div class="steps">
+        <article class="step system"><h3>Tổng quan</h3><p>Xem số liệu tóm tắt về động vật, bán hàng, tồn kho và việc cần chú ý.</p></article>
+        <article class="step system"><h3>Báo cáo</h3><p>Báo cáo tồn kho, doanh số và sức khỏe; có thể xuất CSV.</p></article>
+        <article class="step warning"><h3>Cảnh báo vận hành</h3><p>Rà soát tồn thấp, lô gần hạn, nhiệm vụ và hồ sơ cần theo dõi.</p></article>
+        <article class="step action"><h3>Sao lưu database</h3><p>Quản trị viên tạo bản sao tại thư mục đã chọn; bảo vệ bản sao như dữ liệu gốc.</p></article>
+      </div>
+      <p class="section-label">Lưu ý trước khi dùng dữ liệu thật</p>
+      <div class="cards">
+        <article class="info-card">
+          <h3>Catalog demo</h3>
+          <ul>
+            <li>Giá, thương hiệu, barcode và thành phần cần xác minh.</li>
+            <li>Seed catalog không tự nhập lô hàng hoặc tạo tồn.</li>
+            <li>Rà soát combo và quy tắc trước khi bán.</li>
+          </ul>
+        </article>
+        <article class="info-card">
+          <h3>Tiền & đối soát</h3>
+          <ul>
+            <li>Nhân viên ghi khoản đã thực nhận, không có cổng ngân hàng tự xác minh.</li>
+            <li>Ứng dụng không tự hoàn tiền, thu phí hoặc gia hạn.</li>
+            <li>Đối chiếu sổ thanh toán với chứng từ thật.</li>
+          </ul>
+        </article>
+        <article class="info-card">
+          <h3>Quyền riêng tư & an toàn</h3>
+          <ul>
+            <li>Cơ sở dữ liệu lưu hồ sơ khách hàng và vận hành.</li>
+            <li>Giới hạn quyền truy cập thư mục dữ liệu và bản sao.</li>
+            <li>Gợi ý, checklist và mốc tuổi demo không thay thế chuyên gia.</li>
+          </ul>
+        </article>
+      </div>
+      <div class="merge">Kiểm tra nghiệp vụ → ghi nhận đúng giao dịch → rà soát cảnh báo → sao lưu định kỳ</div>
     </section>
   </main>
+
   <footer>
-    Sơ đồ mô tả chức năng hiện được triển khai trong dự án; không phải thay thế cho quy trình chuyên môn thú y.
-    Mở tệp này bằng trình duyệt hiện đại. Chọn “In / lưu PDF” để lưu bản in.
+    <p>PetCare là ứng dụng desktop Python / PySide6 / SQLite. Workflow mô tả chức năng hiện có; quy trình nội bộ của cửa hàng và quy định chuyên môn tại địa phương vẫn cần được tuân thủ.</p>
   </footer>
   <script>
-    const tabs = [...document.querySelectorAll('[role="tab"]')];
-    const panels = [...document.querySelectorAll('[role="tabpanel"]')];
-    const panelCounter = document.querySelector('#panel-counter');
+    (() => {
+      const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+      const panels = tabs.map((tab) => document.getElementById(tab.getAttribute("aria-controls")));
+      const counter = document.getElementById("panel-counter");
 
-    function activateTab(tab, moveFocus = false) {
-      const activeIndex = tabs.indexOf(tab);
-      for (const [index, item] of tabs.entries()) {
-        const active = item === tab;
-        item.setAttribute('aria-selected', String(active));
-        item.tabIndex = active ? 0 : -1;
-        item.setAttribute('aria-posinset', String(index + 1));
-        item.setAttribute('aria-setsize', String(tabs.length));
+      function activate(index, moveFocus = false) {
+        const selectedIndex = (index + tabs.length) % tabs.length;
+        tabs.forEach((tab, tabIndex) => {
+          const selected = tabIndex === selectedIndex;
+          tab.setAttribute("aria-selected", String(selected));
+          tab.tabIndex = selected ? 0 : -1;
+          panels[tabIndex].hidden = !selected;
+        });
+        counter.textContent = `${selectedIndex + 1} / ${tabs.length}`;
+        if (moveFocus) tabs[selectedIndex].focus();
       }
-      for (const panel of panels) {
-        panel.hidden = panel.id !== tab.getAttribute('aria-controls');
-      }
-      panelCounter.textContent = `${activeIndex + 1} / ${tabs.length}`;
-      if (moveFocus) tab.focus();
-    }
 
-    for (const tab of tabs) {
-      tab.addEventListener('click', () => activateTab(tab));
-      tab.addEventListener('keydown', (event) => {
-        const index = tabs.indexOf(tab);
-        let next = index;
-        if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
-        else if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
-        else if (event.key === 'Home') next = 0;
-        else if (event.key === 'End') next = tabs.length - 1;
-        else return;
-        event.preventDefault();
-        activateTab(tabs[next], true);
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => activate(index));
+        tab.addEventListener("keydown", (event) => {
+          let nextIndex = index;
+          if (event.key === "ArrowRight") nextIndex = index + 1;
+          else if (event.key === "ArrowLeft") nextIndex = index - 1;
+          else if (event.key === "Home") nextIndex = 0;
+          else if (event.key === "End") nextIndex = tabs.length - 1;
+          else return;
+          event.preventDefault();
+          activate(nextIndex, true);
+        });
       });
-    }
-    activateTab(tabs.find((tab) => tab.getAttribute('aria-selected') === 'true') || tabs[0]);
+
+      document.getElementById("print-button").addEventListener("click", () => window.print());
+    })();
   </script>
 </body>
 </html>

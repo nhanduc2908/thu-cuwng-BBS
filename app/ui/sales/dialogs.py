@@ -17,6 +17,9 @@ from PySide6.QtWidgets import (
     QTextEdit,
     QVBoxLayout,
     QWidget,
+    QTableWidget,
+    QTableWidgetItem,
+    QTabWidget,
 )
 
 from app.modules.sales.constants import PAYMENT_METHODS, PAYMENT_METHOD_LABELS
@@ -247,6 +250,188 @@ class SalesOrderDialog(QDialog):
             ],
             "ordered_at": self.ordered_at.date().toString("yyyy-MM-dd"),
             "note": self.note.text().strip(),
+        }
+
+
+class ProductSalesOrderDialog(QDialog):
+    def __init__(
+        self, parent: QWidget, database: Any, customers: list[sqlite3.Row]
+    ) -> None:
+        super().__init__(parent)
+        self.database = database
+        self.setWindowTitle("Tạo đơn bán sản phẩm & combo")
+        self.resize(1100, 760)
+        layout = QVBoxLayout(self)
+        form = QFormLayout()
+        self.code = QLineEdit()
+        self.code.setPlaceholderText(
+            f"Ví dụ: SO-P-{QDate.currentDate().toString('yyyyMMdd')}-001"
+        )
+        self.customer = QComboBox()
+        for customer in customers:
+            self.customer.addItem(
+                f"{customer['customer_code']} — {customer['name']}",
+                customer["id"],
+            )
+        self.customer.currentIndexChanged.connect(self._refresh_catalog)
+        self.ordered_at = QDateEdit(QDate.currentDate())
+        self.ordered_at.setCalendarPopup(True)
+        self.ordered_at.setDisplayFormat("dd/MM/yyyy")
+        self.note = QLineEdit()
+        form.addRow("Mã đơn *", self.code)
+        form.addRow("Khách hàng", self.customer)
+        form.addRow("Ngày bán", self.ordered_at)
+        form.addRow("Ghi chú", self.note)
+        layout.addLayout(form)
+        layout.addWidget(
+            QLabel(
+                "Giá demo cần cửa hàng xác minh. Giá hội viên áp dụng theo hạng đang "
+                "có hiệu lực; tồn chỉ bị trừ khi đơn thanh toán đủ."
+            )
+        )
+        self.tabs = QTabWidget()
+        self.products_table = self._create_select_table(
+            ["Chọn", "SKU", "Sản phẩm", "Danh mục", "Còn bán", "Giá", "Số lượng"]
+        )
+        self.combos_table = self._create_select_table(
+            ["Chọn", "Mã combo", "Combo", "Loài", "Thành phần", "Giá", "Số lượng"]
+        )
+        self.tabs.addTab(self.products_table, "Sản phẩm")
+        self.tabs.addTab(self.combos_table, "Combo")
+        layout.addWidget(self.tabs, 1)
+        self.notice = QLabel("")
+        layout.addWidget(self.notice)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.accepted.connect(self._validate)
+        buttons.rejected.connect(self.reject)
+        layout.addWidget(buttons)
+        self.product_rows: list[dict[str, Any]] = []
+        self.combo_rows: list[dict[str, Any]] = []
+        self._refresh_catalog()
+
+    @staticmethod
+    def _create_select_table(headers: list[str]) -> QTableWidget:
+        table = QTableWidget(0, len(headers))
+        table.setHorizontalHeaderLabels(headers)
+        table.setAlternatingRowColors(True)
+        return table
+
+    def _fill_selection_table(
+        self,
+        table: QTableWidget,
+        entries: list[dict[str, Any]],
+        columns: tuple[str, ...],
+        available: Any,
+    ) -> None:
+        table.setRowCount(len(entries))
+        for row, entry in enumerate(entries):
+            is_available = bool(available(entry))
+            check = QTableWidgetItem()
+            check.setFlags(
+                Qt.ItemFlag.ItemIsEnabled
+                | Qt.ItemFlag.ItemIsSelectable
+                | Qt.ItemFlag.ItemIsUserCheckable
+            )
+            check.setCheckState(Qt.CheckState.Unchecked)
+            if not is_available:
+                check.setFlags(Qt.ItemFlag.ItemIsEnabled)
+            check.setData(Qt.ItemDataRole.UserRole, int(entry["id"]))
+            table.setItem(row, 0, check)
+            for column, key in enumerate(columns, start=1):
+                value = entry.get(key, "")
+                if key == "sale_price":
+                    value = f"{float(value):,.0f} VND"
+                elif key == "available":
+                    value = f"{float(value):g}"
+                set_item = QTableWidgetItem(str(value or ""))
+                table.setItem(row, column, set_item)
+            quantity = QDoubleSpinBox()
+            maximum = float(entry.get("max_quantity", entry.get("available", 0)))
+            quantity.setRange(0.001, max(0.001, min(maximum, 100_000)))
+            quantity.setDecimals(3)
+            quantity.setValue(1)
+            quantity.setEnabled(is_available)
+            if maximum < 1:
+                quantity.setEnabled(False)
+            table.setCellWidget(row, len(columns) + 1, quantity)
+
+    def _refresh_catalog(self, *_: Any) -> None:
+        customer_id = self.customer.currentData()
+        if customer_id is None:
+            return
+        try:
+            products = self.database.list_saleable_products(int(customer_id))
+            combos = self.database.list_saleable_combos(int(customer_id))
+        except (sqlite3.Error, ValueError, PermissionError) as error:
+            self.notice.setText(f"Không thể tải catalog bán hàng: {error}")
+            return
+        self.product_rows = products
+        self.combo_rows = combos
+        for product in products:
+            product["display_name"] = product["name"]
+            if product["pack_size"]:
+                product["display_name"] += f" · {product['pack_size']}"
+        self._fill_selection_table(
+            self.products_table,
+            products,
+            ("item_code", "display_name", "catalog_category", "available", "sale_price"),
+            lambda product: float(product["available"]) > 0,
+        )
+        self._fill_selection_table(
+            self.combos_table,
+            combos,
+            (
+                "combo_code",
+                "name",
+                "target_species",
+                "component_count",
+                "sale_price",
+            ),
+            lambda combo: bool(combo["available"]),
+        )
+        self.notice.setText(
+            "Giá đã tính theo hội viên đang hiệu lực (nếu có). "
+            "Combo cần đủ tồn từng SKU thành phần mới được chọn."
+        )
+
+    @staticmethod
+    def _selected_lines(table: QTableWidget, key: str) -> list[dict[str, Any]]:
+        lines: list[dict[str, Any]] = []
+        for row in range(table.rowCount()):
+            check = table.item(row, 0)
+            if check is None or check.checkState() != Qt.CheckState.Checked:
+                continue
+            lines.append(
+                {
+                    key: int(check.data(Qt.ItemDataRole.UserRole)),
+                    "quantity": table.cellWidget(row, table.columnCount() - 1).value(),
+                }
+            )
+        return lines
+
+    def _validate(self) -> None:
+        if not self.code.text().strip():
+            QMessageBox.warning(self, "Thiếu mã đơn", "Mã đơn hàng là bắt buộc.")
+            return
+        if not self._selected_lines(self.products_table, "item_id") and not self._selected_lines(
+            self.combos_table, "combo_id"
+        ):
+            QMessageBox.warning(
+                self, "Chưa chọn hàng", "Hãy chọn ít nhất một sản phẩm hoặc combo."
+            )
+            return
+        self.accept()
+
+    def values(self) -> dict[str, Any]:
+        return {
+            "order_code": self.code.text().strip(),
+            "customer_id": int(self.customer.currentData()),
+            "ordered_at": self.ordered_at.date().toString("yyyy-MM-dd"),
+            "note": self.note.text().strip(),
+            "product_lines": self._selected_lines(self.products_table, "item_id"),
+            "combo_lines": self._selected_lines(self.combos_table, "combo_id"),
         }
 
 
