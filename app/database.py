@@ -68,11 +68,53 @@ class Database:
         self.services = ServicesRepository(self.connection, self.memberships)
         self.reports = ReportRepository(self.connection)
         self.notifications = NotificationRepository(self.connection)
+        self._seed_health_catalogs()
         self.breeds.seed_default_catalog()
         self.inventory.seed_catalog()
         self.inventory.seed_feeding_profiles()
         self.services.seed_catalog()
         self.actor_id: int | None = None
+
+    def _seed_health_catalogs(self) -> None:
+        default_diseases = [
+            ("DOG", "DOG_PARVOVIRUS", "Parvovirus", "INFECTIOUS", "HIGH", "Bệnh lây nhiễm nguy hiểm ở chó con, gây nôn mửa và tiêu chảy.", "Nôn, tiêu chảy, mất nước, sốt", "Hỗ trợ hồi phục, thuốc chống nôn, truyền dịch nếu cần", "Tiêm phòng đầy đủ, vệ sinh môi trường, tránh tiếp xúc với động vật bệnh"),
+            ("DOG", "DOG_DISTEMPER", "Distemper", "INFECTIOUS", "HIGH", "Nhiễm virus gây viêm hô hấp, thần kinh và tiêu hóa.", "Ho, chảy nước mắt, sốt, co giật", "Điều trị triệu chứng, thuốc kháng virus theo chỉ định", "Tiêm phòng đúng lịch"),
+            ("DOG", "DOG_KENNEL_COUGH", "Kennel Cough", "RESPIRATORY", "MEDIUM", "Cúm chó, ho kéo dài do nhiễm đường hô hấp trên.", "Ho khan, khó thở, ho tăng khi kích thích", "Tái tạo môi trường, thuốc hỗ trợ hô hấp", "Tiêm phòng kháng viêm đường hô hấp"),
+            ("DOG", "DOG_SKIN_ALLERGY", "Dị ứng da", "DERMATOLOGY", "MEDIUM", "Phản ứng da do thức ăn hoặc môi trường.", "Ngứa, đỏ da, rụng lông", "Kiểm soát dị nguyên, thuốc kháng viêm", "Giới hạn dị nguyên và kiểm tra thức ăn"),
+            ("CAT", "CAT_FELINE_URI", "Viêm đường hô hấp mèo", "RESPIRATORY", "MEDIUM", "Bệnh đường hô hấp phổ biến ở mèo.", "Hắt hơi, chảy nước mũi, ho", "Vệ sinh mắt/mũi, hỗ trợ điều trị", "Tránh tiếp xúc với mèo bệnh"),
+            ("CAT", "CAT_FELV", "Feline Leukemia", "INFECTIOUS", "HIGH", "Bệnh nguy hiểm ở mèo gây suy giảm miễn dịch.", "Sụt cân, sốt, viêm nhiễm", "Theo dõi và hỗ trợ điều trị", "Tiêm phòng và cách ly mèo mới"),
+            ("CAT", "CAT_SKIN_ALLERGY", "Dị ứng da mèo", "DERMATOLOGY", "MEDIUM", "Dị ứng thức ăn hoặc môi trường.", "Ngứa, da khô, gãi nhiều", "Thay đổi thức ăn, thuốc hỗ trợ", "Kiểm soát dị nguyên"),
+        ]
+
+        default_schedules = [
+            ("DOG", "Dại", "PUPPY", "2-4 tháng", 3, 12, "Khuyến nghị tiêm dại theo quy định địa phương."),
+            ("DOG", "Parvovirus", "PUPPY", "6-8 tuần", 3, 12, "Lặp lại theo lịch booster."),
+            ("DOG", "Canine Distemper", "PUPPY", "6-8 tuần", 3, 12, "Tiêm nhắc lại sau 12 tháng."),
+            ("DOG", "Leptospirosis", "ADULT", "12 tháng", 1, 12, "Nên chủ động cho chó ở vùng ẩm hoặc làm việc ngoài trời."),
+            ("CAT", "Panleukopenia", "KITTEN", "8-12 tuần", 2, 12, "Tiêm nhắc lai sau 1 năm."),
+            ("CAT", "Feline Calicivirus", "KITTEN", "8-12 tuần", 2, 12, "Bảo vệ đường hô hấp và da."),
+            ("CAT", "Feline Herpesvirus", "KITTEN", "8-12 tuần", 2, 12, "Theo dõi nếu mèo có chảy nước mắt."),
+        ]
+
+        with self.connection:
+            for item in default_diseases:
+                self.connection.execute(
+                    """
+                    INSERT OR IGNORE INTO disease_catalog
+                        (species, disease_code, disease_name, category, severity, description, symptoms, treatment, prevention)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    item,
+                )
+            for item in default_schedules:
+                self.connection.execute(
+                    """
+                    INSERT OR IGNORE INTO vaccination_schedules
+                        (species, vaccine_name, schedule_stage, recommended_months, dose_count, booster_interval_months, notes)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    item,
+                )
 
     def _create_tables(self) -> None:
         with self.connection:
@@ -160,6 +202,54 @@ class Database:
                     treatment TEXT NOT NULL DEFAULT '',
                     veterinarian TEXT NOT NULL DEFAULT '',
                     note TEXT NOT NULL DEFAULT ''
+                );
+
+                CREATE TABLE IF NOT EXISTS disease_catalog (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    species TEXT NOT NULL,
+                    disease_code TEXT NOT NULL UNIQUE,
+                    disease_name TEXT NOT NULL,
+                    category TEXT NOT NULL DEFAULT 'GENERAL',
+                    severity TEXT NOT NULL DEFAULT 'MEDIUM'
+                        CHECK (severity IN ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL')),
+                    description TEXT NOT NULL DEFAULT '',
+                    symptoms TEXT NOT NULL DEFAULT '',
+                    treatment TEXT NOT NULL DEFAULT '',
+                    prevention TEXT NOT NULL DEFAULT '',
+                    is_active INTEGER NOT NULL DEFAULT 1
+                        CHECK (is_active IN (0, 1)),
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS vaccination_schedules (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    species TEXT NOT NULL,
+                    vaccine_name TEXT NOT NULL,
+                    schedule_stage TEXT NOT NULL DEFAULT 'PUPPY',
+                    recommended_months TEXT NOT NULL DEFAULT '0-12',
+                    dose_count INTEGER NOT NULL DEFAULT 1,
+                    booster_interval_months INTEGER NOT NULL DEFAULT 12,
+                    notes TEXT NOT NULL DEFAULT '',
+                    is_active INTEGER NOT NULL DEFAULT 1
+                        CHECK (is_active IN (0, 1)),
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE (species, vaccine_name, schedule_stage)
+                );
+
+                CREATE TABLE IF NOT EXISTS vaccination_records (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    animal_id INTEGER NOT NULL REFERENCES animals(id) ON DELETE RESTRICT,
+                    vaccine_name TEXT NOT NULL,
+                    administered_at TEXT NOT NULL,
+                    next_due_at TEXT NOT NULL DEFAULT '',
+                    dose_number INTEGER NOT NULL DEFAULT 1,
+                    veterinarian TEXT NOT NULL DEFAULT '',
+                    note TEXT NOT NULL DEFAULT '',
+                    status TEXT NOT NULL DEFAULT 'COMPLETED'
+                        CHECK (status IN ('COMPLETED', 'SCHEDULED', 'OVERDUE', 'CANCELLED')),
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
                 );
 
                 CREATE TABLE IF NOT EXISTS care_tasks (
@@ -1282,6 +1372,33 @@ class Database:
 
     def list_health_records(self) -> list[sqlite3.Row]:
         return self.health.list_health_records()
+
+    def list_disease_catalog(self, species: str | None = None) -> list[sqlite3.Row]:
+        return self.health.list_disease_catalog(species)
+
+    def add_disease_catalog_entry(self, values: dict[str, Any]) -> int:
+        self._require_permission("health.manage")
+        result = self.health.add_disease_catalog_entry(values)
+        self._audit("CREATE", "disease_catalog", result)
+        return result
+
+    def list_vaccination_schedules(self, species: str | None = None) -> list[sqlite3.Row]:
+        return self.health.list_vaccination_schedules(species)
+
+    def add_vaccination_schedule(self, values: dict[str, Any]) -> int:
+        self._require_permission("health.manage")
+        result = self.health.add_vaccination_schedule(values)
+        self._audit("CREATE", "vaccination_schedule", result)
+        return result
+
+    def list_vaccination_records(self, animal_id: int | None = None) -> list[sqlite3.Row]:
+        return self.health.list_vaccination_records(animal_id)
+
+    def add_vaccination_record(self, values: dict[str, Any]) -> int:
+        self._require_permission("health.manage")
+        result = self.health.add_vaccination_record(values)
+        self._audit("CREATE", "vaccination_record", result)
+        return result
 
     def add_health_record(self, values: dict[str, Any]) -> int:
         self._require_permission("health.manage")

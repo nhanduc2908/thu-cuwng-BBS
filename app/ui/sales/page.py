@@ -4,6 +4,7 @@ from typing import Any
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QDialog,
+    QGridLayout,
     QHBoxLayout,
     QLabel,
     QMessageBox,
@@ -80,6 +81,93 @@ class SalesPage(QWidget):
             ["Mã", "Khách hàng", "Điện thoại", "Email", "Đơn hàng", "Đã thanh toán"]
         )
         layout.addWidget(self.customers_table)
+
+        detail_widget = QWidget()
+        detail_layout = QHBoxLayout(detail_widget)
+        detail_layout.setContentsMargins(0, 12, 0, 0)
+
+        profile_box = QWidget(objectName="profileCard")
+        profile_box_layout = QVBoxLayout(profile_box)
+        profile_box_layout.setContentsMargins(12, 12, 12, 12)
+        self.customer_profile_title = QLabel("Hồ sơ khách hàng")
+        self.customer_profile_title.setObjectName("pageSubtitle")
+        profile_box_layout.addWidget(self.customer_profile_title)
+
+        profile_grid = QGridLayout()
+        profile_grid.setColumnStretch(0, 0)
+        profile_grid.setColumnStretch(1, 1)
+        self.customer_profile_name = QLabel("-")
+        self.customer_profile_phone = QLabel("-")
+        self.customer_profile_email = QLabel("-")
+        self.customer_profile_address = QLabel("-")
+        self.customer_profile_note = QLabel("-")
+
+        labels = [
+            ("Khách hàng", self.customer_profile_name),
+            ("Điện thoại", self.customer_profile_phone),
+            ("Email", self.customer_profile_email),
+            ("Địa chỉ", self.customer_profile_address),
+            ("Ghi chú", self.customer_profile_note),
+        ]
+        for index, (text, value_label) in enumerate(labels):
+            title = QLabel(f"{text}:")
+            title.setStyleSheet("font-weight: 600; color: #31445d;")
+            profile_grid.addWidget(title, index, 0)
+            profile_grid.addWidget(value_label, index, 1)
+        profile_box_layout.addLayout(profile_grid)
+        detail_layout.addWidget(profile_box, 2)
+
+        pets_box = QWidget(objectName="profileCard")
+        pets_layout = QVBoxLayout(pets_box)
+        pets_layout.setContentsMargins(12, 12, 12, 12)
+        pets_title = QLabel("Thú cưng của khách hàng")
+        pets_title.setObjectName("pageSubtitle")
+        pets_layout.addWidget(pets_title)
+        self.customer_pets_table = make_table(
+            ["Tên thú cưng", "Loài", "Giống", "Tuổi", "Cân nặng", "Trạng thái"]
+        )
+        pets_layout.addWidget(self.customer_pets_table)
+        self.customer_pets_table.currentCellChanged.connect(
+            self._selected_pet_changed
+        )
+
+        pet_detail_box = QWidget(objectName="profileCard")
+        pet_detail_layout = QVBoxLayout(pet_detail_box)
+        pet_detail_layout.setContentsMargins(12, 12, 12, 12)
+        pet_detail_layout.addWidget(QLabel("Pet detail", objectName="pageSubtitle"))
+
+        pet_header = QHBoxLayout()
+        self.pet_avatar = QLabel("🐾")
+        self.pet_avatar.setStyleSheet(
+            "font-size: 30px; background: #f7f0df; border-radius: 18px; min-width: 60px; min-height: 60px; qproperty-alignment: AlignCenter;"
+        )
+        pet_header.addWidget(self.pet_avatar)
+
+        pet_identity = QVBoxLayout()
+        self.pet_profile_name = QLabel("-")
+        self.pet_profile_name.setStyleSheet(
+            "font-size: 18px; font-weight: 700; color: #244b3b;"
+        )
+        self.pet_profile_status = QLabel("Bình thường")
+        self.pet_profile_status.setStyleSheet(
+            "background: #edf7ee; color: #2d7d42; border-radius: 12px; padding: 5px 10px;"
+        )
+        pet_identity.addWidget(self.pet_profile_name)
+        pet_identity.addWidget(self.pet_profile_status)
+        pet_header.addLayout(pet_identity)
+        pet_detail_layout.addLayout(pet_header)
+
+        self.pet_profile_tabs = QTabWidget()
+        self.pet_profile_tabs.addTab(self._build_pet_tab("overview"), "Overview")
+        self.pet_profile_tabs.addTab(self._build_pet_tab("nutrition"), "Nutrition")
+        self.pet_profile_tabs.addTab(self._build_pet_tab("health"), "Health")
+        self.pet_profile_tabs.addTab(self._build_pet_tab("grooming"), "Grooming")
+        pet_detail_layout.addWidget(self.pet_profile_tabs)
+        detail_layout.addWidget(pet_detail_box, 3)
+        detail_layout.addWidget(pets_box, 3)
+
+        layout.addWidget(detail_widget)
+
         buttons = QHBoxLayout()
         buttons.addStretch()
         self.edit_customer_button = QPushButton("Chỉnh sửa")
@@ -327,6 +415,104 @@ class SalesPage(QWidget):
         self.edit_customer_button.setEnabled(
             self.manage_enabled and self.selected_customer_id() is not None
         )
+        customer_id = self.selected_customer_id()
+        if customer_id is None:
+            self.customer_profile_name.setText("-")
+            self.customer_profile_phone.setText("-")
+            self.customer_profile_email.setText("-")
+            self.customer_profile_address.setText("-")
+            self.customer_profile_note.setText("-")
+            self.customer_pets_table.setRowCount(0)
+            return
+
+        customer = self.database.get_customer(customer_id)
+        if customer is None:
+            return
+
+        self.customer_profile_name.setText(str(customer["name"]))
+        self.customer_profile_phone.setText(str(customer["phone"]) or "-")
+        self.customer_profile_email.setText(str(customer["email"]) or "-")
+        self.customer_profile_address.setText(str(customer["address"]) or "-")
+        self.customer_profile_note.setText(str(customer["note"]) or "-")
+
+        pets = self.database.list_pets(customer_id)
+        self.customer_pets_table.setRowCount(len(pets))
+        for row, pet in enumerate(pets):
+            set_cell(self.customer_pets_table, row, 0, pet["name"])
+            set_cell(self.customer_pets_table, row, 1, pet["species"])
+            set_cell(self.customer_pets_table, row, 2, pet["breed_name"] or "-")
+            birth_date = pet["birth_date"]
+            if birth_date:
+                age_text = birth_date
+            else:
+                age_text = "-"
+            set_cell(self.customer_pets_table, row, 3, age_text)
+            set_cell(self.customer_pets_table, row, 4, f"{pet['weight_kg']:.1f} kg" if pet["weight_kg"] is not None else "-")
+            set_cell(self.customer_pets_table, row, 5, pet["health_status"] or "Bình thường")
+        if pets:
+            self.customer_pets_table.selectRow(0)
+        self._selected_pet_changed()
+
+    def _build_pet_tab(self, kind: str) -> QWidget:
+        tab = QWidget()
+        layout = QVBoxLayout(tab)
+        layout.setContentsMargins(12, 12, 12, 12)
+        label = QLabel("-")
+        label.setWordWrap(True)
+        setattr(self, f"pet_{kind}_summary", label)
+        layout.addWidget(label)
+        return tab
+
+    def _selected_pet_changed(self, *_: Any) -> None:
+        customer_id = self.selected_customer_id()
+        if customer_id is None:
+            self._clear_pet_profile()
+            return
+        pets = self.database.list_pets(customer_id)
+        row = self.customer_pets_table.currentRow()
+        if row < 0 or row >= len(pets):
+            self._clear_pet_profile()
+            return
+        pet = pets[row]
+        self.pet_profile_name.setText(f"{pet['name']} · {pet['species']}")
+        self.pet_avatar.setText("🐶" if str(pet["species"]).lower().startswith("chó") else "🐱")
+
+        health_status = pet["health_status"] or "Bình thường"
+        self.pet_profile_status.setText(health_status)
+        bg = "#edf7ee" if "bình thường" in health_status.lower() or "stable" in health_status.lower() else "#fff1d8"
+        fg = "#2d7d42" if "bình thường" in health_status.lower() or "stable" in health_status.lower() else "#9b5f17"
+        self.pet_profile_status.setStyleSheet(
+            f"background: {bg}; color: {fg}; border-radius: 12px; padding: 5px 10px;"
+        )
+
+        age_text = pet["birth_date"] or "Chưa xác định"
+        weight_text = f"{pet['weight_kg']:.1f} kg" if pet["weight_kg"] is not None else "Chưa cập nhật"
+        environment_text = pet["environment_type"] or "Trong nhà"
+        notes = pet["notes"] or "Không có ghi chú"
+        self.pet_overview_summary.setText(
+            f"Giống: {pet['breed_name'] or 'Chưa xác định'} | Tuổi: {age_text} | Cân nặng: {weight_text} | Môi trường: {environment_text} | Ghi chú: {notes}"
+        )
+        self.pet_nutrition_summary.setText(
+            f"Khuyến nghị dinh dưỡng cho {pet['name']}: ưu tiên chế độ phù hợp với {pet['species']} và mức hoạt động {pet['activity_level'] or 'Trung bình'}. Cân nặng hiện tại {weight_text}."
+        )
+        self.pet_health_summary.setText(
+            f"Tình trạng sức khỏe: {health_status}. Thân trạng {pet['body_condition'] or 'Bình thường'} và môi trường sống {environment_text}. Nên theo dõi định kỳ khi cần." 
+        )
+        self.pet_grooming_summary.setText(
+            f"Chăm sóc cơ bản: chải lông, vệ sinh tai/mắt và kiểm tra da theo lịch. Mức độ hoạt động: {pet['activity_level'] or 'Trung bình'}, môi trường: {environment_text}."
+        )
+
+    def _clear_pet_profile(self) -> None:
+        self.pet_profile_name.setText("-")
+        self.pet_avatar.setText("🐾")
+        self.pet_profile_status.setText("Bình thường")
+        self.pet_profile_status.setStyleSheet(
+            "background: #edf7ee; color: #2d7d42; border-radius: 12px; padding: 5px 10px;"
+        )
+        for key in ("overview", "nutrition", "health", "grooming"):
+            summary = getattr(self, f"pet_{key}_summary", None)
+            if summary is not None:
+                summary.setText("-")
 
     def _reservation_selection_changed(self, *_: Any) -> None:
         reservation_id = self.selected_reservation_id()

@@ -31,6 +31,8 @@ from app.ui.notifications.page import OperationsPage
 from app.modules.auth.constants import ROLE_LABELS
 from app.ui.auth.access_page import AccessPage
 from app.ui.customers.page import CustomersPage
+from app.ui.customer_insights.page import CustomerPetServiceDashboardPage
+from app.ui.pet_detail.page import PetDetailPage
 from app.ui.reservations.page import ReservationsPage
 from app.ui.suppliers.page import SuppliersPage
 from app.ui.platform.page import PlatformPage
@@ -86,12 +88,14 @@ class MainWindow(QMainWindow):
         )
         self.dashboard = DashboardPage(database)
         self.animals = AnimalsPage(database, self.refresh_dashboard)
+        self.pet_detail = PetDetailPage(database)
         self.store = StorePage(database)
         self.suppliers = SuppliersPage(database)
         self.imports = ImportsPage(database, focused_section="imports")
         self.health = HealthPage(database)
         self.care = CarePage(database)
         self.customers = CustomersPage(database)
+        self.customer_insights = CustomerPetServiceDashboardPage(database)
         self.reservations = ReservationsPage(database)
         self.sales = SalesPage(database, focused_section="sales")
         self.inventory = InventoryPage(database)
@@ -110,12 +114,14 @@ class MainWindow(QMainWindow):
             self.access,
             self.dashboard,
             self.animals,
+            self.pet_detail,
             self.store,
             self.suppliers,
             self.imports,
             self.health,
             self.care,
             self.customers,
+            self.customer_insights,
             self.reservations,
             self.sales,
             self.inventory,
@@ -130,20 +136,22 @@ class MainWindow(QMainWindow):
             ("HỆ THỐNG", "platform", "Nền tảng & dữ liệu", 0, "dashboard.view"),
             ("HỆ THỐNG", "access", "Tài khoản & nhật ký", 1, "access.view"),
             ("TỔNG QUAN", "dashboard", "Tổng quan", 2, "dashboard.view"),
-            ("HỒ SƠ & CHĂM SÓC", "animals", "Động vật", 3, "animals.view"),
-            ("HỒ SƠ & CHĂM SÓC", "health", "Sức khỏe", 7, "health.view"),
-            ("HỒ SƠ & CHĂM SÓC", "care", "Chăm sóc", 8, "care.view"),
-            ("HỒ SƠ & CHĂM SÓC", "store", "Chuồng trại", 4, "store.view"),
-            ("NHẬP HÀNG", "suppliers", "Nhà cung cấp", 5, "imports.view"),
-            ("NHẬP HÀNG", "imports", "Nhập & kiểm tra", 6, "imports.view"),
-            ("KHÁCH HÀNG & BÁN HÀNG", "customers", "Khách hàng", 9, "sales.view"),
-            ("KHÁCH HÀNG & BÁN HÀNG", "reservations", "Đặt trước & giữ chỗ", 10, "sales.view"),
-            ("KHÁCH HÀNG & BÁN HÀNG", "sales", "Đơn hàng & thanh toán", 11, "sales.view"),
-            ("KHÁCH HÀNG & BÁN HÀNG", "memberships", "Hội viên & bill", 15, "membership.view"),
-            ("KHÁCH HÀNG & BÁN HÀNG", "services", "Dịch vụ & lịch hẹn", 16, "services.view"),
-            ("VẬT TƯ & PHÂN TÍCH", "inventory", "Thức ăn & thuốc", 12, "inventory.view"),
-            ("VẬT TƯ & PHÂN TÍCH", "reports", "Báo cáo", 13, "reports.view"),
-            ("VẬT TƯ & PHÂN TÍCH", "operations", "Cảnh báo & sao lưu", 14, "notifications.view"),
+            ("HỒ SƠ & CHĂM SÓC", "animals", "Pet management", 3, "animals.view"),
+            ("HỒ SƠ & CHĂM SÓC", "pet_detail", "Pet detail", 4, "animals.view"),
+            ("HỒ SƠ & CHĂM SÓC", "store", "Chuồng trại", 5, "store.view"),
+            ("HỒ SƠ & CHĂM SÓC", "health", "Sức khỏe", 8, "health.view"),
+            ("HỒ SƠ & CHĂM SÓC", "care", "Chăm sóc", 9, "care.view"),
+            ("NHẬP HÀNG", "suppliers", "Nhà cung cấp", 6, "imports.view"),
+            ("NHẬP HÀNG", "imports", "Nhập & kiểm tra", 7, "imports.view"),
+            ("KHÁCH HÀNG & BÁN HÀNG", "customers", "Customer profile", 10, "sales.view"),
+            ("KHÁCH HÀNG & BÁN HÀNG", "customer_insights", "Customer + Pet + Service", 11, "sales.view"),
+            ("KHÁCH HÀNG & BÁN HÀNG", "reservations", "Đặt trước & giữ chỗ", 12, "sales.view"),
+            ("KHÁCH HÀNG & BÁN HÀNG", "sales", "Đơn hàng & thanh toán", 13, "sales.view"),
+            ("KHÁCH HÀNG & BÁN HÀNG", "memberships", "Hội viên & bill", 17, "membership.view"),
+            ("KHÁCH HÀNG & BÁN HÀNG", "services", "Dịch vụ & lịch hẹn", 18, "services.view"),
+            ("VẬT TƯ & PHÂN TÍCH", "inventory", "Thức ăn & thuốc", 14, "inventory.view"),
+            ("VẬT TƯ & PHÂN TÍCH", "reports", "Báo cáo", 15, "reports.view"),
+            ("VẬT TƯ & PHÂN TÍCH", "operations", "Cảnh báo & sao lưu", 16, "notifications.view"),
         )
 
         navigation_scroll = QScrollArea()
@@ -249,8 +257,9 @@ class MainWindow(QMainWindow):
                 background: #f1dfc8; color: #533f2e; font-weight: 700;
             }
             QLabel#pageTitle { font-size: 25px; font-weight: 700; color: #244b3b; }
+            QLabel#pageSubtitle { font-size: 15px; font-weight: 700; color: #355c49; }
             QLabel#sectionTitle { font-size: 17px; font-weight: 600; margin-top: 16px; color: #355c49; }
-            QFrame#statCard {
+            QFrame#statCard, QWidget#profileCard, QFrame#profileCard {
                 background: #fffdf9; border: 1px solid #ece5d9; border-radius: 12px;
             }
             QLabel#statValue { font-size: 30px; font-weight: 700; }

@@ -144,6 +144,28 @@ def test_checklist_saves_all_25_items_and_updates_same_assessment(database):
     assert saved[CARE_CHECKLIST_ITEMS[0][0]]["note"] == "Ăn ít hơn thường ngày"
 
 
+def test_vaccination_due_alerts_are_reported(database):
+    animal_id = database.save_animal(animal_values("PET-998"))
+    database.add_vaccination_record(
+        {
+            "animal_id": animal_id,
+            "vaccine_name": "Dại",
+            "administered_at": "2026-09-01",
+            "next_due_at": "2026-10-02",
+            "dose_number": 1,
+            "veterinarian": "BS Nhi",
+            "note": "Cần nhắc lại",
+            "status": "SCHEDULED",
+        }
+    )
+
+    alerts = database.list_operational_alerts()
+    assert any(
+        alert["category"] == "Tiêm phòng" and "Dại" in alert["title"]
+        for alert in alerts
+    )
+
+
 def test_existing_animal_database_is_migrated(tmp_path):
     legacy_path = tmp_path / "legacy.db"
     connection = sqlite3.connect(legacy_path)

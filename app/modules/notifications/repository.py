@@ -98,6 +98,35 @@ class NotificationRepository:
                 }
             )
 
+        vaccination_due = self.connection.execute(
+            """
+            SELECT vr.id, vr.vaccine_name, vr.next_due_at, a.name AS animal_name,
+                   a.animal_code, a.species
+            FROM vaccination_records vr
+            JOIN animals a ON a.id = vr.animal_id
+            WHERE vr.status != 'COMPLETED'
+              AND vr.next_due_at IS NOT NULL
+              AND trim(vr.next_due_at) != ''
+              AND date(vr.next_due_at) <= date('now', 'localtime', '+30 days')
+            ORDER BY date(vr.next_due_at) ASC, vr.id ASC
+            """
+        ).fetchall()
+        for row in vaccination_due:
+            due_date = row["next_due_at"]
+            severity = "HIGH" if due_date <= date.today().isoformat() else "MEDIUM"
+            alerts.append(
+                {
+                    "severity": severity,
+                    "category": "Tiêm phòng",
+                    "title": f"Nhắc tiêm: {row['vaccine_name']}",
+                    "detail": (
+                        f"{row['animal_code']} — {row['animal_name']} ({row['species']}); "
+                        f"lịch tiêm dự kiến {due_date}."
+                    ),
+                    "date": due_date,
+                }
+            )
+
         expired_reservations = self.connection.execute(
             """
             SELECT r.id, r.expires_at, c.name AS customer_name,
