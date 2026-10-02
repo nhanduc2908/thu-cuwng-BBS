@@ -26,6 +26,28 @@ class OperationsPage(QWidget):
         layout.setContentsMargins(28, 24, 28, 24)
         layout.addWidget(QLabel("Cảnh báo và vận hành", objectName="pageTitle"))
 
+        self.summary_cards = {}
+        summary_row = QHBoxLayout()
+        for key, title, color in (
+            ("total", "Tổng cảnh báo", "#2d7d42"),
+            ("high", "Khẩn cấp", "#b33636"),
+            ("vaccination", "Tiêm phòng", "#5976b8"),
+            ("care", "Chăm sóc", "#9b5f17"),
+        ):
+            card = QWidget()
+            card.setObjectName("statCard")
+            card_layout = QVBoxLayout(card)
+            card_layout.setContentsMargins(12, 12, 12, 12)
+            label = QLabel(title)
+            value = QLabel("0")
+            value.setObjectName("statValue")
+            value.setStyleSheet(f"color: {color};")
+            card_layout.addWidget(label)
+            card_layout.addWidget(value)
+            summary_row.addWidget(card)
+            self.summary_cards[key] = value
+        layout.addLayout(summary_row)
+
         self.tabs = QTabWidget()
         self.alerts_tab = QWidget()
         alerts_layout = QVBoxLayout(self.alerts_tab)
@@ -85,6 +107,10 @@ class OperationsPage(QWidget):
 
     def refresh_alerts(self) -> None:
         alerts = self.database.list_operational_alerts()
+        summary = self.database.notifications.get_alert_summary()
+        for key, value in self.summary_cards.items():
+            value.setText(str(summary.get(key, 0)))
+
         self.alerts_table.setRowCount(len(alerts))
         for row, alert in enumerate(alerts):
             set_cell(

@@ -7,6 +7,18 @@ class NotificationRepository:
     def __init__(self, connection: sqlite3.Connection) -> None:
         self.connection = connection
 
+    def get_alert_summary(self) -> dict[str, int]:
+        alerts = self.list_alerts()
+        summary = {
+            "total": len(alerts),
+            "high": sum(1 for item in alerts if item["severity"] == "HIGH"),
+            "medium": sum(1 for item in alerts if item["severity"] == "MEDIUM"),
+            "vaccination": sum(1 for item in alerts if item["category"] == "Tiêm phòng"),
+            "inventory": sum(1 for item in alerts if item["category"] in {"Tồn kho", "Hạn sử dụng"}),
+            "care": sum(1 for item in alerts if item["category"] == "Chăm sóc"),
+        }
+        return summary
+
     def list_alerts(self) -> list[dict[str, Any]]:
         today = date.today().isoformat()
         alerts: list[dict[str, Any]] = []

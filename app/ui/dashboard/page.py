@@ -112,6 +112,12 @@ class DashboardPage(QWidget):
         analytics_row.addWidget(self._build_activity_feed(), 1)
         layout.addLayout(analytics_row)
 
+        reminders_row = QHBoxLayout()
+        reminders_row.setSpacing(18)
+        reminders_row.addWidget(self._build_reminder_panel(), 2)
+        reminders_row.addWidget(self._build_customer_summary_panel(), 1)
+        layout.addLayout(reminders_row)
+
         self.recommendation_panel = self._build_recommendation_panel()
         layout.addWidget(self.recommendation_panel)
 
@@ -199,6 +205,31 @@ class DashboardPage(QWidget):
             box.setStyleSheet(f"{box.styleSheet()} QFrame#statCard {{ border-color: {tone}; }}")
             insight_layout.addWidget(box)
         panel_layout.addWidget(insights)
+        return panel
+
+    def _build_reminder_panel(self) -> QWidget:
+        panel = QFrame(objectName="profileCard")
+        layout = QVBoxLayout(panel)
+        layout.setContentsMargins(18, 16, 18, 16)
+        layout.setSpacing(10)
+        layout.addWidget(QLabel("Reminder & alerts", objectName="pageSubtitle"))
+
+        self.reminder_items = QWidget()
+        self.reminder_layout = QVBoxLayout(self.reminder_items)
+        self.reminder_layout.setContentsMargins(0, 0, 0, 0)
+        self.reminder_layout.setSpacing(8)
+        layout.addWidget(self.reminder_items)
+        return panel
+
+    def _build_customer_summary_panel(self) -> QWidget:
+        panel = QFrame(objectName="profileCard")
+        layout = QVBoxLayout(panel)
+        layout.setContentsMargins(18, 16, 18, 16)
+        layout.setSpacing(10)
+        layout.addWidget(QLabel("Customer overview", objectName="pageSubtitle"))
+        self.customer_summary_value = QLabel("Đang tổng hợp khách hàng hoạt động...")
+        self.customer_summary_value.setWordWrap(True)
+        layout.addWidget(self.customer_summary_value)
         return panel
 
     def _build_recommendation_panel(self) -> QWidget:
@@ -437,6 +468,7 @@ class DashboardPage(QWidget):
         for key, label in self.cards.items():
             label.setText(str(counts[key]))
         self._render_featured_pets()
+        self._render_reminders()
         customers = self.database.list_customers()
         pets = self.database.customers.list_pets()
         appointments = self.database.list_service_appointments()
@@ -446,6 +478,7 @@ class DashboardPage(QWidget):
             f"Doanh thu: {sum(float(item['total_price'] or 0) for item in appointments):,.0f} ₫"
         )
         self.customer_overview_label.setText(customer_summary)
+        self.customer_summary_value.setText(customer_summary)
         animals = self.database.recent_animals()
         self.table.setRowCount(len(animals))
         for row_number, animal in enumerate(animals):
@@ -454,3 +487,30 @@ class DashboardPage(QWidget):
             set_cell(self.table, row_number, 2, animal["species"])
             set_cell(self.table, row_number, 3, STATUS_LABELS[animal["status"]])
             set_cell(self.table, row_number, 4, animal["created_at"][:10])
+
+    def _render_reminders(self) -> None:
+        while self.reminder_layout.count():
+            item = self.reminder_layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
+
+        alerts = self.database.list_operational_alerts()[:5]
+        if not alerts:
+            placeholder = QLabel("Không có nhắc nhở/alert nào trong thời gian gần đây.")
+            placeholder.setWordWrap(True)
+            self.reminder_layout.addWidget(placeholder)
+            return
+
+        for alert in alerts:
+            row = QFrame(objectName="statCard")
+            row_layout = QVBoxLayout(row)
+            row_layout.setContentsMargins(10, 10, 10, 10)
+            title = QLabel(f"[{alert['category']}] {alert['title']}")
+            title.setWordWrap(True)
+            detail = QLabel(str(alert['detail']))
+            detail.setWordWrap(True)
+            row_layout.addWidget(title)
+            row_layout.addWidget(detail)
+            row_layout.addWidget(QLabel(str(alert['date'])))
+            self.reminder_layout.addWidget(row)
