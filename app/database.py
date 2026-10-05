@@ -2,7 +2,6 @@ from pathlib import Path
 import sqlite3
 from typing import Any
 
-
 DEFAULT_DATABASE_PATH = Path.home() / "AppData" / "Local" / "PetStoreManagement" / "pet_store.db"
 
 

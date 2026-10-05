@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PetCare 30-Topic Presentation</title>
+  <style>
+    :root {
+      --bg1: #071a2a;
+      --bg2: #0f2234;
+      --bg3: #16354c;
+      --card: rgba(15, 23, 42, 0.88);
+      --line: rgba(148, 163, 184, 0.22);
+      --cyan: #7dd3fc;
+      --mint: #34d399;
+      --amber: #fbbf24;
+      --orange: #fb923c;
+      --red: #f87171;
+      --text: #edf6ff;
+      --muted: #d7e8fb;
+      --shadow: rgba(0,0,0,0.2);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      color: var(--text);
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 10% 18%, rgba(125,211,252,0.12), transparent 24%),
+        radial-gradient(circle at 88% 82%, rgba(251,146,60,0.12), transparent 28%),
+        linear-gradient(135deg, rgba(7,24,38,0.98), rgba(15,34,55,0.96));
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 38px 62px 62px 62px;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .slide.active { display: flex; }
+
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+    }
+
+    .tag {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--orange);
+      font-weight: 800;
+    }
+
+    .counter {
+      position: absolute;
+      top: 18px;
+      right: 28px;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      z-index: 10;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    h1, h2, h3, p, li { margin: 0; }
+    h1 { font-size: clamp(2.1rem, 3vw, 4rem); line-height: 1.08; }
+    h2 { font-size: clamp(1.7rem, 2vw, 2.8rem); margin-bottom: 16px; }
+    h3 { font-size: clamp(1.1rem, 1.5vw, 1.7rem); color: var(--cyan); margin-bottom: 10px; }
+    p, li { font-size: clamp(1rem, 1.1vw, 1.2rem); color: var(--muted); line-height: 1.7; }
+    ul { margin: 0; padding-left: 24px; }
+
+    .title-wrap {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 32px;
+      align-items: center;
+      height: 100%;
+    }
+
+    .sub {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 1.12rem;
+      line-height: 1.8;
+      max-width: 720px;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .badge {
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(125,211,252,0.08);
+      border: 1px solid rgba(125,211,252,0.24);
+      color: var(--cyan);
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 330px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(125,211,252,0.1), rgba(251,146,60,0.12), rgba(10,18,26,0.9));
+      border: 1px solid var(--line);
+      overflow: hidden;
+      box-shadow: 0 24px 46px rgba(0,0,0,0.2);
+    }
+    .hero::before, .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+    .hero::before { width: 260px; height: 260px; right: -56px; top: -82px; }
+    .hero::after { width: 240px; height: 240px; left: -62px; bottom: -90px; }
+
+    .screen {
+      position: absolute;
+      inset: 18px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(8,20,28,0.75);
+    }
+    .sidebar {
+      position: absolute; left: 0; top: 0; bottom: 0; width: 120px; border-right: 1px solid var(--line); background: rgba(255,255,255,0.03);
+    }
+    .sidebar .item {
+      position: absolute; left: 16px; right: 16px; height: 26px; border-radius: 10px; background: rgba(255,255,255,0.08);
+    }
+    .sidebar .item:nth-child(1) { top: 20px; }
+    .sidebar .item:nth-child(2) { top: 62px; }
+    .sidebar .item:nth-child(3) { top: 104px; }
+    .main { position: absolute; left: 130px; right: 18px; top: 18px; bottom: 18px; }
+    .main .top { height: 30px; border-radius: 8px; background: rgba(255,255,255,0.07); }
+    .main .chart {
+      position: absolute; left: 0; right: 0; top: 52px; height: 128px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(125,211,252,0.18), rgba(125,211,252,0.03));
+    }
+    .main .chart::after {
+      content: "";
+      position: absolute; left: 8px; right: 8px; bottom: 14px; height: 62px;
+      background: linear-gradient(180deg, rgba(125,211,252,0.24), rgba(125,211,252,0.04));
+      clip-path: polygon(0 100%, 12% 72%, 24% 68%, 38% 44%, 50% 64%, 62% 28%, 76% 52%, 88% 30%, 100% 10%, 100% 100%);
+    }
+    .stats {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 74px; display: grid; grid-template-columns: repeat(3,1fr); gap: 8px;
+    }
+    .stats .block {
+      background: rgba(255,255,255,0.04); border: 1px solid var(--line); border-radius: 12px;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1.15fr 1fr; gap: 22px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 18px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 16px; }
+    .ui-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 8px;
+    }
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px 20px;
+      box-shadow: 0 18px 30px rgba(0,0,0,0.18);
+    }
+
+    .mini {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-top: 10px;
+    }
+
+    .ui-mockup {
+      background: rgba(8, 16, 24, 0.8);
+      border: 1px solid rgba(125, 211, 252, 0.22);
+      border-radius: 16px;
+      overflow: hidden;
+      min-height: 220px;
+      box-shadow: 0 18px 28px rgba(0,0,0,0.15);
+      position: relative;
+    }
+    .ui-mockup .toolbar {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+    }
+    .ui-mockup .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .ui-mockup .dot:nth-child(1) { background: #f87171; }
+    .ui-mockup .dot:nth-child(2) { background: #fbbf24; }
+    .ui-mockup .dot:nth-child(3) { background: #34d399; }
+    .ui-mockup .body {
+      padding: 12px; display: grid; grid-template-columns: 96px 1fr; gap: 10px; min-height: 180px;
+    }
+    .ui-mockup .menu {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line); border-radius: 10px; padding: 8px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .ui-mockup .menu div {
+      height: 14px; border-radius: 8px; background: rgba(255,255,255,0.08);
+    }
+    .ui-mockup .content {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .ui-mockup .topbar {
+      height: 28px; border-radius: 10px; background: rgba(255,255,255,0.08); border: 1px solid var(--line);
+    }
+    .ui-mockup .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .ui-mockup .stat-box {
+      min-height: 46px; border-radius: 10px; border: 1px solid var(--line); background: linear-gradient(135deg, rgba(125,211,252,0.12), rgba(59,130,246,0.08));
+      position: relative;
+    }
+    .ui-mockup .stat-box::before {
+      content: ""; position: absolute; left: 10px; right: 10px; top: 12px; height: 8px; border-radius: 999px; background: rgba(125,211,252,0.32);
+    }
+    .ui-mockup .chart-box {
+      height: 86px; border-radius: 12px; background: linear-gradient(180deg, rgba(125,211,252,0.12), rgba(125,211,252,0.03)); border: 1px solid var(--line); position: relative; overflow: hidden;
+    }
+    .ui-mockup .chart-box::after {
+      content: ""; position: absolute; left: 8px; right: 8px; bottom: 12px; height: 40px; background: linear-gradient(180deg, rgba(125,211,252,0.25), rgba(125,211,252,0.04)); clip-path: polygon(0 100%, 12% 76%, 24% 69%, 34% 52%, 50% 58%, 64% 30%, 76% 44%, 90% 18%, 100% 10%, 100% 100%);
+    }
+    .ui-mockup .label {
+      position: absolute; left: 12px; top: 10px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); font-weight: 700;
+    }
+
+    .table-card {
+      background: rgba(9, 16, 24, 0.74);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+    .table-card .header {
+      display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,0.02);
+    }
+    .table-card .header .chip {
+      height: 8px; width: 8px; border-radius: 50%; background: var(--cyan);
+    }
+    .table-card .rows {
+      display: grid; gap: 8px; padding: 12px;
+    }
+    .table-card .row {
+      display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 8px; font-size: 11px; color: var(--muted);
+    }
+    .table-card .cell {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px;
+      min-height: 30px;
+    }
+    .table-card .cell.title { background: rgba(125,211,252,0.06); }
+
+    .form-card {
+      background: rgba(9, 16, 24, 0.74); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 10px;
+    }
+    .form-card .field {
+      display: grid; grid-template-columns: 110px 1fr; gap: 10px; align-items: center; font-size: 11px; color: var(--muted);
+    }
+    .form-card .input {
+      height: 26px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--line);
+    }
+    .form-card .input.long { width: 100%; }
+    .form-card .button-row {
+      display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px;
+    }
+    .form-card .btn {
+      padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: rgba(125,211,252,0.08); color: var(--cyan); font-weight: 700; font-size: 10px;
+    }
+
+    .workflow-step {
+      background: rgba(13, 22, 34, 0.82); border: 1px solid var(--line); border-radius: 14px; padding: 12px 10px; text-align: center; min-height: 120px; display: flex; flex-direction: column; justify-content: center; gap: 8px;
+    }
+    .workflow-step .num {
+      width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, rgba(125,211,252,0.18), rgba(251,146,60,0.12)); border: 1px solid var(--line); color: var(--cyan); font-weight: 800; margin: 0 auto;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .workflow-step .label {
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cyan); font-weight: 700;
+    }
+    .workflow-step .desc {
+      font-size: 10px; color: var(--muted); line-height: 1.5;
+    }
+    .workflow-arrow {
+      display: flex; align-items: center; justify-content: center; font-size: 26px; color: var(--orange); padding-top: 24px;
+    }
+
+    .nav {
+      position: absolute;
+      right: 24px;
+      bottom: 18px;
+      display: flex;
+      gap: 12px;
+      z-index: 12;
+    }
+    button {
+      border: 1px solid var(--line);
+      background: rgba(15,23,42,0.92);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    @media (max-width: 980px) {
+      .slide { padding: 28px 26px 60px 26px; }
+      .title-wrap, .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; display: grid; }
+      .hero { height: 220px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <div class="counter" id="counter">01 / 32</div>
+
+    <section class="slide active">
+      <div class="slide-header"><span class="tag">01 - Overview</span></div>
+      <div class="title-wrap">
+        <div>
+          <h1>PetCare Management System</h1>
+          <p class="sub">Giải pháp quản lý doanh nghiệp thú cưng tích hợp quy trình từ hồ sơ thú cưng, chăm sóc, kho, dịch vụ, bán hàng, khách hàng đến báo cáo và cảnh báo.</p>
+          <div class="badge-row">
+            <span class="badge">Python</span>
+            <span class="badge">PySide6</span>
+            <span class="badge">SQLite</span>
+            <span class="badge">Desktop</span>
+          </div>
+        </div>
+        <div class="hero">
+          <div class="screen">
+            <div class="sidebar">
+              <div class="item"></div>
+              <div class="item"></div>
+              <div class="item"></div>
+            </div>
+            <div class="main">
+              <div class="top"></div>
+              <div class="chart"></div>
+              <div class="stats">
+                <div class="block"></div>
+                <div class="block"></div>
+                <div class="block"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">02 - Project Background</span></div>
+      <h2>Lý do xây dựng dự án</h2>
+      <div class="card"><ul><li>Doanh nghiệp thú cưng đang vận hành bằng nhiều công cụ rời rạc</li><li>Dữ liệu bị phân mảnh, dễ sai lệch và khó báo cáo</li><li>Cần hệ thống quản lý tập trung để theo dõi hoạt động thực tế</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">03 - Problem Statement</span></div>
+      <h2>Vấn đề chính</h2>
+      <div class="grid-2">
+        <div class="card"><h3>Thủ công</h3><ul><li>Nhập liệu lặp đi lặp lại</li><li>Quản lý hàng hóa bằng Excel, ghi chú</li><li>Không có kết nối giữa các bộ phận</li></ul></div>
+        <div class="card"><h3>Rủi ro</h3><ul><li>Thông tin không đồng bộ</li><li>Khó kiểm soát tồn kho và dịch vụ</li><li>Quyết định bị chậm</li></ul></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">04 - Objectives</span></div>
+      <h2>Mục tiêu</h2>
+      <div class="grid-4">
+        <div class="card"><h3>1</h3><p>Tập trung dữ liệu</p></div>
+        <div class="card"><h3>2</h3><p>Tối ưu quy trình</p></div>
+        <div class="card"><h3>3</h3><p>Giảm sai sót</p></div>
+        <div class="card"><h3>4</h3><p>Hỗ trợ quyết định</p></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">05 - Scope</span></div>
+      <h2>Phạm vi hệ thống</h2>
+      <div class="card"><ul><li>Quản lý thú cưng và hồ sơ chăm sóc</li><li>Quản lý kho, nhập/xuất, cảnh báo</li><li>Quản lý khách hàng và thành viên</li><li>Quản lý dịch vụ và lịch hẹn</li><li>Quản lý bán hàng, thanh toán và báo cáo</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">06 - Business Value</span></div>
+      <h2>Giá trị kinh doanh</h2>
+      <div class="grid-3">
+        <div class="card"><h3>Vận hành</h3><p>Giảm thời gian xử lý, tăng hiệu suất</p></div>
+        <div class="card"><h3>Khách hàng</h3><p>Chăm sóc tốt hơn, lịch sử rõ ràng</p></div>
+        <div class="card"><h3>Quản lý</h3><p>Ra quyết định dựa trên dữ liệu thực tế</p></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">07 - Target Users</span></div>
+      <h2>Người dùng mục tiêu</h2>
+      <div class="card"><ul><li>Quản lý cửa hàng thú cưng</li><li>Nhân viên chăm sóc và bán hàng</li><li>Nhân viên kho và nhập hàng</li><li>Quản trị hệ thống và giám sát</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">08 - Functional Requirements</span></div>
+      <h2>Yêu cầu chức năng</h2>
+      <div class="card"><ul><li>Quản lý hồ sơ thú cưng</li><li>Quản lý chăm sóc và sức khỏe</li><li>Quản lý hàng hóa, tồn kho, batch</li><li>Quản lý đơn hàng và thanh toán</li><li>Quản lý dịch vụ, lịch hẹn và thành viên</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">09 - Non-Functional Requirements</span></div>
+      <h2>Yêu cầu phi chức năng</h2>
+      <div class="card"><ul><li>Hiệu năng ổn định</li><li>Dễ sử dụng</li><li>Bảo mật thông tin</li><li>Khả năng mở rộng</li><li>Khả năng hoạt động local</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">10 - Technology Stack</span></div>
+      <h2>Công nghệ sử dụng</h2>
+      <div class="grid-4">
+        <div class="card"><h3>Python</h3><p>Logic nghiệp vụ</p></div>
+        <div class="card"><h3>PySide6</h3><p>UI desktop</p></div>
+        <div class="card"><h3>SQLite</h3><p>Lưu trữ dữ liệu</p></div>
+        <div class="card"><h3>Pytest</h3><p>Kiểm thử</p></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">11 - Architecture</span></div>
+      <h2>Kiến trúc hệ thống</h2>
+      <div class="card"><ul><li>UI layer: giao diện người dùng</li><li>Business logic layer: các module nghiệp vụ</li><li>Data layer: SQLite</li><li>Security layer: xác thực, phân quyền, log</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">12 - Entity Relationship</span></div>
+      <h2>Mô hình dữ liệu</h2>
+      <div class="card"><ul><li>Pet, Customer, Product, Order, Service, Membership</li><li>Quan hệ trực tiếp giữa thú cưng với khách hàng</li><li>Đơn hàng liên kết sản phẩm và tồn kho</li><li>Lịch hẹn liên kết nhân sự và thú cưng</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">13 - Module Animal</span></div>
+      <h2>Quản lý thú cưng</h2>
+      <div class="card"><ul><li>Hồ sơ cá nhân</li><li>Thông tin giống loài, hình ảnh, lưu trú</li><li>Chăm sóc và lịch sử sức khỏe</li><li>Nhận thú cưng và kiểm tra ban đầu</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">14 - Module Care</span></div>
+      <h2>Quản lý chăm sóc</h2>
+      <div class="card"><ul><li>Checklist công việc</li><li>Ghi nhận quan sát sức khỏe</li><li>Lịch công việc hằng ngày</li><li>Phân công trách nhiệm cho nhân sự</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">15 - Module Customer</span></div>
+      <h2>Quản lý khách hàng</h2>
+      <div class="card"><ul><li>Hồ sơ khách hàng</li><li>Sở hữu thú cưng</li><li>Lịch sử giao dịch</li><li>Điểm tín nhiệm và ưu đãi</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">16 - Module Inventory</span></div>
+      <h2>Quản lý kho</h2>
+      <div class="card"><ul><li>Danh mục sản phẩm</li><li>Chính sách nhập/xuất</li><li>Hạn sử dụng và cảnh báo</li><li>FEFO, tồn kho và dự báo</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">17 - Module Sales</span></div>
+      <h2>Quản lý bán hàng</h2>
+      <div class="card"><ul><li>Đơn hàng, thanh toán, đặt cọc</li><li>Giảm giá, combo và đi kèm</li><li>Giải phóng tồn kho khi hủy</li><li>Phân tích doanh thu</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">18 - Module Service</span></div>
+      <h2>Quản lý dịch vụ</h2>
+      <div class="card"><ul><li>Đặt lịch tư vấn, spa, grooming</li><li>Gán nhân sự</li><li>Ước tính giá</li><li>Trạng thái: pending, active, completed</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">19 - Module Membership</span></div>
+      <h2>Quản lý thành viên</h2>
+      <div class="card"><ul><li>Gói thành viên</li><li>Thẻ thành viên</li><li>Hóa đơn và kỳ thanh toán</li><li>Gia hạn và ưu đãi</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">20 - Recommendation Engine</span></div>
+      <h2>Hệ thống gợi ý</h2>
+      <div class="card"><ul><li>Gợi ý sản phẩm theo hồ sơ thú cưng</li><li>Ưu tiên theo ngân sách</li><li>Dựa trên dữ liệu tồn kho và lịch sử</li><li>Rules-based recommendation</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">21 - Reporting</span></div>
+      <h2>Báo cáo và thống kê</h2>
+      <div class="card"><ul><li>Báo cáo tồn kho</li><li>Báo cáo bán hàng</li><li>Báo cáo dịch vụ</li><li>Báo cáo thành viên</li><li>Xuất CSV</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">22 - Alerts & Notifications</span></div>
+      <h2>Cảnh báo và nhắc nhở</h2>
+      <div class="card"><ul><li>Hết hàng, sắp hết hàng</li><li>Hàng sắp hết hạn</li><li>Nhắc lịch chăm sóc</li><li>Nhắc thanh toán hoặc gia hạn</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">23 - Authentication</span></div>
+      <h2>Xác thực người dùng</h2>
+      <div class="card"><ul><li>Admin mặc định</li><li>Đổi mật khẩu lần đầu</li><li>Phân quyền theo vai trò</li><li>Login audit log</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">24 - Security</span></div>
+      <h2>Bảo mật dữ liệu</h2>
+      <div class="card"><ul><li>Mã hóa mật khẩu PBKDF2-HMAC-SHA256</li><li>Salt riêng từng user</li><li>Role-based access control</li><li>Audit trail cho thao tác quan trọng</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">25 - Database Design</span></div>
+      <h2>Thiết kế cơ sở dữ liệu</h2>
+      <div class="card"><ul><li>Users, roles, log</li><li>Pets, customers, services</li><li>Products, categories, stock</li><li>Orders, invoices, memberships</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">26 - User Interface</span></div>
+      <h2>Giao diện người dùng</h2>
+      <div class="card"><ul><li>Dashboard tổng quan</li><li>Form nhập liệu trực quan</li><li>Danh sách một màn hình rõ ràng</li><li>Navigation theo chức năng chính</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">27 - Testing Strategy</span></div>
+      <h2>Chiến lược kiểm thử</h2>
+      <div class="card"><ul><li>Unit test cho module logic</li><li>Test giao diện chính</li><li>Kiểm thử workflow nghiệp vụ</li><li>Kiểm tra độ ổn định dữ liệu</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">28 - Risks and Limitations</span></div>
+      <h2>Rủi ro và giới hạn</h2>
+      <div class="card"><ul><li>Chưa hỗ trợ MFA/2FA</li><li>Không tích hợp payment gateway</li><li>Recommendation chưa AI nâng cao</li><li>Phù hợp local deployment hơn là SaaS</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">29 - Roadmap</span></div>
+      <h2>Kế hoạch phát triển</h2>
+      <div class="card"><ul><li>Giai đoạn 1: hoàn thiện nghiệp vụ cốt lõi</li><li>Giai đoạn 2: dashboard và báo cáo nâng cao</li><li>Giai đoạn 3: tích hợp thanh toán</li><li>Giai đoạn 4: mở rộng AI recommendation</li></ul></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">30 - Screen Flow</span></div>
+      <h2>System workflow</h2>
+      <div class="workflow-grid">
+        <div class="workflow-step"><div class="num">1</div><div class="label">Login</div><div class="desc">Xác thực người dùng</div></div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step"><div class="num">2</div><div class="label">Dashboard</div><div class="desc">Tổng quan hệ thống</div></div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step"><div class="num">3</div><div class="label">Pet data</div><div class="desc">Hồ sơ thú cưng & chăm sóc</div></div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step"><div class="num">4</div><div class="label">Inventory</div><div class="desc">Tồn kho và nhập/xuất</div></div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step"><div class="num">5</div><div class="label">Order</div><div class="desc">Đơn hàng & thanh toán</div></div>
+      </div>
+      <div class="workflow-grid" style="margin-top: 18px;">
+        <div class="workflow-step"><div class="num">6</div><div class="label">Service</div><div class="desc">Đặt lịch & theo dõi</div></div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step"><div class="num">7</div><div class="label">Customer</div><div class="desc">Khách hàng & thành viên</div></div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step"><div class="num">8</div><div class="label">Report</div><div class="desc">Báo cáo & cảnh báo</div></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">31 - Screenshot UI</span></div>
+      <h2>Giao diện hệ thống</h2>
+      <div class="ui-grid">
+        <div class="ui-mockup">
+          <div class="toolbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="body">
+            <div class="menu"><div></div><div></div><div></div><div></div></div>
+            <div class="content">
+              <div class="topbar"></div>
+              <div class="stats-row"><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div></div>
+              <div class="chart-box"><span class="label">Dashboard</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="ui-mockup">
+          <div class="toolbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="body">
+            <div class="menu"><div></div><div></div><div></div><div></div></div>
+            <div class="content">
+              <div class="topbar"></div>
+              <div class="table-card">
+                <div class="header"><span class="chip"></span><span style="font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color: var(--cyan);">Inventory</span></div>
+                <div class="rows">
+                  <div class="row">
+                    <div class="cell title">Product</div>
+                    <div class="cell title">Qty</div>
+                    <div class="cell title">Price</div>
+                    <div class="cell title">Status</div>
+                  </div>
+                  <div class="row"><div class="cell">Dog food</div><div class="cell">120</div><div class="cell">350k</div><div class="cell">Good</div></div>
+                  <div class="row"><div class="cell">Cat litter</div><div class="cell">42</div><div class="cell">180k</div><div class="cell">Low</div></div>
+                  <div class="row"><div class="cell">Vitamin</div><div class="cell">18</div><div class="cell">210k</div><div class="cell">Warn</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ui-mockup">
+          <div class="toolbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="body">
+            <div class="menu"><div></div><div></div><div></div><div></div></div>
+            <div class="content">
+              <div class="topbar"></div>
+              <div class="table-card">
+                <div class="header"><span class="chip"></span><span style="font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color: var(--cyan);">Orders</span></div>
+                <div class="rows">
+                  <div class="row">
+                    <div class="cell title">Order</div>
+                    <div class="cell title">Customer</div>
+                    <div class="cell title">Total</div>
+                    <div class="cell title">Status</div>
+                  </div>
+                  <div class="row"><div class="cell">#1024</div><div class="cell">Anna</div><div class="cell">1.2M</div><div class="cell">Paid</div></div>
+                  <div class="row"><div class="cell">#1025</div><div class="cell">Tom</div><div class="cell">680k</div><div class="cell">Pending</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ui-mockup">
+          <div class="toolbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="body">
+            <div class="menu"><div></div><div></div><div></div><div></div></div>
+            <div class="content">
+              <div class="topbar"></div>
+              <div class="form-card">
+                <div class="field"><span>Customer</span><div class="input"></div></div>
+                <div class="field"><span>Pet</span><div class="input"></div></div>
+                <div class="field"><span>Email</span><div class="input"></div></div>
+                <div class="field"><span>Notes</span><div class="input long"></div></div>
+                <div class="button-row"><span class="btn">Save</span><span class="btn">Cancel</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header"><span class="tag">32 - Conclusion</span></div>
+      <h2>Kết luận</h2>
+      <div class="card"><p>PetCare là giải pháp quản lý thực tế, phù hợp doanh nghiệp thú cưng nhỏ và vừa: tập trung dữ liệu, tối ưu vận hành, nâng cao hiệu quả và tạo nền tảng phát triển bền vững.</p></div>
+    </section>
+
+    <div class="nav">
+      <button id="prevBtn">Previous</button>
+      <button id="nextBtn">Next</button>
+    </div>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const counter = document.getElementById('counter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let current = 0;
+
+    function render() {
+      slides.forEach((slide, idx) => slide.classList.toggle('active', idx === current));
+      counter.textContent = `${String(current + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      current = (current - 1 + slides.length) % slides.length;
+      render();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      current = (current + 1) % slides.length;
+      render();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
+        event.preventDefault();
+        current = (current + 1) % slides.length;
+        render();
+      }
+      if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+        event.preventDefault();
+        current = (current - 1 + slides.length) % slides.length;
+        render();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>

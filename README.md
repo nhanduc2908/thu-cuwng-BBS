@@ -1,191 +1,187 @@
-# PetCare — Quản lý cửa hàng thú cưng
+﻿# PetCare — Pet Store Management System
 
-Ứng dụng quản lý cửa hàng thú cưng dạng desktop, viết bằng Python, PySide6 và
-SQLite. Chương trình hoạt động cục bộ trên máy tính Windows, không cần backend,
-tài khoản web hoặc dịch vụ AI bên ngoài.
+PetCare is a Windows desktop application for managing a pet store business using Python, PySide6, and SQLite. The solution runs locally on a single machine without requiring a separate backend, web login service, or external AI provider. It is designed to support daily store operations such as animal intake, care tracking, customer management, inventory, sales, memberships, service scheduling, recommendations, and operational reporting.
 
-## Yêu cầu
+## Overview
+
+This project is a local-first business management system for a pet store and service center. It consolidates core operational workflows into one desktop application while keeping data in an embedded SQLite database. The design favors simplicity, local privacy, and independence from cloud infrastructure, making it suitable for small to medium-sized stores that need a reliable operational tool without a full SaaS installation.
+
+The application includes:
+
+- A local authentication system with admin setup and password rotation
+- Role-aware access and audit logs
+- Pet profile and intake records
+- Housing, care, and health management
+- Supplier and stock tracking
+- Retail catalog and sales orders
+- Memberships, cards, and bill management
+- Service booking and appointment workflows
+- Offline recommendation logic for product suggestions
+- CSV export and operational reporting
+
+## Key Features
+
+### 1. Animal and care management
+
+- Individual pet profiles with more than 25 recorded attributes
+- Intake and check-in workflow before the animal is used in business operations
+- Housing and capacity tracking
+- Species suitability and enclosure history
+- Health observations and care timeline
+- 25-point operational checklist for care tasks
+
+### 2. Inventory and supply management
+
+- Batch and expiry tracking
+- FEFO-style inventory selection
+- Stock inflow/outflow logging
+- Low-stock and soon-to-expire warnings
+- Retail catalog with demo groups, SKUs, and combinations
+- Product composition and membership pricing support
+
+### 3. Sales and orders
+
+- Sales order management with partial payment handling
+- Reservation and deposit tracking
+- Customer-specific membership pricing logic
+- Inventory reservation for pending or partially paid orders
+- Combo stock deduction rules and release of reserved inventory on cancellation
+
+### 4. Membership and billing
+
+- Membership packages and card issuance
+- Payment scheduling and installment tracking
+- Activation and extension rules based on invoice settlement
+- Internal bill and status management
+- Membership-based service discounts and allowances
+
+### 5. Service scheduling and appointments
+
+- Customer-to-pet appointment booking
+- Staff assignment and service configuration
+- Price estimation before saving a booking
+- Appointment states including received, in progress, completed, canceled, and no-show
+- Prepaid service usage tracking and release of unused slots
+
+### 6. Recommendations and offline advisor
+
+- Offline recommendation engine based on pet profile and inventory
+- Budget-aware combo optimization
+- Feedback for liked/disliked SKUs
+- Explanation tags configured in the application
+- Ranking evaluation based on recorded interaction data
+
+### 7. Security and auditability
+
+- Password hashing with PBKDF2-HMAC-SHA256 and random salt
+- Mandatory password change on first login for the default admin account
+- Audit log for write operations and authentication events
+- Role-based area access for operational controls
+
+## Technology Stack
+
+- Python 3.10+
+- PySide6 for the desktop UI
+- SQLite for local data persistence
+- Pytest for automated testing
+- GitHub sync script for repository synchronization tasks
+
+## Requirements
 
 - Windows 10/11
-- Python 3.10 trở lên (khuyến nghị Python 3.13)
-- Kết nối Internet chỉ cần khi cài các gói Python
+- Python 3.10 or newer (Python 3.13 is recommended)
+- Internet access only for installing Python dependencies
 
-## Cài đặt và chạy
+## Installation
 
-Mở PowerShell tại thư mục dự án:
+Open PowerShell in the project folder and run:
 
 ```powershell
 py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --upgrade pip
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe main.py
 ```
 
-Dùng cùng một Python để cài thư viện và chạy ứng dụng. Nếu máy không có Python
-3.13, thay `-3.13` bằng phiên bản đã cài (ví dụ `-3.12`). Có thể kích hoạt môi
-trường trước rồi chạy ngắn gọn:
+If Python 3.13 is not available on the system, replace `-3.13` with the installed version such as `-3.12` or `-3.11`.
+
+You can also activate the virtual environment manually and run the app from there:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
 python main.py
 ```
 
-Ở lần khởi chạy đầu, ứng dụng tạo tài khoản `admin` với mật khẩu tạm `admin`;
-đăng nhập lần đầu sẽ bắt buộc đặt mật khẩu mới (ít nhất 10 ký tự) trước khi vào
-hệ thống. Thông tin tài khoản được lưu dưới dạng hash PBKDF2-HMAC-SHA256 kèm salt
-ngẫu nhiên.
+## Running the Application
 
-Nếu cần khôi phục tài khoản `admin` trên máy đã có dữ liệu, chạy tại thư mục dự án:
+From the project root:
+
+```powershell
+.\.venv\Scripts\python.exe main.py
+```
+
+On the first launch, the application creates a default admin account:
+
+- Username: `admin`
+- Temporary password: `admin`
+
+The user is required to change the password immediately after the first successful login. Passwords are stored using PBKDF2-HMAC-SHA256 hashing with a unique salt.
+
+## Resetting the Default Admin Account
+
+If you need to restore the default admin login on a machine that already contains data, run:
 
 ```powershell
 .\.venv\Scripts\python.exe main.py --reset-admin
 ```
 
-Lệnh này đặt mật khẩu tạm thành `admin`, mở khóa tài khoản quản trị `admin` và
-bắt buộc thay mật khẩu khi đăng nhập kế tiếp. Chỉ dùng trên máy/Windows account
-được phép quản trị dữ liệu cửa hàng; không giữ mật khẩu tạm sau khi đăng nhập.
+This resets the admin password to `admin`, unlocks the admin account, and forces a password change on the next sign-in. Use this only on a trusted Windows account and do not leave the temporary default password in production use.
 
-## Dữ liệu và sao lưu
+## Data Storage and Backup
 
-Trên Windows, SQLite mặc định nằm tại:
+By default, SQLite is stored under the user's local application data folder:
 
 ```text
 %LOCALAPPDATA%\PetStoreManagement\pet_store.db
 ```
 
-Ứng dụng tự tạo thư mục, schema và các bảng khi khởi động. Ảnh chứng từ tiếp nhận
-động vật được lưu trong SQLite. Có thể cấu hình thư mục sao lưu trong ứng dụng;
-nên sao lưu định kỳ và hạn chế quyền truy cập vào thư mục dữ liệu vì có thông tin
-khách hàng và hồ sơ vận hành.
+The application creates the directory, schema, and tables automatically on startup. Pet intake documents and associated record data are stored in SQLite. A backup directory can be configured inside the application, and regular backups are strongly recommended because the database contains customer, operational, and health-related information.
 
-## Các phân hệ
+## Application Modules
 
-Điều hướng ứng dụng có 17 trang:
+The UI includes multiple operational areas:
 
-1. Nền tảng và dữ liệu
-2. Tài khoản, vai trò và nhật ký
-3. Tổng quan
-4. Hồ sơ động vật
-5. Chuồng trại và vị trí
-6. Nhà cung cấp
-7. Nhập lô, ảnh bàn giao và kiểm tra đầu vào
-8. Sức khỏe
-9. Chăm sóc và checklist
-10. Khách hàng
-11. Đặt chỗ, tiền cọc và hoàn cọc
-12. Đơn hàng và thanh toán
-13. Hội viên, thẻ và bill
-14. Dịch vụ và lịch hẹn
-15. Tồn kho thức ăn, thuốc và vật tư
-16. Báo cáo
-17. Cảnh báo và sao lưu
+1. Platform and data
+2. Accounts, roles, and logs
+3. Dashboard
+4. Pet profiles
+5. Housing and enclosure management
+6. Suppliers
+7. Imports, handover photos, and intake checks
+8. Health
+9. Care and checklists
+10. Customers
+11. Reservations, deposits, and refunds
+12. Orders and payments
+13. Memberships, cards, and bills
+14. Services and scheduling
+15. Inventory for food, medicine, and supplies
+16. Reports
+17. Alerts and backup
 
-Các chức năng chính gồm:
+## Business Scope and Operational Notes
 
-- Quản lý hồ sơ cá thể với 25 đặc điểm; lưu ảnh, người xác nhận và thời điểm
-  tiếp nhận. Hồ sơ nhập mới phải qua kiểm tra đầu vào trước khi đưa vào kinh doanh.
-- Theo dõi chuồng, sức chứa, loài phù hợp, lịch sử phân chuồng, sức khỏe và lịch
-  chăm sóc; checklist 25 mục là công cụ vận hành, không thay thế bác sĩ thú y.
-- Quản lý khách hàng, giữ chỗ, đơn bán, cọc, thanh toán từng phần và công nợ.
-- Quản lý tồn kho theo lô/hạn sử dụng, xuất theo FEFO, lịch sử nhập/xuất và cảnh
-  báo tồn thấp/hàng sắp hết hạn.
-- Catalog bán lẻ có 20 nhóm hàng demo, khoảng 600 SKU và 8 combo mẫu; SKU lưu mã/barcode, thương
-  hiệu, loài/độ tuổi, quy cách, giá bán, giá thành viên, khuyến mãi, thành phần và
-  đường dẫn ảnh. Có thể sửa sản phẩm và cấu hình SKU/định lượng trong từng combo.
-- Bán sản phẩm/combo từ trang **Đơn hàng & thanh toán**. Giá membership được áp
-  dụng theo khách hàng và kỳ hội viên còn hiệu lực; tồn sản phẩm được giữ khi đơn
-  chờ/thanh toán một phần, chỉ trừ kho theo FEFO khi đơn thanh toán đủ. Combo trừ
-  tồn của từng sản phẩm thành phần; hủy đơn chưa thanh toán sẽ giải phóng tồn giữ.
-- Gợi ý sản phẩm theo hồ sơ và tồn kho; Advisor tiếng Việt chạy ngoại tuyến, tối
-  ưu combo trong ngân sách, ghi nhớ SKU thích/tránh sau khi nhân viên xác nhận,
-  giải thích bằng tag đã cấu hình và đánh giá ranking ngoại tuyến khi có đủ dữ liệu.
-- Hồ sơ thức ăn mở rộng theo loài/phân loài, tháng tuổi, giai đoạn sống, loại
-  thức ăn, kích thước giống, khoảng cân nặng phù hợp, protein, mục đích, vitamin C
-  (theo nhãn), tầng nước và kiểu ăn. Quy tắc tuổi được lưu thành dữ liệu có thể
-  quản lý; bộ lọc thức ăn dùng tuổi hồ sơ, giống, cân nặng và hàng còn sử dụng được.
-  Tần suất/khẩu phần để theo nhãn nếu cửa hàng chưa nhập dữ liệu sản phẩm cụ thể.
-- Tạo gói hội viên, cấp thẻ, lập bill và gia hạn. Thanh toán từng phần được lưu
-  thành sổ; thẻ chỉ kích hoạt/gia hạn khi bill đủ tiền. Gia hạn sớm nối kỳ mới
-  sau thời hạn hiện có.
-- Catalog dịch vụ tách khỏi kho hàng: 240 gói mẫu thuộc sáu nhóm (tắm, tắm +
-  vệ sinh, grooming, vệ sinh, chăm sóc và premium/spa/VIP), cùng 40 gói hội viên
-  mẫu. Gói cấu hình loài, cân nặng, thời lượng, giá hội viên và phụ phí cân nặng/
-  loại lông; ưu đãi hội viên áp dụng trên giá gốc, phụ phí được cộng riêng theo
-  quy tắc cửa hàng cấu hình. Nhân viên có thể sửa quy tắc và trạng thái.
-- Đặt lịch gắn khách hàng với hồ sơ thú cưng tại cửa hàng, phân công nhân viên,
-  xem bảng tính giá/phụ phí/ưu đãi trước khi lưu và theo dõi trạng thái tiếp nhận,
-  thực hiện, hoàn thành, hủy hoặc không đến. Hủy/không đến giải phóng lượt trả
-  trước; lượt chỉ được trừ khi hoàn thành. Dịch vụ tính tiền tạo bill OTHER để
-  nhân viên ghi thanh toán tại trang hội viên & bill.
-- Gói dịch vụ hội viên chọn một trong ba kiểu: trả trước theo lượt, giảm giá hội
-  viên hoặc định kỳ. Bill định kỳ/gia hạn do nhân viên tạo thủ công; ứng dụng
-  không tự thu tiền hoặc tự gia hạn.
-- Báo cáo tồn kho, bán hàng và sức khỏe; xuất CSV. Cảnh báo vận hành, phân quyền
-  theo vai trò và audit log cho các thao tác ghi dữ liệu.
+The project includes a broad set of workflows that are useful for a real pet business, but it also has intentional limitations:
 
-### Giới hạn nghiệp vụ hiện tại
+- Membership functions are designed as internal administration tools for existing customer data; they are not a public online signup or customer portal.
+- Seed catalog data is demo and documentation-based rather than verified local pricing. It is intended as a starting dataset that a store can review and adjust.
+- Inventory quantities are not auto-generated from supplier data. Actual stock must be entered manually before sales.
+- Feed and nutrition profiles are catalog classification tools rather than medical instructions. They do not replace veterinary advice.
+- Service package pricing and fees are reference data and should be validated before use in live operations.
+- Payment collection is handled by staff confirmation within the application; there is no payment gateway, QR payment integration, or automatic renewal workflow.
+- Membership bills are internal records and are not designed as legal tax invoices or PDF exports.
+- The recommendation advisor is a local rules-based system rather than a generative AI or external ML service.
 
-- Phân hệ hội viên là công cụ quản trị nội bộ gắn với hồ sơ khách hàng hiện có;
-  chưa có đăng ký trực tuyến, OTP hoặc cổng tài khoản khách hàng.
-- Catalog và giá sản phẩm khởi tạo là dữ liệu demo/giá đề xuất theo tài liệu, không
-  phải báo giá đã xác minh. Catalog không tự tạo lô tồn; cần nhập hàng thực tế
-  trước khi bán. Thương hiệu, barcode, ảnh và thành phần chi tiết không được suy
-  diễn nếu chưa có dữ liệu. Gói combo demo đã có thành phần SKU mẫu để cửa hàng
-  rà soát/chỉnh lại. Vitamin/dinh dưỡng không được hiểu là thuốc hay chỉ định điều trị.
-- Quy tắc tuổi và hồ sơ thức ăn demo chỉ để phân loại catalog, không quy định
-  khẩu phần, liều dùng hoặc lịch cho ăn bắt buộc. Các mốc chó/mèo/động vật nhỏ
-  thay đổi theo giống và nhãn; chim, cá, rùa và loài ngoại lai cần xác định phân
-  loài. Luôn kiểm tra nhãn sản phẩm; vấn đề sức khỏe cần bác sĩ thú y.
-- 280 gói dịch vụ/hội viên và giá trong catalog cũng là dữ liệu tham khảo từ đề
-  xuất, chưa được xác minh theo bảng giá địa phương. Phụ phí chỉ phát sinh theo
-  quy tắc cửa hàng cấu hình; cửa hàng cần kiểm tra giá và phạm vi áp dụng trước
-  khi dùng với khách thật. Hồ sơ thú cưng trong lịch hẹn là dữ liệu nhập tại chỗ,
-  độc lập với động vật thuộc tồn kho/bán của cửa hàng.
-- Nhân viên chỉ ghi thanh toán sau khi tự xác minh tiền đã nhận. Chưa tích hợp
-  ngân hàng, payment gateway/webhook, QR thanh toán, hoàn tiền membership hoặc
-  tự động gia hạn/notification theo lịch.
-- Thẻ hiện có token ngẫu nhiên để tra cứu trạng thái trong ứng dụng. Chưa tạo ảnh
-  QR/thẻ in hoặc trang xác minh công khai.
-- Bill membership là chứng từ nội bộ; chưa có xuất PDF/DOCX hoặc tích hợp hóa đơn
-  điện tử. Không dùng làm hóa đơn thuế.
-- Advisor là bộ luật cục bộ, không phải mô hình AI tạo sinh/ML, không gửi dữ liệu
-  ra ngoài, không chẩn đoán và không tự tạo bill, ghi thanh toán hay trừ kho.
-- Các chỉ số đánh giá recommendation là offline trên tương tác đã được ghi nhận;
-  không chứng minh CTR, doanh thu tăng thêm hay hiệu quả y tế.
-
-## Workflow
-
-Mở [workflow.html](./workflow.html) trực tiếp bằng trình duyệt hiện đại để xem
-workflow khởi chạy/đăng nhập, tiếp nhận động vật, chăm sóc, bán hàng, dịch vụ/lịch
-hẹn, hội viên, gợi ý ngoại tuyến, tồn kho và báo cáo/vận hành. Có thể in hoặc lưu
-sơ đồ thành PDF.
-
-## Kiểm thử
-
-```powershell
-.\.venv\Scripts\python.exe -m pytest -q
-```
-
-Các kiểm thử giao diện Qt không hiển thị cửa sổ có thể chạy với:
-
-```powershell
-$env:QT_QPA_PLATFORM = "offscreen"
-.\.venv\Scripts\python.exe -m pytest -q
-```
-
-## Đồng bộ mã nguồn lên GitHub
-
-Sau khi cấu hình Git remote và xác thực Git Credential Manager, có thể chạy:
-
-```powershell
-.\.venv\Scripts\python.exe scripts\github_sync.py --message "Mô tả thay đổi"
-```
-
-Script chỉ đưa các file được cho phép lên GitHub; không đồng bộ cơ sở dữ liệu,
-ảnh tiếp nhận, môi trường ảo, bytecode hoặc file bí mật. Cần kiểm tra danh sách
-file và remote trước khi đồng bộ.
-
-## Cấu trúc dự án
+## Project Structure
 
 ```text
 main.py
@@ -194,30 +190,107 @@ workflow.html
 app/
   database.py
   modules/
-    animals/ care/ customers/ dashboard/ health/ imports/
-    inventory/ memberships/ notifications/ recommendations/
-    reports/ sales/ services/ store/ suppliers/ auth/ audit/
+    animals/
+    audit/
+    auth/
+    care/
+    customers/
+    dashboard/
+    health/
+    imports/
+    inventory/
+    memberships/
+    notifications/
+    nutrition/
+    recommendations/
+    sales/
+    services/
+    store/
+    suppliers/
   ui/
+    auth/
+    animals/
+    care/
+    customers/
+    dashboard/
+    health/
+    imports/
+    inventory/
+    memberships/
+    notifications/
+    platform/
+    reservations/
+    sales/
+    services/
+    store/
+    suppliers/
     main_window.py
-    animals/ care/ customers/ dashboard/ health/ imports/
-    inventory/ memberships/ notifications/ platform/ reports/ services/
-    reservations/ sales/ store/ suppliers/ auth/
+scripts/
+  github_sync.py
 tests/
 ```
 
-`main.py` là điểm khởi chạy, thiết lập SQLite, tạo quản trị viên lần đầu và đăng
-nhập. `app/database.py` quản lý schema/facade; repository trong `app/modules/`
-chứa nghiệp vụ và truy vấn; `app/ui/` chứa giao diện PySide6. Dữ liệu được kiểm
-tra quyền và ghi audit thông qua facade `Database`.
+- `main.py` is the entry point and initializes the application
+- `app/database.py` centralizes the SQLite schema, access control, and auditing layer
+- `app/modules/` contains business logic and repository access patterns
+- `app/ui/` contains the PySide6 user interface
+- `tests/` contains end-to-end and functional test coverage
 
-Catalog mẫu nằm trong `app/modules/inventory/catalog_seed.py`; ứng dụng thêm SKU
-và combo demo một lần theo mã, không ghi đè các SKU đó khi nhân viên sửa lại sau
-khi khởi tạo. Dữ liệu seed không nhập số lượng tồn.
+## Workflow Diagram
 
-20 nhóm hàng mẫu gồm thức ăn chó, thức ăn mèo, pate/thức ăn ướt, snack/bánh
-thưởng, sữa tắm/chăm sóc, vệ sinh, cát mèo, đồ chơi, dây dắt/vòng cổ, bát/dụng
-cụ ăn, ổ nằm/nhà, balo/túi vận chuyển, quần áo, grooming, vitamin/dinh dưỡng,
-hamster/thỏ, cá cảnh, chim cảnh, chuột cảnh và bò sát cảnh. Mỗi nhóm có khoảng
-25–35 SKU demo. 8 combo có SKU thành phần mẫu để nhân viên rà soát.
-Catalog demo chưa gán thương hiệu thật, barcode hay ảnh không được cung cấp trong
-dữ liệu đầu vào; các trường này có thể được cửa hàng cập nhật trong biểu mẫu SKU.
+Open [workflow.html](./workflow.html) in a modern browser to view the application flow for login, animal intake, care, sales, services, membership, recommendations, inventory, and reporting operations. The diagram can be printed or saved as a PDF for internal documentation.
+
+## Testing
+
+Run the full automated suite with:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+If Qt-based tests are running without showing a visible window, use offscreen rendering:
+
+```powershell
+$env:QT_QPA_PLATFORM = "offscreen"
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+## GitHub Sync
+
+After configuring a Git remote and authenticating through Git Credential Manager, you can synchronize the project with:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\github_sync.py --message "Describe your change"
+```
+
+This script only uploads approved files to GitHub. It does not sync the SQLite database, intake images, virtual environments, bytecode, or secret files. Always review the file list and remote configuration before running a sync.
+
+## Demo Catalog Notes
+
+The application includes demo seed data for a retail pet catalog, including:
+
+- Dog food, cat food, wet food, and snacks
+- Grooming and hygiene products
+- Litter and pet accessories
+- Toys, collars, bowls, and furniture
+- Travel accessories, clothing, and enrichment items
+- Nutrition and vitamin products
+- Small animal, fish, bird, and reptile catalog entries
+
+Sample data includes roughly 20 product groups and about 600 demo SKUs, along with eight example combos. The seed catalog is designed to help the store review and tune the product structure before live deployment. Brand names, barcodes, product photos, and detailed composition metadata are not inferred automatically and may need to be completed manually inside the application.
+
+## Operational Security Guidance
+
+- Keep the local machine secured and restrict access to the SQLite data folder
+- Use a strong password for the admin account after first login
+- Regularly back up the database and intake file store
+- Restrict user permissions according to staff responsibilities
+- Treat the software as an internal operations system, not a public-facing commerce platform
+
+## License and Usage
+
+This project is intended for internal business management and operational use. It is best suited for locally managed pet stores, grooming services, animal care operations, and small retail environments that need a practical desktop tool without external infrastructure.
+
+## Summary
+
+PetCare is a desktop-first management platform for pet stores and service businesses. It combines transactional operations, customer records, inventory tracking, service scheduling, and operational reporting into a single local application. It is especially useful for stores that want a privacy-friendly, offline-capable, and self-contained business system without requiring a cloud-hosted backend.

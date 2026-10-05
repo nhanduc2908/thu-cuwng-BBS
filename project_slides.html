@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PetCare Presentation Basic</title>
+  <style>
+    :root { --bg1:#081420; --bg2:#122233; --panel:rgba(15,23,42,.82); --card:rgba(17,26,38,.9); --line:rgba(148,163,184,.22); --cyan:#67e8f9; --orange:#ff9f43; --green:#34d399; --text:#ebf3ff; --muted:#c7d8f6; }
+    *{box-sizing:border-box;} html,body{margin:0;height:100%;font-family:Segoe UI,Tahoma,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:var(--text);overflow:hidden;} body{display:flex;align-items:center;justify-content:center;} .deck{position:relative;width:100vw;height:100vh;overflow:hidden;} .slide{position:absolute;inset:0;padding:40px 60px 60px 60px;display:none;background:radial-gradient(circle at top left,rgba(103,232,249,.1),transparent 24%),radial-gradient(circle at bottom right,rgba(255,159,67,.12),transparent 25%),linear-gradient(135deg,rgba(8,20,32,.98),rgba(15,30,45,.97));}.slide.active{display:flex;flex-direction:column;justify-content:center;}.slide-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--line);}.tag{color:var(--orange);font-size:11px;letter-spacing:.16em;font-weight:800;text-transform:uppercase;}.title-wrap{display:grid;grid-template-columns:1.4fr .95fr;gap:22px;align-items:center;height:100%;}.hero-ui{position:relative;width:100%;height:310px;border-radius:20px;border:1px solid var(--line);background:linear-gradient(135deg,rgba(103,232,249,.08),rgba(255,159,67,.08));box-shadow:0 22px 40px rgba(0,0,0,.18);overflow:hidden;}.hero-ui .sidebar{position:absolute;left:0;top:0;bottom:0;width:140px;border-right:1px solid var(--line);background:rgba(0,0,0,.16);}.hero-ui .sidebar .b{position:absolute;left:18px;right:18px;height:30px;border-radius:10px;background:rgba(103,232,249,.2);} .hero-ui .sidebar .b:nth-child(1){top:18px;} .hero-ui .sidebar .b:nth-child(2){top:68px;} .hero-ui .sidebar .b:nth-child(3){top:118px;} .hero-ui .main{position:absolute;left:150px;top:18px;right:18px;bottom:18px;border:1px solid var(--line);border-radius:16px;background:rgba(12,21,32,.66);} .hero-ui .top{position:absolute;left:16px;right:16px;top:14px;height:26px;border-radius:10px;background:rgba(255,255,255,.06);} .hero-ui .chart{position:absolute;left:16px;right:16px;top:56px;height:120px;border-radius:12px;background:linear-gradient(180deg,rgba(103,232,249,.12),rgba(103,232,249,.02));} .hero-ui .chart::after{content:"";position:absolute;left:10px;right:10px;bottom:14px;height:58px;background:linear-gradient(180deg,rgba(103,232,249,.2),rgba(103,232,249,.04));clip-path:polygon(0 100%,10% 62%,22% 68%,34% 43%,48% 60%,60% 28%,75% 52%,88% 34%,100% 12%,100% 100%);} .hero-ui .stats{position:absolute;left:16px;right:16px;bottom:14px;height:72px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;} .hero-ui .stats .m{border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--line);} h1{font-size:clamp(2.3rem,3vw,4rem);margin:0;line-height:1.1;} h2{font-size:clamp(1.8rem,2.1vw,2.8rem);margin:0 0 16px;} h3{font-size:clamp(1.1rem,1.5vw,1.6rem);margin:0 0 12px;color:var(--cyan);} p,li{color:var(--muted);font-size:clamp(.96rem,1vw,1.08rem);line-height:1.7;} ul{margin:0;padding-left:20px;} .badge-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;} .badge{padding:6px 10px;background:rgba(103,232,249,.08);border:1px solid rgba(103,232,249,.2);border-radius:999px;font-size:12px;color:var(--cyan);font-weight:700;} .grid-2{display:grid;grid-template-columns:1.2fr 1fr;gap:22px;}.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:0 18px 30px rgba(0,0,0,.18);}.kpi{background:linear-gradient(135deg,rgba(103,232,249,.08),rgba(255,159,67,.08));border:1px solid var(--line);border-radius:18px;padding:18px 20px;}.kpi strong{display:block;font-size:2rem;color:var(--green);margin-bottom:8px;} .nav{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:12px;}.button{border:1px solid var(--line);background:rgba(15,23,42,.9);color:var(--text);padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:700;} .counter{position:absolute;right:24px;top:16px;color:var(--muted);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;} @media(max-width:900px){.slide{padding:30px 26px 58px 26px;} .title-wrap,.grid-2,.grid-3{grid-template-columns:1fr;}} 
+  </style>
+</head>
+<body>
+<div class='deck'>
+  <div class='counter' id='counter'>01 / 10</div>
+  <section class='slide active'>
+    <div class='slide-header'><span class='tag'>Overview</span></div>
+    <div class='title-wrap'>
+      <div>
+        <h1>PetCare Management System</h1>
+        <p style='margin-top:18px;max-width:700px;'>A desktop application for pet stores and animal care businesses, integrating pet records, inventory, sales, memberships, and services into one local-first platform.</p>
+        <div class='badge-row'><span class='badge'>Python</span><span class='badge'>PySide6</span><span class='badge'>SQLite</span><span class='badge'>Local-first</span></div>
+      </div>
+      <div class='hero-ui'>
+        <div class='sidebar'><div class='b'></div><div class='b'></div><div class='b'></div></div>
+        <div class='main'><div class='top'></div><div class='chart'></div><div class='stats'><div class='m'></div><div class='m'></div><div class='m'></div></div></div>
+      </div>
+    </div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Problem</span></div>
+    <h2>Operational challenges</h2>
+    <div class='grid-2'>
+      <div class='card'><h3>Business pain points</h3><ul><li>Pet and customer data are scattered</li><li>Inventory and billing are hard to manage together</li><li>Service schedules are difficult to track</li><li>Manual reporting slows decisions</li></ul></div>
+      <div class='card'><h3>Solution</h3><ul><li>Unified dashboard</li><li>Connected records</li><li>Real-time alerts</li><li>Better customer service</li></ul></div>
+    </div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Functions</span></div>
+    <h2>Core functionality</h2>
+    <div class='grid-3'>
+      <div class='card'><h3>Pet management</h3><ul><li>Profiles</li><li>Health tracking</li><li>Care records</li></ul></div>
+      <div class='card'><h3>Inventory</h3><ul><li>SKU</li><li>Stock alerts</li><li>Expiry control</li></ul></div>
+      <div class='card'><h3>Sales</h3><ul><li>Orders</li><li>Payments</li><li>Customer discounts</li></ul></div>
+    </div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Modules</span></div>
+    <h2>Extended workflow</h2>
+    <div class='grid-3'>
+      <div class='card'><h3>Services</h3><ul><li>Appointments</li><li>Staff assignment</li><li>Status tracking</li></ul></div>
+      <div class='card'><h3>Memberships</h3><ul><li>Cards</li><li>Bills</li><li>Renewals</li></ul></div>
+      <div class='card'><h3>Reports</h3><ul><li>CSV</li><li>Alerts</li><li>Audit logs</li></ul></div>
+    </div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Architecture</span></div>
+    <h2>System architecture</h2>
+    <div class='grid-2'>
+      <div class='card'><h3>Layers</h3><ul><li>UI: dashboards and forms</li><li>Business: modules</li><li>Data: SQLite</li><li>Security: hash, role, audit</li></ul></div>
+      <div class='card'><h3>Mock UI</h3><div style='height:200px; border:1px solid var(--line); border-radius:14px; background:rgba(255,255,255,.03); position:relative;'><div style='position:absolute;left:14px;right:14px;top:14px;height:26px;border-radius:8px;background:rgba(255,255,255,.06);'></div><div style='position:absolute;left:14px;top:52px;width:70px;height:100px;border-radius:10px;background:rgba(255,255,255,.04);'></div><div style='position:absolute;left:92px;top:52px;right:14px;bottom:14px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);'></div></div></div>
+    </div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Security</span></div>
+    <h2>Security measures</h2>
+    <div class='grid-2'>
+      <div class='card'><h3>Implemented</h3><ul><li>PBKDF2 password hash</li><li>Salted storage</li><li>Role-based access</li><li>Audit log</li></ul></div>
+      <div class='card'><h3>Operational</h3><ul><li>Backup data</li><li>Protect local folder</li><li>Secure machine</li><li>Restricted access</li></ul></div>
+    </div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Workflow</span></div>
+    <h2>Main business flow</h2>
+    <div class='card'><ol><li>Start app and login</li><li>Select module</li><li>Process pet/customer/inventory/service/sales data</li><li>Validate business rules</li><li>Update database</li><li>Generate alerts/report and save audit log</li></ol></div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Value</span></div>
+    <h2>Business value</h2>
+    <div class='grid-3'>
+      <div class='kpi'><strong>01</strong>Improves daily operations.</div>
+      <div class='kpi'><strong>02</strong>Reduces errors and manual work.</div>
+      <div class='kpi'><strong>03</strong>Improves customer experience.</div>
+    </div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Limitations</span></div>
+    <h2>Current limits</h2>
+    <div class='card'><ul><li>Local business tool, not public web commerce</li><li>No public customer portal</li><li>No online payment gateway</li><li>Rules-based recommendation not advanced AI</li></ul></div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Conclusion</span></div>
+    <h2>Final conclusion</h2>
+    <div class='card'><p>PetCare is a practical local management platform for pet businesses, combining operations and security into a single system.</p></div>
+  </section>
+  <div class='nav'><button id='prevBtn'>Prev</button><button id='nextBtn'>Next</button></div>
+</div>
+<script>
+  const slides=[...document.querySelectorAll('.slide')]; let i=0; const counter=document.getElementById('counter'); const render=()=>{ slides.forEach((s,idx)=>s.classList.toggle('active',idx===i)); counter.textContent=`${String(i+1).padStart(2,'0')} / ${String(slides.length).padStart(2,'0')}`;}; document.getElementById('prevBtn').onclick=()=>{i=(i-1+slides.length)%slides.length;render();}; document.getElementById('nextBtn').onclick=()=>{i=(i+1)%slides.length;render();}; document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){i=(i+1)%slides.length;render();} if(e.key==='ArrowLeft'||e.key==='PageUp'){i=(i-1+slides.length)%slides.length;render();}}); render();
+</script>
+</body>
+</html>

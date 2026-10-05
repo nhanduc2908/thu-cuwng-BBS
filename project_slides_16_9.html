@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PetCare Presentation</title>
+  <style>
+    :root {
+      --bg1: #0f172a;
+      --bg2: #111827;
+      --panel: rgba(17, 24, 39, 0.85);
+      --card: rgba(30, 41, 59, 0.9);
+      --primary: #67e8f9;
+      --secondary: #a78bfa;
+      --accent: #34d399;
+      --warning: #fbbf24;
+      --danger: #f87171;
+      --text: #e5e7eb;
+      --muted: #bfdbfe;
+      --line: rgba(148, 163, 184, 0.22);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: var(--text);
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(17, 24, 39, 0.95));
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 46px 72px 58px 72px;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      background:
+        radial-gradient(circle at top left, rgba(103, 232, 249, 0.12), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(167, 139, 250, 0.12), transparent 30%),
+        linear-gradient(135deg, rgba(15,23,42,0.96), rgba(17,24,39,0.95));
+    }
+
+    .slide.active { display: flex; }
+
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+    }
+
+    .tag {
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    h1, h2, h3, h4 { margin: 0; line-height: 1.15; }
+    h1 { font-size: clamp(2.2rem, 3vw, 4.2rem); }
+    h2 { font-size: clamp(1.8rem, 2.2vw, 3rem); margin-bottom: 18px; }
+    h3 { font-size: clamp(1.2rem, 1.6vw, 1.7rem); margin-bottom: 12px; color: var(--primary); }
+    p, li { color: var(--muted); font-size: clamp(0.97rem, 1vw, 1.18rem); line-height: 1.7; }
+    ul { margin: 0; padding-left: 20px; }
+
+    .title-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      height: 100%;
+    }
+
+    .title-box {
+      max-width: 760px;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .badge {
+      border: 1px solid var(--line);
+      background: rgba(103, 232, 249, 0.08);
+      color: var(--primary);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .hero-visual {
+      width: 420px;
+      height: 320px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(103, 232, 249, 0.1), rgba(167, 139, 250, 0.15));
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.18);
+    }
+
+    .hero-visual::before,
+    .hero-visual::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .hero-visual::before {
+      width: 280px; height: 280px;
+      right: -50px; top: -80px;
+    }
+    .hero-visual::after {
+      width: 220px; height: 220px;
+      left: -60px; bottom: -80px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+      margin-top: 14px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px 20px;
+      box-shadow: 0 18px 30px rgba(0,0,0,0.18);
+    }
+
+    .kpi {
+      background: linear-gradient(135deg, rgba(103,232,249,0.08), rgba(167,139,250,0.08));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px 18px;
+    }
+
+    .kpi strong {
+      display: block;
+      font-size: 2.1rem;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: rgba(15,23,42,0.28);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 12px 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--primary);
+      background: rgba(103, 232, 249, 0.05);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .nav {
+      position: absolute;
+      right: 30px;
+      bottom: 18px;
+      display: flex;
+      gap: 12px;
+      z-index: 10;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .counter {
+      position: absolute;
+      top: 20px;
+      right: 28px;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .highlight { color: var(--primary); font-weight: 700; }
+    .warning { color: var(--warning); }
+
+    @media (max-width: 900px) {
+      .slide {
+        padding: 30px 24px 55px 24px;
+      }
+      .title-wrap, .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+      .hero-visual {
+        width: 100%;
+        height: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <div class="counter" id="counter">01 / 22</div>
+
+    <section class="slide active">
+      <div class="slide-header">
+        <span class="tag">Project Overview</span>
+      </div>
+      <div class="title-wrap">
+        <div class="title-box">
+          <h1>PetCare Management System</h1>
+          <p style="font-size:1.12rem; max-width: 700px; color: var(--muted); margin-top: 18px;">
+            A desktop-based business management platform for pet stores and animal care facilities.
+            It integrates pet records, customer intelligence, inventory, sales, services, memberships,
+            and operational reporting into one local-first application.
+          </p>
+          <div class="badge-row">
+            <span class="badge">Python</span>
+            <span class="badge">PySide6</span>
+            <span class="badge">SQLite</span>
+            <span class="badge">Local-first</span>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="Pet management illustration"></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Problem</span>
+      </div>
+      <h2>Why this system is needed</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Operational pain points</h3>
+          <ul>
+            <li>Pet, customer, and sales data are scattered across multiple tools.</li>
+            <li>Inventory and service management are hard to track consistently.</li>
+            <li>Staff cannot easily monitor care schedules, bills, and memberships.</li>
+            <li>Manual workflows increase errors and operational delays.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Business need</h3>
+          <ul>
+            <li>One place to manage all core business data.</li>
+            <li>Faster customer service and operational control.</li>
+            <li>Centralized reporting and alerting.</li>
+            <li>Improved accountability and data consistency.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Objectives</span>
+      </div>
+      <h2>Project objectives</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Efficiency</h3>
+          <p>Reduce manual work and improve daily operations for staff.</p>
+        </div>
+        <div class="card">
+          <h3>Control</h3>
+          <p>Monitor stock, services, memberships, and customer records in one system.</p>
+        </div>
+        <div class="card">
+          <h3>Security</h3>
+          <p>Protect sensitive data through secure authentication and audit logging.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Core Features</span>
+      </div>
+      <h2>Main functionality</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Pet management</h3>
+          <ul>
+            <li>Profile creation</li>
+            <li>Intake records</li>
+            <li>Housing and care tracking</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Inventory</h3>
+          <ul>
+            <li>Products and SKUs</li>
+            <li>Stock tracking</li>
+            <li>Low-stock alerts</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Sales</h3>
+          <ul>
+            <li>Orders and billing</li>
+            <li>Payments and deposits</li>
+            <li>Customer discounts</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Core Features</span>
+      </div>
+      <h2>Additional integrated modules</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Services</h3>
+          <ul>
+            <li>Appointments</li>
+            <li>Staff assignment</li>
+            <li>Status tracking</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Memberships</h3>
+          <ul>
+            <li>Cards and bills</li>
+            <li>Membership packages</li>
+            <li>Renewals and benefits</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Reporting</h3>
+          <ul>
+            <li>CSV exports</li>
+            <li>Operational alerts</li>
+            <li>Audit visibility</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Architecture</span>
+      </div>
+      <h2>System architecture</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Layers</h3>
+          <ul>
+            <li><span class="highlight">UI Layer:</span> PySide6 screens and dashboards</li>
+            <li><span class="highlight">Business Layer:</span> modules for sales, services, auth, health</li>
+            <li><span class="highlight">Data Layer:</span> SQLite database</li>
+            <li><span class="highlight">Security Layer:</span> permissions, audit, hashing</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Main modules</h3>
+          <ul>
+            <li>auth</li>
+            <li>animals</li>
+            <li>inventory</li>
+            <li>sales</li>
+            <li>services</li>
+            <li>memberships</li>
+            <li>recommendations</li>
+            <li>reports</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Authentication</span>
+      </div>
+      <h2>Authentication and user access</h2>
+      <div class="card">
+        <ul>
+          <li>Application starts with a default admin account.</li>
+          <li>Passwords are stored using <span class="highlight">PBKDF2-HMAC-SHA256</span>.</li>
+          <li>Each account has a unique salt.</li>
+          <li>First-time admin login requires a password change.</li>
+          <li>Login attempts and important events are stored in audit logs.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Pet Management</span>
+      </div>
+      <h2>Pet profile and intake management</h2>
+      <div class="grid-2">
+        <div class="card">
+          <ul>
+            <li>Track pet identity, species, age, weight, and health details</li>
+            <li>Capture intake data, handover records, and photos</li>
+            <li>Store location and enclosure information</li>
+            <li>Link animal records to owners and transactions</li>
+          </ul>
+        </div>
+        <div class="card">
+          <ul>
+            <li>Support better operational traceability</li>
+            <li>Reduce paperwork duplication</li>
+            <li>Improve customer service and trust</li>
+            <li>Support future reporting and analytics</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Care & Health</span>
+      </div>
+      <h2>Care and medical monitoring</h2>
+      <div class="card">
+        <ul>
+          <li>Operational care checklist with repeated tasks</li>
+          <li>Health observations and treatment records</li>
+          <li>Timeline of care activities and status changes</li>
+          <li>Improved compliance with daily service routines</li>
+          <li>Support for veterinary coordination and record-keeping</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Inventory</span>
+      </div>
+      <h2>Inventory and stock control</h2>
+      <div class="grid-2">
+        <div class="card">
+          <ul>
+            <li>Manage product catalog, SKU, pricing, and variants</li>
+            <li>Handle stock inflow, outflow, and reservations</li>
+            <li>Track expiry dates and lot-based records</li>
+            <li>Apply FEFO logic for stock allocation</li>
+          </ul>
+        </div>
+        <div class="card">
+          <ul>
+            <li>Detect low-stock conditions</li>
+            <li>Flag near-expiry items</li>
+            <li>Support combination products and stock holds</li>
+            <li>Reduce risk of stock loss and billing errors</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Sales</span>
+      </div>
+      <h2>Sales and payment workflow</h2>
+      <div class="card">
+        <ul>
+          <li>Create and manage sales orders</li>
+          <li>Support partial payment and deposits</li>
+          <li>Apply membership pricing rules</li>
+          <li>Release stock when a cancelled order is voided</li>
+          <li>Track balances and payment status</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Services</span>
+      </div>
+      <h2>Appointments and service operations</h2>
+      <div class="card">
+        <ul>
+          <li>Schedule appointments for pets and customers</li>
+          <li>Assign staff and calculate service price</li>
+          <li>Track states such as received, active, completed, cancelled, or no-show</li>
+          <li>Manage pre-paid or reserved service usage</li>
+          <li>Support service catalog and pricing rules</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Memberships</span>
+      </div>
+      <h2>Membership and loyalty handling</h2>
+      <div class="card">
+        <ul>
+          <li>Create membership packages and cards</li>
+          <li>Track bills, payments, and activation</li>
+          <li>Support renewal and benefit rules</li>
+          <li>Apply membership pricing to products and services</li>
+          <li>Build customer retention strategies</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Recommendations</span>
+      </div>
+      <h2>Offline recommendation support</h2>
+      <div class="card">
+        <ul>
+          <li>Recommend products based on pet condition and inventory availability</li>
+          <li>Support budget-aware and combo-based suggestions</li>
+          <li>Track liked or avoided SKUs</li>
+          <li>Explain recommendation logic with tags and rules</li>
+          <li>Provide decision support without external AI dependency</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Reporting</span>
+      </div>
+      <h2>Reports, exports, and alerts</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Sales</h3>
+          <p>Track daily transactions and customer activity.</p>
+        </div>
+        <div class="card">
+          <h3>Inventory</h3>
+          <p>Monitor stock movement, shortage, and expiry risks.</p>
+        </div>
+        <div class="card">
+          <h3>Operations</h3>
+          <p>Review alerts, logs, and service performance.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Security</span>
+      </div>
+      <h2>Security design</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Implemented</h3>
+          <ul>
+            <li>PBKDF2 password hashing</li>
+            <li>Random salt per user</li>
+            <li>Mandatory password change on first login</li>
+            <li>Role-based permissions</li>
+            <li>Audit log for critical actions</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Additional safeguards</h3>
+          <ul>
+            <li>Secure local data storage</li>
+            <li>Regular backup policies</li>
+            <li>Restricted account access</li>
+            <li>Operational accountability and traceability</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Limitations</span>
+      </div>
+      <h2>Operational and technical constraints</h2>
+      <div class="card">
+        <ul>
+          <li>Not a public e-commerce or customer portal</li>
+          <li>No payment gateway integration</li>
+          <li>No public QR or online payment flow</li>
+          <li>Recommendation is offline and rules-based</li>
+          <li>Not a legal invoice or veterinary diagnosis platform</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Business Value</span>
+      </div>
+      <h2>Why it matters to a pet business</h2>
+      <div class="grid-3">
+        <div class="kpi">
+          <strong>01</strong>
+          Better resource control and fewer manual errors.
+        </div>
+        <div class="kpi">
+          <strong>02</strong>
+          Better customer experience through organized services and memberships.
+        </div>
+        <div class="kpi">
+          <strong>03</strong>
+          Stronger operational reporting and faster decision-making.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Advantages</span>
+      </div>
+      <h2>Competitive advantages</h2>
+      <div class="card">
+        <ul>
+          <li>All-in-one desktop platform for pet business operations</li>
+          <li>Low deployment and maintenance cost</li>
+          <li>Simple to install and operate locally</li>
+          <li>Strong fit for small and medium businesses</li>
+          <li>Modular structure for future expansion</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Roadmap</span>
+      </div>
+      <h2>Future development roadmap</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Phase</th>
+            <th>Focus</th>
+            <th>Goal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Phase 1</td>
+            <td>Stability and testing</td>
+            <td>Reduce runtime and UI issues</td>
+          </tr>
+          <tr>
+            <td>Phase 2</td>
+            <td>Advanced analytics</td>
+            <td>Improve business decisions</td>
+          </tr>
+          <tr>
+            <td>Phase 3</td>
+            <td>Payment and export integrations</td>
+            <td>Better operational workflows</td>
+          </tr>
+          <tr>
+            <td>Phase 4</td>
+            <td>Recommendation enhancement</td>
+            <td>More intelligent product guidance</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="slide">
+      <div class="slide-header">
+        <span class="tag">Conclusion</span>
+      </div>
+      <h2>Final takeaway</h2>
+      <div class="card">
+        <p>
+          PetCare is a practical, secure, and scalable management system designed for local pet businesses.
+          It combines core business processes into a single desktop application and provides a strong foundation for
+          operational efficiency, customer satisfaction, inventory control, and data accountability.
+        </p>
+      </div>
+    </section>
+
+    <div class="nav">
+      <button id="prevBtn">Prev</button>
+      <button id="nextBtn">Next</button>
+    </div>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const counter = document.getElementById('counter');
+    let current = 0;
+
+    function render() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === current);
+      });
+      counter.textContent = `${String(current + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      current = (current - 1 + slides.length) % slides.length;
+      render();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      current = (current + 1) % slides.length;
+      render();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
+        current = (current + 1) % slides.length; render();
+      }
+      if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+        current = (current - 1 + slides.length) % slides.length; render();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>

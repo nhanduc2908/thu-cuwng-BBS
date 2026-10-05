@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PetCare Executive Deck</title>
+  <style>
+    :root { --bg1:#07111d; --bg2:#111d2d; --bg3:#1b2b3c; --card:rgba(17,24,39,.9); --panel:rgba(15,23,42,.84); --line:rgba(148,163,184,.22); --cyan:#7dd9ff; --orange:#ff9e4d; --green:#4fe2a0; --text:#edf7ff; --muted:#d4e5ff; }
+    *{box-sizing:border-box;} html,body{margin:0;height:100%;font-family:'Segoe UI',Tahoma,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));color:var(--text);overflow:hidden;} body{display:flex;align-items:center;justify-content:center;} .deck{position:relative;width:100vw;height:100vh;overflow:hidden;background:radial-gradient(circle at 10% 15%, rgba(125,217,255,.12), transparent 22%),radial-gradient(circle at 85% 80%, rgba(255,158,77,.12), transparent 22%),linear-gradient(135deg,rgba(7,17,29,.98),rgba(15,23,42,.97));}.slide{position:absolute;inset:0;padding:42px 68px 64px 68px;display:none;flex-direction:column;justify-content:center;}.slide.active{display:flex;} .slide-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:18px;}.tag{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--orange);} .counter{position:absolute;right:24px;top:18px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted);} h1{font-size:clamp(2.4rem,3vw,4.3rem);margin:0;line-height:1.08;} h2{font-size:clamp(1.9rem,2vw,3rem);margin:0 0 16px;} h3{font-size:clamp(1.15rem,1.5vw,1.7rem);margin:0 0 10px;color:var(--cyan);} p,li{font-size:clamp(.96rem,1vw,1.12rem);color:var(--muted);line-height:1.7;} ul{margin:0;padding-left:20px;} .title-wrap{display:grid;grid-template-columns:1.5fr 0.95fr;gap:28px;align-items:center;height:100%;} .badge-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;} .badge{padding:6px 12px;border-radius:999px;background:rgba(125,217,255,.08);border:1px solid rgba(125,217,255,.2);color:var(--cyan);font-size:12px;font-weight:700;} .hero{position:relative;width:100%;height:300px;border-radius:24px;border:1px solid var(--line);background:linear-gradient(135deg,rgba(125,217,255,.12),rgba(255,158,77,.12),rgba(11,17,25,.9));overflow:hidden;box-shadow:0 20px 42px rgba(0,0,0,.2);} .hero::before,.hero::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.08);} .hero::before{width:260px;height:260px;right:-42px;top:-68px;} .hero::after{width:220px;height:220px;left:-50px;bottom:-86px;} .screen{position:absolute;inset:18px;border-radius:18px;background:rgba(10,16,22,.7);border:1px solid var(--line);} .screen .sidebar{position:absolute;left:0;top:0;bottom:0;width:120px;border-right:1px solid var(--line);background:rgba(255,255,255,.03);} .screen .sidebar .item{position:absolute;left:18px;right:18px;height:26px;border-radius:10px;background:rgba(255,255,255,.08);} .screen .sidebar .item:nth-child(1){top:18px;} .screen .sidebar .item:nth-child(2){top:60px;} .screen .sidebar .item:nth-child(3){top:102px;} .screen .main{position:absolute;left:130px;top:18px;right:18px;bottom:18px;} .screen .top{position:absolute;left:0;right:0;top:0;height:28px;border-radius:8px;background:rgba(255,255,255,.06);} .screen .chart{position:absolute;left:0;right:0;top:52px;height:120px;border-radius:12px;background:linear-gradient(180deg,rgba(125,217,255,.12),rgba(125,217,255,.03));} .screen .chart::after{content:"";position:absolute;left:8px;right:8px;bottom:12px;height:60px;background:linear-gradient(180deg,rgba(125,217,255,.2),rgba(125,217,255,.04));clip-path:polygon(0 100%,12% 72%,22% 68%,35% 48%,48% 65%,62% 28%,76% 52%,88% 26%,100% 10%,100% 100%);} .screen .stats{position:absolute;left:0;right:0;bottom:0;height:74px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;} .screen .stats .m{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;} .grid-2{display:grid;grid-template-columns:1.2fr 1fr;gap:22px;} .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;} .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:0 18px 30px rgba(0,0,0,.2);} .kpi{background:linear-gradient(135deg,rgba(125,217,255,.08),rgba(255,158,77,.08));border:1px solid var(--line);border-radius:18px;padding:18px 20px;} .kpi strong{display:block;font-size:2rem;color:var(--green);margin-bottom:8px;} table{width:100%;border-collapse:collapse;border:1px solid var(--line);background:rgba(11,17,29,.44);} th,td{text-align:left;vertical-align:top;padding:12px 14px;border-bottom:1px solid var(--line);} th{color:var(--orange);background:rgba(255,158,77,.05);} tr:last-child td{border-bottom:none;} .nav{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:12px;} button{border:1px solid var(--line);background:rgba(11,17,25,.9);color:var(--text);padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer;} @media(max-width:980px){.slide{padding:28px 24px 60px 24px;} .title-wrap,.grid-2,.grid-3{grid-template-columns:1fr;}} 
+  </style>
+</head>
+<body>
+<div class='deck'>
+  <div class='counter' id='counter'>01 / 18</div>
+  <section class='slide active'>
+    <div class='slide-header'><span class='tag'>Executive Summary</span></div>
+    <div class='title-wrap'>
+      <div>
+        <h1>PetCare Management System</h1>
+        <p style='margin-top:18px;max-width:760px;'>A desktop platform for pet stores and animal care businesses, consolidating pet intake, health tracking, inventory, sales, memberships, and reporting into a secure local workspace.</p>
+        <div class='badge-row'><span class='badge'>Python</span><span class='badge'>PySide6</span><span class='badge'>SQLite</span><span class='badge'>Local-first</span></div>
+      </div>
+      <div class='hero'><div class='screen'><div class='sidebar'><div class='item'></div><div class='item'></div><div class='item'></div></div><div class='main'><div class='top'></div><div class='chart'></div><div class='stats'><div class='m'></div><div class='m'></div><div class='m'></div></div></div></div></div>
+    </div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Problem</span></div>
+    <h2>Operational challenges</h2>
+    <div class='grid-2'>
+      <div class='card'><h3>Issues</h3><ul><li>Data fragmented across tools</li><li>Manual reports delay decisions</li><li>Service and stock are disconnected</li><li>Customer retention is hard to manage</li></ul></div>
+      <div class='card'><h3>Impact</h3><ul><li>Slow operations</li><li>Lower service quality</li><li>Higher operational risk</li><li>Lower customer satisfaction</li></ul></div>
+    </div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Goals</span></div>
+    <h2>Objectives</h2>
+    <div class='grid-3'>
+      <div class='card'><h3>Centralize</h3><p>Unify relevant business functions into one app.</p></div>
+      <div class='card'><h3>Automate</h3><p>Reduce repeated manual work and improve operational rhythm.</p></div>
+      <div class='card'><h3>Control</h3><p>Monitor stock, services, customers, and payments more clearly.</p></div>
+    </div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Functions</span></div>
+    <h2>Main features</h2>
+    <div class='grid-3'>
+      <div class='card'><h3>Pet management</h3><ul><li>Profiles</li><li>Intake</li><li>Care logs</li></ul></div>
+      <div class='card'><h3>Inventory</h3><ul><li>SKU</li><li>Stock</li><li>Expiry</li></ul></div>
+      <div class='card'><h3>Sales</h3><ul><li>Orders</li><li>Invoices</li><li>Payments</li></ul></div>
+    </div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Services</span></div>
+    <h2>Services and appointments</h2>
+    <div class='grid-2'>
+      <div class='card'><ul><li>Schedule appointments</li><li>Assign staff</li><li>Track status</li><li>Generate service invoice</li></ul></div>
+      <div class='card'><div style='height:200px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);position:relative;'><div style='position:absolute;left:14px;right:14px;top:14px;height:22px;border-radius:8px;background:rgba(255,255,255,.06);'></div><div style='position:absolute;left:14px;right:14px;top:52px;height:34px;border-radius:10px;background:rgba(255,255,255,.04);'></div><div style='position:absolute;left:14px;right:14px;bottom:14px;height:80px;border-radius:12px;background:linear-gradient(90deg,rgba(125,217,255,.12),rgba(255,158,77,.1));'></div></div></div>
+    </div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Customers</span></div>
+    <h2>Membership and loyalty</h2>
+    <div class='grid-2'>
+      <div class='card'><ul><li>Customer records</li><li>Membership cards and billing</li><li>Discount and pricing rules</li><li>Repeat customer support</li></ul></div>
+      <div class='card'><div style='height:200px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);position:relative;'><div style='position:absolute;left:16px;right:16px;top:18px;height:30px;border-radius:8px;background:rgba(255,255,255,.06);'></div><div style='position:absolute;left:16px;right:16px;top:62px;height:46px;border-radius:10px;background:rgba(125,217,255,.12);'></div><div style='position:absolute;left:16px;right:16px;bottom:14px;height:60px;border-radius:10px;background:rgba(255,158,77,.08);'></div></div></div>
+    </div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Architecture</span></div>
+    <h2>System design</h2>
+    <table>
+      <thead><tr><th>Layer</th><th>Purpose</th></tr></thead>
+      <tbody><tr><td>UI</td><td>PySide6 screens and dashboards</td></tr><tr><td>Business</td><td>Modules for sales, services, auth, inventory</td></tr><tr><td>Data</td><td>SQLite database and repositories</td></tr><tr><td>Security</td><td>Auth, access control, and audit logs</td></tr></tbody>
+    </table>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Security</span></div>
+    <h2>Protection measures</h2>
+    <div class='grid-2'>
+      <div class='card'><h3>System</h3><ul><li>PBKDF2 password hashing</li><li>Salted credentials</li><li>Role-based access</li><li>Audit log</li></ul></div>
+      <div class='card'><h3>Operations</h3><ul><li>Restricted local storage</li><li>Backup recommendation</li><li>Machine security</li><li>User control policies</li></ul></div>
+    </div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Workflow</span></div>
+    <h2>Operational flow</h2>
+    <div class='card'><ol><li>Launch app</li><li>Authenticate user</li><li>Open dashboard</li><li>Process pet, inventory, sales, or service actions</li><li>Validate rules and update database</li><li>Generate alerts, bills, and reports</li></ol></div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Value</span></div>
+    <h2>Business value</h2>
+    <div class='grid-3'>
+      <div class='kpi'><strong>01</strong>Improved daily control.</div>
+      <div class='kpi'><strong>02</strong>Reduced operational errors.</div>
+      <div class='kpi'><strong>03</strong>Better customer retention.</div>
+    </div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Limits</span></div>
+    <h2>Current limitations</h2>
+    <div class='card'><ul><li>Internal local system, not a public web store</li><li>No online payment or public portal</li><li>Recommendation is local rule-based</li><li>Not a legal tax invoice platform</li></ul></div>
+  </section>
+  <section class='slide'>
+    <div class='slide-header'><span class='tag'>Conclusion</span></div>
+    <h2>Final takeaway</h2>
+    <div class='card'><p>PetCare is a practical local business management platform that unifies pet operations with stock, billing, services, and security in one desktop environment.</p></div>
+  </section>
+  <div class='nav'><button id='prevBtn'>Prev</button><button id='nextBtn'>Next</button></div>
+</div>
+<script>
+  const slides=[...document.querySelectorAll('.slide')]; let i=0; const c=document.getElementById('counter'); const render=()=>{ slides.forEach((s,idx)=>s.classList.toggle('active',idx===i)); c.textContent=`${String(i+1).padStart(2,'0')} / ${String(slides.length).padStart(2,'0')}`;}; document.getElementById('prevBtn').onclick=()=>{i=(i-1+slides.length)%slides.length;render();}; document.getElementById('nextBtn').onclick=()=>{i=(i+1)%slides.length;render();}; document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){i=(i+1)%slides.length;render();} if(e.key==='ArrowLeft'||e.key==='PageUp'){i=(i-1+slides.length)%slides.length;render();}}); render();
+</script>
+</body>
+</html>
