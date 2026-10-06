@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Danh mục thức ăn mẫu PetCare, lọc theo loài, giai đoạn sống và nhóm kích thước; thành phần dinh dưỡng cần đối chiếu nhãn nhà sản xuất.">
+  <title>PetCare | Nutrition & Product Guide</title>
+  <link rel="stylesheet" href="styles/petcare_pages.css">
+  <style>
+    .nutrition-tools { display:grid; grid-template-columns:minmax(180px,1.2fr) repeat(3,minmax(130px,.8fr)) auto; gap:9px; align-items:end; padding:14px; border:1px solid var(--line); border-radius:5px; background:#fff; }
+    .nutrition-tools label { display:grid; gap:5px; color:var(--muted); font-size:11px; }
+    .nutrition-tools input,.nutrition-tools select { width:100%; min-width:0; height:40px; padding:8px 10px; border:1px solid var(--line); border-radius:4px; color:var(--ink); background:#fff; font:inherit; font-size:12px; }
+    .nutrition-tools input:focus,.nutrition-tools select:focus,.compare-button:focus-visible { outline:2px solid var(--green); outline-offset:2px; }
+    .catalog-meta { display:flex; flex-wrap:wrap; justify-content:space-between; gap:7px 16px; margin:12px 0; color:var(--muted); font-size:11px; }
+    .product-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .product-card { min-width:0; overflow:hidden; border:1px solid var(--line); border-radius:6px; background:#fff; }
+    .product-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:15px 16px 12px; border-bottom:1px solid var(--line); }
+    .product-top h3 { margin:4px 0 5px; font-size:21px; line-height:1.18; }
+    .product-brand { color:var(--muted); font-size:11px; }
+    .product-code { flex:0 0 auto; color:var(--green); font:700 10px/1.4 ui-monospace,Consolas,monospace; overflow-wrap:anywhere; }
+    .product-badges { display:flex; flex-wrap:wrap; gap:5px; padding:10px 16px 0; }
+    .product-badges span { padding:3px 7px; border:1px solid var(--line); border-radius:3px; color:#40564a; background:#f7faf6; font-size:9px; font-weight:700; }
+    .nutrient-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; padding:12px 16px; }
+    .nutrient { min-width:0; padding:8px; border-radius:4px; background:var(--paper); }
+    .nutrient span { display:block; color:var(--muted); font-size:9px; line-height:1.3; }
+    .nutrient strong { display:block; margin-top:3px; color:var(--ink); font-size:12px; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+    .product-foot { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:11px 16px; border-top:1px solid var(--line); }
+    .allergen-copy { min-width:0; color:var(--muted); font-size:10px; }
+    .compare-button { flex:0 0 auto; min-height:32px; padding:5px 9px; border:1px solid var(--line); border-radius:4px; color:var(--green); background:#fff; font:inherit; font-size:10px; font-weight:700; cursor:pointer; }
+    .compare-button[aria-pressed="true"] { border-color:var(--green); color:#fff; background:var(--green); }
+    .compare-panel { margin-top:16px; padding:16px; border:1px solid var(--line); border-radius:5px; background:#fff; }
+    .compare-panel[hidden],.product-card[hidden],.empty-results[hidden] { display:none; }
+    .compare-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+    .compare-head h3 { margin:0; font-size:20px; }
+    .compare-table { width:100%; border-collapse:collapse; text-align:left; }
+    .compare-table th,.compare-table td { padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+    .compare-table th { color:var(--green); background:#f5f8f4; font-size:10px; }
+    .compare-table td { font-size:11px; }
+    .empty-results { margin:0; padding:22px; border:1px dashed var(--line); color:var(--muted); text-align:center; }
+    .suitability-note { margin-top:12px; padding:12px 14px; border-left:3px solid var(--coral); background:#fff; color:var(--muted); font-size:12px; }
+    .source-note { margin-top:12px; color:var(--muted); font-size:10px; }
+    @media(max-width:900px) { .nutrition-tools { grid-template-columns:repeat(2,minmax(0,1fr)); } .product-grid { grid-template-columns:1fr; } }
+    @media(max-width:520px) { .nutrition-tools { grid-template-columns:1fr 1fr; padding:10px; } .nutrition-tools label:first-child { grid-column:1/-1; } .nutrition-tools button { grid-column:1/-1; } .nutrient-grid { grid-template-columns:repeat(2,minmax(0,1fr)); padding:10px 12px; } .product-top { padding:12px; } .product-foot { align-items:flex-start; flex-direction:column; padding:10px 12px; } .compare-button { align-self:flex-end; } .compare-panel { padding:10px; overflow:auto; } .compare-table { min-width:530px; } }
+  </style>
+</head>
+<body>
+  <header class="site-header"><div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">P</span> PetCare / Nutrition</a>
+    <div class="header-actions"><nav class="header-nav" aria-label="Primary navigation"><a href="index.html"><span data-lang="vi">Danh mục</span><span data-lang="en">Library</span></a><a href="admin_store_management.html"><span data-lang="vi">Quản trị</span><span data-lang="en">Admin</span></a><a href="report_final.html"><span data-lang="vi">Báo cáo</span><span data-lang="en">Report</span></a></nav>
+    <button class="lang-button" type="button" aria-label="Switch language" onclick="document.body.classList.toggle('show-en');this.textContent=document.body.classList.contains('show-en')?'VI':'EN';renderProducts();renderComparison()">EN</button></div>
+  </div></header>
+  <main class="page-shell">
+    <section class="page-hero"><span class="eyebrow"><span data-lang="vi">Catalog thức ăn / dữ liệu mẫu</span><span data-lang="en">Food catalog / sample records</span></span>
+      <h1><span data-lang="vi">Dinh dưỡng theo loài & giai đoạn</span><span data-lang="en">Nutrition by species & life stage</span></h1>
+      <p class="lede"><span data-lang="vi">Tra cứu hồ sơ thức ăn mẫu, thành phần dinh dưỡng được lưu và phạm vi phù hợp theo loài/nhóm kích thước. Lọc giống chỉ dựa trên size group; không suy luận theo tên giống cụ thể.</span><span class="en" data-lang="en">Review sample food profiles, stored nutrient fields and suitability by species/size group. Breed matching uses size groups only; it does not infer suitability from a named breed.</span></p>
+      <div class="hero-foot"><span class="tag">Dog & cat sample profiles</span><span class="tag">Nutrition facts</span><span class="tag">Size-group matching</span><span class="tag">Not veterinary advice</span></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow">Find a product</span><h2><span data-lang="vi">Bộ lọc phù hợp</span><span data-lang="en">Suitability filters</span></h2></div><p><span data-lang="vi">Kết quả là đối chiếu metadata mẫu, không phải chứng nhận phù hợp y khoa.</span><span data-lang="en">Results match sample metadata, not a medical suitability certification.</span></p></div>
+      <div class="nutrition-tools">
+        <label><span><span data-lang="vi">Tìm tên / mã / hãng</span><span data-lang="en">Search name / code / brand</span></span><input id="product-search" type="search" autocomplete="off" placeholder="Ví dụ: salmon, RC, puppy"></label>
+        <label><span><span data-lang="vi">Loài</span><span data-lang="en">Species</span></span><select id="species-filter"><option value="all">All species / Tất cả</option><option value="DOG">Dog / Chó</option><option value="CAT">Cat / Mèo</option></select></label>
+        <label><span><span data-lang="vi">Giai đoạn</span><span data-lang="en">Life stage</span></span><select id="stage-filter"><option value="all">All stages / Tất cả</option><option value="PUPPY">Puppy / Chó con</option><option value="KITTEN">Kitten / Mèo con</option><option value="ADULT">Adult / Trưởng thành</option><option value="SENIOR">Senior / Cao tuổi</option></select></label>
+        <label><span><span data-lang="vi">Nhóm kích thước</span><span data-lang="en">Size group</span></span><select id="size-filter"><option value="all">Any size / Mọi cỡ</option><option value="SMALL">Small / Nhỏ</option><option value="MEDIUM">Medium / Vừa</option><option value="LARGE">Large / Lớn</option></select></label>
+        <button class="action-button" id="clear-filters" type="button"><span data-lang="vi">Xóa lọc</span><span data-lang="en">Clear filters</span></button>
+      </div>
+      <div class="catalog-meta"><span id="result-count" aria-live="polite"></span><span><span data-lang="vi">Chọn tối đa 3 sản phẩm để so sánh</span><span data-lang="en">Select up to 3 products to compare</span></span></div>
+      <div class="product-grid" id="product-grid"></div>
+      <p class="empty-results" id="empty-results" hidden><span data-lang="vi">Không tìm thấy sản phẩm theo bộ lọc này.</span><span data-lang="en">No products match these filters.</span></p>
+      <section class="compare-panel" id="compare-panel" hidden><div class="compare-head"><h3><span data-lang="vi">So sánh dinh dưỡng</span><span data-lang="en">Nutrition comparison</span></h3><button class="action-button" type="button" id="clear-compare"><span data-lang="vi">Bỏ chọn tất cả</span><span data-lang="en">Clear comparison</span></button></div><div id="compare-content"></div></section>
+      <div class="suitability-note"><strong><span data-lang="vi">Lưu ý an toàn.</span><span data-lang="en">Safety note.</span></strong> <span data-lang="vi">Dữ liệu trong nutrition seed là mẫu phần mềm, chưa xác nhận theo nhãn nhà sản xuất. Thành phần/vi chất không đầy đủ không được xem là 0. Với bệnh lý, dị ứng hoặc chế độ điều trị, hỏi bác sĩ thú y.</span><span data-lang="en">Nutrition seed values are software samples, not verified manufacturer labels. Missing nutrients do not mean zero. Consult a veterinarian for disease, allergy or therapeutic diets.</span></div>
+      <p class="source-note"><span data-lang="vi">Nguồn cấu trúc: app/modules/nutrition/seed_data.py và food_nutrition schema. Ingredient rows chưa được seed trong dữ liệu hiện tại; “allergen sample” chỉ phản ánh trường seed minh họa.</span><span data-lang="en">Schema sources: app/modules/nutrition/seed_data.py and food_nutrition. Ingredient rows are not seeded in the current data; “allergen sample” reflects illustrative seed fields only.</span></p>
+    </section>
+    <footer class="site-footer"><span>PetCare / Nutrition product guide</span><a href="project_security.html"><span data-lang="vi">Bảo mật dữ liệu</span><span data-lang="en">Data security</span></a></footer>
+  </main>
+  <script>
+    const products = [
+      {code:'RC-ADULT-MINI-01',brand:'Royal Canin',name:['Adult Mini Dry Dog Food','Adult Mini Dry Dog Food'],species:'DOG',stage:'ADULT',size:'SMALL',type:'DRY',facts:{kcal:3700,protein:28,fat:16,carbs:36,fiber:3.5,moisture:10,omega3:0.85,omega6:2.5,calcium:1.2,phosphorus:0.9,taurine:null},allergens:['Chicken','Corn']},
+      {code:'ACANA-PUPPY-01',brand:'Acana',name:['Regionals Puppy Recipe','Regionals Puppy Recipe'],species:'DOG',stage:'PUPPY',size:'ALL',type:'DRY',facts:{kcal:3800,protein:31,fat:18,carbs:28,fiber:4.2,moisture:10,omega3:0.95,omega6:2.9,calcium:1.3,phosphorus:1.0,taurine:null},allergens:['Chicken']},
+      {code:'PP-LARGE-CHICKEN-01',brand:'Purina Pro Plan',name:['Adult Large Breed Chicken & Rice','Adult Large Breed Chicken & Rice'],species:'DOG',stage:'ADULT',size:'LARGE',type:'DRY',facts:{kcal:3650,protein:26,fat:15,carbs:38,fiber:4,moisture:10,omega3:0.9,omega6:2.6,calcium:1.1,phosphorus:0.9,taurine:null},allergens:['Chicken','Rice']},
+      {code:'PP-CAT-CHICKEN-01',brand:'Purina Pro Plan',name:['Adult Chicken & Rice Formula','Adult Chicken & Rice Formula'],species:'CAT',stage:'ADULT',size:'ALL',type:'DRY',facts:{kcal:3600,protein:32,fat:16,carbs:35,fiber:3.5,moisture:9,omega3:0.8,omega6:2.5,calcium:1,phosphorus:0.8,taurine:0.15},allergens:['Chicken']},
+      {code:'ACANA-KITTEN-01',brand:'Acana',name:['Cat & Kitten Recipe','Cat & Kitten Recipe'],species:'CAT',stage:'KITTEN',size:'ALL',type:'DRY',facts:{kcal:3800,protein:36,fat:18,carbs:24,fiber:4,moisture:10,omega3:1,omega6:2.8,calcium:1.2,phosphorus:1,taurine:0.17},allergens:['Chicken']},
+      {code:'RC-CAT-INDOOR-01',brand:'Royal Canin',name:['Feline Adult Indoor Dry Food','Feline Adult Indoor Dry Food'],species:'CAT',stage:'ADULT',size:'ALL',type:'DRY',facts:{kcal:3400,protein:30,fat:13,carbs:31,fiber:5.5,moisture:8,omega3:0.7,omega6:2.3,calcium:1,phosphorus:0.8,taurine:0.14},allergens:['Chicken']},
+      {code:'FG-SALMON-01',brand:'Forthglade',name:['Adult Salmon & Sweet Potato','Adult Salmon & Sweet Potato'],species:'DOG',stage:'ADULT',size:'ALL',type:'WET',facts:{kcal:3000,protein:22,fat:12,carbs:24,fiber:1.8,moisture:78,omega3:0.9,omega6:1.8,calcium:0.9,phosphorus:0.7,taurine:null},allergens:['Salmon']},
+      {code:'EUK-LARGE-01',brand:'Eukanuba',name:['Adult Large Breed Formula','Adult Large Breed Formula'],species:'DOG',stage:'ADULT',size:'LARGE',type:'DRY',facts:{kcal:3620,protein:25,fat:14,carbs:39,fiber:4.5,moisture:10,omega3:0.8,omega6:2.4,calcium:1,phosphorus:0.8,taurine:null},allergens:['Chicken']},
+      {code:'EUK-CAT-HAIRBALL-01',brand:'Eukanuba',name:['Adult Hairball Control Formula','Adult Hairball Control Formula'],species:'CAT',stage:'ADULT',size:'ALL',type:'DRY',facts:{kcal:3500,protein:31,fat:14,carbs:30,fiber:6.5,moisture:8,omega3:0.8,omega6:2.2,calcium:1,phosphorus:0.8,taurine:0.15},allergens:['Chicken']}
+    ];
+    const labels={DOG:['Chó','Dog'],CAT:['Mèo','Cat'],ADULT:['Trưởng thành','Adult'],PUPPY:['Chó con','Puppy'],KITTEN:['Mèo con','Kitten'],SENIOR:['Cao tuổi','Senior'],SMALL:['Nhỏ','Small'],MEDIUM:['Vừa','Medium'],LARGE:['Lớn','Large'],ALL:['Mọi cỡ','All sizes'],DRY:['Hạt khô','Dry'],WET:['Thức ăn ướt','Wet']};
+    const factLabels=[['kcal','Năng lượng','Energy','kcal/kg'],['protein','Đạm','Protein','%'],['fat','Béo','Fat','%'],['carbs','Carbohydrate','Carbohydrate','%'],['fiber','Xơ','Fiber','%'],['moisture','Độ ẩm','Moisture','%'],['omega3','Omega-3','Omega-3','%'],['omega6','Omega-6','Omega-6','%'],['calcium','Canxi','Calcium','%'],['phosphorus','Phốt pho','Phosphorus','%'],['taurine','Taurine','Taurine','%']];
+    const selected=new Set();
+    const byId=id=>document.getElementById(id);
+    const english=()=>document.body.classList.contains('show-en');
+    const label=(key)=>labels[key]?.[english()?1:0]??key;
+    const fmt=(value,unit)=>value===null||value===undefined?'—':`${Number(value).toLocaleString(english()?'en-US':'vi-VN')}${unit==='%'?'%':unit==='kcal/kg'?' kcal/kg':''}`;
+    function getFiltered(){const q=byId('product-search').value.trim().toLocaleLowerCase();const species=byId('species-filter').value;const stage=byId('stage-filter').value;const size=byId('size-filter').value;return products.filter(p=>(species==='all'||p.species===species)&&(stage==='all'||p.stage===stage)&&(size==='all'||p.size==='ALL'||p.size===size)&&`${p.code} ${p.brand} ${p.name.join(' ')} ${p.allergens.join(' ')} ${p.species} ${p.stage} ${p.size}`.toLocaleLowerCase().includes(q));}
+    function renderProducts(){const list=getFiltered();const grid=byId('product-grid');grid.innerHTML=list.map(product=>`<article class="product-card"><div class="product-top"><div><span class="tile-kicker">${product.brand} · ${product.code}</span><h3>${product.name[english()?1:0]}</h3><span class="product-brand">Sample nutrition profile · verify package label</span></div><code class="product-code">${product.code}</code></div><div class="product-badges"><span>${label(product.species)}</span><span>${label(product.stage)}</span><span>${label(product.size)}</span><span>${label(product.type)}</span></div><div class="nutrient-grid">${factLabels.map(([key,vi,en,unit])=>`<div class="nutrient"><span>${english()?en:vi}</span><strong>${fmt(product.facts[key],unit)}</strong></div>`).join('')}</div><div class="product-foot"><span class="allergen-copy">${english()?'Allergen sample: ':'Dị ứng mẫu: '}${product.allergens.join(', ')}</span><button class="compare-button" type="button" data-compare="${product.code}" aria-pressed="${selected.has(product.code)}">${selected.has(product.code)?(english()?'Selected':'Đã chọn'):(english()?'Compare':'So sánh')}</button></div></article>`).join('');byId('result-count').textContent=english()?`${list.length} of ${products.length} sample profiles`:`${list.length}/${products.length} hồ sơ dinh dưỡng mẫu`;byId('empty-results').hidden=list.length>0;grid.querySelectorAll('[data-compare]').forEach(button=>button.addEventListener('click',()=>toggleCompare(button.dataset.compare)));}
+    function toggleCompare(code){if(selected.has(code))selected.delete(code);else if(selected.size<3)selected.add(code);else return;renderProducts();renderComparison();}
+    function renderComparison(){const panel=byId('compare-panel');const chosen=products.filter(p=>selected.has(p.code));panel.hidden=chosen.length<2;if(chosen.length<2){byId('compare-content').innerHTML='';return;}const columns=chosen.map(p=>`<th>${p.brand}<br>${p.name[english()?1:0]}</th>`).join('');const rows=factLabels.map(([key,vi,en,unit])=>`<tr><th>${english()?en:vi}</th>${chosen.map(p=>`<td>${fmt(p.facts[key],unit)}</td>`).join('')}</tr>`).join('');byId('compare-content').innerHTML=`<div style="overflow:auto"><table class="compare-table"><thead><tr><th>${english()?'Nutrient':'Chất dinh dưỡng'}</th>${columns}</tr></thead><tbody>${rows}</tbody></table></div>`;}
+    ['product-search','species-filter','stage-filter','size-filter'].forEach(id=>byId(id).addEventListener(id==='product-search'?'input':'change',renderProducts));
+    byId('clear-filters').addEventListener('click',()=>{byId('product-search').value='';byId('species-filter').value='all';byId('stage-filter').value='all';byId('size-filter').value='all';renderProducts();});
+    byId('clear-compare').addEventListener('click',()=>{selected.clear();renderProducts();renderComparison();});
+    renderProducts();
+  </script>
+  <script src="scripts/document_language.js" defer></script>
+</body>
+</html>

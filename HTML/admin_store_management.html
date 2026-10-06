@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Giao diện mô phỏng quản trị cửa hàng PetCare: tổng quan, tài khoản, kho, dịch vụ, bán hàng, audit và backup.">
+  <title>PetCare | Store Admin Workspace</title>
+  <link rel="stylesheet" href="styles/petcare_pages.css">
+  <style>
+    :root { --admin-ink:#17231f; --admin-muted:#68766f; --admin-line:#dce4de; --admin-paper:#f1f5f1; --admin-surface:#fff; --admin-green:#176b4d; --admin-dark:#103c2d; --admin-lime:#c9ef72; --admin-red:#a64332; --admin-amber:#805814; }
+    body { min-height:100vh; background:var(--admin-paper); color:var(--admin-ink); font:13px/1.5 'DM Sans','Trebuchet MS',sans-serif; }
+    body.login-required > .site-header { display:none; }
+    button,input,select { font:inherit; }
+    .admin-shell { width:min(1560px,calc(100% - 28px)); min-height:calc(100vh - 88px); display:grid; grid-template-columns:228px minmax(0,1fr); margin:14px auto 24px; overflow:hidden; border:1px solid var(--admin-line); border-radius:7px; background:var(--admin-surface); box-shadow:0 12px 34px rgba(24,49,38,.07); }
+    .admin-sidebar { display:flex; min-width:0; flex-direction:column; padding:20px 12px 14px; color:#edf5ee; background:var(--admin-dark); }
+    .admin-brand { display:flex; align-items:center; gap:10px; padding:0 8px 18px; border-bottom:1px solid rgba(255,255,255,.15); color:#fff; font-size:12px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+    .admin-brand .brand-mark { width:32px; height:32px; }
+    .sidebar-caption { margin:18px 10px 8px; color:#a8c4b1; font-size:9px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .admin-nav { display:grid; gap:3px; }
+    .admin-nav button { min-height:38px; display:flex; align-items:center; gap:10px; padding:7px 10px; border:0; border-radius:4px; color:#dce9df; background:transparent; text-align:left; cursor:pointer; }
+    .admin-nav button:hover { background:rgba(255,255,255,.09); }
+    .admin-nav button[aria-current="page"] { color:#173a2b; background:var(--admin-lime); font-weight:800; }
+    .nav-symbol { width:20px; color:#b9d1c0; font-size:13px; text-align:center; }
+    .admin-nav button[aria-current="page"] .nav-symbol { color:var(--admin-dark); }
+    .sidebar-foot { margin-top:auto; padding:14px 9px 0; border-top:1px solid rgba(255,255,255,.15); color:#b9d1c0; font-size:10px; }
+    .admin-main { min-width:0; }
+    .admin-topbar { min-height:62px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 20px; border-bottom:1px solid var(--admin-line); background:#fff; }
+    .login-stage { position:relative; min-height:100vh; display:grid; grid-template-columns:minmax(0,1.1fr) minmax(330px,.9fr); align-items:center; gap:clamp(24px,6vw,90px); width:min(1100px,calc(100% - 36px)); margin:0 auto; padding:52px 0; }
+    .login-language { position:absolute; top:16px; right:0; }
+    .login-copy .view-eyebrow { display:inline-flex; margin-bottom:10px; }
+    .login-copy h1 { max-width:640px; margin:0 0 15px; color:var(--admin-dark); font:500 clamp(38px,5vw,64px)/1.06 'Newsreader',Georgia,serif; }
+    .login-copy p { max-width:590px; color:var(--admin-muted); font-size:15px; }
+    .login-facts { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:24px; }
+    .login-facts span { padding:10px 11px; border:1px solid var(--admin-line); border-radius:4px; color:var(--admin-muted); background:#fff; font-size:10px; }
+    .login-card { padding:24px; border:1px solid var(--admin-line); border-radius:7px; background:#fff; box-shadow:0 18px 50px rgba(24,49,38,.1); }
+    .login-card h2 { margin:0 0 5px; font-size:23px; }
+    .login-card > p { margin:0 0 16px; color:var(--admin-muted); font-size:11px; }
+    .login-card label { display:grid; gap:5px; margin-top:12px; color:var(--admin-muted); font-size:10px; font-weight:700; }
+    .login-card input,.login-card select { width:100%; height:40px; padding:8px 10px; border:1px solid var(--admin-line); border-radius:4px; color:var(--admin-ink); background:#fff; }
+    .login-card .action-button { width:100%; min-height:42px; margin-top:17px; }
+    .login-disclaimer { margin-top:13px; padding:9px 10px; border-left:3px solid #c28735; color:#684c20; background:#fff7e8; font-size:10px; }
+    .login-error { min-height:16px; margin-top:6px; color:var(--admin-red); font-size:10px; }
+    .role-switch { height:35px; max-width:205px; padding:0 9px; border:1px solid var(--admin-line); border-radius:4px; color:var(--admin-ink); background:#fff; font-size:10px; }
+    .signed-user { display:flex; align-items:center; gap:7px; color:var(--admin-muted); font-size:10px; white-space:nowrap; }
+    .user-avatar { width:27px; height:27px; display:grid; place-items:center; border-radius:50%; color:#fff; background:var(--admin-green); font-size:10px; font-weight:800; }
+    [hidden] { display:none !important; }
+    .breadcrumbs { color:var(--admin-muted); font-size:11px; }
+    .top-actions { display:flex; align-items:center; gap:8px; }
+    .search-input,.filter-select { height:35px; min-width:0; padding:0 10px; border:1px solid var(--admin-line); border-radius:4px; color:var(--admin-ink); background:#fbfcfa; }
+    .search-input { width:min(250px,26vw); }
+    .demo-badge { padding:5px 8px; border:1px solid #efd4bf; border-radius:3px; color:#8c5123; background:#fff6ec; font-size:9px; font-weight:800; letter-spacing:.07em; white-space:nowrap; }
+    .admin-content { padding:22px clamp(14px,2.4vw,30px) 28px; }
+    .view { display:none; }
+    .view.is-active { display:block; animation:view-in .24s ease both; }
+    @keyframes view-in { from { opacity:.45; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+    .view-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:14px; margin-bottom:18px; }
+    .view-heading h1 { margin:4px 0 5px; font-size:32px; }
+    .view-heading p { max-width:660px; margin:0; color:var(--admin-muted); font-size:12px; }
+    .view-eyebrow { color:var(--admin-green); font-size:9px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; }
+    .button-row { display:flex; flex-wrap:wrap; align-items:center; gap:7px; }
+    .action-button { min-height:35px; display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:7px 11px; border:1px solid var(--admin-line); border-radius:4px; color:var(--admin-ink); background:#fff; font-size:11px; font-weight:700; cursor:pointer; }
+    .action-button:hover { border-color:var(--admin-green); color:var(--admin-green); }
+    .action-button.primary { border-color:var(--admin-green); color:#fff; background:var(--admin-green); }
+    .action-button.primary:hover { background:#10573e; }
+    .action-button:focus-visible,.admin-nav button:focus-visible,.search-input:focus-visible,.filter-select:focus-visible { outline:2px solid var(--admin-green); outline-offset:2px; }
+    .demo-notice { margin:0 0 16px; padding:10px 12px; border-left:3px solid #c28735; color:#684c20; background:#fff7e8; font-size:11px; }
+    .metric-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-bottom:16px; }
+    .metric-card,.panel { min-width:0; border:1px solid var(--admin-line); border-radius:5px; background:#fff; }
+    .metric-card { padding:13px 14px; }
+    .metric-label { color:var(--admin-muted); font-size:10px; }
+    .metric-value { display:block; margin:7px 0 2px; color:var(--admin-dark); font-size:24px; font-weight:800; font-variant-numeric:tabular-nums; }
+    .metric-note { color:var(--admin-muted); font-size:10px; }
+    .workspace-grid { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(250px,.8fr); gap:12px; align-items:start; }
+    .panel { padding:15px; }
+    .panel-heading { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:11px; }
+    .panel-heading h2 { margin:0; font-size:15px; }
+    .panel-heading span { color:var(--admin-muted); font-size:10px; }
+    .data-table-wrap { overflow:auto; border:1px solid var(--admin-line); border-radius:4px; }
+    .data-table { width:100%; border-collapse:collapse; text-align:left; }
+    .data-table th,.data-table td { padding:9px 10px; border-bottom:1px solid #edf0ed; vertical-align:middle; }
+    .data-table th { color:var(--admin-muted); background:#f6f8f5; font-size:9px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; white-space:nowrap; }
+    .data-table td { font-size:11px; }
+    .data-table tbody tr:last-child td { border-bottom:0; }
+    .status { display:inline-flex; align-items:center; gap:5px; padding:3px 7px; border-radius:3px; background:#edf5ef; color:#236143; font-size:9px; font-weight:800; white-space:nowrap; }
+    .status.warn { color:var(--admin-amber); background:#fff5df; }
+    .status.danger { color:var(--admin-red); background:#fff0ed; }
+    .status.neutral { color:#57645d; background:#eef1ee; }
+    .queue-list { display:grid; }
+    .queue-item { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; padding:10px 0; border-top:1px solid #edf0ed; }
+    .queue-item:first-child { border-top:0; }
+    .queue-item strong { display:block; font-size:11px; }
+    .queue-item small { color:var(--admin-muted); font-size:10px; }
+    .report-notice { margin-top:13px; padding:10px 12px; border-left:3px solid #c28735; color:#684c20; background:#fff7e8; font-size:10px; line-height:1.5; }
+    .report-notice strong { display:block; margin-bottom:3px; color:#684c20; }
+    .view-toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; }
+    .view-toolbar .filters { display:flex; flex-wrap:wrap; gap:7px; }
+    .table-empty { padding:26px 12px; color:var(--admin-muted); text-align:center; }
+    .hidden-row { display:none; }
+    .role-matrix { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .role-card { padding:13px; border:1px solid var(--admin-line); border-radius:5px; background:#fff; }
+    .role-card h3 { margin:0 0 6px; font-size:14px; }
+    .role-card p { margin:0; color:var(--admin-muted); font-size:11px; }
+    .permission-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:9px; }
+    .permission-tags span { padding:3px 6px; border:1px solid var(--admin-line); border-radius:3px; color:#42534a; background:#f7f9f7; font-size:9px; }
+    .activity-list { display:grid; }
+    .activity-row { display:grid; grid-template-columns:115px 110px minmax(0,1fr) 120px; gap:10px; padding:10px 8px; border-top:1px solid #edf0ed; font-size:10px; }
+    .activity-row:first-child { border-top:0; }
+    .activity-row span { overflow-wrap:anywhere; }
+    .activity-row .muted { color:var(--admin-muted); }
+    .backup-callout { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:14px; margin-top:14px; padding:14px; border:1px solid var(--admin-line); border-radius:5px; background:#f8faf7; }
+    .backup-callout h3 { margin:0 0 4px; font-size:14px; }
+    .backup-callout p { margin:0; color:var(--admin-muted); font-size:11px; }
+    dialog { width:min(470px,calc(100% - 28px)); padding:0; border:1px solid var(--admin-line); border-radius:6px; color:var(--admin-ink); box-shadow:0 24px 70px rgba(0,0,0,.25); }
+    dialog::backdrop { background:rgba(14,38,28,.42); }
+    .dialog-body { padding:18px; }
+    .dialog-body h2 { margin:0 0 8px; font-size:20px; }
+    .dialog-body p { color:var(--admin-muted); font-size:12px; }
+    .dialog-body label { display:grid; gap:4px; margin-top:10px; color:var(--admin-muted); font-size:10px; }
+    .dialog-body input,.dialog-body select { height:36px; padding:6px 9px; border:1px solid var(--admin-line); border-radius:4px; background:#fff; }
+    .dialog-actions { display:flex; justify-content:flex-end; gap:7px; margin-top:15px; }
+    .toast { position:fixed; right:18px; bottom:18px; z-index:20; max-width:min(420px,calc(100% - 36px)); padding:12px 15px; border-radius:5px; color:#fff; background:var(--admin-dark); box-shadow:0 12px 30px rgba(0,0,0,.18); font-size:11px; }
+    .toast[hidden] { display:none; }
+    @media(max-width:1000px) { .admin-shell { grid-template-columns:190px minmax(0,1fr); } .metric-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .workspace-grid { grid-template-columns:1fr; } }
+    @media(max-width:680px) { .login-stage { min-height:0; grid-template-columns:1fr; gap:18px; width:calc(100% - 24px); padding:24px 0; } .login-copy h1 { font-size:38px; } .login-copy p { margin-bottom:10px; font-size:13px; } .login-facts { margin-top:13px; } .login-card { padding:18px; } .admin-shell { width:100%; min-height:calc(100vh - 58px); display:flex; flex-direction:column; margin:0; border:0; border-radius:0; } .admin-sidebar { padding:9px 10px; } .admin-brand { padding:0 3px 8px; border:0; } .sidebar-caption,.sidebar-foot { display:none; } .admin-nav { display:flex; overflow-x:auto; gap:4px; padding-top:5px; scrollbar-width:thin; } .admin-nav button { width:auto; min-width:max-content; min-height:34px; padding:6px 9px; } .nav-symbol { width:auto; } .admin-topbar { min-height:54px; padding:8px 12px; flex-wrap:wrap; } .breadcrumbs { display:none; } .top-actions { width:100%; flex-wrap:wrap; } .search-input { width:100%; flex:1 1 130px; } .role-switch { flex:1 1 150px; max-width:none; } .admin-content { padding:17px 12px 22px; } .view-heading { align-items:flex-start; flex-direction:column; } .view-heading h1 { font-size:28px; } .activity-row { grid-template-columns:85px 85px minmax(0,1fr); } .activity-row span:last-child { display:none; } .backup-callout { grid-template-columns:1fr; } }
+    @media(max-width:420px) { .metric-grid { grid-template-columns:1fr 1fr; gap:7px; } .metric-card { padding:10px; } .metric-value { font-size:20px; } .role-matrix { grid-template-columns:1fr; } .filter-select { max-width:145px; } }
+    @media(prefers-reduced-motion:reduce) { .view.is-active { animation:none; } }
+  </style>
+</head>
+<body class="login-required">
+  <main class="login-stage" id="login-stage">
+    <button class="lang-button login-language" type="button" aria-label="Switch language" onclick="document.body.classList.toggle('show-en'); this.textContent=document.body.classList.contains('show-en')?'VI':'EN'">EN</button>
+    <section class="login-copy">
+      <span class="view-eyebrow"><span data-lang="vi">Không gian quản trị</span><span data-lang="en">Administration workspace</span></span>
+      <h1><span data-lang="vi">Vận hành cửa hàng, trong tầm kiểm soát.</span><span data-lang="en">Store operations, under control.</span></h1>
+      <p><span data-lang="vi">Một góc nhìn quản trị cho nhân sự, chăm sóc, kho, dịch vụ, bán hàng và kiểm soát nội bộ PetCare.</span><span data-lang="en">An administration view for staff, care, inventory, services, sales and internal controls in PetCare.</span></p>
+      <div class="login-facts"><span>10 roles · permission-aware navigation</span><span>Local desktop · SQLite</span><span>Staff-confirmed payment flow</span><span>On-demand backup workflow</span></div>
+    </section>
+    <form class="login-card" id="demo-login-form">
+      <h2><span data-lang="vi">Đăng nhập quản trị</span><span data-lang="en">Admin sign in</span></h2>
+      <p><span data-lang="vi">Chọn role để xem giao diện và khu vực tương ứng.</span><span data-lang="en">Choose a role to preview its corresponding workspace and access areas.</span></p>
+      <label><span data-lang="vi">Tài khoản demo</span><span data-lang="en">Demo account</span><input id="login-username" name="username" type="text" value="admin.demo" autocomplete="username" required></label>
+      <label><span data-lang="vi">Mật khẩu demo</span><span data-lang="en">Demo password</span><input id="login-password" name="password" type="password" placeholder="••••••••••" autocomplete="current-password" required></label>
+      <label><span data-lang="vi">Vai trò cần xem</span><span data-lang="en">Role to preview</span><select id="login-role" name="role"><option value="ADMIN">ADMIN · Quản trị viên</option><option value="MANAGER">MANAGER · Quản lý</option><option value="VETERINARIAN">VETERINARIAN · Bác sĩ thú y</option><option value="CAREGIVER">CAREGIVER · Nhân viên chăm sóc</option><option value="SALES">SALES · Nhân viên bán hàng</option><option value="INVENTORY_MANAGER">INVENTORY_MANAGER · Quản lý kho</option><option value="SERVICE_COORDINATOR">SERVICE_COORDINATOR · Điều phối dịch vụ</option><option value="CUSTOMER_SUPPORT">CUSTOMER_SUPPORT · Chăm sóc khách hàng</option><option value="REPORT_ANALYST">REPORT_ANALYST · Chuyên viên báo cáo</option><option value="AUDITOR">AUDITOR · Kiểm toán viên</option></select></label>
+      <button class="action-button" id="fill-manager-demo" type="button" style="width:100%;margin-top:10px"><span data-lang="vi">Điền tài khoản Quản lý demo</span><span data-lang="en">Fill manager demo account</span></button>
+      <p class="login-error" id="demo-account-hint" aria-live="polite"><span data-lang="vi">Preset: manager.demo · mật khẩu mẫu: PetCareDemo2026!</span><span data-lang="en">Preset: manager.demo · sample password: PetCareDemo2026!</span></p>
+      <p class="login-error" id="login-error" aria-live="polite"></p>
+      <button class="action-button primary" type="submit"><span data-lang="vi">Vào khu vực demo</span><span data-lang="en">Enter demo workspace</span></button>
+      <div class="login-disclaimer"><strong><span data-lang="vi">Chế độ mô phỏng:</span><span data-lang="en">Prototype mode:</span></strong> <span data-lang="vi">không kiểm tra thông tin xác thực, không kết nối database và không tạo phiên đăng nhập thật.</span><span data-lang="en">credentials are not verified, no database is connected, and no real session is created.</span></div>
+    </form>
+  </main>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html"><span class="brand-mark">P</span> PetCare / Admin demo</a>
+      <div class="header-actions">
+        <nav class="header-nav" aria-label="Primary navigation">
+          <a href="operations_snapshot.html"><span data-lang="vi">Snapshot</span><span data-lang="en">Snapshot</span></a>
+          <a href="nutrition_products.html"><span data-lang="vi">Dinh dưỡng</span><span data-lang="en">Nutrition</span></a>
+          <a href="project_security.html"><span data-lang="vi">Bảo mật</span><span data-lang="en">Security</span></a>
+          <a href="report_final.html"><span data-lang="vi">Báo cáo</span><span data-lang="en">Report</span></a>
+        </nav>
+        <button class="lang-button" type="button" aria-label="Switch language" onclick="document.body.classList.toggle('show-en'); this.textContent=document.body.classList.contains('show-en')?'VI':'EN'">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-shell" id="admin-shell" hidden>
+    <aside class="admin-sidebar">
+      <a class="admin-brand" href="index.html"><span class="brand-mark">P</span><span>PetCare Store</span></a>
+      <span class="sidebar-caption"><span data-lang="vi">Quản trị cửa hàng</span><span data-lang="en">Store administration</span></span>
+      <nav class="admin-nav" aria-label="Admin workspace">
+        <button type="button" data-view="overview" data-view-permission="dashboard.view" aria-current="page"><span class="nav-symbol">⌂</span><span data-lang="vi">Tổng quan</span><span data-lang="en">Overview</span></button>
+        <button type="button" data-view="staff" data-view-permission="users.manage" aria-current="false"><span class="nav-symbol">♙</span><span data-lang="vi">Nhân sự & quyền</span><span data-lang="en">Staff & roles</span></button>
+        <button type="button" data-view="inventory" data-view-permission="inventory.view" aria-current="false"><span class="nav-symbol">▤</span><span data-lang="vi">Kho & cảnh báo</span><span data-lang="en">Inventory & alerts</span></button>
+        <button type="button" data-view="services" data-view-permission="services.view" aria-current="false"><span class="nav-symbol">◷</span><span data-lang="vi">Lịch dịch vụ</span><span data-lang="en">Service schedule</span></button>
+        <button type="button" data-view="sales" data-view-permission="sales.view" aria-current="false"><span class="nav-symbol">＄</span><span data-lang="vi">Đơn & hội viên</span><span data-lang="en">Orders & members</span></button>
+        <button type="button" data-view="reports" data-view-permission="reports.view" aria-current="false"><span class="nav-symbol">▥</span><span data-lang="vi">Báo cáo</span><span data-lang="en">Reports</span></button>
+        <button type="button" data-view="audit" data-view-permission="audit.view" aria-current="false"><span class="nav-symbol">≡</span><span data-lang="vi">Audit & backup</span><span data-lang="en">Audit & backup</span></button>
+      </nav>
+      <div class="sidebar-foot"><strong>Local desktop · SQLite</strong><span data-lang="vi">Prototype tĩnh · không ghi database</span><span data-lang="en">Static prototype · no database writes</span></div>
+    </aside>
+
+    <section class="admin-main">
+      <div class="admin-topbar">
+        <div class="breadcrumbs"><span data-lang="vi">PetCare</span><span data-lang="en">PetCare</span> / <strong id="current-section">Tổng quan</strong></div>
+        <div class="top-actions"><span class="signed-user"><span class="user-avatar" id="user-avatar">AD</span><span id="signed-user-label">admin.demo · ADMIN</span></span><select class="role-switch" id="role-switch" aria-label="Switch demo role"><option value="ADMIN">ADMIN</option><option value="MANAGER">MANAGER</option><option value="VETERINARIAN">VETERINARIAN</option><option value="CAREGIVER">CAREGIVER</option><option value="SALES">SALES</option><option value="INVENTORY_MANAGER">INVENTORY_MANAGER</option><option value="SERVICE_COORDINATOR">SERVICE_COORDINATOR</option><option value="CUSTOMER_SUPPORT">CUSTOMER_SUPPORT</option><option value="REPORT_ANALYST">REPORT_ANALYST</option><option value="AUDITOR">AUDITOR</option></select><input class="search-input" id="global-search" type="search" placeholder="Tìm trong trang / Search this view" aria-label="Search current admin view"><button class="action-button" id="logout-demo" type="button"><span data-lang="vi">Thoát</span><span data-lang="en">Sign out</span></button><span class="demo-badge"><span data-lang="vi">DEMO · DỮ LIỆU MẪU</span><span data-lang="en">DEMO · SAMPLE DATA</span></span></div>
+      </div>
+
+      <div class="admin-content">
+        <p class="demo-notice"><strong><span data-lang="vi">Mô phỏng giao diện.</span><span data-lang="en">Interface simulation.</span></strong> <span data-lang="vi">Bản này không kết nối SQLite và không lưu thay đổi. Các số liệu, tài khoản và hoạt động đều là dữ liệu minh họa.</span><span data-lang="en">This page does not connect to SQLite or persist changes. Metrics, accounts and activity are illustrative.</span></p>
+
+        <section class="view is-active" id="view-overview" data-view-panel="overview">
+          <div class="view-heading"><div><span class="view-eyebrow"><span data-lang="vi">Điều hành / Hôm nay</span><span data-lang="en">Operations / Today</span></span><h1><span data-lang="vi">Tổng quan cửa hàng</span><span data-lang="en">Store overview</span></h1><p><span data-lang="vi">Màn hình rà soát công việc, lịch, tồn kho và trạng thái bán hàng trong một phiên làm việc.</span><span data-lang="en">Review tasks, appointments, stock and sales status in one workspace.</span></p></div><div class="button-row"><button class="action-button" type="button" data-open-view="audit" data-requires-permission="audit.view"><span data-lang="vi">Xem audit</span><span data-lang="en">Review audit</span></button><button class="action-button primary" type="button" data-open-view="services"><span data-lang="vi">Mở lịch dịch vụ</span><span data-lang="en">Open schedule</span></button></div></div>
+          <div class="metric-grid">
+            <article class="metric-card"><span class="metric-label"><span data-lang="vi">Hồ sơ vật nuôi</span><span data-lang="en">Animal records</span></span><strong class="metric-value">248</strong><span class="metric-note"><span data-lang="vi">Mẫu demo · không phải dữ liệu thật</span><span data-lang="en">Demo sample · not live data</span></span></article>
+            <article class="metric-card"><span class="metric-label"><span data-lang="vi">Lịch dịch vụ hôm nay</span><span data-lang="en">Appointments today</span></span><strong class="metric-value">12</strong><span class="metric-note"><span data-lang="vi">Mẫu demo · theo trạng thái</span><span data-lang="en">Demo sample · by state</span></span></article>
+            <article class="metric-card"><span class="metric-label"><span data-lang="vi">Cảnh báo kho</span><span data-lang="en">Inventory alerts</span></span><strong class="metric-value">04</strong><span class="metric-note"><span data-lang="vi">Mẫu demo · cần nhân viên rà</span><span data-lang="en">Demo sample · staff review needed</span></span></article>
+            <article class="metric-card"><span class="metric-label"><span data-lang="vi">Đơn đang mở</span><span data-lang="en">Open orders</span></span><strong class="metric-value">07</strong><span class="metric-note"><span data-lang="vi">Mẫu demo · thanh toán thủ công</span><span data-lang="en">Demo sample · staff-recorded payment</span></span></article>
+          </div>
+          <div class="workspace-grid">
+            <section class="panel"><div class="panel-heading"><h2><span data-lang="vi">Việc cần xử lý</span><span data-lang="en">Action queue</span></h2><span><span data-lang="vi">Mẫu · 5 mục</span><span data-lang="en">Sample · 5 items</span></span></div><div class="data-table-wrap"><table class="data-table"><thead><tr><th><span data-lang="vi">Mã</span><span data-lang="en">ID</span></th><th><span data-lang="vi">Công việc</span><span data-lang="en">Task</span></th><th><span data-lang="vi">Phụ trách</span><span data-lang="en">Owner</span></th><th><span data-lang="vi">Ưu tiên</span><span data-lang="en">Priority</span></th></tr></thead><tbody><tr><td>CARE-031</td><td><span data-lang="vi">Rà checklist chăm sóc</span><span data-lang="en">Review care checklist</span></td><td><span data-lang="vi">NV demo 01</span><span data-lang="en">Demo staff 01</span></td><td><span class="status warn"><span data-lang="vi">Hôm nay</span><span data-lang="en">Today</span></span></td></tr><tr><td>STK-012</td><td><span data-lang="vi">Kiểm tra lô gần hạn</span><span data-lang="en">Review near-expiry batch</span></td><td><span data-lang="vi">Quản lý demo</span><span data-lang="en">Demo manager</span></td><td><span class="status danger"><span data-lang="vi">Cần rà</span><span data-lang="en">Review</span></span></td></tr><tr><td>SRV-052</td><td><span data-lang="vi">Xác nhận lịch 09:30</span><span data-lang="en">Confirm 09:30 booking</span></td><td><span data-lang="vi">NV demo 02</span><span data-lang="en">Demo staff 02</span></td><td><span class="status neutral"><span data-lang="vi">Sắp tới</span><span data-lang="en">Upcoming</span></span></td></tr><tr><td>RSV-006</td><td><span data-lang="vi">Rà ngày giữ chỗ</span><span data-lang="en">Review reservation date</span></td><td><span data-lang="vi">Bán hàng demo</span><span data-lang="en">Demo sales</span></td><td><span class="status warn"><span data-lang="vi">Theo dõi</span><span data-lang="en">Follow up</span></span></td></tr><tr><td>ALT-024</td><td><span data-lang="vi">Kiểm tra ngưỡng tồn</span><span data-lang="en">Check stock threshold</span></td><td><span data-lang="vi">Kho demo</span><span data-lang="en">Demo inventory</span></td><td><span class="status neutral"><span data-lang="vi">Mở</span><span data-lang="en">Open</span></span></td></tr></tbody></table></div></section>
+            <aside class="panel"><div class="panel-heading"><h2><span data-lang="vi">Tóm tắt ca làm</span><span data-lang="en">Shift summary</span></h2><span><span data-lang="vi">Mẫu demo</span><span data-lang="en">Demo sample</span></span></div><div class="queue-list"><div class="queue-item"><div><strong><span data-lang="vi">Lịch hẹn</span><span data-lang="en">Appointments</span></strong><small><span data-lang="vi">08 đã lên lịch · 02 tiếp nhận · 02 hoàn tất</span><span data-lang="en">08 scheduled · 02 checked in · 02 complete</span></small></div><span class="status">12</span></div><div class="queue-item"><div><strong><span data-lang="vi">Đơn hàng</span><span data-lang="en">Orders</span></strong><small><span data-lang="vi">03 chờ · 02 một phần · 02 hoàn tất</span><span data-lang="en">03 open · 02 partial · 02 complete</span></small></div><span class="status neutral">07</span></div><div class="queue-item"><div><strong><span data-lang="vi">Nhắc việc</span><span data-lang="en">Reminders</span></strong><small><span data-lang="vi">Chăm sóc, tiêm chủng, tồn kho</span><span data-lang="en">Care, vaccination, stock</span></small></div><span class="status warn">04</span></div></div><div class="report-notice"><strong><span data-lang="vi">Nguyên tắc xử lý</span><span data-lang="en">Handling principle</span></strong><span data-lang="vi">Cảnh báo hỗ trợ rà soát; nhân viên xác nhận hành động và trạng thái.</span><span data-lang="en">Alerts support review; staff confirm actions and state changes.</span></div></aside>
+          </div>
+        </section>
+
+        <section class="view" id="view-staff" data-view-panel="staff" hidden>
+          <div class="view-heading"><div><span class="view-eyebrow">Access administration</span><h1><span data-lang="vi">Nhân sự & phân quyền</span><span data-lang="en">Staff & roles</span></h1><p><span data-lang="vi">Quản lý tài khoản nội bộ, vai trò và trạng thái. Giao diện thật giới hạn quản lý người dùng theo permission.</span><span data-lang="en">Manage internal accounts, roles and status. The real application restricts user administration by permission.</span></p></div><button class="action-button primary" type="button" data-dialog="user-dialog" data-requires-permission="users.manage"><span data-lang="vi">＋ Tạo tài khoản demo</span><span data-lang="en">＋ Add demo account</span></button></div>
+          <div class="role-matrix">
+            <article class="role-card"><h3>ADMIN</h3><p><span data-lang="vi">Quản trị tài khoản, thiết lập, audit và toàn bộ luồng nghiệp vụ.</span><span data-lang="en">Accounts, settings, audit and all operational areas.</span></p><div class="permission-tags"><span>users.manage</span><span>settings.manage</span><span>audit.view</span></div></article>
+            <article class="role-card"><h3>MANAGER</h3><p><span data-lang="vi">Điều hành phần lớn cửa hàng, không quản lý tài khoản.</span><span data-lang="en">Runs most store workflows, but not user administration.</span></p><div class="permission-tags"><span>sales.manage</span><span>inventory.manage</span><span>audit.view</span></div></article>
+            <article class="role-card"><h3>VETERINARIAN</h3><p><span data-lang="vi">Xem vật nuôi và quản lý hồ sơ sức khỏe, chăm sóc liên quan.</span><span data-lang="en">Views animals and manages health records and related care.</span></p><div class="permission-tags"><span>health.manage</span><span>care.view</span><span>reports.view</span></div></article>
+            <article class="role-card"><h3>CAREGIVER</h3><p><span data-lang="vi">Thực hiện chăm sóc và cập nhật lịch dịch vụ được cấp quyền.</span><span data-lang="en">Handles care tasks and permitted service appointments.</span></p><div class="permission-tags"><span>care.manage</span><span>services.manage</span><span>inventory.view</span></div></article>
+            <article class="role-card"><h3>SALES</h3><p><span data-lang="vi">Bán hàng, hội viên và lịch dịch vụ theo quyền.</span><span data-lang="en">Sales, memberships and service appointments under granted access.</span></p><div class="permission-tags"><span>sales.manage</span><span>membership.manage</span><span>services.manage</span></div></article>
+            <article class="role-card"><h3>INVENTORY_MANAGER</h3><p><span data-lang="vi">Quản lý nhập hàng, tồn kho và cảnh báo nguồn cung.</span><span data-lang="en">Manages intake, stock and supply alerts.</span></p><div class="permission-tags"><span>imports.manage</span><span>inventory.manage</span><span>reports.view</span></div></article>
+            <article class="role-card"><h3>SERVICE_COORDINATOR</h3><p><span data-lang="vi">Điều phối lịch dịch vụ và xem quyền lợi hội viên liên quan.</span><span data-lang="en">Coordinates appointments and views related membership benefits.</span></p><div class="permission-tags"><span>services.manage</span><span>membership.view</span><span>reports.view</span></div></article>
+            <article class="role-card"><h3>CUSTOMER_SUPPORT</h3><p><span data-lang="vi">Tra cứu khách hàng, lịch sử bán hàng, hội viên và dịch vụ; không có quyền sửa.</span><span data-lang="en">Views customer, sales, membership and service records; no write access.</span></p><div class="permission-tags"><span>animals.view</span><span>sales.view</span><span>services.view</span></div></article>
+            <article class="role-card"><h3>REPORT_ANALYST</h3><p><span data-lang="vi">Chỉ xem dashboard và báo cáo.</span><span data-lang="en">Read-only access to dashboard and reports.</span></p><div class="permission-tags"><span>dashboard.view</span><span>reports.view</span></div></article>
+            <article class="role-card"><h3>AUDITOR</h3><p><span data-lang="vi">Xem báo cáo và audit log; không thao tác nghiệp vụ ghi.</span><span data-lang="en">Views reports and audit logs; no operational write access.</span></p><div class="permission-tags"><span>reports.view</span><span>audit.view</span></div></article>
+          </div>
+          <section class="panel" style="margin-top:12px"><div class="panel-heading"><h2><span data-lang="vi">Danh sách tài khoản mẫu</span><span data-lang="en">Sample accounts</span></h2><span><span data-lang="vi">Không phải tài khoản thật</span><span data-lang="en">Not real accounts</span></span></div><div class="data-table-wrap"><table class="data-table searchable-table"><thead><tr><th><span data-lang="vi">Tài khoản</span><span data-lang="en">Account</span></th><th><span data-lang="vi">Vai trò</span><span data-lang="en">Role</span></th><th><span data-lang="vi">Trạng thái</span><span data-lang="en">Status</span></th><th><span data-lang="vi">Đăng nhập gần nhất</span><span data-lang="en">Last sign-in</span></th><th></th></tr></thead><tbody id="user-rows"><tr><td>admin-demo</td><td>ADMIN</td><td><span class="status">Active</span></td><td>09:12 · sample</td><td><button class="action-button small-action" type="button" data-toast="Demo only: account changes are not persisted."><span data-lang="vi">Chi tiết</span><span data-lang="en">Details</span></button></td></tr><tr><td>manager-demo</td><td>MANAGER</td><td><span class="status">Active</span></td><td>08:46 · sample</td><td><button class="action-button small-action" type="button" data-toast="Demo only: account changes are not persisted."><span data-lang="vi">Chi tiết</span><span data-lang="en">Details</span></button></td></tr><tr><td>care-demo-01</td><td>CAREGIVER</td><td><span class="status warn">Password rotation</span></td><td>Yesterday · sample</td><td><button class="action-button small-action" type="button" data-toast="Demo only: account changes are not persisted."><span data-lang="vi">Chi tiết</span><span data-lang="en">Details</span></button></td></tr></tbody></table></div></section>
+        </section>
+
+        <section class="view" id="view-inventory" data-view-panel="inventory" hidden>
+          <div class="view-heading"><div><span class="view-eyebrow">Stock control</span><h1><span data-lang="vi">Kho & cảnh báo</span><span data-lang="en">Inventory & alerts</span></h1><p><span data-lang="vi">Rà lượng, lô, hạn dùng và ngưỡng do cửa hàng cấu hình. Tồn kho cần nhập/đối soát; nhà cung cấp không tự sinh số lượng.</span><span data-lang="en">Review quantities, batches, expiry and store-configured thresholds. Stock must be entered/reconciled; supplier records do not create quantities automatically.</span></p></div><button class="action-button" type="button" data-toast="Demo only: inventory values are not written to SQLite." data-requires-permission="inventory.manage"><span data-lang="vi">＋ Ghi nhận nhập mẫu</span><span data-lang="en">＋ Record sample intake</span></button></div>
+          <div class="metric-grid"><article class="metric-card"><span class="metric-label">SKU monitored · demo</span><strong class="metric-value">86</strong><span class="metric-note">Sample count</span></article><article class="metric-card"><span class="metric-label">Below threshold · demo</span><strong class="metric-value">04</strong><span class="metric-note">Staff review required</span></article><article class="metric-card"><span class="metric-label">Near expiry · demo</span><strong class="metric-value">03</strong><span class="metric-note">Uses configured date window</span></article><article class="metric-card"><span class="metric-label">Unreconciled · demo</span><strong class="metric-value">02</strong><span class="metric-note">Check source movement</span></article></div>
+          <section class="panel"><div class="panel-heading"><h2><span data-lang="vi">Hàng hóa cần rà</span><span data-lang="en">Items for review</span></h2><span><span data-lang="vi">Bản ghi mẫu</span><span data-lang="en">Sample records</span></span></div><div class="data-table-wrap"><table class="data-table searchable-table"><thead><tr><th>SKU</th><th><span data-lang="vi">Sản phẩm</span><span data-lang="en">Product</span></th><th><span data-lang="vi">Khả dụng</span><span data-lang="en">Available</span></th><th><span data-lang="vi">Ngưỡng</span><span data-lang="en">Threshold</span></th><th><span data-lang="vi">Lô gần nhất</span><span data-lang="en">Nearest expiry</span></th><th><span data-lang="vi">Tình trạng</span><span data-lang="en">State</span></th></tr></thead><tbody><tr><td>FOOD-014</td><td>Pet food · demo</td><td>04</td><td>08</td><td>2026-10-18</td><td><span class="status danger">Below threshold</span></td></tr><tr><td>CARE-008</td><td>Care supplies · demo</td><td>11</td><td>05</td><td>2026-10-22</td><td><span class="status warn">Near expiry</span></td></tr><tr><td>MED-003</td><td>Tracked item · demo</td><td>06</td><td>04</td><td>2027-01-08</td><td><span class="status neutral">Review batch</span></td></tr></tbody></table></div></section>
+        </section>
+
+        <section class="view" id="view-services" data-view-panel="services" hidden>
+          <div class="view-heading"><div><span class="view-eyebrow">Appointments</span><h1><span data-lang="vi">Lịch dịch vụ</span><span data-lang="en">Service schedule</span></h1><p><span data-lang="vi">Theo dõi lịch theo trạng thái và phân công. Appointment lưu khách hàng cùng tên/loài thú cưng; schema hiện không gắn pet-profile ID.</span><span data-lang="en">Review appointment state and assignment. Appointments store customer plus pet name/species; current schema does not link a pet-profile ID.</span></p></div><select class="filter-select" id="service-filter" aria-label="Filter appointments"><option value="all">All states</option><option value="SCHEDULED">SCHEDULED</option><option value="CHECKED_IN">CHECKED_IN</option><option value="IN_PROGRESS">IN_PROGRESS</option><option value="COMPLETED">COMPLETED</option><option value="NO_SHOW">NO_SHOW</option></select></div>
+          <section class="panel"><div class="panel-heading"><h2><span data-lang="vi">Lịch hẹn hôm nay</span><span data-lang="en">Today's appointments</span></h2><span><span data-lang="vi">Dữ liệu mẫu tĩnh</span><span data-lang="en">Static sample data</span></span></div><div class="data-table-wrap"><table class="data-table searchable-table"><thead><tr><th>Code</th><th><span data-lang="vi">Khách / thú cưng</span><span data-lang="en">Customer / pet</span></th><th><span data-lang="vi">Dịch vụ</span><span data-lang="en">Service</span></th><th><span data-lang="vi">Giờ</span><span data-lang="en">Time</span></th><th><span data-lang="vi">Nhân viên</span><span data-lang="en">Staff</span></th><th><span data-lang="vi">Trạng thái</span><span data-lang="en">State</span></th><th></th></tr></thead><tbody><tr data-state="SCHEDULED"><td>SRV-052</td><td>Customer demo 01 · May / Cat</td><td>Basic care</td><td>09:30</td><td>Staff demo 02</td><td><span class="status neutral">SCHEDULED</span></td><td><button class="action-button small-action" type="button" data-toast="Demo only: no appointment state was saved.">Review</button></td></tr><tr data-state="CHECKED_IN"><td>SRV-053</td><td>Customer demo 02 · Dom / Dog</td><td>Bath & hygiene</td><td>10:15</td><td>Staff demo 01</td><td><span class="status warn">CHECKED_IN</span></td><td><button class="action-button small-action" type="button" data-toast="Demo only: no appointment state was saved.">Review</button></td></tr><tr data-state="IN_PROGRESS"><td>SRV-054</td><td>Customer demo 03 · Bong / Rabbit</td><td>Routine check</td><td>11:00</td><td>Staff demo 03</td><td><span class="status warn">IN_PROGRESS</span></td><td><button class="action-button small-action" type="button" data-toast="Demo only: no appointment state was saved.">Review</button></td></tr><tr data-state="NO_SHOW"><td>SRV-055</td><td>Customer demo 01 · May / Cat</td><td>Basic care</td><td>12:30</td><td>Unassigned</td><td><span class="status danger">NO_SHOW</span></td><td><button class="action-button small-action" type="button" data-toast="Demo only: no appointment state was saved.">Review</button></td></tr></tbody></table></div></section>
+        </section>
+
+        <section class="view" id="view-sales" data-view-panel="sales" hidden>
+          <div class="view-heading"><div><span class="view-eyebrow">Commercial operations</span><h1><span data-lang="vi">Đơn hàng & hội viên</span><span data-lang="en">Orders & memberships</span></h1><p><span data-lang="vi">Đối soát đơn, khoản thanh toán đã ghi và trạng thái hội viên. Nhân viên xác nhận thanh toán; đây không phải cổng thanh toán.</span><span data-lang="en">Reconcile orders, recorded payments and membership state. Staff confirm payments; this is not a payment gateway.</span></p></div><button class="action-button" type="button" data-toast="Demo only: order data is not persisted." data-requires-permission="sales.manage"><span data-lang="vi">＋ Tạo đơn mẫu</span><span data-lang="en">＋ New sample order</span></button></div>
+          <section class="panel"><div class="panel-heading"><h2><span data-lang="vi">Đơn gần đây</span><span data-lang="en">Recent orders</span></h2><span><span data-lang="vi">Số tiền minh họa</span><span data-lang="en">Illustrative amounts</span></span></div><div class="data-table-wrap"><table class="data-table searchable-table"><thead><tr><th>Order</th><th><span data-lang="vi">Khách hàng</span><span data-lang="en">Customer</span></th><th><span data-lang="vi">Tổng mẫu</span><span data-lang="en">Sample total</span></th><th><span data-lang="vi">Đã ghi nhận</span><span data-lang="en">Recorded paid</span></th><th><span data-lang="vi">Trạng thái</span><span data-lang="en">State</span></th><th><span data-lang="vi">Cập nhật bởi</span><span data-lang="en">Updated by</span></th></tr></thead><tbody><tr><td>ORD-108</td><td>Customer demo 01</td><td>850,000 VND</td><td>850,000 VND</td><td><span class="status">PAID</span></td><td>Sales demo</td></tr><tr><td>ORD-109</td><td>Customer demo 02</td><td>1,200,000 VND</td><td>600,000 VND</td><td><span class="status warn">PARTIALLY_PAID</span></td><td>Manager demo</td></tr><tr><td>ORD-110</td><td>Customer demo 03</td><td>420,000 VND</td><td>0 VND</td><td><span class="status neutral">OPEN</span></td><td>Sales demo</td></tr></tbody></table></div></section>
+          <section class="panel" style="margin-top:12px"><div class="panel-heading"><h2><span data-lang="vi">Hội viên cần theo dõi</span><span data-lang="en">Memberships to review</span></h2><span>Sample</span></div><div class="data-table-wrap"><table class="data-table searchable-table"><thead><tr><th>Membership</th><th><span data-lang="vi">Khách hàng</span><span data-lang="en">Customer</span></th><th><span data-lang="vi">Gói</span><span data-lang="en">Plan</span></th><th><span data-lang="vi">Bill</span><span data-lang="en">Bill</span></th><th><span data-lang="vi">Trạng thái</span><span data-lang="en">State</span></th></tr></thead><tbody><tr><td>MEM-014</td><td>Customer demo 01</td><td>Basic care · demo</td><td>SETTLED</td><td><span class="status">ACTIVE</span></td></tr><tr><td>MEM-015</td><td>Customer demo 02</td><td>Service plan · demo</td><td>UNPAID</td><td><span class="status warn">PENDING</span></td></tr></tbody></table></div></section>
+        </section>
+
+        <section class="view" id="view-reports" data-view-panel="reports" hidden>
+          <div class="view-heading"><div><span class="view-eyebrow">Read-only oversight</span><h1><span data-lang="vi">Báo cáo & đối soát</span><span data-lang="en">Reports & reconciliation</span></h1><p><span data-lang="vi">Khu vực xem dành cho REPORT_ANALYST và AUDITOR. Giá trị minh họa; cần truy vấn nguồn, kỳ báo cáo và người xác nhận trước khi công bố.</span><span data-lang="en">Read-oriented area for REPORT_ANALYST and AUDITOR. Values are illustrative; verify source, period and reviewer before publication.</span></p></div></div>
+          <div class="metric-grid"><article class="metric-card"><span class="metric-label">Sales summary · demo</span><strong class="metric-value">—</strong><span class="metric-note">No live query</span></article><article class="metric-card"><span class="metric-label">Inventory status · demo</span><strong class="metric-value">—</strong><span class="metric-note">Needs source reconciliation</span></article><article class="metric-card"><span class="metric-label">Service states · demo</span><strong class="metric-value">—</strong><span class="metric-note">Period not selected</span></article><article class="metric-card"><span class="metric-label">Audit events · demo</span><strong class="metric-value">—</strong><span class="metric-note">Selected events only</span></article></div>
+          <section class="panel"><div class="panel-heading"><h2><span data-lang="vi">Danh mục báo cáo</span><span data-lang="en">Report catalogue</span></h2><span><span data-lang="vi">Chỉ đọc · mẫu</span><span data-lang="en">Read-only · sample</span></span></div><div class="data-table-wrap"><table class="data-table searchable-table"><thead><tr><th>Report</th><th><span data-lang="vi">Nguồn dự kiến</span><span data-lang="en">Expected source</span></th><th><span data-lang="vi">Kỳ</span><span data-lang="en">Period</span></th><th><span data-lang="vi">Trạng thái</span><span data-lang="en">Status</span></th></tr></thead><tbody><tr><td>Sales summary</td><td>Orders / payments</td><td>Not selected</td><td><span class="status neutral">Template</span></td></tr><tr><td>Inventory status</td><td>Items / batches</td><td>Snapshot</td><td><span class="status neutral">Template</span></td></tr><tr><td>Service schedule</td><td>Appointments</td><td>Not selected</td><td><span class="status neutral">Template</span></td></tr><tr><td>Audit activity</td><td>Selected audit events</td><td>Recent</td><td><span class="status warn">Review source</span></td></tr></tbody></table></div></section>
+        </section>
+
+        <section class="view" id="view-audit" data-view-panel="audit" hidden>
+          <div class="view-heading"><div><span class="view-eyebrow">Governance</span><h1><span data-lang="vi">Audit & sao lưu</span><span data-lang="en">Audit & backup</span></h1><p><span data-lang="vi">Audit ghi một số sự kiện có chọn lọc, không phải mọi thao tác. Backup thật được tạo theo yêu cầu trong ứng dụng; trang demo không tạo file.</span><span data-lang="en">Audit captures selected events, not every action. Real backups are created on demand in the application; this demo does not create files.</span></p></div><button class="action-button" type="button" data-dialog="backup-dialog" data-requires-permission="settings.manage"><span data-lang="vi">Quy trình backup</span><span data-lang="en">Backup procedure</span></button></div>
+          <section class="panel"><div class="panel-heading"><h2><span data-lang="vi">Sự kiện gần đây</span><span data-lang="en">Recent events</span></h2><span><span data-lang="vi">Mẫu minh họa · audit không phải log chống giả mạo trên máy chủ</span><span data-lang="en">Illustrative sample · local audit is not server-side tamper-proof logging</span></span></div><div class="activity-list"><div class="activity-row"><span class="muted">2026-10-07 09:14</span><span>LOGIN_SUCCESS</span><span>admin-demo · auth</span><span>Sample event</span></div><div class="activity-row"><span class="muted">2026-10-07 09:06</span><span>UPDATE_ORDER</span><span>manager-demo · ORD-109</span><span>Sample event</span></div><div class="activity-row"><span class="muted">2026-10-07 08:51</span><span>BACKUP</span><span>admin-demo · db snapshot</span><span>Sample event</span></div><div class="activity-row"><span class="muted">2026-10-07 08:33</span><span>LOGIN_FAILED</span><span>unknown actor · auth</span><span>Sample event</span></div></div></section>
+          <div class="backup-callout"><div><h3><span data-lang="vi">Khôi phục cần diễn tập riêng</span><span data-lang="en">Restore must be rehearsed separately</span></h3><p><span data-lang="vi">UI có tạo backup theo yêu cầu; hiện chưa có màn hình restore. Lưu bản sao ngoài máy và xác minh khả năng phục hồi.</span><span data-lang="en">The UI supports on-demand backup; there is no restore screen. Store a copy off-device and verify recovery.</span></p></div><button class="action-button" type="button" data-dialog="backup-dialog"><span data-lang="vi">Xem hướng dẫn</span><span data-lang="en">View guidance</span></button></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="user-dialog"><form method="dialog" class="dialog-body" id="user-form"><h2><span data-lang="vi">Tài khoản demo mới</span><span data-lang="en">New demo account</span></h2><p><span data-lang="vi">Bản mô phỏng chỉ thêm dòng tạm vào bảng trong trình duyệt. Không tạo tài khoản thật.</span><span data-lang="en">The prototype adds a temporary row in this browser only. It does not create a real account.</span></p><label><span data-lang="vi">Tên đăng nhập</span><span data-lang="en">Username</span><input name="username" required minlength="3" autocomplete="off"></label><label><span data-lang="vi">Vai trò</span><span data-lang="en">Role</span><select name="role"><option>ADMIN</option><option>MANAGER</option><option>VETERINARIAN</option><option>CAREGIVER</option><option>SALES</option><option>INVENTORY_MANAGER</option><option>SERVICE_COORDINATOR</option><option>CUSTOMER_SUPPORT</option><option>REPORT_ANALYST</option><option>AUDITOR</option></select></label><div class="dialog-actions"><button class="action-button" value="cancel"><span data-lang="vi">Hủy</span><span data-lang="en">Cancel</span></button><button class="action-button primary" id="save-user" value="default"><span data-lang="vi">Thêm demo</span><span data-lang="en">Add demo</span></button></div></form></dialog>
+  <dialog id="backup-dialog"><div class="dialog-body"><h2><span data-lang="vi">Quy trình backup an toàn</span><span data-lang="en">Safe backup procedure</span></h2><p><span data-lang="vi">Trong ứng dụng desktop thật: người có quyền settings.manage chọn thư mục backup, tạo bản SQLite theo yêu cầu, kiểm tra file và lưu bản sao ngoài máy. Giao diện hiện không có restore; hãy diễn tập phục hồi bằng quy trình đã phê duyệt.</span><span data-lang="en">In the real desktop app: a settings.manage user selects a backup directory, creates an on-demand SQLite copy, verifies it and keeps an off-device copy. There is no restore UI; rehearse recovery using an approved procedure.</span></p><div class="dialog-actions"><button class="action-button primary" type="button" data-close-dialog><span data-lang="vi">Đã hiểu</span><span data-lang="en">Understood</span></button></div></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script>
+    const navButtons = [...document.querySelectorAll('.admin-nav [data-view]')];
+    const views = [...document.querySelectorAll('[data-view-panel]')];
+    const currentSection = document.getElementById('current-section');
+    const globalSearch = document.getElementById('global-search');
+    const serviceFilter = document.getElementById('service-filter');
+    const roleSwitch = document.getElementById('role-switch');
+    const adminShell = document.getElementById('admin-shell');
+    const loginStage = document.getElementById('login-stage');
+    const toast = document.getElementById('toast');
+    let toastTimer;
+    const rolePermissions = {
+      ADMIN: ['dashboard.view','animals.view','animals.manage','health.view','health.manage','care.view','care.manage','store.view','store.manage','imports.view','imports.manage','sales.view','sales.manage','membership.view','membership.manage','services.view','services.manage','services.catalog.manage','inventory.view','inventory.manage','reports.view','notifications.view','settings.manage','users.manage','audit.view'],
+      MANAGER: ['dashboard.view','animals.view','animals.manage','health.view','health.manage','care.view','care.manage','store.view','store.manage','imports.view','imports.manage','sales.view','sales.manage','membership.view','membership.manage','services.view','services.manage','services.catalog.manage','inventory.view','inventory.manage','reports.view','notifications.view','settings.manage','audit.view'],
+      VETERINARIAN: ['dashboard.view','animals.view','health.view','health.manage','care.view','inventory.view','inventory.manage','reports.view','notifications.view'],
+      CAREGIVER: ['dashboard.view','animals.view','health.view','care.view','care.manage','services.view','services.manage','inventory.view','inventory.manage','reports.view','notifications.view'],
+      SALES: ['dashboard.view','animals.view','store.view','imports.view','sales.view','sales.manage','membership.view','membership.manage','services.view','services.manage','reports.view','notifications.view'],
+      INVENTORY_MANAGER: ['dashboard.view','imports.view','imports.manage','inventory.view','inventory.manage','reports.view','notifications.view'],
+      SERVICE_COORDINATOR: ['dashboard.view','services.view','services.manage','membership.view','reports.view','notifications.view'],
+      CUSTOMER_SUPPORT: ['dashboard.view','animals.view','sales.view','membership.view','services.view','reports.view','notifications.view'],
+      REPORT_ANALYST: ['dashboard.view','reports.view'],
+      AUDITOR: ['dashboard.view','reports.view','audit.view']
+    };
+    const roleLabels = { ADMIN:['Quản trị viên','Administrator'], MANAGER:['Quản lý','Store manager'], VETERINARIAN:['Bác sĩ thú y','Veterinarian'], CAREGIVER:['Nhân viên chăm sóc','Caregiver'], SALES:['Nhân viên bán hàng','Sales associate'], INVENTORY_MANAGER:['Quản lý kho','Inventory manager'], SERVICE_COORDINATOR:['Điều phối dịch vụ','Service coordinator'], CUSTOMER_SUPPORT:['Chăm sóc khách hàng','Customer support'], REPORT_ANALYST:['Chuyên viên báo cáo','Report analyst'], AUDITOR:['Kiểm toán viên','Auditor'] };
+    const sectionNames = { overview:['Tổng quan','Overview'], staff:['Nhân sự & quyền','Staff & roles'], inventory:['Kho & cảnh báo','Inventory & alerts'], services:['Lịch dịch vụ','Service schedule'], sales:['Đơn & hội viên','Orders & members'], reports:['Báo cáo & đối soát','Reports & reconciliation'], audit:['Audit & backup','Audit & backup'] };
+    let activeRole = 'ADMIN';
+    let activeUser = 'admin.demo';
+    const hasPermission = permission => rolePermissions[activeRole]?.includes(permission) ?? false;
+    function applyRole() {
+      navButtons.forEach(button => { button.hidden = !hasPermission(button.dataset.viewPermission); });
+      document.querySelectorAll('[data-requires-permission]').forEach(control => { control.hidden = !hasPermission(control.dataset.requiresPermission); });
+      document.getElementById('signed-user-label').textContent = `${activeUser} · ${activeRole}`;
+      document.getElementById('user-avatar').textContent = activeRole.slice(0,2);
+      const activeButton = document.querySelector('.admin-nav [aria-current="page"]');
+      if (!activeButton || activeButton.hidden) setView('overview');
+      else setView(activeButton.dataset.view);
+    }
+    function setView(name) {
+      const targetButton = navButtons.find(button => button.dataset.view === name);
+      if (!targetButton || targetButton.hidden) {
+        showToast(`Access unavailable for ${activeRole} in this demo.`);
+        return;
+      }
+      views.forEach(view => { const active=view.dataset.viewPanel===name; view.classList.toggle('is-active',active); view.hidden=!active; });
+      navButtons.forEach(button => button.setAttribute('aria-current',String(button.dataset.view===name?'page':'false')));
+      const english=document.body.classList.contains('show-en');
+      currentSection.textContent=sectionNames[name][english?1:0];
+      globalSearch.value='';
+      applySearch();
+      document.querySelector('.admin-content').scrollTop=0;
+    }
+    function applySearch() {
+      const query=globalSearch.value.trim().toLocaleLowerCase();
+      const activeView=document.querySelector('.view.is-active');
+      if(!activeView) return;
+      activeView.querySelectorAll('.searchable-table tbody tr').forEach(row=>{ row.classList.toggle('hidden-row',!row.textContent.toLocaleLowerCase().includes(query)); });
+      activeView.querySelectorAll('.metric-card,.queue-item,.role-card,.activity-row').forEach(item=>{ if(query) item.hidden=!item.textContent.toLocaleLowerCase().includes(query); else item.hidden=false; });
+    }
+    navButtons.forEach(button=>button.addEventListener('click',()=>setView(button.dataset.view)));
+    document.querySelectorAll('[data-open-view]').forEach(button=>button.addEventListener('click',()=>setView(button.dataset.openView)));
+    document.getElementById('demo-login-form').addEventListener('submit',event=>{
+      event.preventDefault();
+      const username=document.getElementById('login-username').value.trim();
+      const password=document.getElementById('login-password').value;
+      if(!username||!password){document.getElementById('login-error').textContent='Enter demo values to continue.';return;}
+      activeUser=username;
+      activeRole=document.getElementById('login-role').value;
+      roleSwitch.value=activeRole;
+      document.body.classList.remove('login-required');
+      loginStage.hidden=true;
+      adminShell.hidden=false;
+      applyRole();
+      showToast(`Demo view only · ${activeRole} · credentials were not verified.`);
+    });
+    document.getElementById('fill-manager-demo').addEventListener('click',()=>{
+      document.getElementById('login-username').value='manager.demo';
+      document.getElementById('login-password').value='PetCareDemo2026!';
+      document.getElementById('login-role').value='MANAGER';
+      document.getElementById('login-error').textContent='';
+      document.getElementById('login-username').focus();
+    });
+    roleSwitch.addEventListener('change',()=>{activeRole=roleSwitch.value;applyRole();showToast(`Demo role switched to ${activeRole}; no real permissions or session changed.`);});
+    document.getElementById('logout-demo').addEventListener('click',()=>{adminShell.hidden=true;loginStage.hidden=false;document.body.classList.add('login-required');document.getElementById('login-password').value='';document.getElementById('login-role').value='ADMIN';roleSwitch.value='ADMIN';activeRole='ADMIN';activeUser='admin.demo';});
+    globalSearch.addEventListener('input',applySearch);
+    serviceFilter.addEventListener('change',()=>{ document.querySelectorAll('#view-services tbody tr[data-state]').forEach(row=>{row.hidden=serviceFilter.value!=='all'&&row.dataset.state!==serviceFilter.value;}); });
+    document.querySelectorAll('[data-dialog]').forEach(button=>button.addEventListener('click',()=>document.getElementById(button.dataset.dialog).showModal()));
+    document.querySelectorAll('[data-close-dialog]').forEach(button=>button.addEventListener('click',()=>button.closest('dialog').close()));
+    document.querySelectorAll('dialog').forEach(dialog=>dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close();}));
+    function showToast(message) { toast.textContent=message; toast.hidden=false; clearTimeout(toastTimer); toastTimer=setTimeout(()=>{toast.hidden=true;},3200); }
+    document.querySelectorAll('[data-toast]').forEach(button=>button.addEventListener('click',()=>showToast(button.dataset.toast)));
+    document.getElementById('user-form').addEventListener('submit',event=>{
+      event.preventDefault();
+      const form=new FormData(event.currentTarget); const username=String(form.get('username')).trim(); const role=String(form.get('role'));
+      if(!username) return;
+      const row=document.createElement('tr'); row.innerHTML=`<td></td><td></td><td><span class="status">DEMO</span></td><td>Just now · sample</td><td><button class="action-button small-action" type="button" data-toast="Demo only: account changes are not persisted.">Review</button></td>`; row.cells[0].textContent=username; row.cells[1].textContent=role;
+      document.getElementById('user-rows').prepend(row); row.querySelector('[data-toast]').addEventListener('click',button=>showToast(button.currentTarget.dataset.toast));
+      event.currentTarget.closest('dialog').close(); event.currentTarget.reset(); showToast('Demo row added in this browser only; no account was created.'); applySearch();
+    });
+    document.querySelector('.site-header .lang-button').addEventListener('click',()=>{requestAnimationFrame(()=>{const active=document.querySelector('.admin-nav [aria-current="page"]');if(active)currentSection.textContent=sectionNames[active.dataset.view][document.body.classList.contains('show-en')?1:0];});});
+    roleSwitch.value=activeRole;
+  </script>
+  <script src="scripts/document_language.js" defer></script>
+</body>
+</html>

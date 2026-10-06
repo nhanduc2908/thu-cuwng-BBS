@@ -596,6 +596,90 @@ def test_first_admin_password_authentication_permissions_and_audit(database):
         )
 
 
+def test_specialized_roles_are_supported_with_narrow_permissions(database):
+    assert database.create_initial_admin(
+        "admin", "Quản trị", "StrongPass!2026"
+    )
+    inventory_user = database.create_user(
+        "stock", "Quản lý kho", "InventoryPass!2026", "INVENTORY_MANAGER"
+    )
+    analyst_user = database.create_user(
+        "analyst", "Chuyên viên báo cáo", "ReportPass!2026", "REPORT_ANALYST"
+    )
+
+    assert database.has_permission(inventory_user, "inventory.manage")
+    assert database.has_permission(inventory_user, "imports.manage")
+    assert not database.has_permission(inventory_user, "sales.manage")
+    assert database.has_permission(analyst_user, "reports.view")
+    assert not database.has_permission(analyst_user, "reports.manage")
+
+
+def test_legacy_five_role_database_migrates_without_losing_audit_actor(tmp_path):
+    database_path = tmp_path / "legacy_roles.db"
+    legacy = sqlite3.connect(database_path)
+    legacy.execute("PRAGMA foreign_keys = ON")
+    legacy.executescript(
+        """
+        CREATE TABLE users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL UNIQUE COLLATE NOCASE,
+            display_name TEXT NOT NULL,
+            password_salt TEXT NOT NULL,
+            password_hash TEXT NOT NULL,
+            role TEXT NOT NULL CHECK (
+                role IN ('ADMIN', 'MANAGER', 'VETERINARIAN', 'CAREGIVER', 'SALES')
+            ),
+            is_active INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0, 1)),
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            password_changed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            must_change_password INTEGER NOT NULL DEFAULT 0
+                CHECK (must_change_password IN (0, 1))
+        );
+        CREATE TABLE audit_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            actor_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            action TEXT NOT NULL,
+            entity_type TEXT NOT NULL,
+            entity_id INTEGER,
+            details TEXT NOT NULL DEFAULT '',
+            occurred_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );
+        INSERT INTO users
+            (id, username, display_name, password_salt, password_hash, role)
+        VALUES (41, 'legacy-admin', 'Legacy Admin', '00', '00', 'ADMIN');
+        INSERT INTO audit_logs (actor_id, action, entity_type, entity_id)
+        VALUES (41, 'LEGACY_EVENT', 'user', 41);
+        """
+    )
+    legacy.close()
+
+    migrated = Database(database_path)
+    try:
+        user = migrated.connection.execute(
+            "SELECT id, username, role FROM users WHERE id = 41"
+        ).fetchone()
+        audit = migrated.connection.execute(
+            "SELECT actor_id, action FROM audit_logs WHERE action = 'LEGACY_EVENT'"
+        ).fetchone()
+        auditor_id = migrated.auth.create_user(
+            "auditor", "Auditor", "AuditorPass!2026", "AUDITOR"
+        )
+        auditor_role = migrated.connection.execute(
+            "SELECT role FROM users WHERE id = ?", (auditor_id,)
+        ).fetchone()["role"]
+        foreign_key_errors = migrated.connection.execute(
+            "PRAGMA foreign_key_check"
+        ).fetchall()
+
+        assert user["username"] == "legacy-admin"
+        assert user["role"] == "ADMIN"
+        assert audit["actor_id"] == 41
+        assert auditor_role == "AUDITOR"
+        assert foreign_key_errors == []
+    finally:
+        migrated.close()
+
+
 def test_default_admin_and_local_recovery_require_password_change(database):
     default_admin_id = database.create_default_admin()
     user = database.authenticate("ADMIN", "admin")

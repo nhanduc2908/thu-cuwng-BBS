@@ -21,6 +21,7 @@ from app.modules.animals.constants import (
 from app.modules.animals.repository import AnimalRepository, BreedRepository
 from app.modules.audit.repository import AuditRepository
 from app.modules.auth.repository import AuthRepository
+from app.modules.auth.constants import ROLE_PERMISSIONS
 from app.modules.care.constants import (
     CARE_CHECKLIST_ITEMS,
     CARE_CHECKLIST_STATUSES,
@@ -364,7 +365,11 @@ class Database:
                     password_salt TEXT NOT NULL,
                     password_hash TEXT NOT NULL,
                     role TEXT NOT NULL CHECK (
-                        role IN ('ADMIN', 'MANAGER', 'VETERINARIAN', 'CAREGIVER', 'SALES')
+                        role IN (
+                            'ADMIN', 'MANAGER', 'VETERINARIAN', 'CAREGIVER', 'SALES',
+                            'INVENTORY_MANAGER', 'SERVICE_COORDINATOR',
+                            'CUSTOMER_SUPPORT', 'REPORT_ANALYST', 'AUDITOR'
+                        )
                     ),
                     is_active INTEGER NOT NULL DEFAULT 1
                         CHECK (is_active IN (0, 1)),
@@ -1157,6 +1162,61 @@ class Database:
         self._migrate_inventory_catalog()
         self._migrate_service_memberships()
         self._migrate_authentication()
+        self._migrate_user_roles()
+
+    def _migrate_user_roles(self) -> None:
+        table = self.connection.execute(
+            "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'users'"
+        ).fetchone()
+        if table is None or table["sql"] is None:
+            return
+        if all(role in table["sql"] for role in ROLE_PERMISSIONS):
+            return
+
+        role_values = ", ".join(f"'{role}'" for role in ROLE_PERMISSIONS)
+        self.connection.commit()
+        self.connection.execute("PRAGMA foreign_keys = OFF")
+        try:
+            self.connection.execute("BEGIN IMMEDIATE")
+            self.connection.execute(
+                f"""
+                CREATE TABLE users_role_migration (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT NOT NULL UNIQUE COLLATE NOCASE,
+                    display_name TEXT NOT NULL,
+                    password_salt TEXT NOT NULL,
+                    password_hash TEXT NOT NULL,
+                    role TEXT NOT NULL CHECK (role IN ({role_values})),
+                    is_active INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0, 1)),
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    password_changed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    must_change_password INTEGER NOT NULL DEFAULT 0
+                        CHECK (must_change_password IN (0, 1))
+                )
+                """
+            )
+            self.connection.execute(
+                """
+                INSERT INTO users_role_migration
+                    (id, username, display_name, password_salt, password_hash,
+                     role, is_active, created_at, password_changed_at,
+                     must_change_password)
+                SELECT id, username, display_name, password_salt, password_hash,
+                       role, is_active, created_at, password_changed_at,
+                       must_change_password
+                FROM users
+                """
+            )
+            self.connection.execute("DROP TABLE users")
+            self.connection.execute(
+                "ALTER TABLE users_role_migration RENAME TO users"
+            )
+            self.connection.commit()
+        except BaseException:
+            self.connection.rollback()
+            raise
+        finally:
+            self.connection.execute("PRAGMA foreign_keys = ON")
 
     def _migrate_authentication(self) -> None:
         columns = {
