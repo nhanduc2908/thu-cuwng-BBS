@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kịch bản demo song ngữ theo dõi một lịch dịch vụ của thú cưng khách hàng qua các bước đặt, thực hiện và ghi nhận.">
+  <title>PetCare | Workflow story</title>
+  <link rel="stylesheet" href="styles/petcare_pages.css">
+  <style>
+    .story-shell { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(250px,.6fr); gap:15px; align-items:stretch; }
+    .story-slide { min-height:350px; display:flex; flex-direction:column; justify-content:space-between; padding:clamp(22px,4vw,42px); border-radius:6px; color:#f3f8f3; background:var(--green-dark); }
+    .story-slide .eyebrow { color:#c9ef72; }
+    .story-slide h2 { max-width:760px; margin:12px 0 16px; color:#fff; font:600 clamp(28px,4vw,48px)/1.12 "Segoe UI",Tahoma,sans-serif; }
+    .story-slide .story-copy { max-width:680px; color:#d8e8dc; font-size:16px; line-height:1.7; }
+    .story-slide .story-copy [data-lang="en"] { margin-top:10px; color:#bdd2c4; }
+    body.show-en .story-slide .story-copy [data-lang="en"] { display:block; }
+    .story-slide .story-detail { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; margin-top:22px; }
+    .story-detail div { padding:11px; border:1px solid rgba(255,255,255,.2); border-radius:4px; background:rgba(255,255,255,.04); }
+    .story-detail div > span:not([data-lang]) { display:block; color:#bdd2c4; font-size:10px; }
+    .story-detail strong { display:block; margin-top:4px; color:#fff; font-size:12px; }
+    body.show-en .story-detail [data-lang="en"] { display:block; }
+    .story-side { display:flex; flex-direction:column; gap:12px; }
+    .story-side .tile { padding:16px; }
+    .story-side h3 { margin-bottom:9px; font-size:20px; }
+    .story-side p { margin:0; color:var(--muted); font-size:12px; }
+    .story-side p .en { margin-top:6px; }
+    body.show-en .story-side p .en { display:block; }
+    .story-step-list { display:grid; gap:5px; margin-top:10px; }
+    .story-step { display:grid; grid-template-columns:28px minmax(0,1fr); gap:8px; align-items:center; width:100%; min-height:34px; padding:5px 7px; border:1px solid transparent; border-radius:4px; color:var(--ink); text-align:left; background:transparent; cursor:pointer; }
+    .story-step:hover { background:#f2f7f1; }
+    .story-step[aria-current="step"] { border-color:#c4d8c8; background:#edf5ed; color:var(--green-dark); font-weight:700; }
+    .story-step span:first-child { color:var(--green); font-size:10px; font-weight:800; }
+    .story-step span:last-child { overflow:hidden; font-size:11px; text-overflow:ellipsis; white-space:nowrap; }
+    .story-controls { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:13px; }
+    .story-controls .actions { display:flex; gap:8px; margin:0; }
+    .story-progress { color:var(--muted); font-size:12px; font-variant-numeric:tabular-nums; }
+    .path-compare { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .path-card { padding:17px; border:1px solid var(--line); border-radius:5px; background:#fff; }
+    .path-card h3 { margin-bottom:7px; font-size:21px; }
+    .path-card p { margin:0; color:var(--muted); font-size:13px; }
+    .path-card p .en { margin-top:6px; }
+    body.show-en .path-card p .en { display:block; }
+    .path-card .path-label { display:inline-flex; margin-bottom:10px; padding:5px 7px; border-radius:3px; color:var(--green-dark); background:#e9f3e9; font-size:10px; font-weight:800; text-transform:uppercase; }
+    .story-caveat { margin-top:12px; }
+    @media(max-width:820px) { .story-shell { grid-template-columns:1fr; } .story-side { display:grid; grid-template-columns:1fr 1fr; } .story-side .tile:last-child { grid-column:1 / -1; } }
+    @media(max-width:560px) { .story-side,.path-compare { grid-template-columns:1fr; } .story-side .tile:last-child { grid-column:auto; } .story-slide { min-height:410px; padding:22px; } .story-slide .story-detail { grid-template-columns:1fr 1fr; } .story-controls { align-items:flex-start; flex-direction:column; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html"><span class="brand-mark">P</span> PetCare / Workflow story</a>
+      <div class="header-actions">
+        <nav class="header-nav" aria-label="Primary navigation"><a href="index.html">Home</a><a href="workflow.html">Workflow</a><a href="report_final.html">Report</a></nav>
+        <button class="lang-button" type="button" aria-label="Switch language" onclick="document.body.classList.toggle('show-en');this.textContent=document.body.classList.contains('show-en')?'VI':'EN'">EN</button>
+      </div>
+    </div>
+  </header>
+  <main class="page-shell">
+    <section class="page-hero">
+      <span class="eyebrow"><span data-lang="vi">Câu chuyện thuyết trình / hành trình mẫu</span><span data-lang="en">Presenter story / sample journey</span></span>
+      <h1><span data-lang="vi">Một lịch dịch vụ, từ đặt đến hoàn tất</span><span data-lang="en">One service booking, from request to completion</span></h1>
+      <p class="lede"><span data-lang="vi">Kịch bản này theo một thú cưng thuộc khách hàng qua báo giá, đặt lịch, tiếp nhận, thực hiện và bill. Tất cả tên/mã là mẫu.</span><span class="en" data-lang="en">This story follows a customer-owned pet through quote, booking, check-in, service and bill. Names and IDs are illustrative.</span></p>
+      <div class="hero-foot"><span class="tag"><span data-lang="vi">Thú cưng khách hàng</span><span data-lang="en">Customer-owned pet</span></span><span class="tag"><span data-lang="vi">Quy trình dịch vụ</span><span data-lang="en">Service workflow</span></span><span class="tag"><span data-lang="vi">Không phải dữ liệu trực tiếp</span><span data-lang="en">Not live data</span></span></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow"><span data-lang="vi">Hướng dẫn / 10 bước</span><span data-lang="en">Walkthrough / 10 steps</span></span><h2><span data-lang="vi">Trình chiếu hành trình</span><span data-lang="en">Journey walkthrough</span></h2></div><p><span data-lang="vi">Dùng nút hoặc phím mũi tên để chuyển bước.</span><span data-lang="en">Use the buttons or arrow keys to move between steps.</span></p></div>
+      <div class="story-shell">
+        <article class="story-slide" aria-live="polite">
+          <div><span class="eyebrow" id="story-kicker"></span><h2 id="story-title"></h2><div class="story-copy" id="story-copy"></div></div>
+          <div class="story-detail" id="story-detail"></div>
+        </article>
+        <aside class="story-side">
+          <section class="tile"><span class="tile-kicker"><span data-lang="vi">Kịch bản</span><span data-lang="en">Scenario</span></span><h3><span data-lang="vi">Hồ sơ minh họa</span><span data-lang="en">Illustrative record</span></h3><p><span data-lang="vi">Khách mẫu 01 · PET-C01 / “Mây” · mèo. Tên thú cưng được ghi trên lịch hẹn; không tuyên bố liên kết pet ID tự động.</span><span class="en" data-lang="en">Sample customer 01 · PET-C01 / “May” · cat. The pet name is recorded on the appointment; no automatic pet-profile ID link is implied.</span></p></section>
+          <section class="tile"><span class="tile-kicker"><span data-lang="vi">Trạng thái quy trình</span><span data-lang="en">Workflow states</span></span><h3><span data-lang="vi">Các bước</span><span data-lang="en">Steps</span></h3><nav class="story-step-list" id="story-step-list" aria-label="Story steps"></nav></section>
+          <section class="tile"><span class="tile-kicker"><span data-lang="vi">Giới hạn</span><span data-lang="en">Boundary</span></span><h3><span data-lang="vi">Thanh toán</span><span data-lang="en">Payment</span></h3><p><span data-lang="vi">Bill được tạo khi dịch vụ hoàn tất; nhân viên xác nhận thanh toán. Không có cổng thanh toán hoặc thu tiền tự động.</span><span class="en" data-lang="en">A bill is created on completion; staff record payment. There is no payment gateway or automatic collection.</span></p></section>
+        </aside>
+      </div>
+      <div class="story-controls"><div class="actions"><button class="lang-button" id="story-prev" type="button" aria-label="Previous step">←</button><button class="lang-button" id="story-next" type="button" aria-label="Next step">→</button></div><span class="story-progress" id="story-progress" aria-live="polite"></span></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow"><span data-lang="vi">Không gộp hai nhánh</span><span data-lang="en">Do not merge these paths</span></span><h2><span data-lang="vi">Phân biệt hai loại hồ sơ</span><span data-lang="en">Keep the two record paths distinct</span></h2></div></div>
+      <div class="path-compare">
+        <article class="path-card"><span class="path-label"><span data-lang="vi">Nhánh cửa hàng</span><span data-lang="en">Store branch</span></span><h3><span data-lang="vi">Vật nuôi nhập kho</span><span data-lang="en">Store-intake animal</span></h3><p><span data-lang="vi">Nhà cung cấp/lô nhập → ảnh bàn giao & xác nhận nhân viên → kiểm tra → AVAILABLE, QUARANTINE hoặc TREATMENT. Đây là hồ sơ động vật thuộc quy trình cửa hàng.</span><span class="en" data-lang="en">Supplier/import batch → handover photo and staff confirmation → inspection → AVAILABLE, QUARANTINE or TREATMENT. This is an animal record in the store workflow.</span></p></article>
+        <article class="path-card"><span class="path-label"><span data-lang="vi">Nhánh dịch vụ khách hàng</span><span data-lang="en">Customer service branch</span></span><h3><span data-lang="vi">Thú cưng khách hàng</span><span data-lang="en">Customer-owned pet</span></h3><p><span data-lang="vi">Khách hàng → thông tin thú cưng trên hồ sơ khách → báo giá → lịch hẹn ghi tên/loài thú cưng. Appointment hiện không lưu pet-profile ID hoặc animal tồn kho.</span><span class="en" data-lang="en">Customer → pet information on the customer profile → quote → appointment recording pet name/species. The appointment does not store a pet-profile ID or store-animal ID.</span></p></article>
+      </div>
+      <div class="note story-caveat"><strong><span data-lang="vi">Không suy diễn.</span><span data-lang="en">Do not infer.</span></strong> <span data-lang="vi">Đây là một kịch bản trình bày, không khẳng định mọi cửa hàng dùng cùng quy trình hoặc kết quả.</span><span data-lang="en">This is a presentation scenario, not a claim that every store follows the same process or outcome.</span></div>
+    </section>
+    <footer class="site-footer"><span>PetCare / <span data-lang="vi">Câu chuyện demo</span><span data-lang="en">Demo story</span></span><a href="workflow.html"><span data-lang="vi">Mở bản đồ quy trình đầy đủ</span><span data-lang="en">Open the full workflow map</span></a></footer>
+  </main>
+  <script>
+    const slides=[
+      {title:['Bắt đầu từ khách hàng','Start with the customer'],copy:['Nhân viên tìm hoặc tạo hồ sơ nội bộ cho khách mẫu 01. Dữ liệu liên hệ chỉ dùng để minh họa.','Staff find or create an internal record for sample customer 01. Contact data is illustrative only.'],detail:[['Route','Khách hàng / Customers'],['Actor','Nhân viên có quyền sales / Sales-authorized staff'],['Record','CUS-001 · dữ liệu mẫu / sample record']]},
+      {title:['Ghi nhận thú cưng','Record the pet'],copy:['Thông tin “Mây”, loài mèo và ghi chú cần thiết được quản lý cùng hồ sơ khách. Đây là thú cưng của khách, không phải vật nuôi nhập kho.','“May”, species cat and relevant notes are maintained with the customer record. This is customer-owned, not store intake inventory.'],detail:[['Customer','CUS-001'],['Pet label','PET-C01 · Mây / May'],['Link limit','Không pet ID trên appointment / No pet ID on appointment']]},
+      {title:['Chọn dịch vụ & ước tính','Choose service & estimate'],copy:['Nhân viên chọn gói dịch vụ đã cấu hình. Quy tắc có thể xét loài, cân nặng/lông và quyền lợi hội viên đủ điều kiện.','Staff select a configured service package. Rules may consider species, weight/coat and eligible membership benefits.'],detail:[['Package','Chăm sóc cơ bản / Basic care'],['Quote','Giá tham chiếu trước khi lưu / Reference price before save'],['Check','Cấu hình giá cần cửa hàng xác nhận / Store validates pricing']]},
+      {title:['Đặt lịch','Book the appointment'],copy:['Lịch lưu khách hàng, tên/loài thú cưng, dịch vụ, thời gian, nhân viên tùy chọn và ghi chú. Hệ thống kiểm tra xung đột theo quy tắc lịch.','The booking stores customer, pet name/species, service, time, optional staff and notes. Scheduling rules check conflicts.'],detail:[['Booking','SRV-052 · mẫu / sample'],['Initial state','SCHEDULED'],['Validation','Thời gian & xung đột / Time & overlap']]},
+      {title:['Tiếp nhận','Check in'],copy:['Khi khách đưa thú cưng tới, nhân viên chuyển lịch sang trạng thái tiếp nhận. Nếu không thể phục vụ, dùng nhánh hủy phù hợp trước khi bắt đầu.','When the customer arrives, staff move the booking to checked-in. If service cannot proceed, use an allowed cancellation path before work starts.'],detail:[['Transition','SCHEDULED → CHECKED_IN'],['Actor','Nhân viên được cấp quyền / Authorized staff'],['Alternative','CANCELLED hoặc NO_SHOW khi hợp lệ / When allowed']]},
+      {title:['Thực hiện dịch vụ','Perform the service'],copy:['Nhân viên bắt đầu công việc; lịch chuyển sang IN_PROGRESS. Ghi chú thao tác thuộc luồng nội bộ, không phải hồ sơ chẩn đoán thú y.','Staff begin the work; the appointment moves to IN_PROGRESS. Operational notes are not a veterinary diagnosis record.'],detail:[['Transition','CHECKED_IN → IN_PROGRESS'],['Record','Lịch & ghi chú / Appointment & notes'],['Limit','Không chẩn đoán tự động / No automated diagnosis']]},
+      {title:['Hoàn tất & tạo bill','Complete & create bill'],copy:['Khi hoàn tất, hệ thống ghi trạng thái hoàn thành và tạo bill dịch vụ. Nếu dùng lượt trả trước, lượt được tiêu thụ theo quy tắc membership.','On completion, the system records the completed state and creates a service bill. A prepaid visit is consumed under membership rules.'],detail:[['Transition','IN_PROGRESS → COMPLETED'],['Billing','Bill nội bộ / Internal bill'],['Payment','Nhân viên xác nhận / Staff-recorded']]},
+      {title:['Xử lý ngoại lệ','Handle exceptions'],copy:['Nếu hủy hoặc khách không đến ở trạng thái được phép, lịch chuyển CANCELLED/NO_SHOW; lượt dịch vụ trả trước được giải phóng theo điều kiện.','If cancellation or no-show is allowed from the current state, the appointment moves to CANCELLED/NO_SHOW; prepaid usage is released under its rules.'],detail:[['Exception','CANCELLED / NO_SHOW'],['Prepaid','Giải phóng lượt nếu áp dụng / Release visit if applicable'],['Not automatic','Không tự thu/hoàn tiền / No automatic collection/refund']]},
+      {title:['Rà soát & báo cáo','Review & report'],copy:['Lịch, bill và lịch sử khách hàng hỗ trợ nhân viên xem lại dữ liệu đã ghi. Báo cáo phụ thuộc độ đầy đủ của dữ liệu và khoảng thời gian chọn.','Appointment, bill and customer history let staff review recorded data. Reports depend on data completeness and selected date range.'],detail:[['Review','Hồ sơ & báo cáo / Records & reports'],['Audit','Một số sự kiện chọn lọc / Selected events'],['Decision','Đối chiếu với dữ liệu thật / Reconcile with real data']]},
+      {title:['Đường đi riêng: nhập vật nuôi','Separate path: animal intake'],copy:['Nếu demo chuyển sang vật nuôi cửa hàng, đó là nhánh khác: lô nhập → ảnh/xác nhận → kiểm tra → trạng thái kho. Không nối tự động vào lịch dịch vụ khách hàng.','If the demo concerns a store animal, that is a separate branch: import batch → photo/confirmation → inspection → inventory status. It does not auto-link to customer service appointments.'],detail:[['Intake','IMP batch + receipt / lô nhập + tiếp nhận'],['Inspection','PASSED / QUARANTINE / NEEDS_TREATMENT'],['Relationship','Hồ sơ riêng / Separate record path']]}
+    ];
+    let current=0;
+    const tr=(pair)=>pair[document.body.classList.contains('show-en')?1:0];
+    const detailLabels={Route:['Phân hệ','Route'],Actor:['Người thực hiện','Actor'],Record:['Hồ sơ','Record'],Customer:['Khách hàng','Customer'],Pet:['Thú cưng','Pet'],PetLabel:['Tên thú cưng','Pet label'],LinkLimit:['Giới hạn liên kết','Link limit'],Package:['Gói dịch vụ','Package'],Quote:['Báo giá','Quote'],Check:['Kiểm tra','Check'],Booking:['Lịch hẹn','Booking'],InitialState:['Trạng thái đầu','Initial state'],Validation:['Kiểm tra hợp lệ','Validation'],Transition:['Chuyển trạng thái','Transition'],Alternative:['Nhánh thay thế','Alternative'],Billing:['Lập bill','Billing'],Payment:['Thanh toán','Payment'],Exception:['Ngoại lệ','Exception'],Prepaid:['Lượt trả trước','Prepaid visit'],NotAutomatic:['Không tự động','Not automatic'],Review:['Rà soát','Review'],Audit:['Audit','Audit'],Decision:['Quyết định','Decision'],Intake:['Tiếp nhận','Intake'],Inspection:['Kiểm tra','Inspection'],Relationship:['Quan hệ hồ sơ','Record relationship']};
+    const detailValue=(value)=>{const parts=value.split(' / ');return parts.length===2?`<span data-lang="vi">${parts[0]}</span><span class="en" data-lang="en">${parts[1]}</span>`:`<span>${value}</span>`;};
+    function render(){
+      const slide=slides[current];
+      document.getElementById('story-kicker').textContent=(document.body.classList.contains('show-en')?'STEP ':'BƯỚC ')+String(current+1).padStart(2,'0')+' / 10';
+      document.getElementById('story-title').textContent=tr(slide.title);
+      document.getElementById('story-copy').innerHTML=`<span data-lang="vi">${slide.copy[0]}</span><span class="en" data-lang="en">${slide.copy[1]}</span>`;
+      document.getElementById('story-detail').innerHTML=slide.detail.map(([label,value])=>`<div><span><span data-lang="vi">${detailLabels[label]?.[0]||label}</span><span data-lang="en">${detailLabels[label]?.[1]||label}</span></span><strong>${detailValue(value)}</strong></div>`).join('');
+      document.getElementById('story-progress').textContent=(current+1)+' / '+slides.length;
+      document.getElementById('story-step-list').innerHTML=slides.map((item,index)=>`<button type="button" class="story-step" data-step="${index}" aria-current="${index===current?'step':'false'}"><span>${String(index+1).padStart(2,'0')}</span><span>${tr(item.title)}</span></button>`).join('');
+      document.querySelectorAll('[data-step]').forEach((button)=>button.addEventListener('click',()=>{current=Number(button.dataset.step);render();}));
+      document.getElementById('story-prev').disabled=current===0;
+      document.getElementById('story-next').disabled=current===slides.length-1;
+      document.getElementById('story-prev').style.opacity=current===0?'.45':'1';
+      document.getElementById('story-next').style.opacity=current===slides.length-1?'.45':'1';
+    }
+    document.getElementById('story-prev').addEventListener('click',()=>{if(current>0){current-=1;render();}});
+    document.getElementById('story-next').addEventListener('click',()=>{if(current<slides.length-1){current+=1;render();}});
+    document.addEventListener('keydown',(event)=>{if(event.key==='ArrowLeft'&&current>0){current-=1;render();}if(event.key==='ArrowRight'&&current<slides.length-1){current+=1;render();}});
+    document.querySelector('.site-header .lang-button').addEventListener('click',()=>requestAnimationFrame(render));
+    render();
+  </script>
+  <script src="scripts/document_language.js" defer></script>
+</body>
+</html>

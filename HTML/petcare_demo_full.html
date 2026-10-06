@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Bản demo giao diện PetCare với dữ liệu mẫu tĩnh.">
+  <title>PetCare | Interactive interface demo</title>
+  <link rel="stylesheet" href="styles/petcare_pages.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html"><span class="brand-mark">P</span> PetCare / Demo</a>
+      <div class="header-actions">
+        <nav class="header-nav" aria-label="Primary navigation"><a href="index.html">Home / Trang chủ</a><a href="workflow.html">Workflow</a><a href="report_final.html">Report</a></nav>
+        <button class="lang-button" type="button" aria-label="Switch language" onclick="document.body.classList.toggle('show-en'); this.textContent=document.body.classList.contains('show-en')?'VI':'EN'">EN</button>
+      </div>
+    </div>
+  </header>
+  <main class="page-shell">
+    <section class="page-hero">
+      <span class="eyebrow"><span data-lang="vi">Giao diện tương tác / dữ liệu mẫu</span><span data-lang="en">Interactive UI / sample records</span></span>
+      <h1><span data-lang="vi">PetCare / Bản demo giao diện</span><span data-lang="en">PetCare / Interface demo</span></h1>
+      <p class="lede"><span data-lang="vi">Mô phỏng tĩnh để trình bày cách nhóm màn hình theo công việc. Bản demo không đọc hoặc ghi vào cơ sở dữ liệu ứng dụng.</span><span class="en" data-lang="en">A static simulation showing how screens are grouped by task. The demo does not read from or write to the application database.</span></p>
+      <div class="hero-foot"><span class="tag"><span data-lang="vi">Dữ liệu mẫu</span><span data-lang="en">Sample data</span></span><span class="tag"><span data-lang="vi">Không kết nối cơ sở dữ liệu</span><span data-lang="en">No live database</span></span></div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow"><span data-lang="vi">Không gian làm việc</span><span data-lang="en">Workspace</span></span><h2><span data-lang="vi">Tổng quan cửa hàng</span><span data-lang="en">Store overview</span></h2></div></div>
+      <div class="tablist" role="tablist" aria-label="Demo screens">
+        <button class="tab-button" id="tab-overview" role="tab" aria-selected="true" aria-controls="panel-overview"><span data-lang="vi">Tổng quan</span><span data-lang="en">Overview</span></button>
+        <button class="tab-button" id="tab-animals" role="tab" aria-selected="false" aria-controls="panel-animals" tabindex="-1"><span data-lang="vi">Vật nuôi</span><span data-lang="en">Animals</span></button>
+        <button class="tab-button" id="tab-inventory" role="tab" aria-selected="false" aria-controls="panel-inventory" tabindex="-1"><span data-lang="vi">Kho</span><span data-lang="en">Inventory</span></button>
+        <button class="tab-button" id="tab-services" role="tab" aria-selected="false" aria-controls="panel-services" tabindex="-1"><span data-lang="vi">Dịch vụ</span><span data-lang="en">Services</span></button>
+      </div>
+      <section class="demo-panel" id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">
+        <h2><span data-lang="vi">Bảng điều hành mẫu</span><span data-lang="en">Sample operations board</span></h2>
+        <div class="grid">
+          <article class="tile"><span class="tile-kicker"><span data-lang="vi">Chăm sóc</span><span data-lang="en">Care</span></span><h3><span data-lang="vi">Checklist cần rà soát</span><span data-lang="en">Care checks to review</span></h3><p><span data-lang="vi">Vùng hiển thị công việc chăm sóc còn mở.</span><span class="en" data-lang="en">Area for open care tasks.</span></p></article>
+          <article class="tile"><span class="tile-kicker"><span data-lang="vi">Tồn kho</span><span data-lang="en">Stock</span></span><h3><span data-lang="vi">Cảnh báo hàng hóa</span><span data-lang="en">Stock notices</span></h3><p><span data-lang="vi">Cảnh báo thấp hoặc gần hết hạn dựa trên dữ liệu đã nhập.</span><span class="en" data-lang="en">Low-stock or expiry notices based on entered records.</span></p></article>
+          <article class="tile"><span class="tile-kicker"><span data-lang="vi">Lịch</span><span data-lang="en">Schedule</span></span><h3><span data-lang="vi">Lịch dịch vụ hôm nay</span><span data-lang="en">Today's service schedule</span></h3><p><span data-lang="vi">Tóm tắt lịch hẹn theo trạng thái.</span><span class="en" data-lang="en">Appointment summary by status.</span></p></article>
+        </div>
+      </section>
+      <section class="demo-panel" id="panel-animals" role="tabpanel" aria-labelledby="tab-animals" tabindex="0" hidden>
+        <h2><span data-lang="vi">Hồ sơ vật nuôi mẫu</span><span data-lang="en">Sample animal records</span></h2>
+        <table class="demo-table"><thead><tr><th><span data-lang="vi">Mã hồ sơ</span><span data-lang="en">Record</span></th><th><span data-lang="vi">Loài</span><span data-lang="en">Species</span></th><th><span data-lang="vi">Trạng thái</span><span data-lang="en">Status</span></th></tr></thead><tbody><tr><td>DEMO-A01</td><td><span data-lang="vi">Chó</span><span data-lang="en">Dog</span></td><td><span data-lang="vi">Đang chăm sóc</span><span data-lang="en">In care</span></td></tr><tr><td>DEMO-A02</td><td><span data-lang="vi">Mèo</span><span data-lang="en">Cat</span></td><td><span data-lang="vi">Cần rà soát</span><span data-lang="en">Review</span></td></tr></tbody></table>
+      </section>
+      <section class="demo-panel" id="panel-inventory" role="tabpanel" aria-labelledby="tab-inventory" tabindex="0" hidden>
+        <h2><span data-lang="vi">Danh mục kho minh họa</span><span data-lang="en">Illustrative inventory</span></h2>
+        <table class="demo-table"><thead><tr><th>SKU</th><th><span data-lang="vi">Danh mục</span><span data-lang="en">Category</span></th><th><span data-lang="vi">Trạng thái bản ghi</span><span data-lang="en">Record state</span></th></tr></thead><tbody><tr><td>DEMO-F01</td><td><span data-lang="vi">Thức ăn</span><span data-lang="en">Food</span></td><td><span data-lang="vi">Rà soát tồn</span><span data-lang="en">Review stock</span></td></tr><tr><td>DEMO-S02</td><td><span data-lang="vi">Vật tư</span><span data-lang="en">Supplies</span></td><td><span data-lang="vi">Chỉ là mẫu</span><span data-lang="en">Sample only</span></td></tr></tbody></table>
+      </section>
+      <section class="demo-panel" id="panel-services" role="tabpanel" aria-labelledby="tab-services" tabindex="0" hidden>
+        <h2><span data-lang="vi">Lịch dịch vụ minh họa</span><span data-lang="en">Illustrative service schedule</span></h2>
+        <table class="demo-table"><thead><tr><th><span data-lang="vi">Mã lịch</span><span data-lang="en">Booking</span></th><th><span data-lang="vi">Dịch vụ</span><span data-lang="en">Task</span></th><th><span data-lang="vi">Trạng thái</span><span data-lang="en">Status</span></th></tr></thead><tbody><tr><td>DEMO-B01</td><td><span data-lang="vi">Tắm tỉa</span><span data-lang="en">Grooming</span></td><td><span data-lang="vi">Đã tiếp nhận</span><span data-lang="en">Received</span></td></tr><tr><td>DEMO-B02</td><td><span data-lang="vi">Chăm sóc</span><span data-lang="en">Care</span></td><td><span data-lang="vi">Đã lên lịch</span><span data-lang="en">Scheduled</span></td></tr></tbody></table>
+      </section>
+      <section class="section" id="demo-evidence">
+        <div class="section-head"><div><span class="eyebrow">Demo interpretation</span><h2><span data-lang="vi">Phạm vi và cách đọc bản demo</span><span data-lang="en">Demo scope and interpretation</span></h2></div></div>
+        <div class="grid">
+          <article class="tile"><span class="tile-kicker">Screen grouping</span><h3><span data-lang="vi">Luồng màn hình</span><span data-lang="en">Screen flow</span></h3><p><span data-lang="vi">Các tab trình bày nhóm công việc tương ứng với phân hệ; chuyển tab là tương tác cục bộ của trang demo.</span><span class="en" data-lang="en">Tabs present work areas corresponding to application modules; tab switching is local to this demo page.</span></p></article>
+          <article class="tile"><span class="tile-kicker">Sample records</span><h3><span data-lang="vi">Bản ghi giả lập</span><span data-lang="en">Fictional records</span></h3><p><span data-lang="vi">Mã DEMO, số lượng kho, trạng thái và giờ hẹn chỉ dùng minh họa; không đại diện SQLite hay khách hàng thật.</span><span class="en" data-lang="en">DEMO IDs, stock counts, statuses and appointment times are illustrative; they do not represent SQLite or real customers.</span></p></article>
+          <article class="tile"><span class="tile-kicker">Verification</span><h3><span data-lang="vi">Kiểm chứng riêng</span><span data-lang="en">Separate verification</span></h3><p><span data-lang="vi">Dùng test suite và ứng dụng desktop để xác nhận lưu dữ liệu, quyền, quy tắc trạng thái và lỗi; bản demo không đọc/ghi database.</span><span class="en" data-lang="en">Use the test suite and desktop app to verify persistence, permissions, state rules and errors; this demo does not read/write the database.</span></p></article>
+        </div>
+      </section>
+      <div class="note"><strong><span data-lang="vi">Chỉ là dữ liệu mẫu.</span><span data-lang="en">Sample only.</span></strong> <span data-lang="vi">Mã hồ sơ giả lập, không đại diện khách hàng hay số liệu kinh doanh thực.</span><span data-lang="en">Fictional record IDs; no real customer or business data is represented.</span></div>
+    </section>
+    <footer class="site-footer"><span>PetCare / <span data-lang="vi">Mô phỏng giao diện</span><span data-lang="en">Interface concept</span></span><a href="index.html"><span data-lang="vi">Về trang dự án</span><span data-lang="en">Back to project hub</span></a></footer>
+  </main>
+  <script>
+    const tabs = [...document.querySelectorAll('[role="tab"]')];
+    const selectTab = (tab) => {
+      for (const item of tabs) {
+        const selected = item === tab;
+        item.setAttribute('aria-selected', String(selected));
+        item.tabIndex = selected ? 0 : -1;
+        document.getElementById(item.getAttribute('aria-controls')).hidden = !selected;
+      }
+    };
+    for (const [index, tab] of tabs.entries()) {
+      tab.addEventListener('click', () => selectTab(tab));
+      tab.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+        event.preventDefault();
+        const offset = event.key === 'ArrowRight' ? 1 : -1;
+        const nextTab = tabs[(index + offset + tabs.length) % tabs.length];
+        selectTab(nextTab);
+        nextTab.focus();
+      });
+    }
+  </script>
+  <script src="scripts/document_language.js" defer></script>
+</body>
+</html>

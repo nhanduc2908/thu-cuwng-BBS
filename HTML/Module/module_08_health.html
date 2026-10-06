@@ -1,0 +1,1044 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Lưu quan sát sức khỏe, danh mục bệnh và lịch/bản ghi tiêm chủng để hỗ trợ theo dõi nội bộ.">
+  <title>PetCare | Health Monitoring</title>
+  <link rel="stylesheet" href="../styles/petcare_pages.css">
+  <style>
+    .module-nav { display: flex; gap: 8px; flex-wrap: wrap; margin: 18px 0; }
+    .module-nav a { border: 1px solid var(--line); padding: 8px 10px; border-radius: 5px; font-size: 13px; background: var(--surface); }
+    .module-nav a:hover { border-color: var(--green); }
+    .detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .detail-panel { padding: 20px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+    .detail-panel h3 { margin-bottom: 12px; }
+    .detail-panel li { margin: 8px 0; }
+    .checklist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: list-item calc(var(--start, 1) - 1); }
+    .check-row { min-width: 0; padding: 14px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface); }
+    .check-row code { display: inline-block; margin-bottom: 8px; color: var(--green); font-size: 11px; }
+    .check-row strong, .check-row > span { display: block; }
+    .check-row strong [data-lang="en"], .check-row > span [data-lang="en"] { color: var(--muted); font-weight: 500; }
+    .check-row p { margin: 9px 0; font-size: 13px; }
+    .check-row p [data-lang="en"] { color: var(--muted); }
+    .check-row small { color: var(--muted); font-size: 11px; }
+    .check-range { color: var(--muted); font-size: 12px; }
+    .scope-list { columns: 2; }
+    @media (max-width: 720px) { .checklist, .detail-grid { grid-template-columns: 1fr; } .scope-list { columns: 1; } }
+  </style>
+</head>
+<body>
+  <header class="site-header"><div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">P</span> PetCare / Theo dõi sức khỏe</a>
+    <div class="header-actions"><nav class="header-nav" aria-label="Primary navigation"><a href="../index.html">Project hub</a><a href="index.html">Modules</a><a href="../workflow.html">Workflow</a></nav>
+    <button class="lang-button" type="button" aria-label="Switch language" onclick="document.body.classList.toggle('show-en');this.textContent=document.body.classList.contains('show-en')?'VI':'EN'">EN</button></div>
+  </div></header>
+  <main class="page-shell">
+    <section class="page-hero">
+      <span class="eyebrow">Module 08 / Animal care</span>
+      <h1><span class="" data-lang="vi">Theo dõi sức khỏe</span><span class="en " data-lang="en">Health Monitoring</span></h1>
+      <p class="lede"><span class="" data-lang="vi">Lưu quan sát sức khỏe, danh mục bệnh và lịch/bản ghi tiêm chủng để hỗ trợ theo dõi nội bộ.</span><span class="en " data-lang="en">Stores health observations, disease catalog entries and vaccination schedules/records for internal tracking.</span></p>
+      <div class="hero-foot"><span class="tag">Chăm sóc động vật / Animal care</span><span class="tag">Python + PySide6</span><span class="tag">SQLite local</span><span class="tag">Detailed reference</span></div>
+    </section>
+    <nav class="module-nav" aria-label="Module sections"><a href="#overview">Overview / Tổng quan</a><a href="#workflow">Workflow / Quy trình</a><a href="#operations">Checks / Kiểm tra</a><a href="#evidence">Evidence / Bằng chứng</a><a href="#boundaries">Limits / Giới hạn</a></nav>
+    <section class="section" id="overview">
+      <div class="section-head"><div><span class="eyebrow">Purpose & ownership</span><h2><span data-lang="vi">Trách nhiệm phân hệ</span><span data-lang="en">Module responsibilities</span></h2></div>
+      <p><span class="" data-lang="vi">Mô tả theo phạm vi ứng dụng hiện có; số liệu ví dụ không được xem là trạng thái trực tiếp.</span><span class="en " data-lang="en">Describes current application scope; example values are not live status.</span></p></div>
+      <div class="detail-grid"><article class="detail-panel"><h3><span data-lang="vi">Phạm vi phụ trách</span><span data-lang="en">Responsibilities</span></h3><ul>
+          <li><span class="tile-kicker">01</span><span class="" data-lang="vi">Bản ghi quan sát sức khỏe</span><span class="en " data-lang="en">Health observation records</span></li>
+          <li><span class="tile-kicker">02</span><span class="" data-lang="vi">Danh mục phân loại</span><span class="en " data-lang="en">Classification catalog</span></li>
+          <li><span class="tile-kicker">03</span><span class="" data-lang="vi">Lịch tiêm và lịch sử tiêm</span><span class="en " data-lang="en">Vaccination schedule and history</span></li>
+          <li><span class="tile-kicker">04</span><span class="" data-lang="vi">Liên kết hồ sơ vật nuôi</span><span class="en " data-lang="en">Animal profile association</span></li>
+      </ul></article><article class="detail-panel"><h3><span data-lang="vi">Luồng công việc chính</span><span data-lang="en">Primary workflow</span></h3><ol>
+          <li><span class="tile-kicker">01</span><span class="" data-lang="vi">Chọn hồ sơ vật nuôi</span><span class="en " data-lang="en">Select an animal profile</span></li>
+          <li><span class="tile-kicker">02</span><span class="" data-lang="vi">Ghi quan sát có nguồn và ngày</span><span class="en " data-lang="en">Record an observation with source and date</span></li>
+          <li><span class="tile-kicker">03</span><span class="" data-lang="vi">Lập hoặc rà soát lịch tiêm</span><span class="en " data-lang="en">Create or review a vaccination schedule</span></li>
+          <li><span class="tile-kicker">04</span><span class="" data-lang="vi">Theo dõi lịch sử và nhắc việc</span><span class="en " data-lang="en">Track history and reminders</span></li>
+      </ol></article></div>
+    </section>
+    <section class="section" id="workflow">
+      <div class="section-head"><div><span class="eyebrow">Operational map</span><h2><span data-lang="vi">Danh sách thao tác cần rà soát</span><span data-lang="en">Operations to review</span></h2></div>
+      <p><span class="" data-lang="vi">Đi tới từng thao tác để xem các trường hợp kiểm tra chi tiết.</span><span class="en " data-lang="en">Jump to an operation to review its detailed checks.</span></p></div>
+      <div class="detail-panel"><ol class="scope-list">
+          <li><a href="#check-01"><span class="" data-lang="vi">Tạo quan sát sức khỏe</span><span class="en " data-lang="en">Create a health observation</span></a></li>
+          <li><a href="#check-02"><span class="" data-lang="vi">Liên kết vật nuôi</span><span class="en " data-lang="en">Link an animal</span></a></li>
+          <li><a href="#check-03"><span class="" data-lang="vi">Chọn danh mục phù hợp</span><span class="en " data-lang="en">Select a suitable catalog entry</span></a></li>
+          <li><a href="#check-04"><span class="" data-lang="vi">Ghi ngày quan sát</span><span class="en " data-lang="en">Record observation date</span></a></li>
+          <li><a href="#check-05"><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe</span><span class="en " data-lang="en">Update a health record</span></a></li>
+          <li><a href="#check-06"><span class="" data-lang="vi">Tạo lịch tiêm</span><span class="en " data-lang="en">Create a vaccination schedule</span></a></li>
+          <li><a href="#check-07"><span class="" data-lang="vi">Ghi tiêm đã thực hiện</span><span class="en " data-lang="en">Record a completed vaccination</span></a></li>
+          <li><a href="#check-08"><span class="" data-lang="vi">Rà soát lịch đến hạn</span><span class="en " data-lang="en">Review due schedules</span></a></li>
+          <li><a href="#check-09"><span class="" data-lang="vi">Mở lịch sử sức khỏe</span><span class="en " data-lang="en">Open health history</span></a></li>
+          <li><a href="#check-10"><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian</span></a></li>
+      </ol></div>
+    </section>
+    <section class="section" id="operations">
+      <div class="section-head"><div><span class="eyebrow">Detailed review matrix</span><h2><span data-lang="vi">Ma trận kiểm tra chi tiết</span><span data-lang="en">Detailed verification matrix</span></h2></div>
+      <p><span class="" data-lang="vi">Mỗi thao tác được xem xét theo 12 chiều: dữ liệu, quyền, trạng thái, lỗi, lưu trữ và truy vết. Đây là danh sách kiểm thử đề xuất, không phải bằng chứng đã chạy tự động.</span><span class="en " data-lang="en">Each operation is reviewed across 12 dimensions: data, access, state, failures, persistence and traceability. This is a proposed test checklist, not evidence of automated execution.</span></p></div>
+        <section class="section" id="check-01">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 01 / Animal care</span>
+            <h2><span class="" data-lang="vi">Tạo quan sát sức khỏe</span><span class="en " data-lang="en">Create a health observation</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="1">
+            <li class="check-row" data-check="M08-01-01">
+              <code>M08-01-01</code>
+              <strong><span class="" data-lang="vi">Tạo quan sát sức khỏe</span><span class="en " data-lang="en">Create a health observation</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Tạo quan sát sức khỏe: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Create a health observation: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-01-02">
+              <code>M08-01-02</code>
+              <strong><span class="" data-lang="vi">Tạo quan sát sức khỏe</span><span class="en " data-lang="en">Create a health observation</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Tạo quan sát sức khỏe: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Create a health observation: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-01-03">
+              <code>M08-01-03</code>
+              <strong><span class="" data-lang="vi">Tạo quan sát sức khỏe</span><span class="en " data-lang="en">Create a health observation</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Tạo quan sát sức khỏe: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Create a health observation: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-01-04">
+              <code>M08-01-04</code>
+              <strong><span class="" data-lang="vi">Tạo quan sát sức khỏe</span><span class="en " data-lang="en">Create a health observation</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Tạo quan sát sức khỏe: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Create a health observation: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-01-05">
+              <code>M08-01-05</code>
+              <strong><span class="" data-lang="vi">Tạo quan sát sức khỏe</span><span class="en " data-lang="en">Create a health observation</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Tạo quan sát sức khỏe: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Create a health observation: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-01-06">
+              <code>M08-01-06</code>
+              <strong><span class="" data-lang="vi">Tạo quan sát sức khỏe</span><span class="en " data-lang="en">Create a health observation</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Tạo quan sát sức khỏe: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Create a health observation: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-01-07">
+              <code>M08-01-07</code>
+              <strong><span class="" data-lang="vi">Tạo quan sát sức khỏe</span><span class="en " data-lang="en">Create a health observation</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Tạo quan sát sức khỏe: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Create a health observation: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-01-08">
+              <code>M08-01-08</code>
+              <strong><span class="" data-lang="vi">Tạo quan sát sức khỏe</span><span class="en " data-lang="en">Create a health observation</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Tạo quan sát sức khỏe: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Create a health observation: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-01-09">
+              <code>M08-01-09</code>
+              <strong><span class="" data-lang="vi">Tạo quan sát sức khỏe</span><span class="en " data-lang="en">Create a health observation</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Tạo quan sát sức khỏe: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Create a health observation: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-01-10">
+              <code>M08-01-10</code>
+              <strong><span class="" data-lang="vi">Tạo quan sát sức khỏe</span><span class="en " data-lang="en">Create a health observation</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Tạo quan sát sức khỏe: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Create a health observation: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-01-11">
+              <code>M08-01-11</code>
+              <strong><span class="" data-lang="vi">Tạo quan sát sức khỏe</span><span class="en " data-lang="en">Create a health observation</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Tạo quan sát sức khỏe: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Create a health observation: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-01-12">
+              <code>M08-01-12</code>
+              <strong><span class="" data-lang="vi">Tạo quan sát sức khỏe</span><span class="en " data-lang="en">Create a health observation</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Tạo quan sát sức khỏe: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Create a health observation: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 1–12; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 1–12; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-02">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 02 / Animal care</span>
+            <h2><span class="" data-lang="vi">Liên kết vật nuôi</span><span class="en " data-lang="en">Link an animal</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="13">
+            <li class="check-row" data-check="M08-02-01">
+              <code>M08-02-01</code>
+              <strong><span class="" data-lang="vi">Liên kết vật nuôi</span><span class="en " data-lang="en">Link an animal</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Liên kết vật nuôi: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Link an animal: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-02-02">
+              <code>M08-02-02</code>
+              <strong><span class="" data-lang="vi">Liên kết vật nuôi</span><span class="en " data-lang="en">Link an animal</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Liên kết vật nuôi: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Link an animal: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-02-03">
+              <code>M08-02-03</code>
+              <strong><span class="" data-lang="vi">Liên kết vật nuôi</span><span class="en " data-lang="en">Link an animal</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Liên kết vật nuôi: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Link an animal: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-02-04">
+              <code>M08-02-04</code>
+              <strong><span class="" data-lang="vi">Liên kết vật nuôi</span><span class="en " data-lang="en">Link an animal</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Liên kết vật nuôi: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Link an animal: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-02-05">
+              <code>M08-02-05</code>
+              <strong><span class="" data-lang="vi">Liên kết vật nuôi</span><span class="en " data-lang="en">Link an animal</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Liên kết vật nuôi: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Link an animal: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-02-06">
+              <code>M08-02-06</code>
+              <strong><span class="" data-lang="vi">Liên kết vật nuôi</span><span class="en " data-lang="en">Link an animal</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Liên kết vật nuôi: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Link an animal: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-02-07">
+              <code>M08-02-07</code>
+              <strong><span class="" data-lang="vi">Liên kết vật nuôi</span><span class="en " data-lang="en">Link an animal</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Liên kết vật nuôi: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Link an animal: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-02-08">
+              <code>M08-02-08</code>
+              <strong><span class="" data-lang="vi">Liên kết vật nuôi</span><span class="en " data-lang="en">Link an animal</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Liên kết vật nuôi: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Link an animal: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-02-09">
+              <code>M08-02-09</code>
+              <strong><span class="" data-lang="vi">Liên kết vật nuôi</span><span class="en " data-lang="en">Link an animal</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Liên kết vật nuôi: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Link an animal: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-02-10">
+              <code>M08-02-10</code>
+              <strong><span class="" data-lang="vi">Liên kết vật nuôi</span><span class="en " data-lang="en">Link an animal</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Liên kết vật nuôi: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Link an animal: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-02-11">
+              <code>M08-02-11</code>
+              <strong><span class="" data-lang="vi">Liên kết vật nuôi</span><span class="en " data-lang="en">Link an animal</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Liên kết vật nuôi: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Link an animal: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-02-12">
+              <code>M08-02-12</code>
+              <strong><span class="" data-lang="vi">Liên kết vật nuôi</span><span class="en " data-lang="en">Link an animal</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Liên kết vật nuôi: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Link an animal: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 13–24; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 13–24; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-03">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 03 / Animal care</span>
+            <h2><span class="" data-lang="vi">Chọn danh mục phù hợp</span><span class="en " data-lang="en">Select a suitable catalog entry</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="25">
+            <li class="check-row" data-check="M08-03-01">
+              <code>M08-03-01</code>
+              <strong><span class="" data-lang="vi">Chọn danh mục phù hợp</span><span class="en " data-lang="en">Select a suitable catalog entry</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Chọn danh mục phù hợp: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Select a suitable catalog entry: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-03-02">
+              <code>M08-03-02</code>
+              <strong><span class="" data-lang="vi">Chọn danh mục phù hợp</span><span class="en " data-lang="en">Select a suitable catalog entry</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Chọn danh mục phù hợp: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Select a suitable catalog entry: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-03-03">
+              <code>M08-03-03</code>
+              <strong><span class="" data-lang="vi">Chọn danh mục phù hợp</span><span class="en " data-lang="en">Select a suitable catalog entry</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Chọn danh mục phù hợp: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Select a suitable catalog entry: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-03-04">
+              <code>M08-03-04</code>
+              <strong><span class="" data-lang="vi">Chọn danh mục phù hợp</span><span class="en " data-lang="en">Select a suitable catalog entry</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Chọn danh mục phù hợp: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Select a suitable catalog entry: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-03-05">
+              <code>M08-03-05</code>
+              <strong><span class="" data-lang="vi">Chọn danh mục phù hợp</span><span class="en " data-lang="en">Select a suitable catalog entry</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Chọn danh mục phù hợp: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Select a suitable catalog entry: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-03-06">
+              <code>M08-03-06</code>
+              <strong><span class="" data-lang="vi">Chọn danh mục phù hợp</span><span class="en " data-lang="en">Select a suitable catalog entry</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Chọn danh mục phù hợp: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Select a suitable catalog entry: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-03-07">
+              <code>M08-03-07</code>
+              <strong><span class="" data-lang="vi">Chọn danh mục phù hợp</span><span class="en " data-lang="en">Select a suitable catalog entry</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Chọn danh mục phù hợp: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Select a suitable catalog entry: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-03-08">
+              <code>M08-03-08</code>
+              <strong><span class="" data-lang="vi">Chọn danh mục phù hợp</span><span class="en " data-lang="en">Select a suitable catalog entry</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Chọn danh mục phù hợp: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Select a suitable catalog entry: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-03-09">
+              <code>M08-03-09</code>
+              <strong><span class="" data-lang="vi">Chọn danh mục phù hợp</span><span class="en " data-lang="en">Select a suitable catalog entry</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Chọn danh mục phù hợp: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Select a suitable catalog entry: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-03-10">
+              <code>M08-03-10</code>
+              <strong><span class="" data-lang="vi">Chọn danh mục phù hợp</span><span class="en " data-lang="en">Select a suitable catalog entry</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Chọn danh mục phù hợp: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Select a suitable catalog entry: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-03-11">
+              <code>M08-03-11</code>
+              <strong><span class="" data-lang="vi">Chọn danh mục phù hợp</span><span class="en " data-lang="en">Select a suitable catalog entry</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Chọn danh mục phù hợp: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Select a suitable catalog entry: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-03-12">
+              <code>M08-03-12</code>
+              <strong><span class="" data-lang="vi">Chọn danh mục phù hợp</span><span class="en " data-lang="en">Select a suitable catalog entry</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Chọn danh mục phù hợp: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Select a suitable catalog entry: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 25–36; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 25–36; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-04">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 04 / Animal care</span>
+            <h2><span class="" data-lang="vi">Ghi ngày quan sát</span><span class="en " data-lang="en">Record observation date</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="37">
+            <li class="check-row" data-check="M08-04-01">
+              <code>M08-04-01</code>
+              <strong><span class="" data-lang="vi">Ghi ngày quan sát</span><span class="en " data-lang="en">Record observation date</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Ghi ngày quan sát: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Record observation date: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-04-02">
+              <code>M08-04-02</code>
+              <strong><span class="" data-lang="vi">Ghi ngày quan sát</span><span class="en " data-lang="en">Record observation date</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Ghi ngày quan sát: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Record observation date: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-04-03">
+              <code>M08-04-03</code>
+              <strong><span class="" data-lang="vi">Ghi ngày quan sát</span><span class="en " data-lang="en">Record observation date</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Ghi ngày quan sát: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Record observation date: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-04-04">
+              <code>M08-04-04</code>
+              <strong><span class="" data-lang="vi">Ghi ngày quan sát</span><span class="en " data-lang="en">Record observation date</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Ghi ngày quan sát: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Record observation date: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-04-05">
+              <code>M08-04-05</code>
+              <strong><span class="" data-lang="vi">Ghi ngày quan sát</span><span class="en " data-lang="en">Record observation date</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Ghi ngày quan sát: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Record observation date: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-04-06">
+              <code>M08-04-06</code>
+              <strong><span class="" data-lang="vi">Ghi ngày quan sát</span><span class="en " data-lang="en">Record observation date</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Ghi ngày quan sát: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Record observation date: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-04-07">
+              <code>M08-04-07</code>
+              <strong><span class="" data-lang="vi">Ghi ngày quan sát</span><span class="en " data-lang="en">Record observation date</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Ghi ngày quan sát: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Record observation date: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-04-08">
+              <code>M08-04-08</code>
+              <strong><span class="" data-lang="vi">Ghi ngày quan sát</span><span class="en " data-lang="en">Record observation date</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Ghi ngày quan sát: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Record observation date: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-04-09">
+              <code>M08-04-09</code>
+              <strong><span class="" data-lang="vi">Ghi ngày quan sát</span><span class="en " data-lang="en">Record observation date</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Ghi ngày quan sát: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Record observation date: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-04-10">
+              <code>M08-04-10</code>
+              <strong><span class="" data-lang="vi">Ghi ngày quan sát</span><span class="en " data-lang="en">Record observation date</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Ghi ngày quan sát: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Record observation date: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-04-11">
+              <code>M08-04-11</code>
+              <strong><span class="" data-lang="vi">Ghi ngày quan sát</span><span class="en " data-lang="en">Record observation date</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Ghi ngày quan sát: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Record observation date: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-04-12">
+              <code>M08-04-12</code>
+              <strong><span class="" data-lang="vi">Ghi ngày quan sát</span><span class="en " data-lang="en">Record observation date</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Ghi ngày quan sát: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Record observation date: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 37–48; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 37–48; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-05">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 05 / Animal care</span>
+            <h2><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe</span><span class="en " data-lang="en">Update a health record</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="49">
+            <li class="check-row" data-check="M08-05-01">
+              <code>M08-05-01</code>
+              <strong><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe</span><span class="en " data-lang="en">Update a health record</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Update a health record: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-05-02">
+              <code>M08-05-02</code>
+              <strong><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe</span><span class="en " data-lang="en">Update a health record</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Update a health record: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-05-03">
+              <code>M08-05-03</code>
+              <strong><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe</span><span class="en " data-lang="en">Update a health record</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Update a health record: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-05-04">
+              <code>M08-05-04</code>
+              <strong><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe</span><span class="en " data-lang="en">Update a health record</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Update a health record: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-05-05">
+              <code>M08-05-05</code>
+              <strong><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe</span><span class="en " data-lang="en">Update a health record</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Update a health record: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-05-06">
+              <code>M08-05-06</code>
+              <strong><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe</span><span class="en " data-lang="en">Update a health record</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Update a health record: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-05-07">
+              <code>M08-05-07</code>
+              <strong><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe</span><span class="en " data-lang="en">Update a health record</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Update a health record: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-05-08">
+              <code>M08-05-08</code>
+              <strong><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe</span><span class="en " data-lang="en">Update a health record</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Update a health record: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-05-09">
+              <code>M08-05-09</code>
+              <strong><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe</span><span class="en " data-lang="en">Update a health record</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Update a health record: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-05-10">
+              <code>M08-05-10</code>
+              <strong><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe</span><span class="en " data-lang="en">Update a health record</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Update a health record: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-05-11">
+              <code>M08-05-11</code>
+              <strong><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe</span><span class="en " data-lang="en">Update a health record</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Update a health record: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-05-12">
+              <code>M08-05-12</code>
+              <strong><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe</span><span class="en " data-lang="en">Update a health record</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Cập nhật bản ghi sức khỏe: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Update a health record: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 49–60; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 49–60; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-06">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 06 / Animal care</span>
+            <h2><span class="" data-lang="vi">Tạo lịch tiêm</span><span class="en " data-lang="en">Create a vaccination schedule</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="61">
+            <li class="check-row" data-check="M08-06-01">
+              <code>M08-06-01</code>
+              <strong><span class="" data-lang="vi">Tạo lịch tiêm</span><span class="en " data-lang="en">Create a vaccination schedule</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Tạo lịch tiêm: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Create a vaccination schedule: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-06-02">
+              <code>M08-06-02</code>
+              <strong><span class="" data-lang="vi">Tạo lịch tiêm</span><span class="en " data-lang="en">Create a vaccination schedule</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Tạo lịch tiêm: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Create a vaccination schedule: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-06-03">
+              <code>M08-06-03</code>
+              <strong><span class="" data-lang="vi">Tạo lịch tiêm</span><span class="en " data-lang="en">Create a vaccination schedule</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Tạo lịch tiêm: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Create a vaccination schedule: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-06-04">
+              <code>M08-06-04</code>
+              <strong><span class="" data-lang="vi">Tạo lịch tiêm</span><span class="en " data-lang="en">Create a vaccination schedule</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Tạo lịch tiêm: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Create a vaccination schedule: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-06-05">
+              <code>M08-06-05</code>
+              <strong><span class="" data-lang="vi">Tạo lịch tiêm</span><span class="en " data-lang="en">Create a vaccination schedule</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Tạo lịch tiêm: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Create a vaccination schedule: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-06-06">
+              <code>M08-06-06</code>
+              <strong><span class="" data-lang="vi">Tạo lịch tiêm</span><span class="en " data-lang="en">Create a vaccination schedule</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Tạo lịch tiêm: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Create a vaccination schedule: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-06-07">
+              <code>M08-06-07</code>
+              <strong><span class="" data-lang="vi">Tạo lịch tiêm</span><span class="en " data-lang="en">Create a vaccination schedule</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Tạo lịch tiêm: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Create a vaccination schedule: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-06-08">
+              <code>M08-06-08</code>
+              <strong><span class="" data-lang="vi">Tạo lịch tiêm</span><span class="en " data-lang="en">Create a vaccination schedule</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Tạo lịch tiêm: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Create a vaccination schedule: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-06-09">
+              <code>M08-06-09</code>
+              <strong><span class="" data-lang="vi">Tạo lịch tiêm</span><span class="en " data-lang="en">Create a vaccination schedule</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Tạo lịch tiêm: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Create a vaccination schedule: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-06-10">
+              <code>M08-06-10</code>
+              <strong><span class="" data-lang="vi">Tạo lịch tiêm</span><span class="en " data-lang="en">Create a vaccination schedule</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Tạo lịch tiêm: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Create a vaccination schedule: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-06-11">
+              <code>M08-06-11</code>
+              <strong><span class="" data-lang="vi">Tạo lịch tiêm</span><span class="en " data-lang="en">Create a vaccination schedule</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Tạo lịch tiêm: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Create a vaccination schedule: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-06-12">
+              <code>M08-06-12</code>
+              <strong><span class="" data-lang="vi">Tạo lịch tiêm</span><span class="en " data-lang="en">Create a vaccination schedule</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Tạo lịch tiêm: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Create a vaccination schedule: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 61–72; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 61–72; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-07">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 07 / Animal care</span>
+            <h2><span class="" data-lang="vi">Ghi tiêm đã thực hiện</span><span class="en " data-lang="en">Record a completed vaccination</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="73">
+            <li class="check-row" data-check="M08-07-01">
+              <code>M08-07-01</code>
+              <strong><span class="" data-lang="vi">Ghi tiêm đã thực hiện</span><span class="en " data-lang="en">Record a completed vaccination</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Ghi tiêm đã thực hiện: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Record a completed vaccination: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-07-02">
+              <code>M08-07-02</code>
+              <strong><span class="" data-lang="vi">Ghi tiêm đã thực hiện</span><span class="en " data-lang="en">Record a completed vaccination</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Ghi tiêm đã thực hiện: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Record a completed vaccination: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-07-03">
+              <code>M08-07-03</code>
+              <strong><span class="" data-lang="vi">Ghi tiêm đã thực hiện</span><span class="en " data-lang="en">Record a completed vaccination</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Ghi tiêm đã thực hiện: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Record a completed vaccination: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-07-04">
+              <code>M08-07-04</code>
+              <strong><span class="" data-lang="vi">Ghi tiêm đã thực hiện</span><span class="en " data-lang="en">Record a completed vaccination</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Ghi tiêm đã thực hiện: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Record a completed vaccination: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-07-05">
+              <code>M08-07-05</code>
+              <strong><span class="" data-lang="vi">Ghi tiêm đã thực hiện</span><span class="en " data-lang="en">Record a completed vaccination</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Ghi tiêm đã thực hiện: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Record a completed vaccination: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-07-06">
+              <code>M08-07-06</code>
+              <strong><span class="" data-lang="vi">Ghi tiêm đã thực hiện</span><span class="en " data-lang="en">Record a completed vaccination</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Ghi tiêm đã thực hiện: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Record a completed vaccination: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-07-07">
+              <code>M08-07-07</code>
+              <strong><span class="" data-lang="vi">Ghi tiêm đã thực hiện</span><span class="en " data-lang="en">Record a completed vaccination</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Ghi tiêm đã thực hiện: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Record a completed vaccination: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-07-08">
+              <code>M08-07-08</code>
+              <strong><span class="" data-lang="vi">Ghi tiêm đã thực hiện</span><span class="en " data-lang="en">Record a completed vaccination</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Ghi tiêm đã thực hiện: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Record a completed vaccination: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-07-09">
+              <code>M08-07-09</code>
+              <strong><span class="" data-lang="vi">Ghi tiêm đã thực hiện</span><span class="en " data-lang="en">Record a completed vaccination</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Ghi tiêm đã thực hiện: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Record a completed vaccination: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-07-10">
+              <code>M08-07-10</code>
+              <strong><span class="" data-lang="vi">Ghi tiêm đã thực hiện</span><span class="en " data-lang="en">Record a completed vaccination</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Ghi tiêm đã thực hiện: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Record a completed vaccination: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-07-11">
+              <code>M08-07-11</code>
+              <strong><span class="" data-lang="vi">Ghi tiêm đã thực hiện</span><span class="en " data-lang="en">Record a completed vaccination</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Ghi tiêm đã thực hiện: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Record a completed vaccination: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-07-12">
+              <code>M08-07-12</code>
+              <strong><span class="" data-lang="vi">Ghi tiêm đã thực hiện</span><span class="en " data-lang="en">Record a completed vaccination</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Ghi tiêm đã thực hiện: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Record a completed vaccination: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 73–84; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 73–84; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-08">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 08 / Animal care</span>
+            <h2><span class="" data-lang="vi">Rà soát lịch đến hạn</span><span class="en " data-lang="en">Review due schedules</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="85">
+            <li class="check-row" data-check="M08-08-01">
+              <code>M08-08-01</code>
+              <strong><span class="" data-lang="vi">Rà soát lịch đến hạn</span><span class="en " data-lang="en">Review due schedules</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Rà soát lịch đến hạn: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Review due schedules: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-08-02">
+              <code>M08-08-02</code>
+              <strong><span class="" data-lang="vi">Rà soát lịch đến hạn</span><span class="en " data-lang="en">Review due schedules</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Rà soát lịch đến hạn: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Review due schedules: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-08-03">
+              <code>M08-08-03</code>
+              <strong><span class="" data-lang="vi">Rà soát lịch đến hạn</span><span class="en " data-lang="en">Review due schedules</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Rà soát lịch đến hạn: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Review due schedules: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-08-04">
+              <code>M08-08-04</code>
+              <strong><span class="" data-lang="vi">Rà soát lịch đến hạn</span><span class="en " data-lang="en">Review due schedules</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Rà soát lịch đến hạn: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Review due schedules: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-08-05">
+              <code>M08-08-05</code>
+              <strong><span class="" data-lang="vi">Rà soát lịch đến hạn</span><span class="en " data-lang="en">Review due schedules</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Rà soát lịch đến hạn: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Review due schedules: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-08-06">
+              <code>M08-08-06</code>
+              <strong><span class="" data-lang="vi">Rà soát lịch đến hạn</span><span class="en " data-lang="en">Review due schedules</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Rà soát lịch đến hạn: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Review due schedules: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-08-07">
+              <code>M08-08-07</code>
+              <strong><span class="" data-lang="vi">Rà soát lịch đến hạn</span><span class="en " data-lang="en">Review due schedules</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Rà soát lịch đến hạn: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Review due schedules: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-08-08">
+              <code>M08-08-08</code>
+              <strong><span class="" data-lang="vi">Rà soát lịch đến hạn</span><span class="en " data-lang="en">Review due schedules</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Rà soát lịch đến hạn: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Review due schedules: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-08-09">
+              <code>M08-08-09</code>
+              <strong><span class="" data-lang="vi">Rà soát lịch đến hạn</span><span class="en " data-lang="en">Review due schedules</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Rà soát lịch đến hạn: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Review due schedules: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-08-10">
+              <code>M08-08-10</code>
+              <strong><span class="" data-lang="vi">Rà soát lịch đến hạn</span><span class="en " data-lang="en">Review due schedules</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Rà soát lịch đến hạn: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Review due schedules: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-08-11">
+              <code>M08-08-11</code>
+              <strong><span class="" data-lang="vi">Rà soát lịch đến hạn</span><span class="en " data-lang="en">Review due schedules</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Rà soát lịch đến hạn: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Review due schedules: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-08-12">
+              <code>M08-08-12</code>
+              <strong><span class="" data-lang="vi">Rà soát lịch đến hạn</span><span class="en " data-lang="en">Review due schedules</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Rà soát lịch đến hạn: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Review due schedules: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 85–96; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 85–96; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-09">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 09 / Animal care</span>
+            <h2><span class="" data-lang="vi">Mở lịch sử sức khỏe</span><span class="en " data-lang="en">Open health history</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="97">
+            <li class="check-row" data-check="M08-09-01">
+              <code>M08-09-01</code>
+              <strong><span class="" data-lang="vi">Mở lịch sử sức khỏe</span><span class="en " data-lang="en">Open health history</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Mở lịch sử sức khỏe: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Open health history: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-09-02">
+              <code>M08-09-02</code>
+              <strong><span class="" data-lang="vi">Mở lịch sử sức khỏe</span><span class="en " data-lang="en">Open health history</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Mở lịch sử sức khỏe: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Open health history: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-09-03">
+              <code>M08-09-03</code>
+              <strong><span class="" data-lang="vi">Mở lịch sử sức khỏe</span><span class="en " data-lang="en">Open health history</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Mở lịch sử sức khỏe: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Open health history: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-09-04">
+              <code>M08-09-04</code>
+              <strong><span class="" data-lang="vi">Mở lịch sử sức khỏe</span><span class="en " data-lang="en">Open health history</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Mở lịch sử sức khỏe: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Open health history: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-09-05">
+              <code>M08-09-05</code>
+              <strong><span class="" data-lang="vi">Mở lịch sử sức khỏe</span><span class="en " data-lang="en">Open health history</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Mở lịch sử sức khỏe: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Open health history: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-09-06">
+              <code>M08-09-06</code>
+              <strong><span class="" data-lang="vi">Mở lịch sử sức khỏe</span><span class="en " data-lang="en">Open health history</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Mở lịch sử sức khỏe: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Open health history: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-09-07">
+              <code>M08-09-07</code>
+              <strong><span class="" data-lang="vi">Mở lịch sử sức khỏe</span><span class="en " data-lang="en">Open health history</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Mở lịch sử sức khỏe: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Open health history: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-09-08">
+              <code>M08-09-08</code>
+              <strong><span class="" data-lang="vi">Mở lịch sử sức khỏe</span><span class="en " data-lang="en">Open health history</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Mở lịch sử sức khỏe: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Open health history: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-09-09">
+              <code>M08-09-09</code>
+              <strong><span class="" data-lang="vi">Mở lịch sử sức khỏe</span><span class="en " data-lang="en">Open health history</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Mở lịch sử sức khỏe: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Open health history: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-09-10">
+              <code>M08-09-10</code>
+              <strong><span class="" data-lang="vi">Mở lịch sử sức khỏe</span><span class="en " data-lang="en">Open health history</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Mở lịch sử sức khỏe: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Open health history: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-09-11">
+              <code>M08-09-11</code>
+              <strong><span class="" data-lang="vi">Mở lịch sử sức khỏe</span><span class="en " data-lang="en">Open health history</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Mở lịch sử sức khỏe: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Open health history: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-09-12">
+              <code>M08-09-12</code>
+              <strong><span class="" data-lang="vi">Mở lịch sử sức khỏe</span><span class="en " data-lang="en">Open health history</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Mở lịch sử sức khỏe: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Open health history: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 97–108; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 97–108; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-10">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 10 / Animal care</span>
+            <h2><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="109">
+            <li class="check-row" data-check="M08-10-01">
+              <code>M08-10-01</code>
+              <strong><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-10-02">
+              <code>M08-10-02</code>
+              <strong><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-10-03">
+              <code>M08-10-03</code>
+              <strong><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-10-04">
+              <code>M08-10-04</code>
+              <strong><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-10-05">
+              <code>M08-10-05</code>
+              <strong><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-10-06">
+              <code>M08-10-06</code>
+              <strong><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-10-07">
+              <code>M08-10-07</code>
+              <strong><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-10-08">
+              <code>M08-10-08</code>
+              <strong><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-10-09">
+              <code>M08-10-09</code>
+              <strong><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-10-10">
+              <code>M08-10-10</code>
+              <strong><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-10-11">
+              <code>M08-10-11</code>
+              <strong><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M08-10-12">
+              <code>M08-10-12</code>
+              <strong><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Chuyển trường hợp cần chuyên gia cho bác sĩ thú y: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Refer cases needing expertise to a veterinarian: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 109–120; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 109–120; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+    </section>
+    <section class="section" id="evidence">
+      <div class="section-head"><div><span class="eyebrow">Evidence & verification</span><h2><span data-lang="vi">Cơ sở kiểm chứng</span><span data-lang="en">Verification basis</span></h2></div></div>
+      <div class="detail-grid">
+        <article class="detail-panel"><h3><span data-lang="vi">Test suite có thể liên quan</span><span data-lang="en">Potentially related test suites</span></h3><ul>
+          <li><code>test_operations.py</code></li>
+        </ul><p><span class="" data-lang="vi">Danh sách này là điểm bắt đầu tra cứu; cần đọc assertion trong từng test để xác định đúng phạm vi module.</span><span class="en " data-lang="en">These files are starting points for review; inspect individual assertions to establish actual module coverage.</span></p></article>
+        <article class="detail-panel"><h3><span data-lang="vi">Trạng thái bằng chứng</span><span data-lang="en">Evidence status</span></h3><p><span class="" data-lang="vi">Ma trận phía trên là tiêu chí rà soát đề xuất. Generator không chạy test và không xác nhận pass/fail. Khi nộp dự án, ghi revision, môi trường, lệnh chạy và kết quả thực tế.</span><span class="en " data-lang="en">The matrix above is a proposed review checklist. The generator does not run tests or assert pass/fail. For submission, record the revision, environment, command and actual results.</span></p><p><span class="" data-lang="vi">Demo HTML và số liệu mẫu không thay thế test chức năng, kiểm thử người dùng hoặc đánh giá pilot.</span><span class="en " data-lang="en">HTML demos and sample metrics do not replace functional tests, user testing or pilot evaluation.</span></p></article>
+      </div>
+    </section>
+    <section class="section" id="boundaries">
+      <div class="section-head"><div><span class="eyebrow">Constraints</span><h2><span data-lang="vi">Giới hạn & diễn giải</span><span data-lang="en">Boundaries & interpretation</span></h2></div></div>
+      <div class="note"><ul>
+          <li><span class="" data-lang="vi">Ứng dụng lưu trữ theo dõi; không chẩn đoán bệnh hoặc kê phác đồ điều trị.</span><span class="en " data-lang="en">The app records observations; it does not diagnose disease or prescribe treatment.</span></li>
+          <li><span class="" data-lang="vi">Thông tin dinh dưỡng là phân loại danh mục, không phải chỉ dẫn y tế.</span><span class="en " data-lang="en">Nutrition information is catalog classification, not medical guidance.</span></li>
+          <li><span class="" data-lang="vi">Ngày và trạng thái nhắc việc cần được người dùng xác minh.</span><span class="en " data-lang="en">Users must verify dates and reminder status.</span></li>
+      </ul></div>
+    </section>
+    <section class="section"><div class="section-head"><div><span class="eyebrow">Continue</span><h2><span data-lang="vi">Phân hệ lân cận</span><span data-lang="en">Related modules</span></h2></div></div><div class="grid">
+        <a class="tile" href="module_07_imports.html"><span class="tile-kicker">Previous module</span><h3><span class="" data-lang="vi">Nhập hàng &amp; tiếp nhận</span><span class="en " data-lang="en">Imports &amp; Intake</span></h3><p><span class="" data-lang="vi">Ghi nhận đợt nhập, nguồn cung, tiếp nhận vật nuôi và kết quả kiểm tra ban đầu.</span><span class="en " data-lang="en">Records intake batches, source, animal receipt and initial inspection outcomes.</span></p></a>
+        <a class="tile" href="module_09_care.html"><span class="tile-kicker">Next module</span><h3><span class="" data-lang="vi">Chăm sóc hằng ngày</span><span class="en " data-lang="en">Daily Care</span></h3><p><span class="" data-lang="vi">Theo dõi công việc chăm sóc thường nhật và checklist vận hành 25 điểm cho vật nuôi.</span><span class="en " data-lang="en">Tracks routine care tasks and the 25-point operational checklist for animals.</span></p></a>
+        <a class="tile" href="index.html"><span class="tile-kicker">Module library</span><h3><span data-lang="vi">Quay lại danh mục</span><span data-lang="en">Back to module library</span></h3><p><span data-lang="vi">Mở danh sách 17 phân hệ.</span><span data-lang="en">Browse all 17 modules.</span></p></a>
+    </div></section>
+    <footer class="site-footer"><span>PetCare / Theo dõi sức khỏe</span><a href="index.html">Module hub / Danh mục</a></footer>
+  </main>
+</body>
+</html>

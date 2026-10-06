@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Bản mô phỏng giao diện PetCare desktop, có thể chuyển phân hệ và tìm trong dữ liệu minh họa.">
+  <title>PetCare | Interactive Interface Preview</title>
+  <style>
+    :root { color-scheme: light; --ink:#17231f; --muted:#65736d; --paper:#f2f5f1; --surface:#fff; --line:#dce4de; --green:#176b4d; --green-dark:#0c4a35; --coral:#dc7356; --blue:#3f79a8; --amber:#ba8433; --shadow:0 14px 38px rgba(26,54,40,.08); }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--paper); font:14px/1.5 "Trebuchet MS","Segoe UI",sans-serif; }
+    button,input { font:inherit; }
+    button,a { -webkit-tap-highlight-color:transparent; }
+    a { color:inherit; text-decoration:none; }
+    .site-bar { height:58px; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 22px; border-bottom:1px solid var(--line); background:var(--surface); }
+    .site-brand { display:inline-flex; align-items:center; gap:10px; min-width:0; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+    .brand-mark { width:30px; height:30px; display:grid; flex:0 0 auto; place-items:center; border-radius:9px 9px 9px 3px; color:#fff; background:var(--green); }
+    .site-actions { display:flex; align-items:center; justify-content:flex-end; gap:10px; }
+    .site-link { color:var(--muted); font-size:12px; }
+    .site-link:hover { color:var(--green); }
+    .lang-toggle { min-width:42px; height:34px; border:1px solid var(--line); border-radius:5px; color:var(--ink); background:#fff; font-weight:700; cursor:pointer; }
+    .preview-shell { width:min(1500px,calc(100% - 32px)); min-height:calc(100vh - 82px); display:grid; grid-template-columns:238px minmax(0,1fr); margin:12px auto 18px; overflow:hidden; border:1px solid #d9e2db; border-radius:8px; background:var(--surface); box-shadow:var(--shadow); }
+    .sidebar { display:flex; min-width:0; flex-direction:column; padding:18px 12px; color:#e7f2e9; background:var(--green-dark); }
+    .workspace-label { padding:2px 10px 14px; border-bottom:1px solid rgba(255,255,255,.15); }
+    .workspace-label strong { display:block; font-size:14px; }
+    .workspace-label span { display:block; margin-top:3px; color:#b9d0c0; font-size:11px; }
+    .nav-caption { margin:17px 10px 7px; color:#9fbeaa; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+    .nav-group-label { margin:13px 10px 4px; color:#9fbeaa; font-size:9px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
+    .nav-group-label:first-child { margin-top:8px; }
+    .module-nav { display:grid; gap:3px; }
+    .module-nav button { width:100%; min-height:36px; display:flex; align-items:center; gap:10px; padding:7px 9px; border:0; border-radius:4px; color:#d8e8dc; text-align:left; background:transparent; cursor:pointer; }
+    .module-nav button:hover { background:rgba(255,255,255,.09); }
+    .module-nav button[aria-current="page"] { color:#173b2b; background:#c9ef72; font-weight:700; }
+    .nav-index { width:23px; flex:0 0 23px; color:#93b5a0; font-size:10px; font-variant-numeric:tabular-nums; }
+    .module-nav button[aria-current="page"] .nav-index { color:var(--green-dark); }
+    .nav-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; }
+    .sidebar-foot { margin-top:auto; padding:15px 10px 0; border-top:1px solid rgba(255,255,255,.15); color:#b9d0c0; font-size:11px; }
+    .sidebar-foot strong { display:block; margin-bottom:4px; color:#f1f7ed; font-size:12px; }
+    .workspace { min-width:0; }
+    .workspace-top { min-height:62px; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:10px 22px; border-bottom:1px solid var(--line); background:#fff; }
+    .crumb { color:var(--muted); font-size:12px; }
+    .crumb strong { color:var(--ink); }
+    .top-controls { display:flex; align-items:center; justify-content:flex-end; gap:8px; }
+    .search-box,.status-filter { height:36px; padding:0 10px; border:1px solid var(--line); border-radius:5px; outline:none; background:#fbfcfa; }
+    .search-box { width:min(250px,26vw); }
+    .status-filter { max-width:170px; color:var(--ink); font-size:12px; }
+    .search-box:focus,.status-filter:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(23,107,77,.1); }
+    .demo-flag { padding:6px 9px; border:1px solid #efd1c5; border-radius:4px; color:#a64f39; background:#fff3ee; font-size:10px; font-weight:800; letter-spacing:.07em; white-space:nowrap; }
+    .screen-content { padding:25px clamp(16px,3vw,34px) 30px; }
+    .screen-head { display:flex; align-items:end; justify-content:space-between; gap:16px; margin-bottom:20px; }
+    .screen-kicker { color:var(--green); font-size:10px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; }
+    h1 { margin:5px 0 4px; font:600 clamp(27px,3vw,38px)/1.15 "Segoe UI",Tahoma,sans-serif; }
+    .screen-description { max-width:680px; margin:0; color:var(--muted); font-size:13px; }
+    .screen-meta { color:var(--muted); font-size:11px; white-space:nowrap; }
+    .demo-note { display:flex; align-items:flex-start; gap:9px; margin:0 0 17px; padding:10px 12px; border-left:3px solid var(--coral); color:#69483d; background:#fff5f0; font-size:11px; }
+    .demo-note strong { color:#9e5039; }
+    .metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-bottom:20px; }
+    .metric { min-width:0; padding:14px 15px; border:1px solid var(--line); border-radius:5px; background:#fff; }
+    .metric-label { color:var(--muted); font-size:11px; }
+    .metric-value { display:block; margin-top:6px; color:var(--green-dark); font-size:25px; font-weight:700; font-variant-numeric:tabular-nums; }
+    .metric-foot { color:var(--muted); font-size:10px; }
+    .content-grid { display:grid; grid-template-columns:minmax(0,1.6fr) minmax(220px,.8fr); gap:14px; align-items:start; }
+    .section-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+    .section-head h2 { margin:0; font-size:14px; }
+    .section-head span { color:var(--muted); font-size:11px; }
+    .data-section { min-width:0; }
+    .table-wrap { overflow:auto; border:1px solid var(--line); border-radius:5px; background:#fff; }
+    #record-rows tr { cursor:pointer; }
+    #record-rows tr[aria-selected="true"] { background:#e8f3ea; }
+    table { width:100%; border-collapse:collapse; text-align:left; }
+    th,td { padding:11px 12px; border-bottom:1px solid #e9eeea; vertical-align:middle; }
+    th { color:var(--muted); background:#f6f8f5; font-size:10px; font-weight:700; letter-spacing:.04em; white-space:nowrap; }
+    td { font-size:12px; }
+    tbody tr:last-child td { border-bottom:0; }
+    tbody tr:hover { background:#f5faf6; }
+    .record-id { color:var(--green); font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    .side-section { padding:15px; border:1px solid var(--line); border-radius:5px; background:#fff; }
+    .detail-card { margin-top:14px; padding:15px; border:1px solid var(--line); border-radius:5px; background:#f8faf7; }
+    .detail-card[hidden] { display:none; }
+    .detail-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:12px; }
+    .detail-field { min-width:0; padding:9px; border:1px solid var(--line); border-radius:4px; background:#fff; }
+    .detail-field dt { color:var(--muted); font-size:10px; }
+    .detail-field dd { margin:3px 0 0; overflow-wrap:anywhere; font-size:12px; font-weight:700; }
+    .detail-actions { display:flex; gap:8px; margin-top:12px; }
+    .detail-action { min-height:34px; padding:6px 10px; border:1px solid var(--line); border-radius:4px; color:var(--green); background:#fff; font-size:11px; cursor:pointer; }
+    .detail-action:hover { border-color:var(--green); }
+    .activity-list { display:grid; }
+    .activity-item { display:grid; grid-template-columns:8px minmax(0,1fr); gap:10px; padding:11px 0; border-top:1px solid #edf0ed; }
+    .activity-dot { width:7px; height:7px; margin-top:5px; border-radius:50%; background:var(--coral); }
+    .activity-item p { margin:0; font-size:11px; }
+    .activity-item small { display:block; margin-top:3px; color:var(--muted); font-size:10px; }
+    .empty-state { padding:30px 14px; color:var(--muted); text-align:center; }
+    .empty-state[hidden],.table-wrap[hidden] { display:none; }
+    .screen-footer { display:flex; justify-content:space-between; gap:12px; margin-top:22px; padding-top:13px; border-top:1px solid var(--line); color:var(--muted); font-size:10px; }
+    [data-lang="en"] { display:none; }
+    body.show-en [data-lang="vi"] { display:none; }
+    body.show-en [data-lang="en"] { display:initial; }
+    @media (max-width:980px) { .preview-shell { grid-template-columns:190px minmax(0,1fr); } .module-nav button { padding-inline:7px; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } .content-grid { grid-template-columns:1fr; } }
+    @media (max-width:680px) {
+      .site-bar { height:52px; padding:0 12px; }
+      .site-link { display:none; }
+      .preview-shell { width:100%; min-height:calc(100vh - 52px); display:flex; flex-direction:column; margin:0; border:0; border-radius:0; }
+      .sidebar { padding:10px; }
+      .workspace-label,.nav-caption,.sidebar-foot { display:none; }
+      .module-nav { display:flex; overflow-x:auto; gap:5px; padding:1px 0 3px; scrollbar-width:thin; }
+      .module-nav button { width:auto; min-width:max-content; min-height:36px; padding:7px 10px; }
+      .nav-index { width:auto; flex-basis:auto; }
+      .workspace-top { min-height:56px; padding:9px 12px; }
+      .crumb { display:none; }
+      .top-controls { width:100%; display:grid; grid-template-columns:minmax(0,1fr) minmax(110px,.6fr); }
+      .search-box,.status-filter { width:100%; min-width:0; max-width:none; }
+      .demo-flag { grid-column:1 / -1; justify-self:start; }
+      .screen-content { padding:20px 12px; }
+      .screen-head { align-items:flex-start; flex-direction:column; gap:5px; }
+      .screen-meta { white-space:normal; }
+      .metrics { gap:7px; }
+      .detail-grid { grid-template-columns:1fr 1fr; }
+      .metric { padding:11px; }
+      .metric-value { font-size:21px; }
+      th,td { padding:9px 8px; }
+      .screen-footer { flex-direction:column; }
+    }
+    @media (max-width:380px) { .site-brand { font-size:10px; } .metrics { grid-template-columns:1fr 1fr; } .demo-flag { padding-inline:6px; font-size:9px; } .table-wrap table { min-width:560px; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto !important; transition-duration:.01ms !important; } }
+  </style>
+</head>
+<body>
+  <header class="site-bar">
+    <a class="site-brand" href="index.html"><span class="brand-mark">P</span><span>PetCare / Interface preview</span></a>
+    <div class="site-actions"><a class="site-link" href="index.html"><span data-lang="vi">Tài liệu dự án</span><span data-lang="en">Project library</span></a><a class="site-link" href="workflow.html">Workflow</a><button class="lang-toggle" id="language-toggle" type="button" aria-label="Switch language">EN</button></div>
+  </header>
+  <main class="preview-shell">
+    <aside class="sidebar">
+      <div class="workspace-label"><strong>PetCare Store</strong><span><span data-lang="vi">Không gian demo</span><span data-lang="en">Demo workspace</span></span></div>
+      <div class="nav-caption"><span data-lang="vi">Phân hệ</span><span data-lang="en">Modules</span></div>
+      <nav class="module-nav" id="module-nav" aria-label="Application modules"></nav>
+      <div class="sidebar-foot"><strong>Python · PySide6 · SQLite</strong><span><span data-lang="vi">Ứng dụng desktop cục bộ</span><span data-lang="en">Local desktop application</span></span></div>
+    </aside>
+    <section class="workspace">
+      <div class="workspace-top"><div class="crumb">PetCare <span aria-hidden="true">/</span> <strong id="breadcrumb-title">Dashboard</strong></div><div class="top-controls"><input class="search-box" id="record-search" type="search" autocomplete="off" placeholder="Tìm mã hoặc nội dung" aria-label="Search displayed records"><select class="status-filter" id="status-filter" aria-label="Filter sample records"></select><span class="demo-flag"><span data-lang="vi">DỮ LIỆU MINH HỌA</span><span data-lang="en">SAMPLE DATA</span></span></div></div>
+      <div class="screen-content" id="screen-content" aria-live="polite"></div>
+    </section>
+  </main>
+  <script>
+    const navigationGroups = [
+      { id:'system', vi:'Hệ thống', en:'System', routes:['platform','accounts'] },
+      { id:'overview', vi:'Tổng quan', en:'Overview', routes:['dashboard'] },
+      { id:'care', vi:'Hồ sơ & chăm sóc', en:'Profiles & care', routes:['pets','pet_detail','housing','health','care'] },
+      { id:'intake', vi:'Nhập hàng', en:'Intake', routes:['suppliers','imports'] },
+      { id:'customers', vi:'Khách hàng & bán hàng', en:'Customers & sales', routes:['customers','customer_insights','reservations','orders','memberships','services'] },
+      { id:'materials', vi:'Vật tư & phân tích', en:'Materials & analytics', routes:['inventory','reports','alerts'] }
+    ];
+    const modules = [
+      { id:'platform',group:'system',vi:'Nền tảng & dữ liệu',en:'Platform & data' },
+      { id:'accounts',group:'system',vi:'Tài khoản & nhật ký',en:'Accounts & audit log' },
+      { id:'dashboard',group:'overview',vi:'Tổng quan',en:'Dashboard' },
+      { id:'pets',group:'care',vi:'Quản lý vật nuôi',en:'Pet management' },
+      { id:'pet_detail',group:'care',vi:'Chi tiết vật nuôi',en:'Pet detail' },
+      { id:'housing',group:'care',vi:'Chuồng trại',en:'Housing' },
+      { id:'health',group:'care',vi:'Sức khỏe',en:'Health' },
+      { id:'care',group:'care',vi:'Chăm sóc',en:'Care' },
+      { id:'suppliers',group:'intake',vi:'Nhà cung cấp',en:'Suppliers' },
+      { id:'imports',group:'intake',vi:'Nhập & kiểm tra',en:'Imports & inspection' },
+      { id:'customers',group:'customers',vi:'Hồ sơ khách hàng',en:'Customer profile' },
+      { id:'customer_insights',group:'customers',vi:'Khách hàng + thú cưng + dịch vụ',en:'Customer + pet + service' },
+      { id:'reservations',group:'customers',vi:'Đặt trước & giữ chỗ',en:'Reservations' },
+      { id:'orders',group:'customers',vi:'Đơn hàng & thanh toán',en:'Orders & payments' },
+      { id:'memberships',group:'customers',vi:'Hội viên & bill',en:'Memberships & billing' },
+      { id:'services',group:'customers',vi:'Dịch vụ & lịch hẹn',en:'Services & appointments' },
+      { id:'inventory',group:'materials',vi:'Thức ăn & thuốc',en:'Food & medicine' },
+      { id:'reports',group:'materials',vi:'Báo cáo',en:'Reports' },
+      { id:'alerts',group:'materials',vi:'Cảnh báo & sao lưu',en:'Alerts & backup' }
+    ];
+    const screens = {
+      platform:{title:['Nền tảng & dữ liệu','Platform & data'],desc:['Thông tin môi trường chạy cục bộ và cơ sở dữ liệu đang dùng trong ứng dụng.','Local runtime and database information used by the application.'],columns:[['Hạng mục','Item'],['Giá trị demo','Sample value'],['Ghi chú','Notes']],rows:[[['Cơ sở dữ liệu','Database'],['SQLite','SQLite'],['Lưu trữ trên máy cục bộ','Stored locally']],[['Giao diện','Interface'],['PySide6','PySide6'],['Ứng dụng desktop Windows','Windows desktop application']],[['Kết nối backend','Backend connection'],['Không dùng','Not used'],['Không yêu cầu máy chủ riêng','No separate server required']]]},
+      accounts:{title:['Tài khoản & phân quyền','Accounts & roles'],desc:['Quản lý người dùng nội bộ và giới hạn truy cập theo vai trò.','Manage internal users and role-based access.'],columns:[['Tài khoản','Account'],['Vai trò','Role'],['Trạng thái','Status']],rows:[[['demo-admin','demo-admin'],['Quản trị viên','Administrator'],['Đang hoạt động','Active']],[['demo-staff-01','demo-staff-01'],['Nhân viên','Staff'],['Đang hoạt động','Active']],[['demo-viewer','demo-viewer'],['Chỉ xem','Read only'],['Mẫu minh họa','Sample']]]},
+      dashboard:{title:['Bảng điều khiển','Dashboard'],desc:['Điểm bắt đầu để rà soát công việc, tồn kho và lịch dịch vụ trong ngày.','A starting point for reviewing tasks, stock and today’s service schedule.'],metrics:[{label:['Việc cần rà soát','Items to review'],value:'08',foot:['Mẫu minh họa','Sample only']},{label:['Lịch dịch vụ','Service bookings'],value:'03',foot:['Mẫu minh họa','Sample only']},{label:['Cảnh báo kho','Stock alerts'],value:'02',foot:['Mẫu minh họa','Sample only']},{label:['Đơn đang mở','Open orders'],value:'04',foot:['Mẫu minh họa','Sample only']}],columns:[['Mã','ID'],['Công việc','Task'],['Phụ trách','Assigned to'],['Trạng thái','Status']],rows:[[['TASK-024','TASK-024'],['Kiểm tra checklist chăm sóc','Review care checklist'],['Nhân viên demo','Demo staff'],['Cần rà soát','Needs review']],[['BOOK-008','BOOK-008'],['Xác nhận lịch dịch vụ','Confirm service booking'],['Nhân viên demo','Demo staff'],['Đã lên lịch','Scheduled']],[['STOCK-012','STOCK-012'],['Rà soát lô gần hết hạn','Review near-expiry batch'],['Quản lý demo','Demo manager'],['Chú ý','Attention']]]},
+      pets:{title:['Hồ sơ vật nuôi','Pet profiles'],desc:['Tra cứu định danh, trạng thái và liên kết chủ nuôi của từng hồ sơ.','Review identity, status and owner links for each animal record.'],columns:[['Mã hồ sơ','Record ID'],['Tên gọi','Name'],['Loài','Species'],['Chủ nuôi','Owner'],['Trạng thái','Status']],rows:[[['PET-001','PET-001'],['Mây','May'],['Mèo','Cat'],['KH demo 01','Sample customer 01'],['Đang chăm sóc','In care']],[['PET-002','PET-002'],['Đốm','Dom'],['Chó','Dog'],['KH demo 02','Sample customer 02'],['Đã tiếp nhận','Received']],[['PET-003','PET-003'],['Bông','Bong'],['Thỏ','Rabbit'],['Chưa liên kết','Unlinked'],['Chờ kiểm tra','Pending review']]]},
+      pet_detail:{title:['Chi tiết vật nuôi','Pet detail'],desc:['Góc nhìn hồ sơ cá thể: thông tin định danh, tình trạng, tiếp nhận và lịch sử liên quan.','Individual record view: identity, status, intake and related history.'],columns:[['Mã hồ sơ','Record ID'],['Thông tin','Field'],['Giá trị mẫu','Sample value']],rows:[[['PET-001','PET-001'],['Tên gọi','Name'],['Mây','May']],[['PET-001','PET-001'],['Loài / giống','Species / breed'],['Mèo · Domestic shorthair','Cat · Domestic shorthair']],[['PET-001','PET-001'],['Tình trạng','Status'],['Đang chăm sóc','In care']],[['PET-001','PET-001'],['Sức khỏe','Health'],['Theo dõi thường lệ','Routine observation']],[['PET-001','PET-001'],['Tiếp nhận','Intake'],['Đã xác nhận · ảnh mẫu','Confirmed · sample photo']]]},
+      housing:{title:['Chuồng nuôi & sức chứa','Housing & capacity'],desc:['Rà soát vị trí, sức chứa và phân công vật nuôi theo cấu hình.','Review locations, capacity and animal assignments against configuration.'],columns:[['Mã khu','Area ID'],['Khu vực','Area'],['Loài phù hợp','Suitable species'],['Sức chứa mẫu','Sample capacity'],['Đang dùng mẫu','Sample assigned']],rows:[[['ENC-A1','ENC-A1'],['Khu A','Area A'],['Mèo','Cats'],['6','6'],['4','4']],[['ENC-B2','ENC-B2'],['Khu B','Area B'],['Chó nhỏ','Small dogs'],['4','4'],['3','3']],[['ENC-C1','ENC-C1'],['Khu cách ly','Quarantine area'],['Theo đánh giá','By assessment'],['2','2'],['1','1']]]},
+      suppliers:{title:['Nhà cung cấp','Suppliers'],desc:['Hồ sơ liên hệ và các đợt nhập có liên kết trong hệ thống.','Supplier contacts and linked intake batches.'],columns:[['Mã','ID'],['Nhà cung cấp','Supplier'],['Liên hệ','Contact'],['Đợt nhập','Intake batches'],['Trạng thái','Status']],rows:[[['SUP-001','SUP-001'],['Nguồn hàng demo A','Sample supplier A'],['contact-a@example.test','contact-a@example.test'],['02','02'],['Đang dùng','Active']],[['SUP-002','SUP-002'],['Nguồn hàng demo B','Sample supplier B'],['contact-b@example.test','contact-b@example.test'],['01','01'],['Đang dùng','Active']]]},
+      imports:{title:['Nhập hàng & tiếp nhận','Imports & intake'],desc:['Theo dõi lô nhập, ảnh bàn giao và kết quả kiểm tra ban đầu.','Track intake batches, handover photos and initial inspection outcomes.'],columns:[['Mã phiếu','Batch ID'],['Nguồn','Source'],['Ngày nhận','Received'],['Kiểm tra','Inspection'],['Trạng thái','Status']],rows:[[['IMP-014','IMP-014'],['Nguồn hàng demo A','Sample supplier A'],['2026-10-04','2026-10-04'],['Đạt','Passed'],['Đã xác nhận','Confirmed']],[['IMP-015','IMP-015'],['Tiếp nhận vật nuôi','Animal intake'],['2026-10-05','2026-10-05'],['Cách ly','Quarantine'],['Cần theo dõi','Follow-up']]]},
+      health:{title:['Theo dõi sức khỏe','Health records'],desc:['Lưu quan sát và lịch tiêm để hỗ trợ theo dõi nội bộ; không thay thế bác sĩ thú y.','Record observations and vaccination schedules for internal follow-up; not a veterinary service.'],columns:[['Mã','ID'],['Vật nuôi','Animal'],['Loại bản ghi','Record type'],['Ngày','Date'],['Theo dõi','Follow-up']],rows:[[['HLT-021','HLT-021'],['PET-001 · Mây','PET-001 · May'],['Quan sát','Observation'],['2026-10-04','2026-10-04'],['Đã ghi nhận','Recorded']],[['HLT-022','HLT-022'],['PET-002 · Đốm','PET-002 · Dom'],['Lịch tiêm','Vaccination schedule'],['2026-10-12','2026-10-12'],['Sắp tới','Upcoming']]]},
+      care:{title:['Chăm sóc hằng ngày','Daily care'],desc:['Checklist 25 điểm và nhiệm vụ chăm sóc được ghi nhận theo vật nuôi.','A 25-point checklist and care tasks recorded per animal.'],columns:[['Mã việc','Task ID'],['Vật nuôi','Animal'],['Nhiệm vụ','Task'],['Phụ trách','Assigned to'],['Trạng thái','Status']],rows:[[['CARE-031','CARE-031'],['PET-001 · Mây','PET-001 · May'],['Kiểm tra khu vực ở','Check housing area'],['NV demo 01','Sample staff 01'],['Hoàn tất','Complete']],[['CARE-032','CARE-032'],['PET-002 · Đốm','PET-002 · Dom'],['Checklist buổi sáng','Morning checklist'],['NV demo 02','Sample staff 02'],['Đang chờ','Pending']]]},
+      customers:{title:['Khách hàng','Customers'],desc:['Hồ sơ nội bộ được liên kết với vật nuôi và lịch sử nghiệp vụ.','Internal records linked to animals and operational history.'],columns:[['Mã KH','Customer ID'],['Khách hàng','Customer'],['Vật nuôi','Animals'],['Hoạt động gần đây','Recent activity']],rows:[[['CUS-001','CUS-001'],['Khách demo 01','Sample customer 01'],['PET-001 · Mây','PET-001 · May'],['Lịch dịch vụ','Service booking']],[['CUS-002','CUS-002'],['Khách demo 02','Sample customer 02'],['PET-002 · Đốm','PET-002 · Dom'],['Đơn hàng','Order']],[['CUS-003','CUS-003'],['Khách demo 03','Sample customer 03'],['Chưa liên kết','Unlinked'],['Chưa có','None']]]},
+      customer_insights:{title:['Khách hàng + thú cưng + dịch vụ','Customer + pet + service'],desc:['Tổng quan liên kết giữa khách hàng, vật nuôi và lịch sử dịch vụ; đây là góc nhìn mẫu, không phải phân tích trực tiếp.','A sample linked view of customers, animals and service history; not live analytics.'],columns:[['Khách hàng','Customer'],['Vật nuôi','Pet'],['Dịch vụ gần nhất','Latest service'],['Ngày mẫu','Sample date'],['Trạng thái','Status']],rows:[[['KH demo 01','Sample customer 01'],['Mây · Mèo','May · Cat'],['Chăm sóc cơ bản','Basic care'],['2026-10-05','2026-10-05'],['Hoàn tất','Completed']],[['KH demo 02','Sample customer 02'],['Đốm · Chó','Dom · Dog'],['Tắm & vệ sinh','Bath & hygiene'],['2026-10-06','2026-10-06'],['Đã lên lịch','Scheduled']],[['KH demo 03','Sample customer 03'],['Bông · Thỏ','Bong · Rabbit'],['Chưa có lịch','No booking'],['—','—'],['Chưa phát sinh','No activity']]]},
+      reservations:{title:['Đặt giữ & tiền cọc','Reservations & deposits'],desc:['Theo dõi giữ chỗ, tiền cọc và trạng thái hoàn tiền theo giao dịch.','Track reservations, deposits and refund state by transaction.'],columns:[['Mã giữ','Reservation'],['Vật nuôi','Animal'],['Tiền cọc mẫu','Sample deposit'],['Hoàn tiền','Refund'],['Trạng thái','Status']],rows:[[['RSV-006','RSV-006'],['PET-003 · Bông','PET-003 · Bong'],['1.000.000 đ','VND 1,000,000'],['Chưa hoàn','Not refunded'],['Đang giữ','Reserved']],[['RSV-007','RSV-007'],['PET-004 · Nâu','PET-004 · Nau'],['500.000 đ','VND 500,000'],['Đã hoàn đủ','Fully refunded'],['Đã giải phóng','Released']]]},
+      orders:{title:['Đơn hàng & thanh toán','Orders & payments'],desc:['Đơn nội bộ hỗ trợ thanh toán một phần và theo dõi tồn kho liên quan.','Internal orders support partial payments and related stock tracking.'],columns:[['Mã đơn','Order ID'],['Khách hàng','Customer'],['Tổng mẫu','Sample total'],['Đã thanh toán mẫu','Sample paid'],['Trạng thái','Status']],rows:[[['ORD-108','ORD-108'],['Khách demo 01','Sample customer 01'],['850.000 đ','VND 850,000'],['850.000 đ','VND 850,000'],['Hoàn tất','Completed']],[['ORD-109','ORD-109'],['Khách demo 02','Sample customer 02'],['1.200.000 đ','VND 1,200,000'],['600.000 đ','VND 600,000'],['Thanh toán một phần','Partially paid']]]},
+      memberships:{title:['Hội viên & hóa đơn nội bộ','Memberships & internal bills'],desc:['Quản lý gói, thẻ, đợt thanh toán và quyền lợi áp dụng cho khách hàng hiện có.','Manage plans, cards, installments and benefits for existing customers.'],columns:[['Mã thẻ','Card ID'],['Khách hàng','Customer'],['Gói','Plan'],['Kỳ hạn mẫu','Sample term'],['Trạng thái','Status']],rows:[[['MEM-014','MEM-014'],['Khách demo 01','Sample customer 01'],['Gói chăm sóc cơ bản','Basic care plan'],['12 tháng','12 months'],['Đang hiệu lực','Active']],[['MEM-015','MEM-015'],['Khách demo 02','Sample customer 02'],['Gói dịch vụ mẫu','Sample service plan'],['06 tháng','06 months'],['Chờ thanh toán','Awaiting payment']]]},
+      services:{title:['Dịch vụ & lịch hẹn','Services & appointments'],desc:['Lịch hẹn lưu khách hàng, tên/loài vật nuôi, dịch vụ và nhân viên phụ trách. Đây là dữ liệu mô phỏng; schema hiện không liên kết lịch bằng mã hồ sơ vật nuôi.','Appointments store the customer, pet name/species, service and assigned staff. This is mock data; the current schema does not link appointments by pet-profile ID.'],columns:[['Mã lịch','Booking ID'],['Tên vật nuôi mẫu','Sample pet name'],['Dịch vụ','Service'],['Giờ hẹn mẫu','Sample appointment'],['Trạng thái mẫu','Sample status']],rows:[[['SRV-052','SRV-052'],['Mây · Mèo','May · Cat'],['Chăm sóc cơ bản','Basic care'],['09:30','09:30'],['Đã tiếp nhận','Received']],[['SRV-053','SRV-053'],['Đốm · Chó','Dom · Dog'],['Tắm & vệ sinh','Bath & hygiene'],['14:00','14:00'],['Đã lên lịch','Scheduled']],[['SRV-054','SRV-054'],['Bông · Thỏ','Bong · Rabbit'],['Kiểm tra định kỳ','Routine check'],['15:30','15:30'],['Không đến','No-show']]]},
+      inventory:{title:['Sản phẩm & tồn kho','Products & inventory'],desc:['Theo dõi SKU, số lượng nhập thủ công, lô và hạn sử dụng.','Track SKUs, manually entered quantities, batches and expiry dates.'],columns:[['SKU','SKU'],['Sản phẩm','Product'],['Tồn mẫu','Sample stock'],['Lô','Batch'],['Hạn dùng','Expiry']],rows:[[['FOOD-014','FOOD-014'],['Thức ăn thú cưng demo','Sample pet food'],['18','18'],['B-2409','B-2409'],['2027-03-18','2027-03-18']],[['CARE-008','CARE-008'],['Vật tư chăm sóc demo','Sample care supply'],['04','04'],['B-2410','B-2410'],['2027-02-02','2027-02-02']],[['MED-003','MED-003'],['Sản phẩm theo dõi demo','Sample tracked item'],['02','02'],['B-2408','B-2408'],['2026-11-10','2026-11-10']]]},
+      reports:{title:['Báo cáo vận hành','Operational reports'],desc:['Chọn khoảng ngày và xem tổng hợp từ bản ghi đã lưu; đây là dữ liệu demo.','Choose a date range and review summaries from saved records; this is sample data.'],columns:[['Báo cáo','Report'],['Khoảng thời gian mẫu','Sample period'],['Nguồn','Source'],['Định dạng','Format']],rows:[[['Tổng hợp bán hàng','Sales summary'],['01–07/10/2026','01–07 Oct 2026'],['Đơn hàng','Orders'],['CSV','CSV']],[['Trạng thái tồn kho','Inventory status'],['Tại thời điểm demo','Demo snapshot'],['Sản phẩm & lô','Products & batches'],['CSV','CSV']],[['Tóm tắt lịch dịch vụ','Service schedule summary'],['01–07/10/2026','01–07 Oct 2026'],['Lịch hẹn','Appointments'],['CSV','CSV']]]},
+      alerts:{title:['Cảnh báo & sao lưu','Alerts & backup'],desc:['Rà soát nhắc việc theo dữ liệu; bản sao lưu được tạo theo yêu cầu.','Review record-based notices; backups are created on demand.'],columns:[['Mã','ID'],['Nội dung','Notice'],['Nguồn','Source'],['Thời điểm mẫu','Sample time'],['Trạng thái','Status']],rows:[[['ALT-024','ALT-024'],['Lô hàng sắp đến hạn','Batch nearing expiry'],['Kho','Inventory'],['Hôm nay','Today'],['Cần rà soát','Needs review']],[['ALT-025','ALT-025'],['Checklist chăm sóc chưa hoàn tất','Care checklist incomplete'],['Chăm sóc','Care'],['Hôm nay','Today'],['Đang mở','Open']],[['ALT-026','ALT-026'],['Đến kỳ rà soát sao lưu','Backup review due'],['Nền tảng','Platform'],['Theo quy trình','By procedure'],['Nhắc việc','Reminder']]]}
+    };
+    let englishMode=false;
+    let activeScreen='dashboard';
+    const nav=document.getElementById('module-nav');
+    const content=document.getElementById('screen-content');
+    const search=document.getElementById('record-search');
+    const statusFilter=document.getElementById('status-filter');
+    const tr=(pair)=>pair[englishMode?1:0];
+    const escapeHtml=(value)=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+    const normalize=(value)=>value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
+    function renderNavigation(){
+      let routeIndex=0;
+      nav.innerHTML=navigationGroups.map((group)=>`<div class="nav-group-label" data-group="${group.id}">${escapeHtml(tr([group.vi,group.en]))}</div>${group.routes.map((route)=>{const module=modules.find((item)=>item.id===route);routeIndex+=1;return `<button type="button" data-screen="${module.id}" aria-current="${module.id===activeScreen?'page':'false'}"><span class="nav-index">${String(routeIndex).padStart(2,'0')}</span><span class="nav-name">${escapeHtml(tr([module.vi,module.en]))}</span></button>`;}).join('')}`).join('');
+      nav.querySelectorAll('[data-screen]').forEach((button)=>button.addEventListener('click',()=>{activeScreen=button.dataset.screen;search.value='';statusFilter.value='all';renderScreen();}));
+    }
+    function renderScreen(){
+      const screen=screens[activeScreen];
+      const module=modules.find((item)=>item.id===activeScreen);
+      document.getElementById('breadcrumb-title').textContent=tr(module?[module.vi,module.en]:screen.title);
+      const metricHtml=screen.metrics?`<div class="metrics">${screen.metrics.map((metric)=>`<div class="metric"><span class="metric-label">${escapeHtml(tr(metric.label))}</span><strong class="metric-value">${escapeHtml(metric.value)}</strong><span class="metric-foot">${escapeHtml(tr(metric.foot))}</span></div>`).join('')}</div>`:'';
+      const statuses=[...new Map(screen.rows.map((row)=>[row.at(-1)[0],row.at(-1)])).values()];
+      const filterColumn=screen.columns.at(-1);
+      statusFilter.innerHTML=`<option value="all">${escapeHtml(tr(['Tất cả · '+filterColumn[0],'All · '+filterColumn[1]]))}</option>${statuses.map((status,index)=>`<option value="${index}">${escapeHtml(tr(status))}</option>`).join('')}`;
+      statusFilter.setAttribute('aria-label',tr(['Lọc theo '+filterColumn[0],'Filter by '+filterColumn[1]]));
+      content.innerHTML=`<div class="screen-head"><div><span class="screen-kicker">PetCare / ${escapeHtml(tr(module?[module.vi,module.en]:screen.title))}</span><h1>${escapeHtml(tr(screen.title))}</h1><p class="screen-description">${escapeHtml(tr(screen.desc))}</p></div><span class="screen-meta">${escapeHtml(tr(['Màn hình minh họa','Illustrative screen']))}</span></div>
+        <p class="demo-note"><span aria-hidden="true">●</span><span><strong>${escapeHtml(tr(['Chế độ xem trước','Preview mode']))}</strong> · ${escapeHtml(tr(['Tên, mã, trạng thái và số liệu trên màn hình đều là dữ liệu mẫu. Thao tác không ghi vào SQLite.','Names, IDs, statuses and figures are sample data. Actions do not write to SQLite.']))}</span></p>${metricHtml}
+        <div class="content-grid"><section class="data-section"><div class="section-head"><h2>${escapeHtml(tr(['Bản ghi gần đây','Recent records']))}</h2><span id="visible-count"></span></div><div class="table-wrap" id="table-wrap"><table><thead><tr>${screen.columns.map((column)=>`<th>${escapeHtml(tr(column))}</th>`).join('')}</tr></thead><tbody id="record-rows"></tbody></table></div><div class="empty-state" id="empty-state" hidden>${escapeHtml(tr(['Không tìm thấy bản ghi phù hợp.','No matching records.']))}</div></section>
+        <aside><section class="side-section"><div class="section-head"><h2>${escapeHtml(tr(['Ghi chú vận hành','Operations note']))}</h2><span>${escapeHtml(tr(['Mẫu','Sample']))}</span></div><div class="activity-list"><div class="activity-item"><span class="activity-dot"></span><p>${escapeHtml(tr(['Dữ liệu được nhập và xác nhận bởi nhân viên.','Records are entered and confirmed by staff.']))}<small>${escapeHtml(tr(['Quy trình nội bộ','Internal workflow']))}</small></p></div><div class="activity-item"><span class="activity-dot" style="background:var(--blue)"></span><p>${escapeHtml(tr(['Kiểm tra liên kết hồ sơ trước khi cập nhật.','Check linked records before updating.']))}<small>${escapeHtml(tr(['Kiểm soát dữ liệu','Data control']))}</small></p></div><div class="activity-item"><span class="activity-dot" style="background:var(--amber)"></span><p>${escapeHtml(tr(['Sao lưu định kỳ cần được thực hiện theo quy trình riêng.','Regular backups should follow a separate procedure.']))}<small>SQLite · Local</small></p></div></div></section>
+        <section class="detail-card" id="record-detail" aria-live="polite" hidden><div class="section-head"><h2>${escapeHtml(tr(['Chi tiết bản ghi mẫu','Sample record detail']))}</h2><button class="detail-action" id="close-detail" type="button">×</button></div><p id="detail-intro"></p><dl class="detail-grid" id="detail-fields"></dl><div class="detail-actions"><button class="detail-action" id="detail-related" type="button">${escapeHtml(tr(['Xem mục liên quan','View related item']))}</button></div><p class="metric-foot">${escapeHtml(tr(['Chỉ thay đổi nội dung xem trước; không tạo hoặc sửa dữ liệu ứng dụng.','Preview only; no application data is created or changed.']))}</p></section></aside></div>
+        <footer class="screen-footer"><span>${escapeHtml(tr(['PetCare chạy cục bộ trên Windows · Python + PySide6 + SQLite','PetCare runs locally on Windows · Python + PySide6 + SQLite']))}</span><span>${escapeHtml(tr(['Bản mô phỏng giao diện, không phải ứng dụng đang hoạt động','Interface prototype, not a running application']))}</span></footer>`;
+      renderRows();
+      renderNavigation();
+      document.getElementById('close-detail').addEventListener('click',()=>document.getElementById('record-detail').hidden=true);
+      document.getElementById('detail-related').addEventListener('click',()=>{
+        const related=activeScreen==='customers'?'customer_insights':activeScreen==='pets'?'pet_detail':activeScreen==='pet_detail'?'pets':activeScreen==='customer_insights'?'customers':null;
+        if(related){activeScreen=related;search.value='';statusFilter.value='all';renderScreen();}
+      });
+    }
+    function renderRows(){
+      const screen=screens[activeScreen];
+      const query=normalize(search.value.trim());
+      const selectedStatus=statusFilter.value;
+      const rows=screen.rows.map((row,index)=>({row,index})).filter(({row})=>normalize(row.flat().join(' ')).includes(query)&&(selectedStatus==='all'||String([...new Map(screen.rows.map((record)=>[record.at(-1)[0],record.at(-1)])).values()].findIndex((status)=>status[0]===row.at(-1)[0]))===selectedStatus));
+      document.getElementById('record-rows').innerHTML=rows.map(({row,index})=>`<tr data-row="${index}" tabindex="0" aria-label="${escapeHtml(tr(['Xem chi tiết','View details']))}: ${escapeHtml(tr(row[0]))}" aria-selected="false">${row.map((column,columnIndex)=>`<td>${columnIndex===0?`<span class="record-id">${escapeHtml(tr(column))}</span>`:escapeHtml(tr(column))}</td>`).join('')}</tr>`).join('');
+      document.getElementById('table-wrap').hidden=rows.length===0;
+      document.getElementById('empty-state').hidden=rows.length!==0;
+      document.getElementById('visible-count').textContent=rows.length+' / '+screen.rows.length+' '+tr(['bản ghi mẫu','sample records']);
+      document.querySelectorAll('#record-rows tr').forEach((rowElement)=>{
+        const open=()=>showRecordDetail(screen,screen.rows[Number(rowElement.dataset.row)],rowElement);
+        rowElement.addEventListener('click',open);
+        rowElement.addEventListener('keydown',(event)=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();open();}});
+      });
+      document.getElementById('record-detail').hidden=true;
+    }
+    function showRecordDetail(screen,row,selectedRow){
+      document.querySelectorAll('#record-rows tr').forEach((item)=>item.setAttribute('aria-selected',String(item===selectedRow)));
+      document.getElementById('detail-intro').textContent=tr(['Mẫu minh họa trong phân hệ: '+tr(screen.title)+'.','Illustrative sample from: '+tr(screen.title)+'.']);
+      document.getElementById('detail-fields').innerHTML=screen.columns.map((column,index)=>`<div class="detail-field"><dt>${escapeHtml(tr(column))}</dt><dd>${escapeHtml(tr(row[index]))}</dd></div>`).join('');
+      document.getElementById('record-detail').hidden=false;
+    }
+    document.getElementById('language-toggle').addEventListener('click',(event)=>{englishMode=!englishMode;document.body.classList.toggle('show-en',englishMode);event.currentTarget.textContent=englishMode?'VI':'EN';search.placeholder=tr(['Tìm mã hoặc nội dung','Search IDs or text']);search.setAttribute('aria-label',tr(['Tìm bản ghi đang hiển thị','Search displayed records']));renderScreen();});
+    search.addEventListener('input',renderRows);
+    statusFilter.addEventListener('change',renderRows);
+    renderScreen();
+  </script>
+  <script src="scripts/document_language.js" defer></script>
+</body>
+</html>

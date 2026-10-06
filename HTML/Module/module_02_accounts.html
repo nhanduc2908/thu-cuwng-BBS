@@ -1,0 +1,1045 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Quản trị tài khoản nội bộ, xác thực, vai trò, quyền khu vực và dấu vết kiểm toán.">
+  <title>PetCare | Accounts &amp; Roles</title>
+  <link rel="stylesheet" href="../styles/petcare_pages.css">
+  <style>
+    .module-nav { display: flex; gap: 8px; flex-wrap: wrap; margin: 18px 0; }
+    .module-nav a { border: 1px solid var(--line); padding: 8px 10px; border-radius: 5px; font-size: 13px; background: var(--surface); }
+    .module-nav a:hover { border-color: var(--green); }
+    .detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .detail-panel { padding: 20px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+    .detail-panel h3 { margin-bottom: 12px; }
+    .detail-panel li { margin: 8px 0; }
+    .checklist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: list-item calc(var(--start, 1) - 1); }
+    .check-row { min-width: 0; padding: 14px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface); }
+    .check-row code { display: inline-block; margin-bottom: 8px; color: var(--green); font-size: 11px; }
+    .check-row strong, .check-row > span { display: block; }
+    .check-row strong [data-lang="en"], .check-row > span [data-lang="en"] { color: var(--muted); font-weight: 500; }
+    .check-row p { margin: 9px 0; font-size: 13px; }
+    .check-row p [data-lang="en"] { color: var(--muted); }
+    .check-row small { color: var(--muted); font-size: 11px; }
+    .check-range { color: var(--muted); font-size: 12px; }
+    .scope-list { columns: 2; }
+    @media (max-width: 720px) { .checklist, .detail-grid { grid-template-columns: 1fr; } .scope-list { columns: 1; } }
+  </style>
+</head>
+<body>
+  <header class="site-header"><div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">P</span> PetCare / Tài khoản &amp; phân quyền</a>
+    <div class="header-actions"><nav class="header-nav" aria-label="Primary navigation"><a href="../index.html">Project hub</a><a href="index.html">Modules</a><a href="../workflow.html">Workflow</a></nav>
+    <button class="lang-button" type="button" aria-label="Switch language" onclick="document.body.classList.toggle('show-en');this.textContent=document.body.classList.contains('show-en')?'VI':'EN'">EN</button></div>
+  </div></header>
+  <main class="page-shell">
+    <section class="page-hero">
+      <span class="eyebrow">Module 02 / Platform</span>
+      <h1><span class="" data-lang="vi">Tài khoản &amp; phân quyền</span><span class="en " data-lang="en">Accounts &amp; Roles</span></h1>
+      <p class="lede"><span class="" data-lang="vi">Quản trị tài khoản nội bộ, xác thực, vai trò, quyền khu vực và dấu vết kiểm toán.</span><span class="en " data-lang="en">Administrates internal accounts, authentication, roles, area access and audit traceability.</span></p>
+      <div class="hero-foot"><span class="tag">Nền tảng / Platform</span><span class="tag">Python + PySide6</span><span class="tag">SQLite local</span><span class="tag">Detailed reference</span></div>
+    </section>
+    <nav class="module-nav" aria-label="Module sections"><a href="#overview">Overview / Tổng quan</a><a href="#workflow">Workflow / Quy trình</a><a href="#operations">Checks / Kiểm tra</a><a href="#evidence">Evidence / Bằng chứng</a><a href="#boundaries">Limits / Giới hạn</a></nav>
+    <section class="section" id="overview">
+      <div class="section-head"><div><span class="eyebrow">Purpose & ownership</span><h2><span data-lang="vi">Trách nhiệm phân hệ</span><span data-lang="en">Module responsibilities</span></h2></div>
+      <p><span class="" data-lang="vi">Mô tả theo phạm vi ứng dụng hiện có; số liệu ví dụ không được xem là trạng thái trực tiếp.</span><span class="en " data-lang="en">Describes current application scope; example values are not live status.</span></p></div>
+      <div class="detail-grid"><article class="detail-panel"><h3><span data-lang="vi">Phạm vi phụ trách</span><span data-lang="en">Responsibilities</span></h3><ul>
+          <li><span class="tile-kicker">01</span><span class="" data-lang="vi">Tài khoản nhân viên nội bộ</span><span class="en " data-lang="en">Internal staff accounts</span></li>
+          <li><span class="tile-kicker">02</span><span class="" data-lang="vi">Vai trò và quyền truy cập</span><span class="en " data-lang="en">Roles and access permissions</span></li>
+          <li><span class="tile-kicker">03</span><span class="" data-lang="vi">Đăng nhập và đổi mật khẩu</span><span class="en " data-lang="en">Sign-in and password change</span></li>
+          <li><span class="tile-kicker">04</span><span class="" data-lang="vi">Audit cho sự kiện quan trọng</span><span class="en " data-lang="en">Audit records for important events</span></li>
+      </ul></article><article class="detail-panel"><h3><span data-lang="vi">Luồng công việc chính</span><span data-lang="en">Primary workflow</span></h3><ol>
+          <li><span class="tile-kicker">01</span><span class="" data-lang="vi">Tạo tài khoản hoặc mở danh sách tài khoản</span><span class="en " data-lang="en">Create an account or open the account list</span></li>
+          <li><span class="tile-kicker">02</span><span class="" data-lang="vi">Gán vai trò theo trách nhiệm công việc</span><span class="en " data-lang="en">Assign a role based on job responsibility</span></li>
+          <li><span class="tile-kicker">03</span><span class="" data-lang="vi">Xác thực khi đăng nhập</span><span class="en " data-lang="en">Authenticate at sign-in</span></li>
+          <li><span class="tile-kicker">04</span><span class="" data-lang="vi">Ghi nhận thao tác được kiểm toán</span><span class="en " data-lang="en">Record auditable operations</span></li>
+      </ol></article></div>
+    </section>
+    <section class="section" id="workflow">
+      <div class="section-head"><div><span class="eyebrow">Operational map</span><h2><span data-lang="vi">Danh sách thao tác cần rà soát</span><span data-lang="en">Operations to review</span></h2></div>
+      <p><span class="" data-lang="vi">Đi tới từng thao tác để xem các trường hợp kiểm tra chi tiết.</span><span class="en " data-lang="en">Jump to an operation to review its detailed checks.</span></p></div>
+      <div class="detail-panel"><ol class="scope-list">
+          <li><a href="#check-01"><span class="" data-lang="vi">Tạo tài khoản nhân viên</span><span class="en " data-lang="en">Create a staff account</span></a></li>
+          <li><a href="#check-02"><span class="" data-lang="vi">Cập nhật trạng thái tài khoản</span><span class="en " data-lang="en">Update account status</span></a></li>
+          <li><a href="#check-03"><span class="" data-lang="vi">Gán vai trò</span><span class="en " data-lang="en">Assign a role</span></a></li>
+          <li><a href="#check-04"><span class="" data-lang="vi">Kiểm tra quyền khu vực</span><span class="en " data-lang="en">Check area permissions</span></a></li>
+          <li><a href="#check-05"><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ</span><span class="en " data-lang="en">Sign in with valid credentials</span></a></li>
+          <li><a href="#check-06"><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ</span><span class="en " data-lang="en">Reject invalid credentials</span></a></li>
+          <li><a href="#check-07"><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu</span><span class="en " data-lang="en">Change the default admin password on first use</span></a></li>
+          <li><a href="#check-08"><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi</span><span class="en " data-lang="en">Review recorded sign-in events</span></a></li>
+          <li><a href="#check-09"><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng</span><span class="en " data-lang="en">Audit an important write operation</span></a></li>
+          <li><a href="#check-10"><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự</span><span class="en " data-lang="en">Review access after staff changes</span></a></li>
+      </ol></div>
+    </section>
+    <section class="section" id="operations">
+      <div class="section-head"><div><span class="eyebrow">Detailed review matrix</span><h2><span data-lang="vi">Ma trận kiểm tra chi tiết</span><span data-lang="en">Detailed verification matrix</span></h2></div>
+      <p><span class="" data-lang="vi">Mỗi thao tác được xem xét theo 12 chiều: dữ liệu, quyền, trạng thái, lỗi, lưu trữ và truy vết. Đây là danh sách kiểm thử đề xuất, không phải bằng chứng đã chạy tự động.</span><span class="en " data-lang="en">Each operation is reviewed across 12 dimensions: data, access, state, failures, persistence and traceability. This is a proposed test checklist, not evidence of automated execution.</span></p></div>
+        <section class="section" id="check-01">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 01 / Platform</span>
+            <h2><span class="" data-lang="vi">Tạo tài khoản nhân viên</span><span class="en " data-lang="en">Create a staff account</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="1">
+            <li class="check-row" data-check="M02-01-01">
+              <code>M02-01-01</code>
+              <strong><span class="" data-lang="vi">Tạo tài khoản nhân viên</span><span class="en " data-lang="en">Create a staff account</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Tạo tài khoản nhân viên: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Create a staff account: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-01-02">
+              <code>M02-01-02</code>
+              <strong><span class="" data-lang="vi">Tạo tài khoản nhân viên</span><span class="en " data-lang="en">Create a staff account</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Tạo tài khoản nhân viên: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Create a staff account: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-01-03">
+              <code>M02-01-03</code>
+              <strong><span class="" data-lang="vi">Tạo tài khoản nhân viên</span><span class="en " data-lang="en">Create a staff account</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Tạo tài khoản nhân viên: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Create a staff account: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-01-04">
+              <code>M02-01-04</code>
+              <strong><span class="" data-lang="vi">Tạo tài khoản nhân viên</span><span class="en " data-lang="en">Create a staff account</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Tạo tài khoản nhân viên: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Create a staff account: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-01-05">
+              <code>M02-01-05</code>
+              <strong><span class="" data-lang="vi">Tạo tài khoản nhân viên</span><span class="en " data-lang="en">Create a staff account</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Tạo tài khoản nhân viên: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Create a staff account: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-01-06">
+              <code>M02-01-06</code>
+              <strong><span class="" data-lang="vi">Tạo tài khoản nhân viên</span><span class="en " data-lang="en">Create a staff account</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Tạo tài khoản nhân viên: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Create a staff account: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-01-07">
+              <code>M02-01-07</code>
+              <strong><span class="" data-lang="vi">Tạo tài khoản nhân viên</span><span class="en " data-lang="en">Create a staff account</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Tạo tài khoản nhân viên: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Create a staff account: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-01-08">
+              <code>M02-01-08</code>
+              <strong><span class="" data-lang="vi">Tạo tài khoản nhân viên</span><span class="en " data-lang="en">Create a staff account</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Tạo tài khoản nhân viên: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Create a staff account: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-01-09">
+              <code>M02-01-09</code>
+              <strong><span class="" data-lang="vi">Tạo tài khoản nhân viên</span><span class="en " data-lang="en">Create a staff account</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Tạo tài khoản nhân viên: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Create a staff account: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-01-10">
+              <code>M02-01-10</code>
+              <strong><span class="" data-lang="vi">Tạo tài khoản nhân viên</span><span class="en " data-lang="en">Create a staff account</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Tạo tài khoản nhân viên: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Create a staff account: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-01-11">
+              <code>M02-01-11</code>
+              <strong><span class="" data-lang="vi">Tạo tài khoản nhân viên</span><span class="en " data-lang="en">Create a staff account</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Tạo tài khoản nhân viên: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Create a staff account: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-01-12">
+              <code>M02-01-12</code>
+              <strong><span class="" data-lang="vi">Tạo tài khoản nhân viên</span><span class="en " data-lang="en">Create a staff account</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Tạo tài khoản nhân viên: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Create a staff account: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 1–12; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 1–12; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-02">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 02 / Platform</span>
+            <h2><span class="" data-lang="vi">Cập nhật trạng thái tài khoản</span><span class="en " data-lang="en">Update account status</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="13">
+            <li class="check-row" data-check="M02-02-01">
+              <code>M02-02-01</code>
+              <strong><span class="" data-lang="vi">Cập nhật trạng thái tài khoản</span><span class="en " data-lang="en">Update account status</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Cập nhật trạng thái tài khoản: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Update account status: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-02-02">
+              <code>M02-02-02</code>
+              <strong><span class="" data-lang="vi">Cập nhật trạng thái tài khoản</span><span class="en " data-lang="en">Update account status</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Cập nhật trạng thái tài khoản: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Update account status: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-02-03">
+              <code>M02-02-03</code>
+              <strong><span class="" data-lang="vi">Cập nhật trạng thái tài khoản</span><span class="en " data-lang="en">Update account status</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Cập nhật trạng thái tài khoản: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Update account status: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-02-04">
+              <code>M02-02-04</code>
+              <strong><span class="" data-lang="vi">Cập nhật trạng thái tài khoản</span><span class="en " data-lang="en">Update account status</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Cập nhật trạng thái tài khoản: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Update account status: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-02-05">
+              <code>M02-02-05</code>
+              <strong><span class="" data-lang="vi">Cập nhật trạng thái tài khoản</span><span class="en " data-lang="en">Update account status</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Cập nhật trạng thái tài khoản: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Update account status: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-02-06">
+              <code>M02-02-06</code>
+              <strong><span class="" data-lang="vi">Cập nhật trạng thái tài khoản</span><span class="en " data-lang="en">Update account status</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Cập nhật trạng thái tài khoản: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Update account status: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-02-07">
+              <code>M02-02-07</code>
+              <strong><span class="" data-lang="vi">Cập nhật trạng thái tài khoản</span><span class="en " data-lang="en">Update account status</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Cập nhật trạng thái tài khoản: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Update account status: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-02-08">
+              <code>M02-02-08</code>
+              <strong><span class="" data-lang="vi">Cập nhật trạng thái tài khoản</span><span class="en " data-lang="en">Update account status</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Cập nhật trạng thái tài khoản: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Update account status: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-02-09">
+              <code>M02-02-09</code>
+              <strong><span class="" data-lang="vi">Cập nhật trạng thái tài khoản</span><span class="en " data-lang="en">Update account status</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Cập nhật trạng thái tài khoản: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Update account status: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-02-10">
+              <code>M02-02-10</code>
+              <strong><span class="" data-lang="vi">Cập nhật trạng thái tài khoản</span><span class="en " data-lang="en">Update account status</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Cập nhật trạng thái tài khoản: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Update account status: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-02-11">
+              <code>M02-02-11</code>
+              <strong><span class="" data-lang="vi">Cập nhật trạng thái tài khoản</span><span class="en " data-lang="en">Update account status</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Cập nhật trạng thái tài khoản: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Update account status: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-02-12">
+              <code>M02-02-12</code>
+              <strong><span class="" data-lang="vi">Cập nhật trạng thái tài khoản</span><span class="en " data-lang="en">Update account status</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Cập nhật trạng thái tài khoản: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Update account status: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 13–24; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 13–24; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-03">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 03 / Platform</span>
+            <h2><span class="" data-lang="vi">Gán vai trò</span><span class="en " data-lang="en">Assign a role</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="25">
+            <li class="check-row" data-check="M02-03-01">
+              <code>M02-03-01</code>
+              <strong><span class="" data-lang="vi">Gán vai trò</span><span class="en " data-lang="en">Assign a role</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Gán vai trò: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Assign a role: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-03-02">
+              <code>M02-03-02</code>
+              <strong><span class="" data-lang="vi">Gán vai trò</span><span class="en " data-lang="en">Assign a role</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Gán vai trò: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Assign a role: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-03-03">
+              <code>M02-03-03</code>
+              <strong><span class="" data-lang="vi">Gán vai trò</span><span class="en " data-lang="en">Assign a role</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Gán vai trò: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Assign a role: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-03-04">
+              <code>M02-03-04</code>
+              <strong><span class="" data-lang="vi">Gán vai trò</span><span class="en " data-lang="en">Assign a role</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Gán vai trò: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Assign a role: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-03-05">
+              <code>M02-03-05</code>
+              <strong><span class="" data-lang="vi">Gán vai trò</span><span class="en " data-lang="en">Assign a role</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Gán vai trò: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Assign a role: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-03-06">
+              <code>M02-03-06</code>
+              <strong><span class="" data-lang="vi">Gán vai trò</span><span class="en " data-lang="en">Assign a role</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Gán vai trò: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Assign a role: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-03-07">
+              <code>M02-03-07</code>
+              <strong><span class="" data-lang="vi">Gán vai trò</span><span class="en " data-lang="en">Assign a role</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Gán vai trò: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Assign a role: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-03-08">
+              <code>M02-03-08</code>
+              <strong><span class="" data-lang="vi">Gán vai trò</span><span class="en " data-lang="en">Assign a role</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Gán vai trò: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Assign a role: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-03-09">
+              <code>M02-03-09</code>
+              <strong><span class="" data-lang="vi">Gán vai trò</span><span class="en " data-lang="en">Assign a role</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Gán vai trò: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Assign a role: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-03-10">
+              <code>M02-03-10</code>
+              <strong><span class="" data-lang="vi">Gán vai trò</span><span class="en " data-lang="en">Assign a role</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Gán vai trò: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Assign a role: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-03-11">
+              <code>M02-03-11</code>
+              <strong><span class="" data-lang="vi">Gán vai trò</span><span class="en " data-lang="en">Assign a role</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Gán vai trò: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Assign a role: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-03-12">
+              <code>M02-03-12</code>
+              <strong><span class="" data-lang="vi">Gán vai trò</span><span class="en " data-lang="en">Assign a role</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Gán vai trò: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Assign a role: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 25–36; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 25–36; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-04">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 04 / Platform</span>
+            <h2><span class="" data-lang="vi">Kiểm tra quyền khu vực</span><span class="en " data-lang="en">Check area permissions</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="37">
+            <li class="check-row" data-check="M02-04-01">
+              <code>M02-04-01</code>
+              <strong><span class="" data-lang="vi">Kiểm tra quyền khu vực</span><span class="en " data-lang="en">Check area permissions</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Kiểm tra quyền khu vực: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Check area permissions: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-04-02">
+              <code>M02-04-02</code>
+              <strong><span class="" data-lang="vi">Kiểm tra quyền khu vực</span><span class="en " data-lang="en">Check area permissions</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Kiểm tra quyền khu vực: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Check area permissions: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-04-03">
+              <code>M02-04-03</code>
+              <strong><span class="" data-lang="vi">Kiểm tra quyền khu vực</span><span class="en " data-lang="en">Check area permissions</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Kiểm tra quyền khu vực: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Check area permissions: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-04-04">
+              <code>M02-04-04</code>
+              <strong><span class="" data-lang="vi">Kiểm tra quyền khu vực</span><span class="en " data-lang="en">Check area permissions</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Kiểm tra quyền khu vực: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Check area permissions: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-04-05">
+              <code>M02-04-05</code>
+              <strong><span class="" data-lang="vi">Kiểm tra quyền khu vực</span><span class="en " data-lang="en">Check area permissions</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Kiểm tra quyền khu vực: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Check area permissions: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-04-06">
+              <code>M02-04-06</code>
+              <strong><span class="" data-lang="vi">Kiểm tra quyền khu vực</span><span class="en " data-lang="en">Check area permissions</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Kiểm tra quyền khu vực: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Check area permissions: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-04-07">
+              <code>M02-04-07</code>
+              <strong><span class="" data-lang="vi">Kiểm tra quyền khu vực</span><span class="en " data-lang="en">Check area permissions</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Kiểm tra quyền khu vực: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Check area permissions: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-04-08">
+              <code>M02-04-08</code>
+              <strong><span class="" data-lang="vi">Kiểm tra quyền khu vực</span><span class="en " data-lang="en">Check area permissions</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Kiểm tra quyền khu vực: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Check area permissions: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-04-09">
+              <code>M02-04-09</code>
+              <strong><span class="" data-lang="vi">Kiểm tra quyền khu vực</span><span class="en " data-lang="en">Check area permissions</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Kiểm tra quyền khu vực: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Check area permissions: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-04-10">
+              <code>M02-04-10</code>
+              <strong><span class="" data-lang="vi">Kiểm tra quyền khu vực</span><span class="en " data-lang="en">Check area permissions</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Kiểm tra quyền khu vực: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Check area permissions: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-04-11">
+              <code>M02-04-11</code>
+              <strong><span class="" data-lang="vi">Kiểm tra quyền khu vực</span><span class="en " data-lang="en">Check area permissions</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Kiểm tra quyền khu vực: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Check area permissions: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-04-12">
+              <code>M02-04-12</code>
+              <strong><span class="" data-lang="vi">Kiểm tra quyền khu vực</span><span class="en " data-lang="en">Check area permissions</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Kiểm tra quyền khu vực: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Check area permissions: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 37–48; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 37–48; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-05">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 05 / Platform</span>
+            <h2><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ</span><span class="en " data-lang="en">Sign in with valid credentials</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="49">
+            <li class="check-row" data-check="M02-05-01">
+              <code>M02-05-01</code>
+              <strong><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ</span><span class="en " data-lang="en">Sign in with valid credentials</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Sign in with valid credentials: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-05-02">
+              <code>M02-05-02</code>
+              <strong><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ</span><span class="en " data-lang="en">Sign in with valid credentials</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Sign in with valid credentials: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-05-03">
+              <code>M02-05-03</code>
+              <strong><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ</span><span class="en " data-lang="en">Sign in with valid credentials</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Sign in with valid credentials: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-05-04">
+              <code>M02-05-04</code>
+              <strong><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ</span><span class="en " data-lang="en">Sign in with valid credentials</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Sign in with valid credentials: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-05-05">
+              <code>M02-05-05</code>
+              <strong><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ</span><span class="en " data-lang="en">Sign in with valid credentials</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Sign in with valid credentials: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-05-06">
+              <code>M02-05-06</code>
+              <strong><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ</span><span class="en " data-lang="en">Sign in with valid credentials</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Sign in with valid credentials: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-05-07">
+              <code>M02-05-07</code>
+              <strong><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ</span><span class="en " data-lang="en">Sign in with valid credentials</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Sign in with valid credentials: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-05-08">
+              <code>M02-05-08</code>
+              <strong><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ</span><span class="en " data-lang="en">Sign in with valid credentials</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Sign in with valid credentials: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-05-09">
+              <code>M02-05-09</code>
+              <strong><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ</span><span class="en " data-lang="en">Sign in with valid credentials</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Sign in with valid credentials: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-05-10">
+              <code>M02-05-10</code>
+              <strong><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ</span><span class="en " data-lang="en">Sign in with valid credentials</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Sign in with valid credentials: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-05-11">
+              <code>M02-05-11</code>
+              <strong><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ</span><span class="en " data-lang="en">Sign in with valid credentials</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Sign in with valid credentials: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-05-12">
+              <code>M02-05-12</code>
+              <strong><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ</span><span class="en " data-lang="en">Sign in with valid credentials</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Đăng nhập bằng thông tin hợp lệ: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Sign in with valid credentials: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 49–60; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 49–60; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-06">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 06 / Platform</span>
+            <h2><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ</span><span class="en " data-lang="en">Reject invalid credentials</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="61">
+            <li class="check-row" data-check="M02-06-01">
+              <code>M02-06-01</code>
+              <strong><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ</span><span class="en " data-lang="en">Reject invalid credentials</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Reject invalid credentials: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-06-02">
+              <code>M02-06-02</code>
+              <strong><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ</span><span class="en " data-lang="en">Reject invalid credentials</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Reject invalid credentials: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-06-03">
+              <code>M02-06-03</code>
+              <strong><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ</span><span class="en " data-lang="en">Reject invalid credentials</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Reject invalid credentials: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-06-04">
+              <code>M02-06-04</code>
+              <strong><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ</span><span class="en " data-lang="en">Reject invalid credentials</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Reject invalid credentials: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-06-05">
+              <code>M02-06-05</code>
+              <strong><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ</span><span class="en " data-lang="en">Reject invalid credentials</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Reject invalid credentials: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-06-06">
+              <code>M02-06-06</code>
+              <strong><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ</span><span class="en " data-lang="en">Reject invalid credentials</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Reject invalid credentials: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-06-07">
+              <code>M02-06-07</code>
+              <strong><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ</span><span class="en " data-lang="en">Reject invalid credentials</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Reject invalid credentials: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-06-08">
+              <code>M02-06-08</code>
+              <strong><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ</span><span class="en " data-lang="en">Reject invalid credentials</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Reject invalid credentials: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-06-09">
+              <code>M02-06-09</code>
+              <strong><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ</span><span class="en " data-lang="en">Reject invalid credentials</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Reject invalid credentials: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-06-10">
+              <code>M02-06-10</code>
+              <strong><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ</span><span class="en " data-lang="en">Reject invalid credentials</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Reject invalid credentials: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-06-11">
+              <code>M02-06-11</code>
+              <strong><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ</span><span class="en " data-lang="en">Reject invalid credentials</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Reject invalid credentials: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-06-12">
+              <code>M02-06-12</code>
+              <strong><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ</span><span class="en " data-lang="en">Reject invalid credentials</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Từ chối thông tin xác thực không hợp lệ: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Reject invalid credentials: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 61–72; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 61–72; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-07">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 07 / Platform</span>
+            <h2><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu</span><span class="en " data-lang="en">Change the default admin password on first use</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="73">
+            <li class="check-row" data-check="M02-07-01">
+              <code>M02-07-01</code>
+              <strong><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu</span><span class="en " data-lang="en">Change the default admin password on first use</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Change the default admin password on first use: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-07-02">
+              <code>M02-07-02</code>
+              <strong><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu</span><span class="en " data-lang="en">Change the default admin password on first use</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Change the default admin password on first use: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-07-03">
+              <code>M02-07-03</code>
+              <strong><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu</span><span class="en " data-lang="en">Change the default admin password on first use</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Change the default admin password on first use: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-07-04">
+              <code>M02-07-04</code>
+              <strong><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu</span><span class="en " data-lang="en">Change the default admin password on first use</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Change the default admin password on first use: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-07-05">
+              <code>M02-07-05</code>
+              <strong><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu</span><span class="en " data-lang="en">Change the default admin password on first use</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Change the default admin password on first use: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-07-06">
+              <code>M02-07-06</code>
+              <strong><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu</span><span class="en " data-lang="en">Change the default admin password on first use</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Change the default admin password on first use: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-07-07">
+              <code>M02-07-07</code>
+              <strong><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu</span><span class="en " data-lang="en">Change the default admin password on first use</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Change the default admin password on first use: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-07-08">
+              <code>M02-07-08</code>
+              <strong><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu</span><span class="en " data-lang="en">Change the default admin password on first use</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Change the default admin password on first use: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-07-09">
+              <code>M02-07-09</code>
+              <strong><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu</span><span class="en " data-lang="en">Change the default admin password on first use</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Change the default admin password on first use: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-07-10">
+              <code>M02-07-10</code>
+              <strong><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu</span><span class="en " data-lang="en">Change the default admin password on first use</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Change the default admin password on first use: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-07-11">
+              <code>M02-07-11</code>
+              <strong><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu</span><span class="en " data-lang="en">Change the default admin password on first use</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Change the default admin password on first use: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-07-12">
+              <code>M02-07-12</code>
+              <strong><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu</span><span class="en " data-lang="en">Change the default admin password on first use</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Đổi mật khẩu quản trị mặc định lần đầu: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Change the default admin password on first use: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 73–84; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 73–84; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-08">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 08 / Platform</span>
+            <h2><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi</span><span class="en " data-lang="en">Review recorded sign-in events</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="85">
+            <li class="check-row" data-check="M02-08-01">
+              <code>M02-08-01</code>
+              <strong><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi</span><span class="en " data-lang="en">Review recorded sign-in events</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Review recorded sign-in events: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-08-02">
+              <code>M02-08-02</code>
+              <strong><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi</span><span class="en " data-lang="en">Review recorded sign-in events</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Review recorded sign-in events: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-08-03">
+              <code>M02-08-03</code>
+              <strong><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi</span><span class="en " data-lang="en">Review recorded sign-in events</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Review recorded sign-in events: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-08-04">
+              <code>M02-08-04</code>
+              <strong><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi</span><span class="en " data-lang="en">Review recorded sign-in events</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Review recorded sign-in events: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-08-05">
+              <code>M02-08-05</code>
+              <strong><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi</span><span class="en " data-lang="en">Review recorded sign-in events</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Review recorded sign-in events: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-08-06">
+              <code>M02-08-06</code>
+              <strong><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi</span><span class="en " data-lang="en">Review recorded sign-in events</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Review recorded sign-in events: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-08-07">
+              <code>M02-08-07</code>
+              <strong><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi</span><span class="en " data-lang="en">Review recorded sign-in events</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Review recorded sign-in events: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-08-08">
+              <code>M02-08-08</code>
+              <strong><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi</span><span class="en " data-lang="en">Review recorded sign-in events</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Review recorded sign-in events: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-08-09">
+              <code>M02-08-09</code>
+              <strong><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi</span><span class="en " data-lang="en">Review recorded sign-in events</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Review recorded sign-in events: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-08-10">
+              <code>M02-08-10</code>
+              <strong><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi</span><span class="en " data-lang="en">Review recorded sign-in events</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Review recorded sign-in events: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-08-11">
+              <code>M02-08-11</code>
+              <strong><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi</span><span class="en " data-lang="en">Review recorded sign-in events</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Review recorded sign-in events: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-08-12">
+              <code>M02-08-12</code>
+              <strong><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi</span><span class="en " data-lang="en">Review recorded sign-in events</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Xem sự kiện đăng nhập đã ghi: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Review recorded sign-in events: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 85–96; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 85–96; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-09">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 09 / Platform</span>
+            <h2><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng</span><span class="en " data-lang="en">Audit an important write operation</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="97">
+            <li class="check-row" data-check="M02-09-01">
+              <code>M02-09-01</code>
+              <strong><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng</span><span class="en " data-lang="en">Audit an important write operation</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Audit an important write operation: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-09-02">
+              <code>M02-09-02</code>
+              <strong><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng</span><span class="en " data-lang="en">Audit an important write operation</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Audit an important write operation: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-09-03">
+              <code>M02-09-03</code>
+              <strong><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng</span><span class="en " data-lang="en">Audit an important write operation</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Audit an important write operation: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-09-04">
+              <code>M02-09-04</code>
+              <strong><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng</span><span class="en " data-lang="en">Audit an important write operation</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Audit an important write operation: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-09-05">
+              <code>M02-09-05</code>
+              <strong><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng</span><span class="en " data-lang="en">Audit an important write operation</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Audit an important write operation: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-09-06">
+              <code>M02-09-06</code>
+              <strong><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng</span><span class="en " data-lang="en">Audit an important write operation</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Audit an important write operation: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-09-07">
+              <code>M02-09-07</code>
+              <strong><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng</span><span class="en " data-lang="en">Audit an important write operation</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Audit an important write operation: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-09-08">
+              <code>M02-09-08</code>
+              <strong><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng</span><span class="en " data-lang="en">Audit an important write operation</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Audit an important write operation: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-09-09">
+              <code>M02-09-09</code>
+              <strong><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng</span><span class="en " data-lang="en">Audit an important write operation</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Audit an important write operation: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-09-10">
+              <code>M02-09-10</code>
+              <strong><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng</span><span class="en " data-lang="en">Audit an important write operation</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Audit an important write operation: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-09-11">
+              <code>M02-09-11</code>
+              <strong><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng</span><span class="en " data-lang="en">Audit an important write operation</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Audit an important write operation: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-09-12">
+              <code>M02-09-12</code>
+              <strong><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng</span><span class="en " data-lang="en">Audit an important write operation</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Ghi dấu thao tác ghi quan trọng: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Audit an important write operation: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 97–108; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 97–108; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+        <section class="section" id="check-10">
+          <div class="section-head">
+            <div><span class="eyebrow">Operation 10 / Platform</span>
+            <h2><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự</span><span class="en " data-lang="en">Review access after staff changes</span></h2></div>
+            <p><span class="" data-lang="vi">Mở rộng thao tác thành tiêu chí xác minh đầu vào, quyền, trạng thái, lưu trữ và lỗi.</span><span class="en " data-lang="en">Decompose the operation into input, access, state, persistence and failure checks.</span></p>
+          </div>
+          <ol class="checklist" start="109">
+            <li class="check-row" data-check="M02-10-01">
+              <code>M02-10-01</code>
+              <strong><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự</span><span class="en " data-lang="en">Review access after staff changes</span></strong>
+              <span><span class="" data-lang="vi">Thông tin bắt buộc</span><span class="en " data-lang="en">Required information</span></span>
+              <p><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự: Thông tin bắt buộc — Xác minh trường bắt buộc trước khi lưu.</span><span class="en " data-lang="en">Review access after staff changes: Required information — Verify required values are present before save.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-10-02">
+              <code>M02-10-02</code>
+              <strong><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự</span><span class="en " data-lang="en">Review access after staff changes</span></strong>
+              <span><span class="" data-lang="vi">Tính hợp lệ đầu vào</span><span class="en " data-lang="en">Input validity</span></span>
+              <p><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự: Tính hợp lệ đầu vào — Kiểm tra định dạng, miền giá trị và chuẩn hóa.</span><span class="en " data-lang="en">Review access after staff changes: Input validity — Check accepted format, range and normalization.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-10-03">
+              <code>M02-10-03</code>
+              <strong><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự</span><span class="en " data-lang="en">Review access after staff changes</span></strong>
+              <span><span class="" data-lang="vi">Bản ghi liên quan</span><span class="en " data-lang="en">Related records</span></span>
+              <p><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự: Bản ghi liên quan — Xác nhận bản ghi liên kết tồn tại và thuộc đúng quy trình.</span><span class="en " data-lang="en">Review access after staff changes: Related records — Confirm linked records exist and belong to the intended workflow.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-10-04">
+              <code>M02-10-04</code>
+              <strong><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự</span><span class="en " data-lang="en">Review access after staff changes</span></strong>
+              <span><span class="" data-lang="vi">Quyền vai trò</span><span class="en " data-lang="en">Role access</span></span>
+              <p><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự: Quyền vai trò — Xác minh thao tác chỉ dành cho vai trò được phép.</span><span class="en " data-lang="en">Review access after staff changes: Role access — Verify the action is available only to an authorized role.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-10-05">
+              <code>M02-10-05</code>
+              <strong><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự</span><span class="en " data-lang="en">Review access after staff changes</span></strong>
+              <span><span class="" data-lang="vi">Chuyển trạng thái</span><span class="en " data-lang="en">State transition</span></span>
+              <p><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự: Chuyển trạng thái — Kiểm tra chuyển trạng thái hợp lệ từ trạng thái hiện tại.</span><span class="en " data-lang="en">Review access after staff changes: State transition — Check that the transition is allowed from the current state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-10-06">
+              <code>M02-10-06</code>
+              <strong><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự</span><span class="en " data-lang="en">Review access after staff changes</span></strong>
+              <span><span class="" data-lang="vi">Điều kiện biên</span><span class="en " data-lang="en">Boundary condition</span></span>
+              <p><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự: Điều kiện biên — Thử dữ liệu rỗng, biên dưới, biên trên và vượt biên nếu áp dụng.</span><span class="en " data-lang="en">Review access after staff changes: Boundary condition — Test empty, minimum, maximum and just-outside-boundary values where applicable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-10-07">
+              <code>M02-10-07</code>
+              <strong><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự</span><span class="en " data-lang="en">Review access after staff changes</span></strong>
+              <span><span class="" data-lang="vi">Xử lý trùng lặp</span><span class="en " data-lang="en">Duplicate handling</span></span>
+              <p><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự: Xử lý trùng lặp — Kiểm tra cách xử lý gửi lặp hoặc bản ghi có dữ liệu khớp.</span><span class="en " data-lang="en">Review access after staff changes: Duplicate handling — Check how repeated submissions or matching records are handled.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-10-08">
+              <code>M02-10-08</code>
+              <strong><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự</span><span class="en " data-lang="en">Review access after staff changes</span></strong>
+              <span><span class="" data-lang="vi">Phản hồi lỗi</span><span class="en " data-lang="en">Failure feedback</span></span>
+              <p><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự: Phản hồi lỗi — Xác nhận lỗi kiểm tra nêu rõ dữ liệu cần sửa.</span><span class="en " data-lang="en">Review access after staff changes: Failure feedback — Confirm validation failures explain what needs correction.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-10-09">
+              <code>M02-10-09</code>
+              <strong><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự</span><span class="en " data-lang="en">Review access after staff changes</span></strong>
+              <span><span class="" data-lang="vi">Lưu bền vững</span><span class="en " data-lang="en">Persistence</span></span>
+              <p><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự: Lưu bền vững — Mở lại bản ghi và xác minh kết quả đã lưu còn tồn tại.</span><span class="en " data-lang="en">Review access after staff changes: Persistence — Reopen the record and verify the saved result is still present.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-10-10">
+              <code>M02-10-10</code>
+              <strong><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự</span><span class="en " data-lang="en">Review access after staff changes</span></strong>
+              <span><span class="" data-lang="vi">Khả năng truy vết</span><span class="en " data-lang="en">Traceability</span></span>
+              <p><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự: Khả năng truy vết — Kiểm tra audit/lịch sử với thao tác cần truy vết.</span><span class="en " data-lang="en">Review access after staff changes: Traceability — Check audit/history records for actions that should be traceable.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-10-11">
+              <code>M02-10-11</code>
+              <strong><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự</span><span class="en " data-lang="en">Review access after staff changes</span></strong>
+              <span><span class="" data-lang="vi">Quyền riêng tư</span><span class="en " data-lang="en">Privacy</span></span>
+              <p><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự: Quyền riêng tư — Giới hạn dữ liệu hiển thị/xuất theo nhu cầu vận hành.</span><span class="en " data-lang="en">Review access after staff changes: Privacy — Limit displayed and exported data to the operational need.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+            <li class="check-row" data-check="M02-10-12">
+              <code>M02-10-12</code>
+              <strong><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự</span><span class="en " data-lang="en">Review access after staff changes</span></strong>
+              <span><span class="" data-lang="vi">Trạng thái không dữ liệu</span><span class="en " data-lang="en">No-data behavior</span></span>
+              <p><span class="" data-lang="vi">Bàn giao quyền khi thay đổi nhân sự: Trạng thái không dữ liệu — Phân biệt thiếu dữ liệu với số 0 hoặc trạng thái hoàn tất thật.</span><span class="en " data-lang="en">Review access after staff changes: No-data behavior — Distinguish missing data from a true zero or completed state.</span></p>
+              <small><span class="" data-lang="vi">Tiêu chí rà soát; xác minh với giao diện/mã nguồn hiện hành.</span><span class="en " data-lang="en">Review criterion; verify against the current UI/source.</span></small>
+            </li>
+          </ol>
+          <p class="check-range"><span class="" data-lang="vi">Mã kiểm tra 109–120; đây là tiêu chí rà soát, không phải tuyên bố tự động đã kiểm thử.</span><span class="en " data-lang="en">Check IDs 109–120; these are review criteria, not a claim of automated test execution.</span></p>
+        </section>
+    </section>
+    <section class="section" id="evidence">
+      <div class="section-head"><div><span class="eyebrow">Evidence & verification</span><h2><span data-lang="vi">Cơ sở kiểm chứng</span><span data-lang="en">Verification basis</span></h2></div></div>
+      <div class="detail-grid">
+        <article class="detail-panel"><h3><span data-lang="vi">Test suite có thể liên quan</span><span data-lang="en">Potentially related test suites</span></h3><ul>
+          <li><code>test_database.py</code></li>
+          <li><code>test_main.py</code></li>
+        </ul><p><span class="" data-lang="vi">Danh sách này là điểm bắt đầu tra cứu; cần đọc assertion trong từng test để xác định đúng phạm vi module.</span><span class="en " data-lang="en">These files are starting points for review; inspect individual assertions to establish actual module coverage.</span></p></article>
+        <article class="detail-panel"><h3><span data-lang="vi">Trạng thái bằng chứng</span><span data-lang="en">Evidence status</span></h3><p><span class="" data-lang="vi">Ma trận phía trên là tiêu chí rà soát đề xuất. Generator không chạy test và không xác nhận pass/fail. Khi nộp dự án, ghi revision, môi trường, lệnh chạy và kết quả thực tế.</span><span class="en " data-lang="en">The matrix above is a proposed review checklist. The generator does not run tests or assert pass/fail. For submission, record the revision, environment, command and actual results.</span></p><p><span class="" data-lang="vi">Demo HTML và số liệu mẫu không thay thế test chức năng, kiểm thử người dùng hoặc đánh giá pilot.</span><span class="en " data-lang="en">HTML demos and sample metrics do not replace functional tests, user testing or pilot evaluation.</span></p></article>
+      </div>
+    </section>
+    <section class="section" id="boundaries">
+      <div class="section-head"><div><span class="eyebrow">Constraints</span><h2><span data-lang="vi">Giới hạn & diễn giải</span><span data-lang="en">Boundaries & interpretation</span></h2></div></div>
+      <div class="note"><ul>
+          <li><span class="" data-lang="vi">Mật khẩu được băm bằng PBKDF2-HMAC-SHA256 với salt ngẫu nhiên.</span><span class="en " data-lang="en">Passwords use PBKDF2-HMAC-SHA256 with a random salt.</span></li>
+          <li><span class="" data-lang="vi">Tài khoản là tài khoản nội bộ cục bộ, không phải danh tính trực tuyến.</span><span class="en " data-lang="en">Accounts are local internal accounts, not online identities.</span></li>
+          <li><span class="" data-lang="vi">Bảo vệ tài khoản Windows và đổi mật khẩu tạm là cần thiết.</span><span class="en " data-lang="en">Secure the Windows account and rotate the temporary password.</span></li>
+      </ul></div>
+    </section>
+    <section class="section"><div class="section-head"><div><span class="eyebrow">Continue</span><h2><span data-lang="vi">Phân hệ lân cận</span><span data-lang="en">Related modules</span></h2></div></div><div class="grid">
+        <a class="tile" href="module_01_platform.html"><span class="tile-kicker">Previous module</span><h3><span class="" data-lang="vi">Nền tảng &amp; dữ liệu</span><span class="en " data-lang="en">Platform &amp; Data</span></h3><p><span class="" data-lang="vi">Quản lý môi trường chạy cục bộ, cơ sở dữ liệu SQLite và thông tin nền tảng của PetCare.</span><span class="en " data-lang="en">Covers the local runtime, SQLite database and platform information for PetCare.</span></p></a>
+        <a class="tile" href="module_03_dashboard.html"><span class="tile-kicker">Next module</span><h3><span class="" data-lang="vi">Bảng điều khiển</span><span class="en " data-lang="en">Dashboard</span></h3><p><span class="" data-lang="vi">Tổng hợp các chỉ báo vận hành được truy vấn từ dữ liệu hiện có để giúp nhân viên bắt đầu công việc.</span><span class="en " data-lang="en">Summarizes operational indicators queried from existing records so staff can orient their work.</span></p></a>
+        <a class="tile" href="index.html"><span class="tile-kicker">Module library</span><h3><span data-lang="vi">Quay lại danh mục</span><span data-lang="en">Back to module library</span></h3><p><span data-lang="vi">Mở danh sách 17 phân hệ.</span><span data-lang="en">Browse all 17 modules.</span></p></a>
+    </div></section>
+    <footer class="site-footer"><span>PetCare / Tài khoản &amp; phân quyền</span><a href="index.html">Module hub / Danh mục</a></footer>
+  </main>
+</body>
+</html>

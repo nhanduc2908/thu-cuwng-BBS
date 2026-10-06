@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Bản đồ song ngữ các luồng vận hành PetCare theo trạng thái, quyền và giới hạn của ứng dụng desktop cục bộ.">
+  <title>PetCare | Operational workflow</title>
+  <link rel="stylesheet" href="styles/petcare_pages.css">
+  <style>
+    .flow-key { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+    .flow-key span { padding:6px 9px; border:1px solid var(--line); border-radius:4px; background:#fff; color:var(--muted); font-size:11px; }
+    .flow-index { color:var(--green); font-weight:800; font-variant-numeric:tabular-nums; }
+    .flow-steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; counter-reset:flow; }
+    .flow-step { position:relative; min-height:180px; padding:18px; border:1px solid var(--line); border-radius:6px; background:#fff; }
+    .flow-step::before { counter-increment:flow; content:counter(flow,decimal-leading-zero); display:block; margin-bottom:13px; color:var(--green); font-size:11px; font-weight:800; letter-spacing:.08em; }
+    .flow-step h3 { margin:0 0 9px; font-size:22px; }
+    .flow-step p { margin:0; color:var(--muted); font-size:13px; }
+    .flow-step p .en { margin-top:6px; }
+    body.show-en .flow-step p .en { display:block; }
+    .flow-step .state-line { display:block; margin-top:12px; padding-top:9px; border-top:1px solid var(--line); color:var(--green-dark); font-size:11px; font-weight:700; }
+    .flow-step .state-line .en { display:none; }
+    body.show-en .flow-step .state-line .en { display:block; }
+    .branch-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .branch { padding:19px; border:1px solid var(--line); border-radius:6px; background:#fff; }
+    .branch .eyebrow { margin-bottom:9px; }
+    .branch h3 { margin:0 0 10px; }
+    .branch ol,.branch ul { margin:0; padding-left:19px; color:var(--muted); }
+    .branch li { padding:4px 0; }
+    .branch li .en { margin-top:3px; }
+    body.show-en .branch li .en { display:block; }
+    .state-table { width:100%; border-collapse:collapse; background:#fff; }
+    .state-table th,.state-table td { padding:11px 12px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+    .state-table th { color:var(--green-dark); background:#edf4ed; font-size:11px; }
+    .state-table td { font-size:12px; }
+    .state-table td .en { display:none; margin-top:4px; color:var(--muted); }
+    body.show-en .state-table td .en { display:block; }
+    .state-code { color:var(--green); font-weight:800; white-space:nowrap; }
+    .role-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+    .role { padding:14px; border:1px solid var(--line); border-radius:5px; background:#fff; }
+    .role strong { display:block; margin-bottom:5px; }
+    .role p { margin:0; color:var(--muted); font-size:12px; }
+    .role p .en { margin-top:5px; }
+    body.show-en .role p .en { display:block; }
+    .exception-list { display:grid; grid-template-columns:1fr 1fr; gap:0 22px; margin:0; padding:0; list-style:none; }
+    .exception-list li { padding:12px 0; border-bottom:1px solid var(--line); }
+    .exception-list strong { display:block; font-size:13px; }
+    .exception-list p { margin:4px 0 0; color:var(--muted); font-size:12px; }
+    .exception-list p .en { margin-top:4px; }
+    body.show-en .exception-list p .en { display:block; }
+    .flow-callout { margin-top:18px; }
+    @media(max-width:850px) { .flow-steps { grid-template-columns:repeat(2,minmax(0,1fr)); } .role-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media(max-width:600px) { .flow-steps,.branch-grid,.role-grid,.exception-list { grid-template-columns:1fr; } .state-table { min-width:670px; } .table-wrap { overflow:auto; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html"><span class="brand-mark">P</span> PetCare / Workflow</a>
+      <div class="header-actions">
+        <nav class="header-nav" aria-label="Primary navigation"><a href="index.html">Home</a><a href="project_overview.html">Overview</a><a href="report_final.html">Report</a></nav>
+        <button class="lang-button" type="button" aria-label="Switch language" onclick="document.body.classList.toggle('show-en');this.textContent=document.body.classList.contains('show-en')?'VI':'EN'">EN</button>
+      </div>
+    </div>
+  </header>
+  <main class="page-shell">
+    <section class="page-hero">
+      <span class="eyebrow">Operations / implemented flow</span>
+      <h1><span data-lang="vi">Bản đồ quy trình PetCare</span><span data-lang="en">PetCare workflow map</span></h1>
+      <p class="lede"><span data-lang="vi">Từ khởi chạy và phân quyền đến các nhánh tiếp nhận, chăm sóc, bán hàng, dịch vụ và sao lưu. Đây là các luồng nội bộ; không phải hành trình bắt buộc duy nhất.</span><span class="en" data-lang="en">From startup and access control through intake, care, sales, services and backup. These are internal workflow branches, not one mandatory linear journey.</span></p>
+      <div class="hero-foot"><span class="tag">Python + PySide6</span><span class="tag">SQLite on one Windows machine</span><span class="tag"><span data-lang="vi">17 phân hệ nghiệp vụ</span><span data-lang="en">17 business modules</span></span></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow">01 / Shared application flow</span><h2><span data-lang="vi">Luồng dùng chung</span><span data-lang="en">Shared application flow</span></h2></div><p><span data-lang="vi">Các bước nền trước khi người dùng vào nhánh nghiệp vụ.</span><span data-lang="en">Foundation steps before entering an operational branch.</span></p></div>
+      <div class="flow-steps">
+        <article class="flow-step"><h3><span data-lang="vi">Khởi chạy</span><span data-lang="en">Launch</span></h3><p><span data-lang="vi">Ứng dụng desktop mở cơ sở dữ liệu SQLite cục bộ; schema được khởi tạo khi cần.</span><span class="en" data-lang="en">The desktop app opens local SQLite; schema initialization occurs when required.</span></p><span class="state-line"><span data-lang="vi">Không cần backend riêng</span><span class="en" data-lang="en">No separate backend required</span></span></article>
+        <article class="flow-step"><h3><span data-lang="vi">Xác thực</span><span data-lang="en">Authenticate</span></h3><p><span data-lang="vi">Người dùng đăng nhập bằng tài khoản nội bộ. Lỗi đăng nhập trả người dùng về màn hình đăng nhập.</span><span class="en" data-lang="en">Users sign in with an internal account. Failed sign-in returns to the login screen.</span></p><span class="state-line"><span data-lang="vi">Admin mặc định đổi mật khẩu lần đầu</span><span class="en" data-lang="en">Default admin changes password on first use</span></span></article>
+        <article class="flow-step"><h3><span data-lang="vi">Phân quyền</span><span data-lang="en">Authorize</span></h3><p><span data-lang="vi">Vai trò quyết định route hiển thị và thao tác quản lý được phép; quyền xem và quyền sửa có thể khác nhau.</span><span class="en" data-lang="en">Roles control visible routes and management actions; view and edit permissions may differ.</span></p><span class="state-line"><span data-lang="vi">Menu được lọc theo quyền</span><span class="en" data-lang="en">Navigation is permission-filtered</span></span></article>
+        <article class="flow-step"><h3><span data-lang="vi">Chọn phân hệ</span><span data-lang="en">Choose a module</span></h3><p><span data-lang="vi">Sidebar chia thành hệ thống, tổng quan, hồ sơ/chăm sóc, nhập hàng, khách hàng/bán hàng và vật tư/phân tích.</span><span class="en" data-lang="en">The sidebar groups system, overview, profiles/care, intake, customer/sales and materials/analytics.</span></p><span class="state-line"><span data-lang="vi">Một ứng dụng · nhiều route</span><span class="en" data-lang="en">One app · multiple routes</span></span></article>
+        <article class="flow-step"><h3><span data-lang="vi">Kiểm tra & ghi dữ liệu</span><span data-lang="en">Validate & persist</span></h3><p><span data-lang="vi">Form và repository áp dụng quy tắc nghiệp vụ trước khi ghi SQLite; danh sách được làm mới sau thao tác.</span><span class="en" data-lang="en">Forms and repositories apply business rules before SQLite writes; lists refresh after actions.</span></p><span class="state-line"><span data-lang="vi">Lưu cục bộ</span><span class="en" data-lang="en">Persist locally</span></span></article>
+        <article class="flow-step"><h3><span data-lang="vi">Theo dõi & rà soát</span><span data-lang="en">Monitor & review</span></h3><p><span data-lang="vi">Dashboard, cảnh báo, báo cáo và một số audit event hỗ trợ xem lại hoạt động theo dữ liệu có sẵn.</span><span class="en" data-lang="en">Dashboard, alerts, reports and selected audit events support review of available records.</span></p><span class="state-line"><span data-lang="vi">Không phải mọi thao tác đều được audit</span><span class="en" data-lang="en">Not every interaction is audited</span></span></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow">02 / Business branches</span><h2><span data-lang="vi">Các nhánh nghiệp vụ</span><span data-lang="en">Operational branches</span></h2></div><p><span data-lang="vi">Chọn nhánh theo loại hồ sơ; vật nuôi tồn kho và thú cưng khách hàng là hai khái niệm riêng.</span><span data-lang="en">Choose a branch by record type; store animals and customer-owned pets are distinct concepts.</span></p></div>
+      <div class="branch-grid">
+        <article class="branch"><span class="eyebrow">A / Intake</span><h3><span data-lang="vi">Nhập hàng & tiếp nhận vật nuôi</span><span data-lang="en">Imports & animal intake</span></h3><ol><li><span data-lang="vi">Chọn nhà cung cấp đang hoạt động và tạo lô nhập trạng thái OPEN.</span><span class="en" data-lang="en">Select an active supplier and create an OPEN import batch.</span></li><li><span data-lang="vi">Ghi vật nuôi, ảnh bàn giao hợp lệ, nhân viên nhận và xác nhận hiện diện.</span><span class="en" data-lang="en">Record the animal, valid handover photo, receiving staff and presence confirmation.</span></li><li><span data-lang="vi">Hồ sơ ở PENDING_INSPECTION cho tới khi có kết quả kiểm tra.</span><span class="en" data-lang="en">The record remains PENDING_INSPECTION until inspected.</span></li><li><span data-lang="vi">PASSED → AVAILABLE; QUARANTINE → QUARANTINE; NEEDS_TREATMENT → TREATMENT.</span><span class="en" data-lang="en">PASSED → AVAILABLE; QUARANTINE → QUARANTINE; NEEDS_TREATMENT → TREATMENT.</span></li></ol><div class="note flow-callout"><span data-lang="vi">Lô chỉ hoàn tất khi mọi vật nuôi trong lô đã được kiểm tra; chỉ lô OPEN rỗng mới có thể hủy theo quy tắc hiện hành.</span><span data-lang="en">A batch completes after every animal is inspected; only an empty OPEN batch can be canceled under the current rule.</span></div></article>
+        <article class="branch"><span class="eyebrow">B / Daily care & health</span><h3><span data-lang="vi">Chăm sóc & sức khỏe</span><span data-lang="en">Care & health</span></h3><ol><li><span data-lang="vi">Chọn vật nuôi trong cơ sở và tạo tác vụ chăm sóc có lịch/người phụ trách.</span><span class="en" data-lang="en">Select a store animal and create a scheduled care task with an assignee.</span></li><li><span data-lang="vi">Đánh dấu tác vụ hoàn tất hoặc lưu checklist 25 điểm theo ngày.</span><span class="en" data-lang="en">Complete a care task or save the 25-point checklist for the day.</span></li><li><span data-lang="vi">Mỗi mục checklist có OK, NEEDS_ATTENTION hoặc NOT_APPLICABLE.</span><span class="en" data-lang="en">Each checklist item uses OK, NEEDS_ATTENTION or NOT_APPLICABLE.</span></li><li><span data-lang="vi">Quan sát sức khỏe và tiêm chủng được ghi riêng, gắn với hồ sơ vật nuôi.</span><span class="en" data-lang="en">Health observations and vaccinations are recorded separately against the animal.</span></li></ol><div class="note flow-callout"><span data-lang="vi">Ứng dụng lưu theo dõi và nhắc việc; không tự chẩn đoán hay kê điều trị.</span><span data-lang="en">The app stores tracking and reminders; it does not diagnose or prescribe treatment.</span></div></article>
+        <article class="branch"><span class="eyebrow">C / Reservation & animal sale</span><h3><span data-lang="vi">Giữ chỗ & bán vật nuôi</span><span data-lang="en">Reservation & animal sale</span></h3><ol><li><span data-lang="vi">Chỉ vật nuôi AVAILABLE mới đủ điều kiện giữ chỗ; tạo reservation cho khách hàng.</span><span class="en" data-lang="en">Only AVAILABLE animals can be reserved; create a reservation for a customer.</span></li><li><span data-lang="vi">Tiền cọc không vượt giá bán; vật nuôi chuyển sang RESERVED.</span><span class="en" data-lang="en">Deposit cannot exceed sale price; the animal becomes RESERVED.</span></li><li><span data-lang="vi">Hoàn cọc có thể từng phần; chỉ giải phóng khi đã hoàn đủ, khi đó vật nuôi về AVAILABLE.</span><span class="en" data-lang="en">Refunds may be partial; release requires a full refund, then the animal returns to AVAILABLE.</span></li><li><span data-lang="vi">Đổi reservation thành đơn bán: tiền cọc được chuyển vào thanh toán đơn.</span><span class="en" data-lang="en">Converting a reservation to an animal order transfers deposits into order payments.</span></li></ol><div class="note flow-callout"><span data-lang="vi">Ngày giữ quá hạn tạo cảnh báo để nhân viên xử lý; không tự giải phóng reservation.</span><span data-lang="en">An overdue date raises an alert for staff follow-up; the reservation is not released automatically.</span></div></article>
+        <article class="branch"><span class="eyebrow">D / Product orders</span><h3><span data-lang="vi">Đơn hàng sản phẩm & thanh toán</span><span data-lang="en">Product orders & payments</span></h3><ol><li><span data-lang="vi">Tạo đơn OPEN, chọn khách hàng và dòng sản phẩm/combo.</span><span class="en" data-lang="en">Create an OPEN order, select a customer and product/combo lines.</span></li><li><span data-lang="vi">Có thể ghi thanh toán từng phần; tồn phù hợp được giữ khi OPEN/PARTIALLY_PAID.</span><span class="en" data-lang="en">Partial payments are supported; eligible stock is reserved while OPEN/PARTIALLY_PAID.</span></li><li><span data-lang="vi">Thanh toán đủ chuyển đơn sang PAID; tồn được trừ theo quy tắc lô hết hạn trước (FEFO).</span><span class="en" data-lang="en">Full payment changes the order to PAID; stock is deducted using expiry-first (FEFO) batches.</span></li><li><span data-lang="vi">Hủy chỉ áp dụng cho đơn OPEN chưa thanh toán qua thao tác hiện có.</span><span class="en" data-lang="en">The available cancellation action applies only to unpaid OPEN orders.</span></li></ol><div class="note flow-callout"><span data-lang="vi">Không có cổng thanh toán/QR; nhân viên xác nhận thanh toán trong ứng dụng. Không mô tả luồng hoàn tiền đơn đã thanh toán nếu chưa có chức năng.</span><span data-lang="en">There is no payment/QR gateway; staff record confirmation in the app. Do not imply paid-order refunds where no workflow exists.</span></div></article>
+        <article class="branch"><span class="eyebrow">E / Customer-owned pet & service</span><h3><span data-lang="vi">Khách hàng & lịch dịch vụ</span><span data-lang="en">Customer-owned pets & services</span></h3><ol><li><span data-lang="vi">Mở hồ sơ khách hàng và xem hồ sơ thú cưng khách hàng liên quan.</span><span class="en" data-lang="en">Open a customer record and review related customer pet profiles.</span></li><li><span data-lang="vi">Ước tính gói dịch vụ theo cấu hình loài/cân nặng/lông và quyền lợi hội viên đủ điều kiện.</span><span class="en" data-lang="en">Estimate a service package using species/weight/coat configuration and eligible membership benefits.</span></li><li><span data-lang="vi">Đặt lịch với khách hàng, tên/loài thú cưng, thời gian, nhân viên tùy chọn và ghi chú.</span><span class="en" data-lang="en">Book with customer, pet name/species, time, optional staff and notes.</span></li><li><span data-lang="vi">Hoàn tất tạo bill; hủy/không đến có thể giải phóng lượt trả trước theo điều kiện.</span><span class="en" data-lang="en">Completion creates a bill; cancellation/no-show may release a prepaid visit under its rules.</span></li></ol><div class="note flow-callout"><span data-lang="vi">Appointment lưu tên/loài thú cưng, không liên kết pet ID của hồ sơ khách hàng hay animal tồn kho.</span><span data-lang="en">Appointments store pet name/species, not a customer pet-profile ID or store-animal ID.</span></div></article>
+        <article class="branch"><span class="eyebrow">F / Membership</span><h3><span data-lang="vi">Hội viên & bill nội bộ</span><span data-lang="en">Membership & internal bills</span></h3><ol><li><span data-lang="vi">Tạo membership/card và bill cho khách hàng hiện có; chưa thanh toán thường ở trạng thái chờ.</span><span class="en" data-lang="en">Create a membership/card and bill for an existing customer; unpaid records remain pending.</span></li><li><span data-lang="vi">Bill thanh toán đủ mới kích hoạt; gói giá 0 có thể kích hoạt ngay theo quy tắc.</span><span class="en" data-lang="en">Full settlement activates the bill; zero-price plans may activate immediately under the rule.</span></li><li><span data-lang="vi">Gia hạn là thao tác nhân viên tạo bill mới; không tự gia hạn/thu tiền định kỳ.</span><span class="en" data-lang="en">Renewal is a staff-created bill; recurring collection/automatic renewal is not provided.</span></li><li><span data-lang="vi">Quyền lợi gồm PREPAID_VISITS, MEMBER_DISCOUNT hoặc RECURRING.</span><span class="en" data-lang="en">Benefit modes include PREPAID_VISITS, MEMBER_DISCOUNT or RECURRING.</span></li></ol><div class="note flow-callout"><span data-lang="vi">Bill nội bộ không phải hóa đơn thuế pháp lý hoặc cổng đăng ký khách hàng công khai.</span><span data-lang="en">Internal bills are not legal tax invoices or a public customer-signup portal.</span></div></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow">03 / State transitions</span><h2><span data-lang="vi">Một số chuyển trạng thái cần lưu ý</span><span data-lang="en">Selected state transitions</span></h2></div><p><span data-lang="vi">Đọc trạng thái cùng điều kiện chuyển; cảnh báo không đồng nghĩa tự động cập nhật bản ghi.</span><span data-lang="en">Read each state with its transition condition; an alert does not imply automatic record changes.</span></p></div>
+      <div class="table-wrap"><table class="state-table"><thead><tr><th><span data-lang="vi">Đối tượng</span><span data-lang="en">Entity</span></th><th><span data-lang="vi">Luồng trạng thái mẫu</span><span data-lang="en">Example state flow</span></th><th><span data-lang="vi">Điều kiện / ngoại lệ</span><span data-lang="en">Condition / exception</span></th></tr></thead><tbody>
+        <tr><td><span data-lang="vi">Vật nuôi nhập</span><span class="en" data-lang="en">Intake animal</span></td><td><span class="state-code">PENDING_INSPECTION → AVAILABLE / QUARANTINE / TREATMENT</span></td><td><span data-lang="vi">Kết quả do nhân viên ghi sau kiểm tra.</span><span class="en" data-lang="en">Staff record the result after inspection.</span></td></tr>
+        <tr><td><span data-lang="vi">Đơn vật nuôi</span><span class="en" data-lang="en">Animal order</span></td><td><span class="state-code">OPEN → PAID</span></td><td><span data-lang="vi">Thanh toán đủ mới đánh dấu bán; payment do nhân viên xác nhận.</span><span class="en" data-lang="en">Full payment marks sold; payment is confirmed by staff.</span></td></tr>
+        <tr><td><span data-lang="vi">Đặt lịch dịch vụ</span><span class="en" data-lang="en">Service appointment</span></td><td><span class="state-code">SCHEDULED → CHECKED_IN → IN_PROGRESS → COMPLETED</span></td><td><span data-lang="vi">CANCELLED / NO_SHOW chỉ từ trạng thái được phép; bill tạo khi hoàn tất.</span><span class="en" data-lang="en">CANCELLED / NO_SHOW are allowed only from eligible states; bill is created on completion.</span></td></tr>
+        <tr><td><span data-lang="vi">Membership / bill</span><span class="en" data-lang="en">Membership / bill</span></td><td><span class="state-code">PENDING → ACTIVE</span></td><td><span data-lang="vi">Theo quy tắc thanh toán; gia hạn do nhân viên khởi tạo.</span><span class="en" data-lang="en">Under settlement rules; renewal is initiated by staff.</span></td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow">04 / Role boundaries</span><h2><span data-lang="vi">Quyền phụ thuộc vai trò</span><span data-lang="en">Access depends on role</span></h2></div><p><span data-lang="vi">Menu và thao tác quản lý được ẩn/cho phép theo quyền; đây là tóm tắt, không thay ma trận phân quyền trong ứng dụng.</span><span data-lang="en">Navigation and management actions are filtered by permission; this is a summary, not the application’s full access matrix.</span></p></div>
+      <div class="role-grid">
+        <article class="role"><strong>Admin</strong><p><span data-lang="vi">Quyền quản trị rộng; quản lý tài khoản là quyền riêng của Admin.</span><span class="en" data-lang="en">Broad administrative access; user management is Admin-only.</span></p></article>
+        <article class="role"><strong>Manager</strong><p><span data-lang="vi">Điều hành phần lớn quy trình cửa hàng; không mặc định có quyền quản lý tài khoản.</span><span class="en" data-lang="en">Runs most store workflows; does not automatically manage accounts.</span></p></article>
+        <article class="role"><strong>Veterinarian</strong><p><span data-lang="vi">Tập trung sức khỏe; không mặc định có quyền nhập hàng hoặc quản lý dịch vụ.</span><span class="en" data-lang="en">Health-focused; intake or service management is not implied.</span></p></article>
+        <article class="role"><strong>Caregiver</strong><p><span data-lang="vi">Chăm sóc và quyền lịch hẹn theo cấu hình ứng dụng.</span><span class="en" data-lang="en">Care and appointment permissions as configured in the app.</span></p></article>
+        <article class="role"><strong>Sales</strong><p><span data-lang="vi">Bán hàng, hội viên và lịch dịch vụ theo quyền được cấp.</span><span class="en" data-lang="en">Sales, memberships and appointments under granted permissions.</span></p></article>
+        <article class="role"><strong><span data-lang="vi">Phân quyền cụ thể</span><span data-lang="en">Specific permission</span></strong><p><span data-lang="vi">Danh mục dịch vụ, tài khoản, audit và backup có quyền hẹp riêng.</span><span class="en" data-lang="en">Service catalog, accounts, audit and backup have narrower permissions.</span></p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow">05 / Exceptions & close</span><h2><span data-lang="vi">Ngoại lệ, thông báo & kết thúc phiên</span><span data-lang="en">Exceptions, alerts & shutdown</span></h2></div></div>
+      <ul class="exception-list">
+        <li><strong><span data-lang="vi">Đăng nhập thất bại</span><span data-lang="en">Failed sign-in</span></strong><p><span data-lang="vi">Không vào workspace; sự kiện thất bại có thể không gắn actor.</span><span data-lang="en">No workspace access; a failed event may have no actor.</span></p></li>
+        <li><strong><span data-lang="vi">Đặt giữ quá ngày</span><span data-lang="en">Reservation past date</span></strong><p><span data-lang="vi">Tạo cảnh báo để nhân viên xử lý; không tự hết hạn/giải phóng.</span><span data-lang="en">Raises an alert for staff follow-up; it does not auto-expire or release.</span></p></li>
+        <li><strong><span data-lang="vi">Dữ liệu không hợp lệ</span><span data-lang="en">Invalid input</span></strong><p><span data-lang="vi">Validation từ chối ghi và hiển thị lỗi; phải sửa đầu vào hoặc điều kiện nghiệp vụ.</span><span data-lang="en">Validation rejects the write and shows an error; correct input or business conditions.</span></p></li>
+        <li><strong><span data-lang="vi">Cảnh báo vận hành</span><span data-lang="en">Operational alerts</span></strong><p><span data-lang="vi">Tính từ điều kiện dữ liệu hiện tại: chăm sóc đến hạn, tiêm chủng, tồn thấp, gần hạn và reservation quá ngày.</span><span data-lang="en">Computed from current conditions: due care, vaccination, low stock, near expiry and overdue reservations.</span></p></li>
+        <li><strong><span data-lang="vi">Audit log</span><span data-lang="en">Audit log</span></strong><p><span data-lang="vi">Ghi một số sự kiện chọn lọc; không phải mọi click và không đảm bảo diff trước/sau đầy đủ.</span><span data-lang="en">Records selected events, not every click or a guaranteed full before/after diff.</span></p></li>
+        <li><strong><span data-lang="vi">Sao lưu & đóng ứng dụng</span><span data-lang="en">Backup & shutdown</span></strong><p><span data-lang="vi">Backup SQLite là thao tác theo yêu cầu tạo file riêng; UI hiện không có luồng restore. Đóng app đóng kết nối DB; không ghi logout event trong luồng shutdown.</span><span data-lang="en">On-demand SQLite backup creates a separate file; the UI has no restore flow. Shutdown closes the DB connection; no logout event is written in the shutdown path.</span></p></li>
+      </ul>
+      <div class="note flow-callout"><strong><span data-lang="vi">Giới hạn triển khai.</span><span data-lang="en">Deployment boundary.</span></strong> <span data-lang="vi">Ứng dụng là desktop cục bộ; thanh toán do nhân viên xác nhận. Không có cổng thanh toán, đăng ký khách hàng công khai, tự gia hạn hay hóa đơn thuế pháp lý.</span><span data-lang="en">The app is a local desktop tool; staff confirm payments. There is no payment gateway, public customer signup, automatic renewal or legal tax invoice.</span></div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow">06 / Verification trace</span><h2><span data-lang="vi">Truy vết quy tắc và kiểm thử</span><span data-lang="en">Rule and test traceability</span></h2></div></div>
+      <div class="grid">
+        <article class="tile"><span class="tile-kicker">State and database rules</span><h3><span data-lang="vi">Tiếp nhận, tồn kho, đơn hàng</span><span data-lang="en">Intake, inventory, orders</span></h3><p><span data-lang="vi">Đối chiếu các chuyển trạng thái và quy tắc lô với test_inventory.py, test_sales.py và test_operations.py; phạm vi chính xác tùy từng assertion.</span><span class="en" data-lang="en">Cross-check state transitions and batch rules against test_inventory.py, test_sales.py and test_operations.py; exact coverage depends on each assertion.</span></p></article>
+        <article class="tile"><span class="tile-kicker">Service and membership rules</span><h3><span data-lang="vi">Lịch hẹn, bill, hội viên</span><span data-lang="en">Appointments, bills, memberships</span></h3><p><span data-lang="vi">Tra cứu test_services.py và test_memberships.py; không suy ra mọi nhánh trên sơ đồ đã được tự động kiểm thử.</span><span class="en" data-lang="en">Review test_services.py and test_memberships.py; do not infer that every branch in this map was automatically tested.</span></p></article>
+        <article class="tile"><span class="tile-kicker">Submission record</span><h3><span data-lang="vi">Đầu ra cần lưu</span><span data-lang="en">Evidence to retain</span></h3><p><span data-lang="vi">Ghi revision, lệnh chạy, kết quả và lỗi còn mở. Sơ đồ thể hiện quy tắc thiết kế/triển khai, không phải bằng chứng pilot hay hiệu quả kinh doanh.</span><span class="en" data-lang="en">Record the revision, command, results and open failures. This map describes design/implementation rules, not pilot evidence or business impact.</span></p></article>
+      </div>
+    </section>
+    <footer class="site-footer"><span>PetCare / <span data-lang="vi">Luồng vận hành</span><span data-lang="en">Operational workflow</span></span><a href="workflow_story.html"><span data-lang="vi">Mở câu chuyện demo</span><span data-lang="en">Open the demo story</span></a></footer>
+  </main>
+  <script src="scripts/document_language.js" defer></script>
+</body>
+</html>

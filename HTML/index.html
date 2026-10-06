@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PetCare project hub with the technical report, verified scope, workflows, module references and interactive presentation deck.">
+  <title>PetCare | Project Hub</title>
+  <link rel="stylesheet" href="styles/petcare_pages.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html"><span class="brand-mark">P</span> PetCare / Project files</a>
+      <div class="header-actions">
+        <nav class="header-nav" aria-label="Primary navigation">
+          <a href="workflow.html">Workflow</a><a href="project_overview.html">Overview</a><a href="report_final.html">Report</a><a href="project_slides.html"><span data-lang="vi">Trình chiếu</span><span data-lang="en">Presentation</span></a><a href="Module/index.html"><span data-lang="vi">Thư viện tài liệu</span><span data-lang="en">Document library</span></a>
+        </nav>
+        <button class="lang-button" type="button" aria-label="Switch language" onclick="document.body.classList.toggle('show-en'); this.textContent = document.body.classList.contains('show-en') ? 'VI' : 'EN'">EN</button>
+      </div>
+    </div>
+  </header>
+  <main class="page-shell">
+    <section class="page-hero">
+      <span class="eyebrow">Local-first desktop system</span>
+      <h1>PetCare<br>Operations, connected.</h1>
+      <p class="lede"><span data-lang="vi">Một ứng dụng desktop nội bộ giúp cửa hàng thú cưng quản lý hồ sơ vật nuôi, chăm sóc, khách hàng, kho, bán hàng và lịch dịch vụ trên cùng một cơ sở dữ liệu SQLite.</span><span class="en" data-lang="en">An internal desktop application for pet businesses to manage animal records, care, customers, inventory, sales and service schedules in one SQLite database.</span></p>
+      <div class="hero-foot"><span class="tag">Python + PySide6</span><span class="tag">SQLite on one machine</span><span class="tag">Offline recommendations</span><span class="tag">Windows 10/11</span></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow">Browse the project</span><h2>Project library</h2></div><p><span data-lang="vi">Mỗi tài liệu giữ một mục đích riêng; nội dung được đối chiếu với phạm vi ứng dụng hiện tại.</span><span data-lang="en">Each document keeps its own purpose; project claims are aligned with the current application scope.</span></p></div>
+      <div class="grid">
+        <a class="tile" href="project_overview.html"><span class="tile-kicker">01 / Context</span><h3><span data-lang="vi">Tổng quan dự án</span><span data-lang="en">Project overview</span></h3><p><span data-lang="vi">Mục tiêu, người dùng, phạm vi và kiến trúc cốt lõi.</span><span class="en" data-lang="en">Goals, users, scope and core architecture.</span></p></a>
+        <a class="tile" href="business_case.html"><span class="tile-kicker">02 / Rationale</span><h3>Business case</h3><p><span data-lang="vi">Vấn đề vận hành, giá trị kỳ vọng, giả định và giới hạn.</span><span class="en" data-lang="en">Operational problem, expected value, assumptions and limits.</span></p></a>
+        <a class="tile" href="executive_summary.html"><span class="tile-kicker">03 / Brief</span><h3><span data-lang="vi">Tóm tắt điều hành</span><span data-lang="en">Executive summary</span></h3><p><span data-lang="vi">Bản tóm lược ngắn dành cho người ra quyết định.</span><span class="en" data-lang="en">A concise brief for decision-makers.</span></p></a>
+        <a class="tile" href="workflow.html"><span class="tile-kicker">04 / Operations</span><h3><span data-lang="vi">Quy trình vận hành</span><span data-lang="en">Operational workflow</span></h3><p><span data-lang="vi">Từ khởi chạy và đăng nhập đến nghiệp vụ, lưu trữ và kiểm toán.</span><span class="en" data-lang="en">From startup and sign-in through operations, persistence and audit.</span></p></a>
+        <a class="tile" href="project_workflow_full.html"><span class="tile-kicker">05 / System flow</span><h3><span data-lang="vi">Luồng hệ thống đầy đủ</span><span data-lang="en">Full system workflow</span></h3><p><span data-lang="vi">Luồng dữ liệu và trách nhiệm giữa các phân hệ.</span><span class="en" data-lang="en">Data flow and responsibilities across modules.</span></p></a>
+        <a class="tile" href="report_final.html"><span class="tile-kicker">06 / Documentation</span><h3><span data-lang="vi">Báo cáo dự án</span><span data-lang="en">Final project report</span></h3><p><span data-lang="vi">Thiết kế, chức năng, bảo mật, quy trình và giới hạn.</span><span class="en" data-lang="en">Design, functions, security, workflows and limitations.</span></p></a>
+        <a class="tile" href="operations_snapshot.html"><span class="tile-kicker">07 / Snapshot</span><h3><span data-lang="vi">Ảnh chụp vận hành</span><span data-lang="en">Operations snapshot</span></h3><p><span data-lang="vi">Màn hình mẫu; dữ liệu minh họa được ghi nhãn rõ ràng.</span><span class="en" data-lang="en">A sample view with illustrative data clearly identified.</span></p></a>
+        <a class="tile" href="roadmap.html"><span class="tile-kicker">08 / Next steps</span><h3>Roadmap</h3><p><span data-lang="vi">Các hướng phát triển đề xuất, không phải tính năng đã phát hành.</span><span class="en" data-lang="en">Proposed development directions, not shipped features.</span></p></a>
+        <a class="tile" href="product_showcase.html"><span class="tile-kicker">09 / Product</span><h3><span data-lang="vi">Giới thiệu sản phẩm</span><span data-lang="en">Product showcase</span></h3><p><span data-lang="vi">Nhóm tính năng và hành trình sử dụng chính.</span><span class="en" data-lang="en">Feature groups and the primary user journey.</span></p></a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow">Reports & presentations</span><h2>Review and present</h2></div><p><span data-lang="vi">Các chỉ số trên dashboard demo là dữ liệu mẫu, không phải kết quả kinh doanh đã đo lường.</span><span data-lang="en">Dashboard figures are sample data, not measured business results.</span></p></div>
+      <div class="split-list">
+        <div class="list-item"><a href="report_kpi_board.html">KPI board</a><span>Sample metrics, clearly marked</span></div>
+        <div class="list-item"><a href="report_business_review.html">Business review</a><span>Value, risks and assumptions</span></div>
+        <div class="list-item"><a href="project_slides_final.html">Final slides / VI</a><span>12-slide project presentation</span></div>
+        <div class="list-item"><a href="project_slides.html">Project presentation</a><span>10-slide interactive bilingual deck</span></div>
+        <div class="list-item"><a href="slides_pitch.html">Pitch brief</a><span>Problem, solution, impact</span></div>
+        <div class="list-item"><a href="slides_demo.html">Demo walkthrough</a><span>Product flow and functions</span></div>
+        <div class="list-item"><a href="workflow_story.html">Workflow story</a><span>Business lifecycle narrative</span></div>
+        <div class="list-item"><a href="app_interface_preview.html">Interface preview</a><span>Screen concepts and navigation</span></div>
+        <div class="list-item"><a href="Module/index.html">Reports & module library</a><span>Browse and preview all 37 HTML documents</span></div>
+        <div class="list-item"><a href="petcare_demo_full.html">Interactive app demo</a><span>Static sample records and panels</span></div>
+        <div class="list-item"><a href="projext%20_Full.html">Master directory</a><span>Legacy filename retained</span></div>
+      </div>
+      <div class="note"><strong>Scope note.</strong> <span data-lang="vi">PetCare hiện là ứng dụng desktop chạy cục bộ, không phải dịch vụ SaaS đa chi nhánh. Thanh toán được nhân viên xác nhận; gợi ý sản phẩm chạy bằng luật ngoại tuyến; dữ liệu danh mục mẫu cần được cửa hàng rà soát.</span><span data-lang="en">PetCare is currently a local desktop application, not a multi-branch SaaS service. Staff confirm payments; product suggestions use offline rules; sample catalog data requires store review.</span></div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow">Competition review path</span><h2><span data-lang="vi">Trình tự trình bày hồ sơ</span><span data-lang="en">Project review sequence</span></h2></div><p><span data-lang="vi">Đi từ vấn đề và kiến trúc đến bằng chứng, sau đó mới thảo luận tác động kỳ vọng.</span><span data-lang="en">Move from the problem and architecture to evidence before discussing expected impact.</span></p></div>
+      <div class="split-list">
+        <div class="list-item"><a href="executive_summary.html">01 / Executive summary</a><span>Scope, decision, and evidence boundary</span></div>
+        <div class="list-item"><a href="business_case.html">02 / Business case</a><span>Problem, assumptions, pilot decision method</span></div>
+        <div class="list-item"><a href="report_final.html">03 / Technical report</a><span>Architecture, verification, risks, evaluation plan</span></div>
+        <div class="list-item"><a href="workflow.html">04 / Operational workflow</a><span>Roles, state transitions, and exceptions</span></div>
+        <div class="list-item"><a href="Module/index.html">05 / Module evidence</a><span>Responsibilities, boundaries, related test suites</span></div>
+        <div class="list-item"><a href="project_slides.html">06 / Presentation</a><span>10-slide bilingual interactive deck</span></div>
+        <div class="list-item"><a href="slides_demo.html">07 / Demonstration</a><span>Static walkthrough; sample data only</span></div>
+      </div>
+      <div class="note"><strong>Evidence rule.</strong> <span data-lang="vi">Chỉ trình bày kết quả kiểm thử đã chạy trên đúng phiên bản; dashboard, deck và demo tĩnh không phải bằng chứng tác động kinh doanh.</span><span data-lang="en">Present test results only when run on the submitted revision; static dashboards, decks, and demos are not evidence of business impact.</span></div>
+    </section>
+    <footer class="site-footer"><span>PetCare / Project documentation</span><span>Python · PySide6 · SQLite</span></footer>
+  </main>
+  <script src="scripts/document_language.js" defer></script>
+</body>
+</html>
