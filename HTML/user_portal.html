@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Giao diện mô phỏng dành cho khách hàng và nhân viên PetCare.">
+  <title>PetCare | User Workspace</title>
+  <link rel="stylesheet" href="styles/petcare_pages.css">
+  <style>
+    :root { --portal-ink:#17231f; --portal-muted:#66746c; --portal-line:#dce5de; --portal-paper:#eef4ef; --portal-white:#fff; --portal-green:#176b4d; --portal-deep:#103c2d; --portal-lime:#c9ef72; --portal-coral:#ef785b; --portal-blue:#47758a; }
+    body { min-height:100vh; color:var(--portal-ink); background:var(--portal-paper); font:13px/1.5 'DM Sans','Trebuchet MS',sans-serif; }
+    button,input,select { font:inherit; }
+    [hidden] { display:none !important; }
+    .app-frame { width:min(1500px,calc(100% - 28px)); min-height:calc(100vh - 28px); display:grid; grid-template-columns:224px minmax(0,1fr); margin:14px auto; overflow:hidden; border:1px solid var(--portal-line); border-radius:7px; background:#f8faf7; box-shadow:0 16px 50px rgba(20,56,39,.08); }
+    .side { display:flex; flex-direction:column; padding:19px 12px 13px; color:#eff7ef; background:var(--portal-deep); }
+    .brand { display:flex; align-items:center; gap:10px; padding:2px 8px 18px; border-bottom:1px solid rgba(255,255,255,.14); color:#fff; font-weight:800; letter-spacing:.04em; }
+    .brand-mark { width:34px; height:34px; display:grid; place-items:center; border-radius:10px 10px 10px 3px; color:var(--portal-deep); background:var(--portal-lime); font:700 18px Georgia,serif; }
+    .role-label { margin:17px 8px 7px; color:#a6c3ae; font-size:9px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .role-switch { width:100%; min-height:37px; padding:6px 9px; border:1px solid rgba(255,255,255,.23); border-radius:4px; color:#fff; background:#174c38; }
+    .side-nav { display:grid; gap:4px; margin-top:17px; }
+    .side-nav button { min-height:39px; display:flex; align-items:center; gap:10px; padding:7px 10px; border:0; border-radius:4px; color:#dceae0; background:transparent; text-align:left; cursor:pointer; }
+    .side-nav button:hover { background:rgba(255,255,255,.08); }
+    .side-nav button[aria-current="page"] { color:#183b2b; background:var(--portal-lime); font-weight:800; }
+    .nav-mark { width:20px; color:#b5cfbd; font-size:10px; font-weight:800; text-align:center; }
+    .side-nav button[aria-current="page"] .nav-mark { color:var(--portal-deep); }
+    .side-foot { margin-top:auto; padding:13px 8px 0; border-top:1px solid rgba(255,255,255,.14); color:#b5cfbd; font-size:10px; }
+    .side-foot strong { display:block; margin-bottom:3px; color:#fff; }
+    .main { min-width:0; }
+    .topbar { min-height:64px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 22px; border-bottom:1px solid var(--portal-line); background:#fff; }
+    .crumb { color:var(--portal-muted); font-size:11px; }
+    .top-tools { display:flex; align-items:center; gap:8px; }
+    .demo-flag { padding:5px 8px; border:1px solid #edcfad; border-radius:3px; color:#825326; background:#fff6e9; font-size:9px; font-weight:800; letter-spacing:.06em; }
+    .icon-button { width:35px; height:35px; display:grid; place-items:center; border:1px solid var(--portal-line); border-radius:4px; color:var(--portal-ink); background:#fff; cursor:pointer; }
+    .account { display:flex; align-items:center; gap:8px; color:var(--portal-muted); font-size:10px; }
+    .avatar { width:30px; height:30px; display:grid; place-items:center; border-radius:50%; color:#fff; background:var(--portal-green); font-weight:800; }
+    .content { padding:22px clamp(14px,2.4vw,30px) 32px; }
+    .view { display:none; }
+    .view.active { display:block; animation:arrive .22s ease both; }
+    @keyframes arrive { from { opacity:.4; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+    .welcome { display:flex; align-items:flex-end; justify-content:space-between; gap:18px; margin-bottom:17px; }
+    .eyebrow { color:var(--portal-green); font-size:9px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; }
+    h1,h2,h3 { font-family:'Newsreader',Georgia,serif; font-weight:500; line-height:1.1; }
+    .welcome h1 { margin:5px 0 5px; font-size:34px; }
+    .welcome p { margin:0; color:var(--portal-muted); font-size:12px; }
+    .button { min-height:36px; display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:7px 11px; border:1px solid var(--portal-line); border-radius:4px; color:var(--portal-ink); background:#fff; font-size:11px; font-weight:700; cursor:pointer; }
+    .button:hover { border-color:var(--portal-green); color:var(--portal-green); }
+    .button.primary { border-color:var(--portal-green); color:#fff; background:var(--portal-green); }
+    .button.primary:hover { background:#10573e; }
+    .button:focus-visible,.side-nav button:focus-visible,.icon-button:focus-visible,input:focus-visible,select:focus-visible { outline:2px solid var(--portal-coral); outline-offset:2px; }
+    .notice { margin-bottom:15px; padding:9px 11px; border-left:3px solid #c28735; color:#684c20; background:#fff7e8; font-size:10px; }
+    .metric-row { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:13px; }
+    .metric,.panel { min-width:0; border:1px solid var(--portal-line); border-radius:5px; background:#fff; }
+    .metric { padding:13px 14px; }
+    .metric-label { color:var(--portal-muted); font-size:10px; }
+    .metric-value { display:block; margin:6px 0 2px; color:var(--portal-deep); font-size:23px; font-weight:800; font-variant-numeric:tabular-nums; }
+    .metric-note { color:var(--portal-muted); font-size:10px; }
+    .dashboard-grid { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(245px,.8fr); gap:12px; align-items:start; }
+    .panel { padding:15px; }
+    .panel + .panel { margin-top:11px; }
+    .panel-title { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:11px; }
+    .panel-title h2 { margin:0; font-size:18px; }
+    .panel-title small { color:var(--portal-muted); font-size:10px; }
+    .pet-strip { display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:11px; padding:12px; border:1px solid var(--portal-line); border-radius:4px; background:#f7faf6; }
+    .pet-avatar { width:42px; height:42px; display:grid; place-items:center; border-radius:50%; color:#fff; background:var(--portal-coral); font:700 18px Georgia,serif; }
+    .pet-strip strong { display:block; font-size:12px; }
+    .pet-strip small { color:var(--portal-muted); font-size:10px; }
+    .pet-tag { padding:4px 7px; border-radius:3px; color:#315842; background:#e9f2e9; font-size:9px; font-weight:700; }
+    .appointment { display:grid; grid-template-columns:58px minmax(0,1fr) auto; align-items:center; gap:12px; padding:12px 0; border-top:1px solid #edf1ed; }
+    .appointment:first-of-type { border-top:0; }
+    .date-block { padding:7px 5px; border-radius:4px; color:var(--portal-deep); background:#edf5ee; text-align:center; }
+    .date-block b { display:block; font-size:16px; line-height:1.1; }
+    .date-block small { font-size:9px; font-weight:800; text-transform:uppercase; }
+    .appointment strong { display:block; font-size:11px; }
+    .appointment p { margin:2px 0 0; color:var(--portal-muted); font-size:10px; }
+    .status { padding:4px 7px; border-radius:3px; color:#236143; background:#edf5ef; font-size:9px; font-weight:800; white-space:nowrap; }
+    .status.wait { color:#805814; background:#fff5df; }
+    .list { display:grid; }
+    .list-item { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 0; border-top:1px solid #edf1ed; }
+    .list-item:first-child { border-top:0; }
+    .list-item strong { display:block; font-size:11px; }
+    .list-item small { color:var(--portal-muted); font-size:10px; }
+    .progress { height:6px; overflow:hidden; border-radius:6px; background:#e7eee8; }
+    .progress span { height:100%; display:block; border-radius:inherit; background:var(--portal-green); transition:width .2s ease; }
+    .progress-label { display:flex; justify-content:space-between; gap:8px; margin:8px 0 6px; color:var(--portal-muted); font-size:10px; }
+    .data-table-wrap { overflow:auto; border:1px solid var(--portal-line); border-radius:4px; }
+    .data-table { width:100%; border-collapse:collapse; text-align:left; }
+    .data-table th,.data-table td { padding:9px 10px; border-bottom:1px solid #edf1ed; vertical-align:middle; }
+    .data-table th { color:var(--portal-muted); background:#f6f8f5; font-size:9px; text-transform:uppercase; white-space:nowrap; }
+    .data-table td { font-size:11px; }
+    .toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; }
+    .toolbar input,.toolbar select { height:35px; min-width:150px; padding:0 9px; border:1px solid var(--portal-line); border-radius:4px; background:#fff; }
+    .empty { padding:25px 12px; color:var(--portal-muted); text-align:center; }
+    dialog { width:min(430px,calc(100% - 28px)); padding:0; border:1px solid var(--portal-line); border-radius:6px; color:var(--portal-ink); box-shadow:0 24px 70px rgba(0,0,0,.22); }
+    dialog::backdrop { background:rgba(14,38,28,.42); }
+    .dialog-body { padding:18px; }
+    .dialog-body h2 { margin:0 0 5px; font-size:22px; }
+    .dialog-body p { margin:0 0 13px; color:var(--portal-muted); font-size:11px; }
+    .dialog-body label { display:grid; gap:5px; margin-top:10px; color:var(--portal-muted); font-size:10px; font-weight:700; }
+    .dialog-body input,.dialog-body select { height:37px; padding:7px 9px; border:1px solid var(--portal-line); border-radius:4px; background:#fff; }
+    .dialog-actions { display:flex; justify-content:flex-end; gap:7px; margin-top:16px; }
+    .toast { position:fixed; right:20px; bottom:20px; z-index:5; max-width:min(360px,calc(100% - 40px)); padding:11px 14px; border-radius:4px; color:#fff; background:var(--portal-deep); box-shadow:0 8px 25px #193d2b30; font-size:11px; }
+    @media(max-width:960px) { .app-frame { grid-template-columns:190px minmax(0,1fr); } .dashboard-grid { grid-template-columns:1fr; } }
+    @media(max-width:700px) { .app-frame { width:100%; min-height:100vh; grid-template-columns:1fr; margin:0; border:0; border-radius:0; } .side { padding:12px; } .brand { padding-bottom:10px; } .role-label { margin-top:10px; } .side-nav { grid-template-columns:repeat(4,minmax(0,1fr)); margin-top:10px; } .side-nav button { min-height:36px; justify-content:center; padding:6px; font-size:10px; } .side-nav .nav-mark { display:none; } .side-foot { display:none; } .topbar { min-height:54px; padding:8px 13px; } .content { padding:17px 13px 26px; } .welcome { align-items:flex-start; flex-direction:column; } .welcome h1 { font-size:29px; } .metric-row { grid-template-columns:1fr 1fr; } .metric:last-child { grid-column:1/-1; } }
+    @media(max-width:420px) { .demo-flag { display:none; } .account .account-name { display:none; } .side-nav { grid-template-columns:repeat(2,minmax(0,1fr)); } .appointment { grid-template-columns:48px minmax(0,1fr); } .appointment .status { grid-column:2; justify-self:start; } .pet-strip { grid-template-columns:auto minmax(0,1fr); } .pet-tag { grid-column:2; justify-self:start; } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms !important; transition-duration:.01ms !important; } }
+  </style>
+</head>
+<body>
+  <div class="app-frame">
+    <aside class="side">
+      <a class="brand" href="index.html"><span class="brand-mark">P</span><span>PetCare<br><small style="color:#b5cfbd;font-size:9px;font-weight:500;letter-spacing:0">Care, made clear</small></span></a>
+      <label class="role-label" for="role-select">Chế độ trải nghiệm</label>
+      <select class="role-switch" id="role-select" aria-label="Chọn chế độ giao diện"><option value="customer">Khách hàng</option><option value="staff">Nhân viên</option></select>
+      <nav class="side-nav" id="side-nav" aria-label="Điều hướng chính"></nav>
+      <div class="side-foot"><strong>DEMO WORKSPACE</strong>Dữ liệu mẫu trên trình duyệt<br>Không kết nối tài khoản hoặc database.</div>
+    </aside>
+    <main class="main">
+      <header class="topbar"><div class="crumb" id="crumb">Khách hàng / Tổng quan</div><div class="top-tools"><span class="demo-flag">BẢN MÔ PHỎNG</span><button class="icon-button" id="notifications" type="button" aria-label="Thông báo" title="Thông báo">!</button><div class="account"><span class="avatar" id="account-avatar">LA</span><span class="account-name" id="account-name">Linh Anh</span></div></div></header>
+      <div class="content">
+        <div class="notice"><strong>Prototype tĩnh:</strong> thông tin và thao tác chỉ chạy trong trang này, không đăng nhập thật, không ghi vào SQLite.</div>
+        <section class="view active" id="view-home" aria-labelledby="home-title">
+          <div class="welcome"><div><span class="eyebrow" id="home-eyebrow">Customer portal</span><h1 id="home-title">Chào Linh, Miso khỏe chứ?</h1><p id="home-subtitle">Lịch chăm sóc và thông tin thú cưng của bạn, gói gọn một nơi.</p></div><button class="button primary" id="primary-action" type="button">+ Đặt lịch chăm sóc</button></div>
+          <div class="metric-row" id="metrics"></div>
+          <div class="dashboard-grid">
+            <div>
+              <section class="panel" id="main-panel"></section>
+              <section class="panel" id="secondary-panel"></section>
+            </div>
+            <div>
+              <section class="panel" id="side-panel"></section>
+              <section class="panel" id="action-panel"></section>
+            </div>
+          </div>
+        </section>
+        <section class="view" id="view-list" aria-labelledby="list-title">
+          <div class="welcome"><div><span class="eyebrow" id="list-eyebrow">PetCare</span><h1 id="list-title">Hồ sơ</h1><p id="list-subtitle">Theo dõi thông tin và hoạt động.</p></div><button class="button primary" id="list-action" type="button">Thêm mới</button></div>
+          <section class="panel"><div class="toolbar"><input id="list-search" type="search" placeholder="Tìm theo tên hoặc nội dung"><select id="list-filter" aria-label="Lọc danh sách"><option value="all">Tất cả trạng thái</option><option value="upcoming">Sắp tới</option><option value="done">Hoàn tất</option></select></div><div id="list-content"></div></section>
+        </section>
+      </div>
+    </main>
+  </div>
+  <dialog id="booking-dialog"><form method="dialog" class="dialog-body" id="booking-form"><span class="eyebrow">PETCARE / APPOINTMENT</span><h2>Đặt lịch chăm sóc</h2><p>Chọn dịch vụ và khung giờ mong muốn. Đây là xác nhận minh họa.</p><label>Thú cưng<select name="pet"><option>Miso · Mèo</option><option>Đậu · Chó</option></select></label><label>Dịch vụ<select name="service"><option>Khám sức khỏe định kỳ</option><option>Tắm và vệ sinh</option><option>Tư vấn dinh dưỡng</option></select></label><label>Ngày mong muốn<input name="date" type="date" required></label><label>Ghi chú<input name="note" type="text" placeholder="Điều cần lưu ý"></label><div class="dialog-actions"><button class="button" value="cancel">Hủy</button><button class="button primary" id="confirm-booking" value="confirm">Gửi yêu cầu</button></div></form></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <script>
+    const customerNav=[['home','Tổng quan','OV'],['pets','Thú cưng','PET'],['appointments','Lịch hẹn','CAL'],['care','Chăm sóc','CARE']];
+    const staffNav=[['home','Tổng quan','OV'],['appointments','Lịch hẹn','CAL'],['pets','Hồ sơ thú','PET'],['inventory','Kho hàng','STK']];
+    const customerAppointments=[{day:'18',month:'THG 06',title:'Khám sức khỏe định kỳ',meta:'Miso · Bác sĩ An · 09:30',status:'Đã xác nhận',kind:'upcoming'},{day:'21',month:'THG 06',title:'Tắm và vệ sinh',meta:'Đậu · Grooming · 14:00',status:'Chờ xác nhận',kind:'upcoming'},{day:'10',month:'THG 06',title:'Tiêm nhắc vaccine',meta:'Miso · Hoàn tất',status:'Hoàn tất',kind:'done'}];
+    const staffAppointments=[{day:'18',month:'09:30',title:'Khám sức khỏe định kỳ',meta:'Miso · Linh Anh · BS An',status:'Đã xác nhận',kind:'upcoming'},{day:'18',month:'10:15',title:'Tư vấn dinh dưỡng',meta:'Bắp · Minh Trang · BS An',status:'Chờ tiếp nhận',kind:'upcoming'},{day:'18',month:'11:00',title:'Tắm và vệ sinh',meta:'Đậu · Quốc Huy · Grooming',status:'Đã xác nhận',kind:'upcoming'}];
+    const staffPets=[{name:'Miso',species:'Mèo · British Shorthair',owner:'Linh Anh',status:'Theo dõi định kỳ'},{name:'Đậu',species:'Chó · Corgi',owner:'Linh Anh',status:'Lịch grooming'},{name:'Bắp',species:'Chó · Golden Retriever',owner:'Minh Trang',status:'Đang điều trị'}];
+    const inventoryRows=[{name:'Thức ăn mèo trưởng thành',sku:'FOOD-CAT-014',stock:8,status:'Sắp hết'},{name:'Dung dịch vệ sinh tai',sku:'CARE-EAR-008',stock:24,status:'Đủ hàng'},{name:'Vaccine tổng hợp',sku:'MED-VAC-003',stock:4,status:'Cần kiểm tra'}];
+    const state={role:'customer',section:'home',search:'',filter:'all',careDone:2};
+    const $=id=>document.getElementById(id);
+    function toast(message){const el=$('toast');el.textContent=message;el.hidden=false;clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.hidden=true,2600);}
+    function setNav(){const items=state.role==='customer'?customerNav:staffNav;$('side-nav').innerHTML=items.map(([key,title,mark])=>`<button type="button" data-section="${key}" aria-current="${state.section===key?'page':'false'}"><span class="nav-mark">${mark}</span>${title}</button>`).join('');$('side-nav').querySelectorAll('[data-section]').forEach(button=>button.addEventListener('click',()=>openSection(button.dataset.section)));}
+    function metric(label,value,note){return`<article class="metric"><span class="metric-label">${label}</span><strong class="metric-value">${value}</strong><span class="metric-note">${note}</span></article>`;}
+    function panelTitle(title,meta=''){return`<div class="panel-title"><h2>${title}</h2><small>${meta}</small></div>`;}
+    function appointmentRows(rows){return rows.map(item=>`<div class="appointment"><div class="date-block"><b>${item.day}</b><small>${item.month}</small></div><div><strong>${item.title}</strong><p>${item.meta}</p></div><span class="status ${item.kind==='done'?'':'wait'}">${item.status}</span></div>`).join('');}
+    function renderCustomer(){ $('account-name').textContent='Linh Anh';$('account-avatar').textContent='LA';$('crumb').textContent='Khách hàng / Tổng quan';$('home-eyebrow').textContent='CUSTOMER PORTAL / 01';$('home-title').textContent='Chào Linh, Miso khỏe chứ?';$('home-subtitle').textContent='Lịch chăm sóc và thông tin thú cưng của bạn, gói gọn một nơi.';$('primary-action').textContent='+ Đặt lịch chăm sóc';$('metrics').innerHTML=metric('Lịch sắp tới','02','Một lịch cần xác nhận')+metric('Điểm thành viên','1.240','Hạng Silver · 260 điểm lên Gold')+metric('Việc chăm tuần này',`${state.careDone}/4`,'Đã hoàn thành');$('main-panel').innerHTML=panelTitle('Lịch hẹn tiếp theo','THÁNG 06')+`<div class="pet-strip"><div class="pet-avatar">M</div><div><strong>Miso</strong><small>Mèo · British Shorthair · 4 tuổi</small></div><span class="pet-tag">Hồ sơ khỏe mạnh</span></div>`+appointmentRows(customerAppointments.slice(0,2));$('secondary-panel').innerHTML=panelTitle('Chăm sóc tuần này','2/4 hoàn tất')+`<div class="progress-label"><span>Checklist chăm sóc</span><strong>${state.careDone*25}%</strong></div><div class="progress"><span style="width:${state.careDone*25}%"></span></div><div class="list"><div class="list-item"><span><strong>Uống thuốc bổ</strong><small>Miso · Hôm nay</small></span><button class="button care-toggle" data-care="0" type="button">${state.careDone>0?'Đã xong':'Đánh dấu'}</button></div><div class="list-item"><span><strong>Chải lông</strong><small>Đậu · Hôm nay</small></span><button class="button care-toggle" data-care="1" type="button">${state.careDone>1?'Đã xong':'Đánh dấu'}</button></div></div>`;$('side-panel').innerHTML=panelTitle('Hồ sơ của bạn','2 THÚ CƯNG')+`<div class="list"><div class="list-item"><span><strong>Miso</strong><small>Mèo · 4 tuổi · 4,6 kg</small></span><span class="pet-tag">Khỏe</span></div><div class="list-item"><span><strong>Đậu</strong><small>Chó · 3 tuổi · 11,2 kg</small></span><span class="pet-tag">Khỏe</span></div></div>`;$('action-panel').innerHTML=panelTitle('Nhắc lịch','CẬP NHẬT')+`<div class="list"><div class="list-item"><span><strong>Vaccine Miso</strong><small>Nhắc lại sau 12 ngày</small></span><span class="status wait">Sắp đến</span></div><div class="list-item"><span><strong>Thức ăn định kỳ</strong><small>Dự kiến còn 5 ngày</small></span><button class="button" data-toast="Đã mở danh sách sản phẩm mẫu">Xem</button></div></div>`;}
+    function renderStaff(){ $('account-name').textContent='Nguyễn Minh';$('account-avatar').textContent='NM';$('crumb').textContent='Nhân viên / Tổng quan';$('home-eyebrow').textContent='STAFF WORKSPACE / MANAGER';$('home-title').textContent='Chào Minh, ca sáng sẵn sàng.';$('home-subtitle').textContent='Tổng quan lịch hẹn, hồ sơ cần chú ý và tồn kho trong ngày.';$('primary-action').textContent='+ Tạo lịch hẹn';$('metrics').innerHTML=metric('Lịch hôm nay','12','3 chờ tiếp nhận')+metric('Hồ sơ cần theo dõi','04','2 có cảnh báo')+metric('Mặt hàng sắp hết','03','Cần kiểm tra nhập hàng');$('main-panel').innerHTML=panelTitle('Lịch vận hành hôm nay','18 THÁNG 06')+appointmentRows(staffAppointments);$('secondary-panel').innerHTML=panelTitle('Hồ sơ cần chú ý','4 ĐANG THEO DÕI')+`<div class="list"><div class="list-item"><span><strong>Bắp · sau điều trị</strong><small>Gọi kiểm tra tình trạng · 10:30</small></span><span class="status wait">Chờ gọi</span></div><div class="list-item"><span><strong>Miso · vaccine</strong><small>Nhắc chủ nuôi · còn 12 ngày</small></span><span class="status">Đúng lịch</span></div></div>`;$('side-panel').innerHTML=panelTitle('Ca làm việc','08:00–17:00')+`<div class="list"><div class="list-item"><span><strong>Tiếp nhận</strong><small>Nguyễn Minh</small></span><span class="status">Đang trực</span></div><div class="list-item"><span><strong>Bác sĩ</strong><small>Trần Minh An</small></span><span class="status">Có mặt</span></div><div class="list-item"><span><strong>Grooming</strong><small>Quốc Huy</small></span><span class="status wait">Bận 14:00</span></div></div>`;$('action-panel').innerHTML=panelTitle('Cảnh báo kho','3 MẶT HÀNG')+inventoryRows.map(item=>`<div class="list-item"><span><strong>${item.name}</strong><small>${item.sku} · còn ${item.stock}</small></span><span class="status ${item.stock<10?'wait':''}">${item.status}</span></div>`).join('');}
+    function rowsForSection(){if(state.section==='appointments')return state.role==='customer'?customerAppointments:staffAppointments;if(state.section==='pets')return state.role==='customer'?[{name:'Miso',species:'Mèo · British Shorthair',owner:'Hồ sơ sức khỏe',status:'Khỏe mạnh'},{name:'Đậu',species:'Chó · Corgi',owner:'Lịch grooming',status:'Khỏe mạnh'}]:staffPets;if(state.section==='care')return[{name:'Uống thuốc bổ',species:'Miso · Hôm nay',owner:'Linh Anh',status:'Sắp tới'},{name:'Chải lông',species:'Đậu · Hôm nay',owner:'Linh Anh',status:'Hoàn tất'}];return inventoryRows;}
+    function openSection(section){state.section=section;setNav();const home=section==='home';$('view-home').classList.toggle('active',home);$('view-list').classList.toggle('active',!home);if(home){renderDashboard();return;}const labels={appointments:'Lịch hẹn',pets:state.role==='staff'?'Hồ sơ thú':'Thú cưng',care:'Chăm sóc',inventory:'Kho hàng'};const title=labels[section]||'Hồ sơ';$('crumb').textContent=(state.role==='staff'?'Nhân viên':'Khách hàng')+' / '+title;$('list-eyebrow').textContent=state.role==='staff'?'STAFF WORKSPACE':'CUSTOMER PORTAL';$('list-title').textContent=title;$('list-subtitle').textContent=state.role==='staff'?'Tra cứu và cập nhật các mục trong phạm vi demo.':'Theo dõi lịch và thông tin của thú cưng.';$('list-action').textContent=section==='appointments'?(state.role==='staff'?'+ Tạo lịch':'+ Đặt lịch'):'Tải danh sách';$('list-filter').hidden=section==='pets'||section==='inventory';renderList();}
+    function renderList(){const q=$('list-search').value.trim().toLocaleLowerCase();const filter=$('list-filter').value;const rows=rowsForSection().filter(item=>`${item.name||item.title} ${item.species||item.meta||''} ${item.owner||''} ${item.status||''}`.toLocaleLowerCase().includes(q)).filter(item=>filter==='all'||(filter==='done'?item.kind==='done':item.kind==='upcoming'));if(state.section==='appointments'){ $('list-content').innerHTML=rows.length?`<div class="data-table-wrap"><table class="data-table"><thead><tr><th>Ngày / giờ</th><th>Dịch vụ</th><th>Thú cưng / khách</th><th>Trạng thái</th></tr></thead><tbody>${rows.map(item=>`<tr><td>${item.day} ${item.month}</td><td>${item.title}</td><td>${item.meta}</td><td>${item.status}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">Không có lịch phù hợp bộ lọc.</div>';return;}if(state.section==='inventory'){$('list-content').innerHTML=rows.length?`<div class="data-table-wrap"><table class="data-table"><thead><tr><th>Sản phẩm</th><th>Mã</th><th>Tồn mẫu</th><th>Trạng thái</th></tr></thead><tbody>${rows.map(item=>`<tr><td>${item.name}</td><td>${item.sku}</td><td>${item.stock}</td><td>${item.status}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">Không có mặt hàng phù hợp.</div>';return;}$('list-content').innerHTML=rows.length?`<div class="data-table-wrap"><table class="data-table"><thead><tr><th>Tên</th><th>Thông tin</th><th>Chủ / ghi chú</th><th>Trạng thái</th></tr></thead><tbody>${rows.map(item=>`<tr><td>${item.name||item.title}</td><td>${item.species||item.meta}</td><td>${item.owner||'PetCare'}</td><td>${item.status}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">Không có kết quả phù hợp.</div>';}
+    function renderDashboard(){if(state.role==='customer')renderCustomer();else renderStaff();}
+    $('role-select').addEventListener('change',event=>{state.role=event.target.value;state.section='home';$('view-home').classList.add('active');$('view-list').classList.remove('active');setNav();renderDashboard();});
+    $('side-nav').addEventListener('click',event=>{const button=event.target.closest('[data-section]');if(button)openSection(button.dataset.section);});
+    $('primary-action').addEventListener('click',()=>{$('booking-dialog').showModal();});
+    $('list-action').addEventListener('click',()=>state.section==='appointments'?$('booking-dialog').showModal():toast('Thao tác minh họa đã được ghi nhận trong trang.'));
+    $('booking-form').addEventListener('submit',event=>{event.preventDefault();const date=new FormData(event.currentTarget).get('date');$('booking-dialog').close();event.currentTarget.reset();toast(`Đã ghi nhận yêu cầu lịch mẫu${date?` cho ngày ${date}`:''}. Chưa gửi tới cửa hàng.`);});
+    $('booking-form').addEventListener('click',event=>{if(event.target.value==='cancel')$('booking-dialog').close();});
+    $('list-search').addEventListener('input',renderList);$('list-filter').addEventListener('change',renderList);
+    document.addEventListener('click',event=>{const care=event.target.closest('[data-care]');if(care){state.careDone=Math.min(4,state.careDone+1);renderDashboard();toast('Đã cập nhật checklist demo.');}const action=event.target.closest('[data-toast]');if(action)toast(action.dataset.toast);});
+    $('notifications').addEventListener('click',()=>toast('Bạn không có thông báo mới trong bản mô phỏng.'));
+    setNav();renderDashboard();
+  </script>
+</body>
+</html>
