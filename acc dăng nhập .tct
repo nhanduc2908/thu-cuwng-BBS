@@ -1,0 +1,12 @@
+Đã tạo tài khoản theo từng role trong SQLite dùng chung cho cả desktop app và HTML:
+
+admin / admin
+manager / ManagerPass!2026
+veterinarian / VetPass!2026
+caregiver / CaregiverPass!2026
+sales / SalesPass!2026
+inventory_manager / InventoryPass!2026
+service_coordinator / ServicePass!2026
+customer_support / SupportPass!2026
+report_analyst / ReportPass!2026
+auditor / AuditorPass!2026 

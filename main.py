@@ -25,6 +25,7 @@ except ModuleNotFoundError as error:
     raise SystemExit(1) from error
 
 from app.database import Database
+from app.web_bridge import LocalAdminBridge
 from app.ui.auth.dialogs import ChangePasswordDialog, LoginDialog
 from app.ui.main_window import MainWindow
 
@@ -132,6 +133,17 @@ def show_startup_error(error: Exception) -> None:
 
 def main(arguments: Sequence[str] | None = None) -> int:
     """Initialize storage and authentication, then run the main window."""
+    if hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(encoding="utf-8")
+        except (AttributeError, ValueError):
+            pass
+    if hasattr(sys.stderr, "reconfigure"):
+        try:
+            sys.stderr.reconfigure(encoding="utf-8")
+        except (AttributeError, ValueError):
+            pass
+
     logging.basicConfig(level=logging.INFO)
     command_arguments = list(arguments) if arguments is not None else sys.argv[1:]
     if command_arguments == ["--reset-admin"]:
@@ -158,11 +170,13 @@ def main(arguments: Sequence[str] | None = None) -> int:
 
     application = create_application(arguments)
     database: Database | None = None
+    web_bridge: LocalAdminBridge | None = None
 
     try:
         path = database_path()
         LOGGER.info("Khởi động %s; SQLite: %s", APP_NAME, path)
         database = Database(path)
+        database.ensure_default_admin_credentials()
         if not setup_first_admin(database):
             database.close()
             return 0
@@ -176,15 +190,34 @@ def main(arguments: Sequence[str] | None = None) -> int:
         database.set_actor(user_id)
         database.record_audit(user_id, "LOGIN", "user", user_id)
 
+        web_bridge = LocalAdminBridge(path, Path(__file__).resolve().parent / "HTML")
+        try:
+            bridge_url = web_bridge.start()
+            LOGGER.info("Admin HTML + SQLite read-only bridge: %s/admin_store_management.html", bridge_url)
+        except (OSError, TimeoutError) as error:
+            LOGGER.warning("Không khởi động được cầu nối admin HTML: %s", error)
+            QMessageBox.warning(
+                None,
+                "Admin web chưa sẵn sàng",
+                "Ứng dụng desktop vẫn hoạt động, nhưng giao diện HTML không thể kết nối SQLite. "
+                f"\n\nChi tiết: {error}",
+            )
+            web_bridge = None
+
         window = MainWindow(database, current_user)
         window.show()
     except Exception as error:
         if database is not None:
             database.close()
+        if web_bridge is not None:
+            web_bridge.stop()
         show_startup_error(error)
         return 1
 
-    return application.exec()
+    exit_code = application.exec()
+    if web_bridge is not None:
+        web_bridge.stop()
+    return exit_code
 
 
 if __name__ == "__main__":

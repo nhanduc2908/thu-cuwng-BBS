@@ -1,8 +1,9 @@
-import { writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const outputDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../HTML/Module');
+const dataDir = path.resolve(outputDir, '../data');
 const modules = [
   {
     file: 'module_01_platform.html', title: ['Nền tảng & dữ liệu', 'Platform & Data'], group: ['Nền tảng', 'Platform'],
@@ -565,10 +566,99 @@ function renderChecksForOperation(module, operationIndex) {
   }).join('\n');
 }
 
+const padRecordId = value => String(value).padStart(4, '0');
+const sampleFrom = (values, value) => values[(value - 1) % values.length];
+const syntheticDate = value => {
+  const dayOffset = (value * 17) % 900;
+  return new Date(Date.UTC(2024, 0, 1) + dayOffset * 86400000).toISOString().slice(0, 10);
+};
+
+function generateSyntheticRecords(moduleId, count = 1000) {
+  return Array.from({ length: count }, (_, offset) => {
+    const sequence = offset + 1;
+    const id = padRecordId(sequence);
+    const related = padRecordId(((sequence - 1) % 1000) + 1);
+    const common = { synthetic: true };
+
+    switch (moduleId) {
+      case 'module_01_platform':
+        return { ...common, recordId: `PLT-${id}`, event: sampleFrom(['APP_START', 'DATABASE_CHECK', 'BACKUP_REVIEW', 'CONFIG_REVIEW'], sequence), occurredOn: syntheticDate(sequence), result: sampleFrom(['SAMPLE_OK', 'SAMPLE_REVIEW', 'SAMPLE_PENDING'], sequence), environment: 'LOCAL_DEMO' };
+      case 'module_02_accounts':
+        return { ...common, userId: `USR-${id}`, username: `demo.user.${id}`, displayName: `Demo Staff ${id}`, role: sampleFrom(['ADMIN', 'MANAGER', 'VETERINARIAN', 'CAREGIVER', 'SALES', 'INVENTORY_MANAGER', 'SERVICE_COORDINATOR', 'CUSTOMER_SUPPORT', 'REPORT_ANALYST', 'AUDITOR'], sequence), status: sampleFrom(['ACTIVE', 'ACTIVE', 'ACTIVE', 'REVIEW'], sequence), createdOn: syntheticDate(sequence) };
+      case 'module_03_dashboard':
+        return { ...common, snapshotId: `DASH-${id}`, snapshotDate: syntheticDate(sequence), metric: sampleFrom(['ANIMALS_TOTAL', 'OPEN_ORDERS', 'TODAY_APPOINTMENTS', 'LOW_STOCK_ALERTS'], sequence), sampleValue: (sequence * 13) % 500, source: 'SYNTHETIC_ONLY' };
+      case 'module_04_pets':
+        return { ...common, animalId: `PET-${id}`, displayName: `Demo Pet ${id}`, species: sampleFrom(['DOG', 'CAT', 'RABBIT'], sequence), breedLabel: 'Demo breed', customerId: `CUS-${related}`, status: sampleFrom(['AVAILABLE', 'PENDING_INSPECTION', 'RESERVED', 'QUARANTINE'], sequence), ageMonths: (sequence * 7) % 180 };
+      case 'module_05_housing': {
+        const capacity = 1 + (sequence % 8);
+        return { ...common, enclosureId: `ENC-${id}`, zone: sampleFrom(['A', 'B', 'C', 'Q'], sequence), acceptedSpecies: sampleFrom(['DOG', 'CAT', 'RABBIT'], sequence), capacity, occupied: sequence % (capacity + 1), status: sampleFrom(['ACTIVE', 'ACTIVE', 'CLEANING', 'REVIEW'], sequence) };
+      }
+      case 'module_06_suppliers':
+        return { ...common, supplierId: `SUP-${id}`, displayName: `Demo Supplier ${id}`, category: sampleFrom(['FOOD', 'ANIMAL', 'CARE_SUPPLIES', 'MEDICAL_SUPPLIES'], sequence), contactEmail: `supplier${id}@example.test`, status: sampleFrom(['ACTIVE', 'ACTIVE', 'REVIEW'], sequence) };
+      case 'module_07_imports':
+        return { ...common, receiptId: `IMP-${id}`, supplierId: `SUP-${related}`, receivedOn: syntheticDate(sequence), lineCount: 1 + (sequence % 12), sampleTotal: 100000 + ((sequence * 7919) % 4000000), status: sampleFrom(['DRAFT', 'PENDING', 'RECEIVED', 'RECONCILED'], sequence) };
+      case 'module_08_health':
+        return { ...common, healthRecordId: `HLT-${id}`, animalId: `PET-${related}`, recordType: sampleFrom(['OBSERVATION', 'VACCINATION_REMINDER', 'FOLLOW_UP', 'ROUTINE_CHECK'], sequence), recordedOn: syntheticDate(sequence), summary: 'Synthetic tracking record; not a diagnosis.', followUp: sequence % 3 === 0 };
+      case 'module_09_care':
+        return { ...common, taskId: `CARE-${id}`, animalId: `PET-${related}`, task: sampleFrom(['FEEDING_CHECK', 'GROOMING_CHECK', 'ENCLOSURE_CLEAN', 'BEHAVIOR_OBSERVATION'], sequence), assignedUserId: `USR-${related}`, dueOn: syntheticDate(sequence), status: sampleFrom(['OPEN', 'IN_PROGRESS', 'COMPLETED'], sequence) };
+      case 'module_10_customers':
+        return { ...common, customerId: `CUS-${id}`, displayName: `Demo Customer ${id}`, email: `customer${id}@example.test`, phone: `000-000-${id}`, linkedAnimalId: `PET-${related}`, status: sampleFrom(['ACTIVE', 'ACTIVE', 'REVIEW'], sequence) };
+      case 'module_11_reservations':
+        return { ...common, reservationId: `RSV-${id}`, customerId: `CUS-${related}`, animalId: `PET-${related}`, heldOn: syntheticDate(sequence), depositAmount: (sequence * 37000) % 2500000, status: sampleFrom(['HELD', 'PENDING_DEPOSIT', 'REFUND_PENDING', 'RELEASED'], sequence) };
+      case 'module_12_orders': {
+        const totalAmount = 100000 + ((sequence * 15431) % 7000000);
+        const paidAmount = Math.min(totalAmount, (sequence * 7331) % 7000000);
+        return { ...common, orderId: `ORD-${id}`, customerId: `CUS-${related}`, itemCode: `SKU-${related}`, totalAmount, paidAmount, status: sampleFrom(['OPEN', 'PARTIALLY_PAID', 'PAID', 'CANCELED'], sequence), openedOn: syntheticDate(sequence) };
+      }
+      case 'module_13_memberships':
+        return { ...common, membershipId: `MEM-${id}`, customerId: `CUS-${related}`, plan: sampleFrom(['BASIC_DEMO', 'SILVER_DEMO', 'CARE_PLAN_DEMO'], sequence), billingState: sampleFrom(['UNPAID', 'PARTIAL', 'SETTLED'], sequence), status: sampleFrom(['PENDING', 'ACTIVE', 'EXPIRED'], sequence), validFrom: syntheticDate(sequence) };
+      case 'module_14_services':
+        return { ...common, appointmentId: `SRV-${id}`, customerId: `CUS-${related}`, animalId: `PET-${related}`, serviceCode: sampleFrom(['BASIC_CARE', 'BATH_HYGIENE', 'ROUTINE_CHECK', 'GROOMING'], sequence), assignedUserId: `USR-${related}`, scheduledOn: syntheticDate(sequence), status: sampleFrom(['SCHEDULED', 'CHECKED_IN', 'IN_PROGRESS', 'COMPLETED', 'NO_SHOW'], sequence) };
+      case 'module_15_inventory':
+        return { ...common, productCode: `SKU-${id}`, productName: `Demo Item ${id}`, category: sampleFrom(['FOOD', 'CARE', 'ACCESSORY', 'SUPPLY'], sequence), onHand: (sequence * 11) % 180, reorderPoint: 5 + (sequence % 25), batchCode: `BATCH-${related}`, expiresOn: syntheticDate(sequence + 300) };
+      case 'module_16_reports':
+        return { ...common, reportRunId: `RPT-${id}`, reportType: sampleFrom(['INVENTORY_SUMMARY', 'SALES_SUMMARY', 'HEALTH_ACTIVITY', 'CUSTOMER_OVERVIEW'], sequence), requestedBy: `USR-${related}`, periodStart: syntheticDate(sequence), periodEnd: syntheticDate(sequence + 28), rowCount: (sequence * 19) % 1000, status: 'SYNTHETIC_PREVIEW' };
+      case 'module_17_alerts':
+        return { ...common, alertId: `ALT-${id}`, alertType: sampleFrom(['LOW_STOCK', 'NEAR_EXPIRY', 'CARE_REMINDER', 'VACCINATION_REMINDER'], sequence), sourceId: sampleFrom([`SKU-${related}`, `CARE-${related}`, `PET-${related}`], sequence), severity: sampleFrom(['INFO', 'REVIEW', 'URGENT'], sequence), createdOn: syntheticDate(sequence), status: sampleFrom(['OPEN', 'ACKNOWLEDGED', 'CLOSED'], sequence) };
+      default:
+        throw new Error(`No synthetic record schema for ${moduleId}`);
+    }
+  });
+}
+
 await writeFile(path.join(outputDir, hub.file), hub.html, 'utf8');
+await mkdir(dataDir, { recursive: true });
+for (const module of modules) {
+  const moduleId = module.file.replace(/\.html$/, '');
+  const detail = {
+    schemaVersion: 1,
+    moduleId,
+    htmlFile: module.file,
+    title: { vi: module.title[0], en: module.title[1] },
+    group: { vi: module.group[0], en: module.group[1] },
+    purpose: { vi: module.purpose[0], en: module.purpose[1] },
+    responsibilities: module.responsibilities.map(([vi, en]) => ({ vi, en })),
+    workflow: module.workflow.map(([vi, en]) => ({ vi, en })),
+    operations: module.operations.map(([vi, en]) => ({ vi, en })),
+    limitations: module.limits.map(([vi, en]) => ({ vi, en })),
+    relatedTests: moduleTestSuites[module.file] || [],
+    dataProfile: {
+      classification: 'synthetic-demo',
+      recordCount: 1000,
+      generatedBy: 'scripts/build_module_docs.mjs',
+      note: 'Generated test/demo records only. Not production data; do not use for real operations.'
+    },
+    demoData: generateSyntheticRecords(moduleId, 1000)
+  };
+  await writeFile(
+    path.join(dataDir, `${moduleId}.json`),
+    `${JSON.stringify(detail, null, 2)}\n`,
+    'utf8'
+  );
+}
 if (!process.argv.includes('--hub-only')) {
   for (const [index, module] of modules.entries()) {
     await writeFile(path.join(outputDir, module.file), renderPage(module, index), 'utf8');
   }
 }
-console.log(process.argv.includes('--hub-only') ? 'Generated the document hub.' : `Generated ${modules.length} bilingual module pages plus the module hub.`);
+console.log(process.argv.includes('--hub-only') ? `Generated the document hub and ${modules.length} module JSON files.` : `Generated ${modules.length} bilingual module pages, the module hub and ${modules.length} module JSON files.`);

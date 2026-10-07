@@ -114,6 +114,28 @@ class AuthRepository:
             )
         return int(user["id"])
 
+    def ensure_default_admin_credentials(self, username: str = "admin") -> bool:
+        normalized_username = username.strip().casefold()
+        if not normalized_username:
+            raise ValueError("Tên đăng nhập quản trị không được để trống.")
+
+        user = self.connection.execute(
+            """
+            SELECT id, password_salt, password_hash, role, is_active
+            FROM users
+            WHERE username = ?
+            """,
+            (normalized_username,),
+        ).fetchone()
+        if user is None:
+            return False
+        if user["role"] != "ADMIN":
+            return False
+        if verify_password("admin", user["password_salt"], user["password_hash"]):
+            return False
+        self.reset_admin_password(normalized_username)
+        return True
+
     def authenticate(self, username: str, password: str) -> dict[str, Any] | None:
         normalized_username = username.strip().casefold()
         user = self.connection.execute(

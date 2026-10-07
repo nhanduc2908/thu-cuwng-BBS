@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="PetCare logo">
+  <defs>
+    <linearGradient id="petcareBg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#1e6d50" />
+      <stop offset="100%" stop-color="#0f3d2f" />
+    </linearGradient>
+    <linearGradient id="petcarePaw" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#dff7a8" />
+      <stop offset="100%" stop-color="#b6ea5b" />
+    </linearGradient>
+  </defs>
+  <rect x="6" y="6" width="148" height="148" rx="32" fill="url(#petcareBg)"/>
+  <circle cx="80" cy="62" r="23" fill="#f5f8f2" opacity="0.14"/>
+  <g fill="url(#petcarePaw)">
+    <circle cx="52" cy="54" r="14"/>
+    <circle cx="80" cy="38" r="14"/>
+    <circle cx="108" cy="54" r="14"/>
+    <circle cx="64" cy="82" r="14"/>
+    <circle cx="96" cy="82" r="14"/>
+  </g>
+  <path d="M52 110c0-11 7-18 28-18s28 7 28 18v8H52v-8z" fill="#f2f7ef" opacity="0.92"/>
+  <path d="M72 38c0-7 5-12 12-12s12 5 12 12-5 12-12 12-12-5-12-12z" fill="#f2f7ef" opacity="0.18"/>
+</svg>

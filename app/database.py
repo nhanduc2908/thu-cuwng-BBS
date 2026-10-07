@@ -2229,6 +2229,18 @@ class Database:
         )
         return user_id
 
+    def ensure_default_admin_credentials(self, username: str = "admin") -> bool:
+        if self.auth.ensure_default_admin_credentials(username):
+            self.audit.record(
+                None,
+                "ADMIN_PASSWORD_RESET",
+                "user",
+                None,
+                "Startup recovered the default admin credential to admin/admin",
+            )
+            return True
+        return False
+
     def create_user(
         self,
         username: str,

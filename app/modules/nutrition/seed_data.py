@@ -157,82 +157,141 @@ CAT_PRODUCTS = [
 
 def build_extended_food_products():
     dog_recipe_templates = [
-        ('Chicken', 24, 13, 8, 3.5, ['Chicken']),
-        ('Beef', 25, 14, 9, 3.8, ['Beef']),
-        ('Fish', 23, 12, 10, 4.0, ['Fish']),
-        ('Lamb', 26, 15, 8, 3.6, ['Lamb']),
-        ('Turkey', 24, 13, 7, 3.5, ['Turkey']),
-        ('Salmon', 27, 15, 9, 3.9, ['Salmon']),
+        ('Chicken', 24, 13, 8, 3.5, ['Chicken'], 'Adult'),
+        ('Beef', 25, 14, 9, 3.8, ['Beef'], 'Adult'),
+        ('Fish', 23, 12, 10, 4.0, ['Fish'], 'Adult'),
+        ('Lamb', 26, 15, 8, 3.6, ['Lamb'], 'Adult'),
+        ('Turkey', 24, 13, 7, 3.5, ['Turkey'], 'Adult'),
+        ('Salmon', 27, 15, 9, 3.9, ['Salmon'], 'Adult'),
+        ('Duck', 28, 16, 8, 3.7, ['Duck'], 'Adult'),
+        ('Venison', 27, 15, 7, 3.8, ['Venison'], 'Adult'),
+        ('Pork', 24, 12, 9, 3.6, ['Pork'], 'Adult'),
+        ('Rabbit', 29, 16, 7, 4.1, ['Rabbit'], 'Adult'),
+        ('Puppy', 30, 17, 6, 4.2, ['Chicken'], 'Puppy'),
+        ('Senior', 22, 12, 10, 3.4, ['Chicken'], 'Senior'),
     ]
     cat_recipe_templates = [
-        ('Chicken', 30, 15, 8, 3.0, ['Chicken']),
-        ('Salmon', 31, 16, 7, 3.2, ['Fish']),
-        ('Tuna', 29, 14, 8, 3.0, ['Fish']),
-        ('Turkey', 30, 15, 7, 3.1, ['Turkey']),
-        ('Lamb', 28, 13, 9, 3.4, ['Lamb']),
-        ('Duck', 32, 17, 7, 3.2, ['Duck']),
+        ('Chicken', 30, 15, 8, 3.0, ['Chicken'], 'Adult'),
+        ('Salmon', 31, 16, 7, 3.2, ['Fish'], 'Adult'),
+        ('Tuna', 29, 14, 8, 3.0, ['Fish'], 'Adult'),
+        ('Turkey', 30, 15, 7, 3.1, ['Turkey'], 'Adult'),
+        ('Lamb', 28, 13, 9, 3.4, ['Lamb'], 'Adult'),
+        ('Duck', 32, 17, 7, 3.2, ['Duck'], 'Adult'),
+        ('Rabbit', 33, 18, 6, 3.5, ['Rabbit'], 'Adult'),
+        ('Ocean Fish', 31, 16, 8, 3.3, ['Fish'], 'Adult'),
+        ('Kitten', 36, 19, 5, 3.7, ['Chicken'], 'Kitten'),
+        ('Senior', 27, 12, 9, 2.9, ['Chicken'], 'Senior'),
     ]
 
+    def make_nutrition(base, idx, species):
+        offset = idx * 0.12
+        protein = base['protein']
+        fat = base['fat']
+        fiber = base['fiber']
+        if species == 'DOG':
+            return {
+                'calories_kcal_per_kg': 3300 + idx * 55,
+                'protein_percent': protein,
+                'fat_percent': fat,
+                'carbohydrate_percent': 30 + idx,
+                'fiber_percent': fiber,
+                'moisture_percent': 8 + (idx % 3),
+                'ash_percent': 6.5 + (idx % 3) * 0.2,
+                'energy_density': round(3.3 + idx * 0.03, 2),
+                'omega_3': round(0.65 + offset, 2),
+                'omega_6': round(1.9 + idx * 0.08, 2),
+                'dha': round(0.12 + idx * 0.015, 3),
+                'epa': round(0.08 + idx * 0.011, 3),
+                'taurine': round(0.01 + idx * 0.003, 3),
+                'calcium': round(1.0 + idx * 0.065, 2),
+                'phosphorus': round(0.8 + idx * 0.045, 2),
+                'sodium': round(0.24 + idx * 0.018, 3),
+                'potassium': round(0.7 + idx * 0.065, 2),
+                'magnesium': round(0.08 + idx * 0.005, 3),
+                'iron': round(0.012 + idx * 0.0012, 3),
+                'zinc': round(0.1 + idx * 0.0055, 3),
+                'copper': round(0.006 + idx * 0.0006, 3),
+                'manganese': round(0.004 + idx * 0.0005, 3),
+                'selenium': round(0.00023 + idx * 0.00002, 5),
+                'vitamin_a': 11000 + idx * 600,
+                'vitamin_d': 500 + idx * 35,
+                'vitamin_e': 140 + idx * 10,
+                'choline': 1700 + idx * 120,
+                'lysine': round(1.0 + idx * 0.06, 2),
+                'methionine': round(0.7 + idx * 0.04, 2),
+                'linoleic_acid': round(1.8 + idx * 0.12, 2),
+            }
+        return {
+            'calories_kcal_per_kg': 3200 + idx * 50,
+            'protein_percent': protein,
+            'fat_percent': fat,
+            'carbohydrate_percent': 24 + idx,
+            'fiber_percent': fiber,
+            'moisture_percent': 8 + (idx % 2),
+            'ash_percent': 6.2 + (idx % 2) * 0.15,
+            'energy_density': round(3.2 + idx * 0.02, 2),
+            'omega_3': round(0.7 + offset, 2),
+            'omega_6': round(1.9 + idx * 0.09, 2),
+            'dha': round(0.14 + idx * 0.015, 3),
+            'epa': round(0.09 + idx * 0.012, 3),
+            'taurine': round(0.14 + idx * 0.008, 3),
+            'calcium': round(1.0 + idx * 0.05, 2),
+            'phosphorus': round(0.8 + idx * 0.035, 2),
+            'sodium': round(0.22 + idx * 0.015, 3),
+            'potassium': round(0.6 + idx * 0.05, 2),
+            'magnesium': round(0.07 + idx * 0.004, 3),
+            'iron': round(0.012 + idx * 0.0009, 3),
+            'zinc': round(0.09 + idx * 0.0045, 3),
+            'copper': round(0.005 + idx * 0.0005, 3),
+            'manganese': round(0.003 + idx * 0.0004, 3),
+            'selenium': round(0.00022 + idx * 0.00002, 5),
+            'vitamin_a': 9500 + idx * 500,
+            'vitamin_d': 420 + idx * 30,
+            'vitamin_e': 120 + idx * 8,
+            'choline': 1600 + idx * 110,
+            'lysine': round(1.1 + idx * 0.06, 2),
+            'methionine': round(0.75 + idx * 0.04, 2),
+            'linoleic_acid': round(1.7 + idx * 0.11, 2),
+        }
+
     extra = []
-    brand_sets = [
-        'Royal Canin', 'Hill\'s Science Diet', 'Purina Pro Plan', 'Blue Buffalo',
-        'Wellness', 'Nutro', 'Iams', 'Acana', 'Eukanuba', 'Farmina', 'Pedigree', 'James Wellbeloved',
+    dog_brands = [
+        'Royal Canin', 'Hill\'s Science Diet', 'Purina Pro Plan', 'Blue Buffalo', 'Wellness', 'Nutro',
+        'Iams', 'Acana', 'Eukanuba', 'Farmina', 'Pedigree', 'James Wellbeloved', 'Canagan', 'Earthborn Holistic',
+        'Alpha Spirit', 'Barking Heads', 'Instinct', 'Natural Balance', 'Merrick', 'Halo', 'Open Farm', 'Nulo', 'Wysong', 'Advance', 'Arden Grange', 'Champion', 'Beco', 'Zignature'
     ]
-    for brand in brand_sets:
-        for idx, (protein_name, protein, fat, fiber, energy, allergens) in enumerate(dog_recipe_templates, start=1):
+    cat_brands = [
+        'Royal Canin', 'Hill\'s Science Diet', 'Purina Pro Plan', 'Blue Buffalo', 'Wellness', 'Nutro', 'Iams',
+        'Acana', 'Eukanuba', 'Farmina', 'James Wellbeloved', 'Natural Balance', 'Instinct', 'Open Farm', 'Halo', 'Nulo', 'Merrick','PureBites','Tiki Cat','Whiskas'
+    ]
+
+    for brand in dog_brands:
+        for idx, (protein_name, protein, fat, fiber, energy, allergens, stage) in enumerate(dog_recipe_templates, start=1):
+            nutrition = make_nutrition({'protein': protein, 'fat': fat, 'fiber': fiber}, idx, 'DOG')
             extra.append({
                 'species': 'DOG',
                 'brand': brand,
-                'product_name': f'{brand} {protein_name} Adult Dog Formula {idx}',
+                'product_name': f'{brand} {protein_name} {stage} Formula {idx}',
                 'food_type': 'DRY' if idx % 2 else 'WET',
-                'life_stage': 'ADULT',
-                'breed_size': 'ALL',
-                'product_code': f'{brand[:4].upper()}-{protein_name.upper()}-{idx:02d}',
-                'nutrition': {
-                    'calories_kcal_per_kg': 3300 + idx * 40,
-                    'protein_percent': protein,
-                    'fat_percent': fat,
-                    'carbohydrate_percent': 32 + idx,
-                    'fiber_percent': fiber,
-                    'moisture_percent': 8 + (idx % 3),
-                    'ash_percent': 6.2,
-                    'energy_density': energy,
-                    'omega_3': 0.6 + idx * 0.05,
-                    'omega_6': 1.8 + idx * 0.1,
-                    'taurine': 0.0,
-                    'calcium': 0.9 + idx * 0.05,
-                    'phosphorus': 0.75 + idx * 0.04,
-                    'zinc': 0.09 + idx * 0.008,
-                },
+                'life_stage': 'PUPPY' if stage == 'Puppy' else 'SENIOR' if stage == 'Senior' else 'ADULT',
+                'breed_size': 'ALL' if idx % 3 else ('SMALL' if idx % 2 else 'LARGE'),
+                'product_code': f'{brand[:4].upper()}-{stage[:3].upper()}-{protein_name.upper()}-{idx:02d}',
+                'nutrition': nutrition,
                 'allergens': allergens,
             })
 
-    for brand in brand_sets[:10]:
-        for idx, (protein_name, protein, fat, fiber, energy, allergens) in enumerate(cat_recipe_templates, start=1):
+    for brand in cat_brands:
+        for idx, (protein_name, protein, fat, fiber, energy, allergens, stage) in enumerate(cat_recipe_templates, start=1):
+            nutrition = make_nutrition({'protein': protein, 'fat': fat, 'fiber': fiber}, idx, 'CAT')
             extra.append({
                 'species': 'CAT',
                 'brand': brand,
-                'product_name': f'{brand} {protein_name} Adult Cat Formula {idx}',
+                'product_name': f'{brand} {protein_name} {stage} Formula {idx}',
                 'food_type': 'DRY' if idx % 2 else 'WET',
-                'life_stage': 'ADULT',
-                'breed_size': 'ALL',
-                'product_code': f'{brand[:4].upper()}-CAT-{protein_name.upper()}-{idx:02d}',
-                'nutrition': {
-                    'calories_kcal_per_kg': 3300 + idx * 50,
-                    'protein_percent': protein,
-                    'fat_percent': fat,
-                    'carbohydrate_percent': 25 + idx,
-                    'fiber_percent': fiber,
-                    'moisture_percent': 8 + (idx % 3),
-                    'ash_percent': 6.0,
-                    'energy_density': energy,
-                    'omega_3': 0.7 + idx * 0.05,
-                    'omega_6': 2.0 + idx * 0.1,
-                    'taurine': 0.12 + idx * 0.01,
-                    'calcium': 0.9 + idx * 0.05,
-                    'phosphorus': 0.75 + idx * 0.04,
-                    'zinc': 0.09 + idx * 0.006,
-                },
+                'life_stage': 'KITTEN' if stage == 'Kitten' else 'SENIOR' if stage == 'Senior' else 'ADULT',
+                'breed_size': 'ALL' if idx % 3 else ('SMALL' if idx % 2 else 'MEDIUM'),
+                'product_code': f'{brand[:4].upper()}-{stage[:3].upper()}-{protein_name.upper()}-{idx:02d}',
+                'nutrition': nutrition,
                 'allergens': allergens,
             })
 

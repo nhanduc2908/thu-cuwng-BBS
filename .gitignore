@@ -17,6 +17,9 @@ env/
 *.sqlite3
 backups/
 data/
+!HTML/data/
+HTML/data/*
+!HTML/data/*.json
 uploads/
 reports/
 

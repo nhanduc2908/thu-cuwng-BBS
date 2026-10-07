@@ -11,10 +11,20 @@
     body { min-height:100vh; background:var(--admin-paper); color:var(--admin-ink); font:13px/1.5 'DM Sans','Trebuchet MS',sans-serif; }
     body.login-required > .site-header { display:none; }
     button,input,select { font:inherit; }
+    .brand-logo { display:block; width:36px; height:36px; object-fit:contain; border-radius:12px; box-shadow:0 10px 20px rgba(19,47,38,.18); }
+    .brand-wordmark { display:flex; align-items:center; gap:10px; }
+    .brand-wordmark .brand-token { display:inline-flex; align-items:center; justify-content:center; min-width:36px; }
+    .brand-text { display:flex; flex-direction:column; gap:1px; }
+    .brand-text strong { font-size:12px; }
+    .brand-text small { font-size:9px; letter-spacing:.12em; opacity:.7; }
     .admin-shell { width:min(1560px,calc(100% - 28px)); min-height:calc(100vh - 88px); display:grid; grid-template-columns:228px minmax(0,1fr); margin:14px auto 24px; overflow:hidden; border:1px solid var(--admin-line); border-radius:7px; background:var(--admin-surface); box-shadow:0 12px 34px rgba(24,49,38,.07); }
-    .admin-sidebar { display:flex; min-width:0; flex-direction:column; padding:20px 12px 14px; color:#edf5ee; background:var(--admin-dark); }
+    .admin-sidebar { display:flex; min-width:0; flex-direction:column; padding:20px 12px 14px; overflow-y:auto; color:#edf5ee; background:var(--admin-dark); }
     .admin-brand { display:flex; align-items:center; gap:10px; padding:0 8px 18px; border-bottom:1px solid rgba(255,255,255,.15); color:#fff; font-size:12px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
     .admin-brand .brand-mark { width:32px; height:32px; }
+    .demo-role-row { display:grid; gap:8px; margin-top:12px; }
+    .demo-role-row label { display:grid; gap:5px; margin:0; color:var(--admin-muted); font-size:10px; font-weight:700; }
+    .demo-role-row select { width:100%; min-height:38px; padding:8px 10px; border:1px solid var(--admin-line); border-radius:4px; background:#fff; }
+    .demo-role-helper { color:var(--admin-muted); font-size:10px; line-height:1.5; }
     .sidebar-caption { margin:18px 10px 8px; color:#a8c4b1; font-size:9px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
     .admin-nav { display:grid; gap:3px; }
     .admin-nav button { min-height:38px; display:flex; align-items:center; gap:10px; padding:7px 10px; border:0; border-radius:4px; color:#dce9df; background:transparent; text-align:left; cursor:pointer; }
@@ -40,7 +50,7 @@
     .login-card .action-button { width:100%; min-height:42px; margin-top:17px; }
     .login-disclaimer { margin-top:13px; padding:9px 10px; border-left:3px solid #c28735; color:#684c20; background:#fff7e8; font-size:10px; }
     .login-error { min-height:16px; margin-top:6px; color:var(--admin-red); font-size:10px; }
-    .role-switch { height:35px; max-width:205px; padding:0 9px; border:1px solid var(--admin-line); border-radius:4px; color:var(--admin-ink); background:#fff; font-size:10px; }
+    .role-label { max-width:180px; overflow:hidden; color:var(--admin-muted); font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
     .signed-user { display:flex; align-items:center; gap:7px; color:var(--admin-muted); font-size:10px; white-space:nowrap; }
     .user-avatar { width:27px; height:27px; display:grid; place-items:center; border-radius:50%; color:#fff; background:var(--admin-green); font-size:10px; font-weight:800; }
     [hidden] { display:none !important; }
@@ -95,6 +105,11 @@
     .view-toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; }
     .view-toolbar .filters { display:flex; flex-wrap:wrap; gap:7px; }
     .table-empty { padding:26px 12px; color:var(--admin-muted); text-align:center; }
+    .module-data-panel { margin-top:12px; }
+    .module-data-panel[hidden] { display:none; }
+    .module-data-meta { margin:-3px 0 11px; color:var(--admin-muted); font-size:10px; }
+    .module-data-pages { display:flex; align-items:center; justify-content:flex-end; gap:8px; margin-top:10px; }
+    .module-data-pages span { min-width:90px; color:var(--admin-muted); font-size:10px; text-align:center; }
     .hidden-row { display:none; }
     .role-matrix { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
     .role-card { padding:13px; border:1px solid var(--admin-line); border-radius:5px; background:#fff; }
@@ -102,6 +117,13 @@
     .role-card p { margin:0; color:var(--admin-muted); font-size:11px; }
     .permission-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:9px; }
     .permission-tags span { padding:3px 6px; border:1px solid var(--admin-line); border-radius:3px; color:#42534a; background:#f7f9f7; font-size:9px; }
+    .permission-summary { margin-top:18px; padding:14px; border:1px solid var(--admin-line); border-radius:6px; background:#fff; }
+    .permission-summary h3 { margin:0 0 10px; font-size:14px; }
+    .permission-summary table { width:100%; border-collapse:collapse; }
+    .permission-summary th, .permission-summary td { padding:8px 10px; border:1px solid var(--admin-line); text-align:center; font-size:11px; }
+    .permission-summary th:first-child, .permission-summary td:first-child { text-align:left; }
+    .permission-summary .allowed { color:var(--admin-green); font-weight:800; }
+    .permission-summary .blocked { color:var(--admin-muted); }
     .activity-list { display:grid; }
     .activity-row { display:grid; grid-template-columns:115px 110px minmax(0,1fr) 120px; gap:10px; padding:10px 8px; border-top:1px solid #edf0ed; font-size:10px; }
     .activity-row:first-child { border-top:0; }
@@ -121,7 +143,7 @@
     .toast { position:fixed; right:18px; bottom:18px; z-index:20; max-width:min(420px,calc(100% - 36px)); padding:12px 15px; border-radius:5px; color:#fff; background:var(--admin-dark); box-shadow:0 12px 30px rgba(0,0,0,.18); font-size:11px; }
     .toast[hidden] { display:none; }
     @media(max-width:1000px) { .admin-shell { grid-template-columns:190px minmax(0,1fr); } .metric-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .workspace-grid { grid-template-columns:1fr; } }
-    @media(max-width:680px) { .login-stage { min-height:0; grid-template-columns:1fr; gap:18px; width:calc(100% - 24px); padding:24px 0; } .login-copy h1 { font-size:38px; } .login-copy p { margin-bottom:10px; font-size:13px; } .login-facts { margin-top:13px; } .login-card { padding:18px; } .admin-shell { width:100%; min-height:calc(100vh - 58px); display:flex; flex-direction:column; margin:0; border:0; border-radius:0; } .admin-sidebar { padding:9px 10px; } .admin-brand { padding:0 3px 8px; border:0; } .sidebar-caption,.sidebar-foot { display:none; } .admin-nav { display:flex; overflow-x:auto; gap:4px; padding-top:5px; scrollbar-width:thin; } .admin-nav button { width:auto; min-width:max-content; min-height:34px; padding:6px 9px; } .nav-symbol { width:auto; } .admin-topbar { min-height:54px; padding:8px 12px; flex-wrap:wrap; } .breadcrumbs { display:none; } .top-actions { width:100%; flex-wrap:wrap; } .search-input { width:100%; flex:1 1 130px; } .role-switch { flex:1 1 150px; max-width:none; } .admin-content { padding:17px 12px 22px; } .view-heading { align-items:flex-start; flex-direction:column; } .view-heading h1 { font-size:28px; } .activity-row { grid-template-columns:85px 85px minmax(0,1fr); } .activity-row span:last-child { display:none; } .backup-callout { grid-template-columns:1fr; } }
+    @media(max-width:680px) { .login-stage { min-height:0; grid-template-columns:1fr; gap:18px; width:calc(100% - 24px); padding:24px 0; } .login-copy h1 { font-size:38px; } .login-copy p { margin-bottom:10px; font-size:13px; } .login-facts { margin-top:13px; } .login-card { padding:18px; } .admin-shell { width:100%; min-height:calc(100vh - 58px); display:flex; flex-direction:column; margin:0; border:0; border-radius:0; } .admin-sidebar { padding:9px 10px; } .admin-brand { padding:0 3px 8px; border:0; } .sidebar-caption,.sidebar-foot { display:none; } .admin-nav { display:flex; overflow-x:auto; gap:4px; padding-top:5px; scrollbar-width:thin; } .admin-nav button { width:auto; min-width:max-content; min-height:34px; padding:6px 9px; } .nav-symbol { width:auto; } .admin-topbar { min-height:54px; padding:8px 12px; flex-wrap:wrap; } .breadcrumbs { display:none; } .top-actions { width:100%; flex-wrap:wrap; } .search-input { width:100%; flex:1 1 130px; } .role-label { flex:1 1 120px; } .admin-content { padding:17px 12px 22px; } .view-heading { align-items:flex-start; flex-direction:column; } .view-heading h1 { font-size:28px; } .activity-row { grid-template-columns:85px 85px minmax(0,1fr); } .activity-row span:last-child { display:none; } .backup-callout { grid-template-columns:1fr; } }
     @media(max-width:420px) { .metric-grid { grid-template-columns:1fr 1fr; gap:7px; } .metric-card { padding:10px; } .metric-value { font-size:20px; } .role-matrix { grid-template-columns:1fr; } .filter-select { max-width:145px; } }
     @media(prefers-reduced-motion:reduce) { .view.is-active { animation:none; } }
   </style>
@@ -130,27 +152,43 @@
   <main class="login-stage" id="login-stage">
     <button class="lang-button login-language" type="button" aria-label="Switch language" onclick="document.body.classList.toggle('show-en'); this.textContent=document.body.classList.contains('show-en')?'VI':'EN'">EN</button>
     <section class="login-copy">
-      <span class="view-eyebrow"><span data-lang="vi">Không gian quản trị</span><span data-lang="en">Administration workspace</span></span>
+      <span class="view-eyebrow"><span data-lang="vi">Không gian quản trị kết nối SQLite</span><span data-lang="en">SQLite-connected administration workspace</span></span>
       <h1><span data-lang="vi">Vận hành cửa hàng, trong tầm kiểm soát.</span><span data-lang="en">Store operations, under control.</span></h1>
       <p><span data-lang="vi">Một góc nhìn quản trị cho nhân sự, chăm sóc, kho, dịch vụ, bán hàng và kiểm soát nội bộ PetCare.</span><span data-lang="en">An administration view for staff, care, inventory, services, sales and internal controls in PetCare.</span></p>
       <div class="login-facts"><span>10 roles · permission-aware navigation</span><span>Local desktop · SQLite</span><span>Staff-confirmed payment flow</span><span>On-demand backup workflow</span></div>
     </section>
     <form class="login-card" id="demo-login-form">
+      <div class="brand-wordmark" style="margin-bottom:12px;">
+        <span class="brand-token"><img class="brand-logo" src="assets/petcare-logo.svg" alt="PetCare logo"></span>
+        <span class="brand-text"><strong>PetCare</strong><small>Admin Console</small></span>
+      </div>
       <h2><span data-lang="vi">Đăng nhập quản trị</span><span data-lang="en">Admin sign in</span></h2>
-      <p><span data-lang="vi">Chọn role để xem giao diện và khu vực tương ứng.</span><span data-lang="en">Choose a role to preview its corresponding workspace and access areas.</span></p>
-      <label><span data-lang="vi">Tài khoản demo</span><span data-lang="en">Demo account</span><input id="login-username" name="username" type="text" value="admin.demo" autocomplete="username" required></label>
-      <label><span data-lang="vi">Mật khẩu demo</span><span data-lang="en">Demo password</span><input id="login-password" name="password" type="password" placeholder="••••••••••" autocomplete="current-password" required></label>
-      <label><span data-lang="vi">Vai trò cần xem</span><span data-lang="en">Role to preview</span><select id="login-role" name="role"><option value="ADMIN">ADMIN · Quản trị viên</option><option value="MANAGER">MANAGER · Quản lý</option><option value="VETERINARIAN">VETERINARIAN · Bác sĩ thú y</option><option value="CAREGIVER">CAREGIVER · Nhân viên chăm sóc</option><option value="SALES">SALES · Nhân viên bán hàng</option><option value="INVENTORY_MANAGER">INVENTORY_MANAGER · Quản lý kho</option><option value="SERVICE_COORDINATOR">SERVICE_COORDINATOR · Điều phối dịch vụ</option><option value="CUSTOMER_SUPPORT">CUSTOMER_SUPPORT · Chăm sóc khách hàng</option><option value="REPORT_ANALYST">REPORT_ANALYST · Chuyên viên báo cáo</option><option value="AUDITOR">AUDITOR · Kiểm toán viên</option></select></label>
-      <button class="action-button" id="fill-manager-demo" type="button" style="width:100%;margin-top:10px"><span data-lang="vi">Điền tài khoản Quản lý demo</span><span data-lang="en">Fill manager demo account</span></button>
-      <p class="login-error" id="demo-account-hint" aria-live="polite"><span data-lang="vi">Preset: manager.demo · mật khẩu mẫu: PetCareDemo2026!</span><span data-lang="en">Preset: manager.demo · sample password: PetCareDemo2026!</span></p>
+      <p><span data-lang="vi">Dùng tài khoản nội bộ đã tạo trong ứng dụng desktop. Vai trò và quyền được xác minh từ SQLite.</span><span data-lang="en">Use an internal account created in the desktop app. Role and permissions are verified from SQLite.</span></p>
+      <div class="demo-role-row">
+        <label for="demo-role-select"><span data-lang="vi">Mẫu vai trò để kiểm tra</span><span data-lang="en">Role preview for testing</span></label>
+        <select id="demo-role-select" aria-label="Role preview selector">
+          <option value="ADMIN">ADMIN</option>
+          <option value="MANAGER">MANAGER</option>
+          <option value="VETERINARIAN">VETERINARIAN</option>
+          <option value="CAREGIVER">CAREGIVER</option>
+          <option value="SALES">SALES</option>
+          <option value="INVENTORY_MANAGER">INVENTORY_MANAGER</option>
+          <option value="SERVICE_COORDINATOR">SERVICE_COORDINATOR</option>
+          <option value="CUSTOMER_SUPPORT">CUSTOMER_SUPPORT</option>
+          <option value="REPORT_ANALYST">REPORT_ANALYST</option>
+          <option value="AUDITOR">AUDITOR</option>
+        </select>
+      </div>
+      <label><span data-lang="vi">Tài khoản</span><span data-lang="en">Username</span><input id="login-username" name="username" type="text" autocomplete="username" required></label>
+      <label><span data-lang="vi">Mật khẩu</span><span data-lang="en">Password</span><input id="login-password" name="password" type="password" autocomplete="current-password" required></label>
       <p class="login-error" id="login-error" aria-live="polite"></p>
-      <button class="action-button primary" type="submit"><span data-lang="vi">Vào khu vực demo</span><span data-lang="en">Enter demo workspace</span></button>
-      <div class="login-disclaimer"><strong><span data-lang="vi">Chế độ mô phỏng:</span><span data-lang="en">Prototype mode:</span></strong> <span data-lang="vi">không kiểm tra thông tin xác thực, không kết nối database và không tạo phiên đăng nhập thật.</span><span data-lang="en">credentials are not verified, no database is connected, and no real session is created.</span></div>
+      <button class="action-button primary" type="submit"><span data-lang="vi">Đăng nhập</span><span data-lang="en">Sign in</span></button>
+      <div class="login-disclaimer"><strong><span data-lang="vi">Kết nối cục bộ:</span><span data-lang="en">Local connection:</span></strong> <span data-lang="vi">máy chủ chỉ lắng nghe trên máy này; dữ liệu danh sách đọc từ SQLite. Tạo phiếu nhập và lưu ảnh tiếp nhận sẽ ghi vào database.</span><span data-lang="en">the server listens only on this machine; lists are read from SQLite. Creating intake vouchers and saving receipt photos writes to the database.</span></div>
     </form>
   </main>
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="index.html"><span class="brand-mark">P</span> PetCare / Admin demo</a>
+      <a class="brand brand-wordmark" href="index.html"><span class="brand-token"><img class="brand-logo" src="assets/petcare-logo.svg" alt="PetCare logo"></span><span class="brand-text"><strong>PetCare</strong><small>Admin demo</small></span></a>
       <div class="header-actions">
         <nav class="header-nav" aria-label="Primary navigation">
           <a href="operations_snapshot.html"><span data-lang="vi">Snapshot</span><span data-lang="en">Snapshot</span></a>
@@ -165,16 +203,26 @@
 
   <main class="admin-shell" id="admin-shell" hidden>
     <aside class="admin-sidebar">
-      <a class="admin-brand" href="index.html"><span class="brand-mark">P</span><span>PetCare Store</span></a>
+      <a class="admin-brand" href="index.html"><img class="brand-logo" src="assets/petcare-logo.svg" alt="PetCare logo"><span>PetCare Store</span></a>
       <span class="sidebar-caption"><span data-lang="vi">Quản trị cửa hàng</span><span data-lang="en">Store administration</span></span>
       <nav class="admin-nav" aria-label="Admin workspace">
-        <button type="button" data-view="overview" data-view-permission="dashboard.view" aria-current="page"><span class="nav-symbol">⌂</span><span data-lang="vi">Tổng quan</span><span data-lang="en">Overview</span></button>
-        <button type="button" data-view="staff" data-view-permission="users.manage" aria-current="false"><span class="nav-symbol">♙</span><span data-lang="vi">Nhân sự & quyền</span><span data-lang="en">Staff & roles</span></button>
-        <button type="button" data-view="inventory" data-view-permission="inventory.view" aria-current="false"><span class="nav-symbol">▤</span><span data-lang="vi">Kho & cảnh báo</span><span data-lang="en">Inventory & alerts</span></button>
-        <button type="button" data-view="services" data-view-permission="services.view" aria-current="false"><span class="nav-symbol">◷</span><span data-lang="vi">Lịch dịch vụ</span><span data-lang="en">Service schedule</span></button>
-        <button type="button" data-view="sales" data-view-permission="sales.view" aria-current="false"><span class="nav-symbol">＄</span><span data-lang="vi">Đơn & hội viên</span><span data-lang="en">Orders & members</span></button>
-        <button type="button" data-view="reports" data-view-permission="reports.view" aria-current="false"><span class="nav-symbol">▥</span><span data-lang="vi">Báo cáo</span><span data-lang="en">Reports</span></button>
-        <button type="button" data-view="audit" data-view-permission="audit.view" aria-current="false"><span class="nav-symbol">≡</span><span data-lang="vi">Audit & backup</span><span data-lang="en">Audit & backup</span></button>
+        <button type="button" data-view="platform" data-view-permission="dashboard.view" aria-current="false"><span class="nav-symbol">01</span><span data-lang="vi">Nền tảng & dữ liệu</span><span data-lang="en">Platform & data</span></button>
+        <button type="button" data-view="staff" data-view-permission="users.manage" aria-current="false"><span class="nav-symbol">02</span><span data-lang="vi">Tài khoản & quyền</span><span data-lang="en">Accounts & roles</span></button>
+        <button type="button" data-view="overview" data-view-permission="dashboard.view" aria-current="page"><span class="nav-symbol">03</span><span data-lang="vi">Bảng điều khiển</span><span data-lang="en">Dashboard</span></button>
+        <button type="button" data-view="animals" data-view-permission="animals.view" aria-current="false"><span class="nav-symbol">04</span><span data-lang="vi">Hồ sơ vật nuôi</span><span data-lang="en">Pet profiles</span></button>
+        <button type="button" data-view="housing" data-view-permission="store.view" aria-current="false"><span class="nav-symbol">05</span><span data-lang="vi">Chuồng & sức chứa</span><span data-lang="en">Housing & capacity</span></button>
+        <button type="button" data-view="suppliers" data-view-permission="imports.view" aria-current="false"><span class="nav-symbol">06</span><span data-lang="vi">Nhà cung cấp</span><span data-lang="en">Suppliers</span></button>
+        <button type="button" data-view="imports" data-view-permission="imports.view" aria-current="false"><span class="nav-symbol">07</span><span data-lang="vi">Nhập hàng & tiếp nhận</span><span data-lang="en">Imports & intake</span></button>
+        <button type="button" data-view="health" data-view-permission="health.view" aria-current="false"><span class="nav-symbol">08</span><span data-lang="vi">Theo dõi sức khỏe</span><span data-lang="en">Health monitoring</span></button>
+        <button type="button" data-view="care" data-view-permission="care.view" aria-current="false"><span class="nav-symbol">09</span><span data-lang="vi">Chăm sóc hằng ngày</span><span data-lang="en">Daily care</span></button>
+        <button type="button" data-view="customers" data-view-permission="sales.view" aria-current="false"><span class="nav-symbol">10</span><span data-lang="vi">Khách hàng</span><span data-lang="en">Customers</span></button>
+        <button type="button" data-view="reservations" data-view-permission="services.view" aria-current="false"><span class="nav-symbol">11</span><span data-lang="vi">Đặt giữ & tiền cọc</span><span data-lang="en">Reservations & deposits</span></button>
+        <button type="button" data-view="sales" data-view-permission="sales.view" aria-current="false"><span class="nav-symbol">12</span><span data-lang="vi">Đơn hàng & thanh toán</span><span data-lang="en">Orders & payments</span></button>
+        <button type="button" data-view="memberships" data-view-permission="membership.view" aria-current="false"><span class="nav-symbol">13</span><span data-lang="vi">Hội viên & hóa đơn</span><span data-lang="en">Memberships & billing</span></button>
+        <button type="button" data-view="services" data-view-permission="services.view" aria-current="false"><span class="nav-symbol">14</span><span data-lang="vi">Dịch vụ & lịch hẹn</span><span data-lang="en">Services & scheduling</span></button>
+        <button type="button" data-view="inventory" data-view-permission="inventory.view" aria-current="false"><span class="nav-symbol">15</span><span data-lang="vi">Sản phẩm & tồn kho</span><span data-lang="en">Products & inventory</span></button>
+        <button type="button" data-view="reports" data-view-permission="reports.view" aria-current="false"><span class="nav-symbol">16</span><span data-lang="vi">Báo cáo vận hành</span><span data-lang="en">Operational reports</span></button>
+        <button type="button" data-view="audit" data-view-permission="notifications.view|audit.view" aria-current="false"><span class="nav-symbol">17</span><span data-lang="vi">Cảnh báo & sao lưu</span><span data-lang="en">Alerts & backup</span></button>
       </nav>
       <div class="sidebar-foot"><strong>Local desktop · SQLite</strong><span data-lang="vi">Prototype tĩnh · không ghi database</span><span data-lang="en">Static prototype · no database writes</span></div>
     </aside>
@@ -182,11 +230,11 @@
     <section class="admin-main">
       <div class="admin-topbar">
         <div class="breadcrumbs"><span data-lang="vi">PetCare</span><span data-lang="en">PetCare</span> / <strong id="current-section">Tổng quan</strong></div>
-        <div class="top-actions"><span class="signed-user"><span class="user-avatar" id="user-avatar">AD</span><span id="signed-user-label">admin.demo · ADMIN</span></span><select class="role-switch" id="role-switch" aria-label="Switch demo role"><option value="ADMIN">ADMIN</option><option value="MANAGER">MANAGER</option><option value="VETERINARIAN">VETERINARIAN</option><option value="CAREGIVER">CAREGIVER</option><option value="SALES">SALES</option><option value="INVENTORY_MANAGER">INVENTORY_MANAGER</option><option value="SERVICE_COORDINATOR">SERVICE_COORDINATOR</option><option value="CUSTOMER_SUPPORT">CUSTOMER_SUPPORT</option><option value="REPORT_ANALYST">REPORT_ANALYST</option><option value="AUDITOR">AUDITOR</option></select><input class="search-input" id="global-search" type="search" placeholder="Tìm trong trang / Search this view" aria-label="Search current admin view"><button class="action-button" id="logout-demo" type="button"><span data-lang="vi">Thoát</span><span data-lang="en">Sign out</span></button><span class="demo-badge"><span data-lang="vi">DEMO · DỮ LIỆU MẪU</span><span data-lang="en">DEMO · SAMPLE DATA</span></span></div>
+        <div class="top-actions"><span class="signed-user"><span class="user-avatar" id="user-avatar">--</span><span id="signed-user-label"></span></span><span class="role-label" id="role-label"></span><input class="search-input" id="global-search" type="search" placeholder="Tìm trong trang / Search this view" aria-label="Search current admin view"><button class="action-button" id="logout-demo" type="button"><span data-lang="vi">Thoát</span><span data-lang="en">Sign out</span></button><span class="demo-badge"><span data-lang="vi">SQLITE · CHỈ ĐỌC TRỪ PHIẾU NHẬP</span><span data-lang="en">SQLITE · READ ONLY EXCEPT INTAKE</span></span></div>
       </div>
 
       <div class="admin-content">
-        <p class="demo-notice"><strong><span data-lang="vi">Mô phỏng giao diện.</span><span data-lang="en">Interface simulation.</span></strong> <span data-lang="vi">Bản này không kết nối SQLite và không lưu thay đổi. Các số liệu, tài khoản và hoạt động đều là dữ liệu minh họa.</span><span data-lang="en">This page does not connect to SQLite or persist changes. Metrics, accounts and activity are illustrative.</span></p>
+        <p class="demo-notice"><strong><span data-lang="vi">Dữ liệu trực tiếp.</span><span data-lang="en">Live database data.</span></strong> <span data-lang="vi">Bảng “Dữ liệu SQLite” tải từ database cục bộ theo quyền tài khoản. Các thẻ và panel nghiệp vụ phía trên vẫn là nội dung tham khảo; chỉ luồng phiếu nhập/tiếp nhận bên dưới được ghi dữ liệu.</span><span data-lang="en">The “SQLite data” table reads the local database using account permissions. Summary cards and workflow panels above remain reference content; only the import/intake flow below writes data.</span></p>
 
         <section class="view is-active" id="view-overview" data-view-panel="overview">
           <div class="view-heading"><div><span class="view-eyebrow"><span data-lang="vi">Điều hành / Hôm nay</span><span data-lang="en">Operations / Today</span></span><h1><span data-lang="vi">Tổng quan cửa hàng</span><span data-lang="en">Store overview</span></h1><p><span data-lang="vi">Màn hình rà soát công việc, lịch, tồn kho và trạng thái bán hàng trong một phiên làm việc.</span><span data-lang="en">Review tasks, appointments, stock and sales status in one workspace.</span></p></div><div class="button-row"><button class="action-button" type="button" data-open-view="audit" data-requires-permission="audit.view"><span data-lang="vi">Xem audit</span><span data-lang="en">Review audit</span></button><button class="action-button primary" type="button" data-open-view="services"><span data-lang="vi">Mở lịch dịch vụ</span><span data-lang="en">Open schedule</span></button></div></div>
@@ -202,19 +250,40 @@
           </div>
         </section>
 
+        <section class="view" id="view-module-demo" data-view-panel="module-demo" hidden><div id="module-demo-content"></div></section>
+
         <section class="view" id="view-staff" data-view-panel="staff" hidden>
-          <div class="view-heading"><div><span class="view-eyebrow">Access administration</span><h1><span data-lang="vi">Nhân sự & phân quyền</span><span data-lang="en">Staff & roles</span></h1><p><span data-lang="vi">Quản lý tài khoản nội bộ, vai trò và trạng thái. Giao diện thật giới hạn quản lý người dùng theo permission.</span><span data-lang="en">Manage internal accounts, roles and status. The real application restricts user administration by permission.</span></p></div><button class="action-button primary" type="button" data-dialog="user-dialog" data-requires-permission="users.manage"><span data-lang="vi">＋ Tạo tài khoản demo</span><span data-lang="en">＋ Add demo account</span></button></div>
-          <div class="role-matrix">
-            <article class="role-card"><h3>ADMIN</h3><p><span data-lang="vi">Quản trị tài khoản, thiết lập, audit và toàn bộ luồng nghiệp vụ.</span><span data-lang="en">Accounts, settings, audit and all operational areas.</span></p><div class="permission-tags"><span>users.manage</span><span>settings.manage</span><span>audit.view</span></div></article>
-            <article class="role-card"><h3>MANAGER</h3><p><span data-lang="vi">Điều hành phần lớn cửa hàng, không quản lý tài khoản.</span><span data-lang="en">Runs most store workflows, but not user administration.</span></p><div class="permission-tags"><span>sales.manage</span><span>inventory.manage</span><span>audit.view</span></div></article>
-            <article class="role-card"><h3>VETERINARIAN</h3><p><span data-lang="vi">Xem vật nuôi và quản lý hồ sơ sức khỏe, chăm sóc liên quan.</span><span data-lang="en">Views animals and manages health records and related care.</span></p><div class="permission-tags"><span>health.manage</span><span>care.view</span><span>reports.view</span></div></article>
-            <article class="role-card"><h3>CAREGIVER</h3><p><span data-lang="vi">Thực hiện chăm sóc và cập nhật lịch dịch vụ được cấp quyền.</span><span data-lang="en">Handles care tasks and permitted service appointments.</span></p><div class="permission-tags"><span>care.manage</span><span>services.manage</span><span>inventory.view</span></div></article>
-            <article class="role-card"><h3>SALES</h3><p><span data-lang="vi">Bán hàng, hội viên và lịch dịch vụ theo quyền.</span><span data-lang="en">Sales, memberships and service appointments under granted access.</span></p><div class="permission-tags"><span>sales.manage</span><span>membership.manage</span><span>services.manage</span></div></article>
-            <article class="role-card"><h3>INVENTORY_MANAGER</h3><p><span data-lang="vi">Quản lý nhập hàng, tồn kho và cảnh báo nguồn cung.</span><span data-lang="en">Manages intake, stock and supply alerts.</span></p><div class="permission-tags"><span>imports.manage</span><span>inventory.manage</span><span>reports.view</span></div></article>
-            <article class="role-card"><h3>SERVICE_COORDINATOR</h3><p><span data-lang="vi">Điều phối lịch dịch vụ và xem quyền lợi hội viên liên quan.</span><span data-lang="en">Coordinates appointments and views related membership benefits.</span></p><div class="permission-tags"><span>services.manage</span><span>membership.view</span><span>reports.view</span></div></article>
-            <article class="role-card"><h3>CUSTOMER_SUPPORT</h3><p><span data-lang="vi">Tra cứu khách hàng, lịch sử bán hàng, hội viên và dịch vụ; không có quyền sửa.</span><span data-lang="en">Views customer, sales, membership and service records; no write access.</span></p><div class="permission-tags"><span>animals.view</span><span>sales.view</span><span>services.view</span></div></article>
-            <article class="role-card"><h3>REPORT_ANALYST</h3><p><span data-lang="vi">Chỉ xem dashboard và báo cáo.</span><span data-lang="en">Read-only access to dashboard and reports.</span></p><div class="permission-tags"><span>dashboard.view</span><span>reports.view</span></div></article>
-            <article class="role-card"><h3>AUDITOR</h3><p><span data-lang="vi">Xem báo cáo và audit log; không thao tác nghiệp vụ ghi.</span><span data-lang="en">Views reports and audit logs; no operational write access.</span></p><div class="permission-tags"><span>reports.view</span><span>audit.view</span></div></article>
+          <div class="view-heading"><div><span class="view-eyebrow">Access administration</span><h1><span data-lang="vi">Nhân sự & phân quyền</span><span data-lang="en">Staff & roles</span></h1><p><span data-lang="vi">Quản lý tài khoản nội bộ, vai trò và trạng thái. Giao diện thật giới hạn quản lý người dùng theo permission.</span><span data-lang="en">Manage internal accounts, roles and status. The real application restricts user administration by permission.</span></p></div>          <button class="action-button primary" type="button" data-dialog="user-dialog" data-requires-permission="users.manage" data-role-action="add"><span data-lang="vi">＋ Tạo tài khoản demo</span><span data-lang="en">＋ Add demo account</span></button></div>          <div class="role-matrix">
+            <article class="role-card"><h3>ADMIN</h3><p><span data-lang="vi">Quản trị tài khoản, thiết lập, audit và toàn bộ luồng nghiệp vụ.</span><span data-lang="en">Accounts, settings, audit and all operational areas.</span></p><div class="permission-tags"><span>Read</span><span>Add</span><span>Edit</span><span>Delete</span><span>users.manage</span></div></article>
+            <article class="role-card"><h3>MANAGER</h3><p><span data-lang="vi">Điều hành phần lớn cửa hàng, không quản lý tài khoản.</span><span data-lang="en">Runs most store workflows, but not user administration.</span></p><div class="permission-tags"><span>Read</span><span>Add</span><span>Edit</span><span>Delete</span><span>sales.manage</span></div></article>
+            <article class="role-card"><h3>VETERINARIAN</h3><p><span data-lang="vi">Xem vật nuôi và quản lý hồ sơ sức khỏe, chăm sóc liên quan.</span><span data-lang="en">Views animals and manages health records and related care.</span></p><div class="permission-tags"><span>Read</span><span>Add</span><span>Edit</span><span>Delete</span><span>health.manage</span></div></article>
+            <article class="role-card"><h3>CAREGIVER</h3><p><span data-lang="vi">Thực hiện chăm sóc và cập nhật lịch dịch vụ được cấp quyền.</span><span data-lang="en">Handles care tasks and permitted service appointments.</span></p><div class="permission-tags"><span>Read</span><span>Add</span><span>Edit</span><span>Delete</span><span>care.manage</span></div></article>
+            <article class="role-card"><h3>SALES</h3><p><span data-lang="vi">Bán hàng, hội viên và lịch dịch vụ theo quyền.</span><span data-lang="en">Sales, memberships and service appointments under granted access.</span></p><div class="permission-tags"><span>Read</span><span>Add</span><span>Edit</span><span>Delete</span><span>sales.manage</span></div></article>
+            <article class="role-card"><h3>INVENTORY_MANAGER</h3><p><span data-lang="vi">Quản lý nhập hàng, tồn kho và cảnh báo nguồn cung.</span><span data-lang="en">Manages intake, stock and supply alerts.</span></p><div class="permission-tags"><span>Read</span><span>Add</span><span>Edit</span><span>Delete</span><span>imports.manage</span></div></article>
+            <article class="role-card"><h3>SERVICE_COORDINATOR</h3><p><span data-lang="vi">Điều phối lịch dịch vụ và xem quyền lợi hội viên liên quan.</span><span data-lang="en">Coordinates appointments and views related membership benefits.</span></p><div class="permission-tags"><span>Read</span><span>Add</span><span>Edit</span><span>Delete</span><span>services.manage</span></div></article>
+            <article class="role-card"><h3>CUSTOMER_SUPPORT</h3><p><span data-lang="vi">Tra cứu khách hàng, lịch sử bán hàng, hội viên và dịch vụ; không có quyền sửa.</span><span data-lang="en">Views customer, sales, membership and service records; no write access.</span></p><div class="permission-tags"><span>Read</span><span>—</span><span>—</span><span>—</span><span>sales.view</span></div></article>
+            <article class="role-card"><h3>REPORT_ANALYST</h3><p><span data-lang="vi">Chỉ xem dashboard và báo cáo.</span><span data-lang="en">Read-only access to dashboard and reports.</span></p><div class="permission-tags"><span>Read</span><span>—</span><span>—</span><span>—</span><span>reports.view</span></div></article>
+            <article class="role-card"><h3>AUDITOR</h3><p><span data-lang="vi">Xem báo cáo và audit log; không thao tác nghiệp vụ ghi.</span><span data-lang="en">Views reports and audit logs; no operational write access.</span></p><div class="permission-tags"><span>Read</span><span>—</span><span>—</span><span>—</span><span>audit.view</span></div></article>
+          </div>
+          <div class="permission-summary">
+            <h3><span data-lang="vi">Bảng quyền thao tác (Xem / Thêm / Sửa / Xóa)</span><span data-lang="en">Action permission matrix (View / Add / Edit / Delete)</span></h3>
+            <table>
+              <thead>
+                <tr><th><span data-lang="vi">Vai trò</span><span data-lang="en">Role</span></th><th>Xem</th><th>Thêm</th><th>Sửa</th><th>Xóa</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>ADMIN</td><td class="allowed">✓</td><td class="allowed">✓</td><td class="allowed">✓</td><td class="allowed">✓</td></tr>
+                <tr><td>MANAGER</td><td class="allowed">✓</td><td class="allowed">✓</td><td class="allowed">✓</td><td class="allowed">✓</td></tr>
+                <tr><td>VETERINARIAN</td><td class="allowed">✓</td><td class="allowed">✓</td><td class="allowed">✓</td><td class="allowed">✓</td></tr>
+                <tr><td>CAREGIVER</td><td class="allowed">✓</td><td class="allowed">✓</td><td class="allowed">✓</td><td class="blocked">—</td></tr>
+                <tr><td>SALES</td><td class="allowed">✓</td><td class="allowed">✓</td><td class="allowed">✓</td><td class="blocked">—</td></tr>
+                <tr><td>INVENTORY_MANAGER</td><td class="allowed">✓</td><td class="allowed">✓</td><td class="allowed">✓</td><td class="allowed">✓</td></tr>
+                <tr><td>SERVICE_COORDINATOR</td><td class="allowed">✓</td><td class="allowed">✓</td><td class="allowed">✓</td><td class="blocked">—</td></tr>
+                <tr><td>CUSTOMER_SUPPORT</td><td class="allowed">✓</td><td class="blocked">—</td><td class="blocked">—</td><td class="blocked">—</td></tr>
+                <tr><td>REPORT_ANALYST</td><td class="allowed">✓</td><td class="blocked">—</td><td class="blocked">—</td><td class="blocked">—</td></tr>
+                <tr><td>AUDITOR</td><td class="allowed">✓</td><td class="blocked">—</td><td class="blocked">—</td><td class="blocked">—</td></tr>
+              </tbody>
+            </table>
           </div>
           <section class="panel" style="margin-top:12px"><div class="panel-heading"><h2><span data-lang="vi">Danh sách tài khoản mẫu</span><span data-lang="en">Sample accounts</span></h2><span><span data-lang="vi">Không phải tài khoản thật</span><span data-lang="en">Not real accounts</span></span></div><div class="data-table-wrap"><table class="data-table searchable-table"><thead><tr><th><span data-lang="vi">Tài khoản</span><span data-lang="en">Account</span></th><th><span data-lang="vi">Vai trò</span><span data-lang="en">Role</span></th><th><span data-lang="vi">Trạng thái</span><span data-lang="en">Status</span></th><th><span data-lang="vi">Đăng nhập gần nhất</span><span data-lang="en">Last sign-in</span></th><th></th></tr></thead><tbody id="user-rows"><tr><td>admin-demo</td><td>ADMIN</td><td><span class="status">Active</span></td><td>09:12 · sample</td><td><button class="action-button small-action" type="button" data-toast="Demo only: account changes are not persisted."><span data-lang="vi">Chi tiết</span><span data-lang="en">Details</span></button></td></tr><tr><td>manager-demo</td><td>MANAGER</td><td><span class="status">Active</span></td><td>08:46 · sample</td><td><button class="action-button small-action" type="button" data-toast="Demo only: account changes are not persisted."><span data-lang="vi">Chi tiết</span><span data-lang="en">Details</span></button></td></tr><tr><td>care-demo-01</td><td>CAREGIVER</td><td><span class="status warn">Password rotation</span></td><td>Yesterday · sample</td><td><button class="action-button small-action" type="button" data-toast="Demo only: account changes are not persisted."><span data-lang="vi">Chi tiết</span><span data-lang="en">Details</span></button></td></tr></tbody></table></div></section>
         </section>
@@ -243,54 +312,399 @@
         </section>
 
         <section class="view" id="view-audit" data-view-panel="audit" hidden>
-          <div class="view-heading"><div><span class="view-eyebrow">Governance</span><h1><span data-lang="vi">Audit & sao lưu</span><span data-lang="en">Audit & backup</span></h1><p><span data-lang="vi">Audit ghi một số sự kiện có chọn lọc, không phải mọi thao tác. Backup thật được tạo theo yêu cầu trong ứng dụng; trang demo không tạo file.</span><span data-lang="en">Audit captures selected events, not every action. Real backups are created on demand in the application; this demo does not create files.</span></p></div><button class="action-button" type="button" data-dialog="backup-dialog" data-requires-permission="settings.manage"><span data-lang="vi">Quy trình backup</span><span data-lang="en">Backup procedure</span></button></div>
+          <div class="view-heading"><div><span class="view-eyebrow">Governance & notifications</span><h1><span data-lang="vi">Cảnh báo, audit & sao lưu</span><span data-lang="en">Alerts, audit & backup</span></h1><p><span data-lang="vi">Rà cảnh báo kho/chăm sóc mẫu và một số sự kiện audit. Audit không ghi mọi thao tác; backup thật được tạo theo yêu cầu trong ứng dụng, demo không tạo file.</span><span data-lang="en">Review sample stock/care alerts and selected audit events. Audit does not capture every action; real backups are on demand in the application, and this demo creates no files.</span></p></div><button class="action-button" type="button" data-dialog="backup-dialog" data-requires-permission="settings.manage"><span data-lang="vi">Quy trình backup</span><span data-lang="en">Backup procedure</span></button></div>
+          <section class="panel"><div class="panel-heading"><h2><span data-lang="vi">Cảnh báo cần rà</span><span data-lang="en">Alerts for review</span></h2><span><span data-lang="vi">Mẫu · xác minh bản ghi nguồn</span><span data-lang="en">Sample · verify source records</span></span></div><div class="data-table-wrap"><table class="data-table searchable-table"><thead><tr><th><span data-lang="vi">Mã</span><span data-lang="en">ID</span></th><th><span data-lang="vi">Cảnh báo</span><span data-lang="en">Alert</span></th><th><span data-lang="vi">Nguồn</span><span data-lang="en">Source</span></th><th><span data-lang="vi">Ưu tiên</span><span data-lang="en">Priority</span></th></tr></thead><tbody><tr><td>ALT-024</td><td><span data-lang="vi">Tồn dưới ngưỡng</span><span data-lang="en">Below stock threshold</span></td><td>FOOD-014 · demo</td><td><span class="status danger">Review</span></td></tr><tr><td>ALT-025</td><td><span data-lang="vi">Lô sắp hết hạn</span><span data-lang="en">Batch near expiry</span></td><td>CARE-008 · demo</td><td><span class="status warn">Review</span></td></tr><tr><td>ALT-026</td><td><span data-lang="vi">Nhắc lịch tiêm</span><span data-lang="en">Vaccination reminder</span></td><td>PET-024 · demo</td><td><span class="status neutral">Upcoming</span></td></tr></tbody></table></div></section>
           <section class="panel"><div class="panel-heading"><h2><span data-lang="vi">Sự kiện gần đây</span><span data-lang="en">Recent events</span></h2><span><span data-lang="vi">Mẫu minh họa · audit không phải log chống giả mạo trên máy chủ</span><span data-lang="en">Illustrative sample · local audit is not server-side tamper-proof logging</span></span></div><div class="activity-list"><div class="activity-row"><span class="muted">2026-10-07 09:14</span><span>LOGIN_SUCCESS</span><span>admin-demo · auth</span><span>Sample event</span></div><div class="activity-row"><span class="muted">2026-10-07 09:06</span><span>UPDATE_ORDER</span><span>manager-demo · ORD-109</span><span>Sample event</span></div><div class="activity-row"><span class="muted">2026-10-07 08:51</span><span>BACKUP</span><span>admin-demo · db snapshot</span><span>Sample event</span></div><div class="activity-row"><span class="muted">2026-10-07 08:33</span><span>LOGIN_FAILED</span><span>unknown actor · auth</span><span>Sample event</span></div></div></section>
           <div class="backup-callout"><div><h3><span data-lang="vi">Khôi phục cần diễn tập riêng</span><span data-lang="en">Restore must be rehearsed separately</span></h3><p><span data-lang="vi">UI có tạo backup theo yêu cầu; hiện chưa có màn hình restore. Lưu bản sao ngoài máy và xác minh khả năng phục hồi.</span><span data-lang="en">The UI supports on-demand backup; there is no restore screen. Store a copy off-device and verify recovery.</span></p></div><button class="action-button" type="button" data-dialog="backup-dialog"><span data-lang="vi">Xem hướng dẫn</span><span data-lang="en">View guidance</span></button></div>
         </section>
       </div>
+      <section class="panel module-data-panel" id="module-data-panel" hidden aria-live="polite">
+        <div class="panel-heading"><h2 id="module-data-title"><span data-lang="vi">Dữ liệu module</span><span data-lang="en">Module data</span></h2><span class="status neutral" id="module-data-badge">SYNTHETIC DEMO</span></div>
+        <p class="module-data-meta" id="module-data-meta"><span data-lang="vi">Đang tải dữ liệu module…</span><span data-lang="en">Loading module data…</span></p>
+        <div class="button-row module-data-actions" id="module-data-actions" hidden><button class="action-button primary" id="create-import-voucher" type="button" data-requires-permission="imports.manage" data-role-action="add"><span data-lang="vi">＋ Tạo phiếu nhập</span><span data-lang="en">＋ Create import voucher</span></button><button class="action-button" id="receive-import-animal" type="button" data-requires-permission="imports.manage" data-role-action="edit"><span data-lang="vi">Tiếp nhận thú cưng + chứng từ</span><span data-lang="en">Receive pet + attachment</span></button></div>
+        <div class="data-table-wrap"><table class="data-table" id="module-data-table"><thead></thead><tbody><tr><td class="table-empty">—</td></tr></tbody></table></div>
+        <div class="module-data-pages"><button class="action-button" id="module-data-prev" type="button"><span data-lang="vi">Trước</span><span data-lang="en">Previous</span></button><span id="module-data-page">—</span><button class="action-button" id="module-data-next" type="button"><span data-lang="vi">Tiếp</span><span data-lang="en">Next</span></button></div>
+        <section class="panel" id="import-related-panel" hidden style="margin-top:12px"><div class="panel-heading"><h3 id="import-related-title"></h3><span data-lang="vi">Thú cưng trong phiếu · SQLite</span><span data-lang="en">Animals in voucher · SQLite</span></div><div class="data-table-wrap"><table class="data-table"><thead id="import-related-head"></thead><tbody id="import-related-body"></tbody></table></div></section>
+      </section>
     </section>
   </main>
 
+  <dialog id="import-voucher-dialog"><form class="dialog-body" id="import-voucher-form"><h2><span data-lang="vi">Tạo phiếu nhập</span><span data-lang="en">Create import voucher</span></h2><p><span data-lang="vi">Phiếu được ghi vào SQLite. Tiếp nhận vật nuôi và ảnh chứng từ thực hiện ở bước kế tiếp.</span><span data-lang="en">The voucher is saved to SQLite. Animal intake and its attachment are recorded in the next step.</span></p><label><span data-lang="vi">Mã phiếu</span><span data-lang="en">Voucher code</span><input name="batch_code" required maxlength="40"></label><label><span data-lang="vi">Nhà cung cấp</span><span data-lang="en">Supplier</span><select name="supplier_id" id="import-supplier-select" required></select></label><label><span data-lang="vi">Ngày nhập</span><span data-lang="en">Import date</span><input name="import_date" type="date" required></label><label><span data-lang="vi">Ghi chú</span><span data-lang="en">Note</span><input name="note" maxlength="500"></label><p class="login-error" id="import-voucher-error" aria-live="polite"></p><div class="dialog-actions"><button class="action-button" type="button" data-close-dialog><span data-lang="vi">Hủy</span><span data-lang="en">Cancel</span></button><button class="action-button primary" type="submit"><span data-lang="vi">Lưu phiếu</span><span data-lang="en">Save voucher</span></button></div></form></dialog>
+  <dialog id="intake-animal-dialog"><form class="dialog-body" id="intake-animal-form"><h2><span data-lang="vi">Tiếp nhận vật nuôi</span><span data-lang="en">Receive animal</span></h2><p><span data-lang="vi">Ảnh bàn giao được lưu cùng hồ sơ tiếp nhận trong SQLite (JPEG/PNG/WebP, tối đa 8 MB).</span><span data-lang="en">The handover photo is stored with the intake record in SQLite (JPEG/PNG/WebP, up to 8 MB).</span></p><label><span data-lang="vi">Phiếu nhập đang mở</span><span data-lang="en">Open import voucher</span><select name="batch_id" id="intake-batch-select" required></select></label><label><span data-lang="vi">Mã vật nuôi</span><span data-lang="en">Animal code</span><input name="animal_code" required maxlength="40"></label><label><span data-lang="vi">Tên</span><span data-lang="en">Name</span><input name="name" required maxlength="100"></label><label><span data-lang="vi">Loài</span><span data-lang="en">Species</span><select name="species" required><option value="Chó">Chó / Dog</option><option value="Mèo">Mèo / Cat</option><option value="Thỏ">Thỏ / Rabbit</option><option value="Hamster">Hamster</option><option value="Chim">Chim / Bird</option><option value="Cá">Cá / Fish</option><option value="Bò sát">Bò sát / Reptile</option><option value="Nhím">Nhím / Hedgehog</option></select></label><label><span data-lang="vi">Giống</span><span data-lang="en">Breed</span><input name="breed" maxlength="100"></label><label><span data-lang="vi">Ngày sinh</span><span data-lang="en">Birth date</span><input name="birth_date" type="date"></label><label><span data-lang="vi">Giá nhập</span><span data-lang="en">Purchase price</span><input name="purchase_price" type="number" min="0" step="1000" value="0"></label><label><span data-lang="vi">Giá bán dự kiến</span><span data-lang="en">Expected sale price</span><input name="sale_price" type="number" min="0" step="1000" value="0"></label><label><span data-lang="vi">Ảnh chứng từ bàn giao</span><span data-lang="en">Handover evidence photo</span><input name="photo" id="intake-photo-file" type="file" accept="image/jpeg,image/png,image/webp" required></label><label><span data-lang="vi">Xác nhận bàn giao</span><span data-lang="en">Handover confirmation</span><input name="confirmation" required maxlength="300" value="Đã kiểm tra ảnh và xác nhận vật nuôi có mặt tại cửa hàng."></label><p class="login-error" id="intake-animal-error" aria-live="polite"></p><div class="dialog-actions"><button class="action-button" type="button" data-close-dialog><span data-lang="vi">Hủy</span><span data-lang="en">Cancel</span></button><button class="action-button primary" type="submit"><span data-lang="vi">Lưu tiếp nhận</span><span data-lang="en">Save intake</span></button></div></form></dialog>
+  <dialog id="intake-photo-dialog"><div class="dialog-body"><h2 id="intake-photo-title"><span data-lang="vi">Ảnh chứng từ tiếp nhận</span><span data-lang="en">Intake attachment</span></h2><img id="intake-photo-image" alt="Intake evidence attachment" style="display:block;max-width:100%;max-height:70vh;margin:0 auto;object-fit:contain"><div class="dialog-actions"><button class="action-button primary" type="button" data-close-dialog><span data-lang="vi">Đóng</span><span data-lang="en">Close</span></button></div></div></dialog>
   <dialog id="user-dialog"><form method="dialog" class="dialog-body" id="user-form"><h2><span data-lang="vi">Tài khoản demo mới</span><span data-lang="en">New demo account</span></h2><p><span data-lang="vi">Bản mô phỏng chỉ thêm dòng tạm vào bảng trong trình duyệt. Không tạo tài khoản thật.</span><span data-lang="en">The prototype adds a temporary row in this browser only. It does not create a real account.</span></p><label><span data-lang="vi">Tên đăng nhập</span><span data-lang="en">Username</span><input name="username" required minlength="3" autocomplete="off"></label><label><span data-lang="vi">Vai trò</span><span data-lang="en">Role</span><select name="role"><option>ADMIN</option><option>MANAGER</option><option>VETERINARIAN</option><option>CAREGIVER</option><option>SALES</option><option>INVENTORY_MANAGER</option><option>SERVICE_COORDINATOR</option><option>CUSTOMER_SUPPORT</option><option>REPORT_ANALYST</option><option>AUDITOR</option></select></label><div class="dialog-actions"><button class="action-button" value="cancel"><span data-lang="vi">Hủy</span><span data-lang="en">Cancel</span></button><button class="action-button primary" id="save-user" value="default"><span data-lang="vi">Thêm demo</span><span data-lang="en">Add demo</span></button></div></form></dialog>
   <dialog id="backup-dialog"><div class="dialog-body"><h2><span data-lang="vi">Quy trình backup an toàn</span><span data-lang="en">Safe backup procedure</span></h2><p><span data-lang="vi">Trong ứng dụng desktop thật: người có quyền settings.manage chọn thư mục backup, tạo bản SQLite theo yêu cầu, kiểm tra file và lưu bản sao ngoài máy. Giao diện hiện không có restore; hãy diễn tập phục hồi bằng quy trình đã phê duyệt.</span><span data-lang="en">In the real desktop app: a settings.manage user selects a backup directory, creates an on-demand SQLite copy, verifies it and keeps an off-device copy. There is no restore UI; rehearse recovery using an approved procedure.</span></p><div class="dialog-actions"><button class="action-button primary" type="button" data-close-dialog><span data-lang="vi">Đã hiểu</span><span data-lang="en">Understood</span></button></div></div></dialog>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
   <script>
+    const moduleDemos={
+      platform:{title:['Nền tảng & dữ liệu','Platform & data'],eyebrow:['Hạ tầng ứng dụng','Application foundation'],description:['Cấu hình phiên làm việc, vị trí dữ liệu cục bộ và trạng thái các dịch vụ nền. Bản demo chỉ trình bày cấu trúc, không đọc cấu hình máy.','Review session setup, local data location and foundational service status. This demo shows structure only and does not read machine configuration.'],permission:'settings.manage',action:['Rà cấu hình mẫu','Review sample setup'],stats:[['Nguồn dữ liệu','Data source','SQLite','Máy cục bộ · demo','Local machine · demo'],['Phiên làm việc','Session','Mô phỏng','Không xác thực','Not authenticated'],['Backup','Backup','Theo yêu cầu','Không tạo file ở đây','No file created here']],columns:[['Thành phần','Component'],['Trạng thái','Status'],['Ghi chú','Notes']],rows:[['Database','Cục bộ · mẫu','Không có kết nối từ trang HTML','Local sample','No connection from this HTML page'],['Audit','Thiết kế trong app','Chỉ sự kiện chọn lọc','Implemented in app','Selected events only'],['Backup','Theo yêu cầu','Demo không ghi file','On demand','Demo does not write files']]},
+      animals:{title:['Hồ sơ vật nuôi','Pet profiles'],eyebrow:['Chăm sóc động vật','Animal care'],description:['Tra cứu mã hồ sơ, loài, giống và trạng thái tiếp nhận. Dữ liệu dưới đây là mẫu minh họa, không liên kết hồ sơ thú cưng thật.','Review record code, species, breed and intake status. The rows below are illustrative and are not linked to real pet records.'],permission:'animals.manage',action:['Mở thao tác hồ sơ mẫu','Open sample record action'],stats:[['Hồ sơ minh họa','Sample profiles','03','Không phải tổng hệ thống','Not a system total'],['Chờ kiểm tra','Pending inspection','01','Mẫu trạng thái','Sample state'],['Đã sẵn sàng','Available','02','Mẫu trạng thái','Sample state']],columns:[['Mã / tên','Code / name'],['Loài / giống','Species / breed'],['Trạng thái','Status']],rows:[['PET-024 · Miso','Mèo · British Shorthair','AVAILABLE','Cat · British Shorthair','AVAILABLE'],['PET-031 · Đậu','Chó · Corgi','PENDING_INSPECTION','Dog · Corgi','PENDING_INSPECTION'],['PET-044 · Bông','Thỏ · Mixed','AVAILABLE','Rabbit · Mixed','AVAILABLE']]},
+      housing:{title:['Chuồng nuôi & sức chứa','Housing & capacity'],eyebrow:['Quản lý khu nuôi','Housing operations'],description:['Xem sức chứa theo khu và loài được chấp nhận. Không gán chuồng hay thay đổi sức chứa thật từ bản demo này.','Review capacity by area and accepted species. This demo does not assign animals or change real capacity.'],permission:'store.manage',action:['Xem phân công mẫu','Review sample assignments'],stats:[['Khu đang dùng','Areas in use','04','Số liệu minh họa','Illustrative count'],['Còn chỗ','Available capacity','08','Không đồng bộ live','Not live-synced'],['Cần kiểm tra','Needs review','01','Rà điều kiện phù hợp','Review suitability']],columns:[['Mã khu','Area'],['Loài','Species'],['Đang ở / sức chứa','Occupancy / capacity'],['Ghi chú','Note']],rows:[['C-01','Chó / Dog','03 / 05','Đang hoạt động · demo'],['C-02','Mèo / Cat','02 / 04','Đang hoạt động · demo'],['Q-01','Cách ly / Quarantine','01 / 02','Cần nhân viên rà · demo']]},
+      suppliers:{title:['Nhà cung cấp','Suppliers'],eyebrow:['Mua hàng','Procurement'],description:['Tra cứu liên hệ và nhóm hàng của nhà cung cấp. Thông tin nhà cung cấp không tự tạo nhập kho hoặc tăng số lượng tồn.','Review supplier contacts and product categories. Supplier records do not create receipts or increase stock.'],permission:'imports.view',action:['Rà hồ sơ nhà cung cấp','Review supplier record'],stats:[['Nhà cung cấp mẫu','Sample suppliers','03','Không phải dữ liệu thật','Not real data'],['Đang hoạt động','Active','02','Trạng thái mẫu','Sample status'],['Chờ rà soát','Needs review','01','Kiểm tra liên hệ','Verify contact']],columns:[['Mã / tên','Code / name'],['Nhóm hàng','Category'],['Liên hệ','Contact'],['Trạng thái','Status']],rows:[['SUP-01 · GreenFarm','Vật nuôi / Animals','supplier1@example.test','ACTIVE'],['SUP-02 · PetFoods','Thức ăn / Food','supplier2@example.test','ACTIVE'],['SUP-03 · VetSupply','Vật tư / Supplies','supplier3@example.test','REVIEW']]},
+      imports:{title:['Nhập hàng & tiếp nhận','Imports & intake'],eyebrow:['Chứng từ đầu vào','Receiving'],description:['Theo dõi phiếu nhập mẫu, người tiếp nhận và trạng thái đối soát. Hàng chỉ tăng tồn sau quy trình nhận hàng hợp lệ trong ứng dụng thật.','Review sample receipts, receiving staff and reconciliation state. Real stock changes only after a valid receiving workflow in the application.'],permission:'imports.manage',action:['Mô phỏng rà phiếu nhập','Review sample receipt'],stats:[['Phiếu mẫu','Sample receipts','03','Kỳ hiện tại · mẫu','Current period · sample'],['Đã đối soát','Reconciled','02','Trạng thái minh họa','Illustrative state'],['Chờ tiếp nhận','Awaiting receipt','01','Chưa ghi tồn','No stock posted']],columns:[['Phiếu','Receipt'],['Nhà cung cấp','Supplier'],['Ngày','Date'],['Trạng thái','Status']],rows:[['IMP-112','GreenFarm','2026-10-06','RECEIVED · demo'],['IMP-113','PetFoods','2026-10-07','PENDING · demo'],['IMP-114','VetSupply','2026-10-07','DRAFT · demo']]},
+      health:{title:['Theo dõi sức khỏe','Health monitoring'],eyebrow:['Hồ sơ y tế','Health records'],description:['Rà quan sát, lần khám và lịch tiêm theo hồ sơ mẫu. Nội dung không thay cho chẩn đoán hoặc chỉ định của bác sĩ thú y.','Review observations, visits and vaccination dates in sample records. This is not a veterinary diagnosis or prescription.'],permission:'health.manage',action:['Mở ghi nhận sức khỏe mẫu','Open sample health action'],stats:[['Quan sát gần đây','Recent observations','03','Bản ghi mẫu','Sample records'],['Lịch tiêm cần rà','Vaccines to review','01','Xác minh hồ sơ gốc','Verify source record'],['Tái khám','Follow-up','02','Theo lịch bác sĩ','Per veterinarian schedule']],columns:[['Thú cưng','Pet'],['Nội dung','Record'],['Ngày','Date'],['Theo dõi','Follow-up']],rows:[['Miso · PET-024','Khám định kỳ · mẫu','2026-10-07','12 tháng · xác minh'],['Đậu · PET-031','Tiêm chủng · mẫu','2026-10-05','Cần đối chiếu'],['Bông · PET-044','Quan sát ăn uống · mẫu','2026-10-04','Theo dõi · demo']]},
+      care:{title:['Chăm sóc hằng ngày','Daily care'],eyebrow:['Vận hành chăm sóc','Care operations'],description:['Theo dõi checklist và người phụ trách. Hoàn tất trong prototype không ghi vào hồ sơ ứng dụng.','Review care checklists and assignees. Completing items in this prototype does not update application records.'],permission:'care.manage',action:['Rà checklist mẫu','Review sample checklist'],stats:[['Checklist hôm nay','Today checklists','06','Mẫu tĩnh','Static sample'],['Hoàn tất','Completed','04','Không lưu thay đổi','Changes not saved'],['Còn mở','Open','02','Cần nhân viên xác minh','Staff verification needed']],columns:[['Mã','ID'],['Công việc','Task'],['Phụ trách','Assignee'],['Trạng thái','Status']],rows:[['CARE-031','Chải lông · Miso','Care demo 01','DONE · sample'],['CARE-032','Kiểm tra ăn uống · Đậu','Care demo 02','OPEN · sample'],['CARE-033','Vệ sinh khu · C-01','Care demo 03','OPEN · sample']]},
+      customers:{title:['Khách hàng','Customers'],eyebrow:['Quan hệ khách hàng','Customer records'],description:['Tra cứu thông tin liên hệ và thú cưng liên kết. Dữ liệu mẫu không đại diện cho khách hàng thật và không hiển thị thông tin nhạy cảm.','Review contact records and linked pets. Sample rows are not real customers and do not expose sensitive information.'],permission:'sales.view',action:['Mở hồ sơ khách mẫu','Open sample customer'],stats:[['Khách mẫu','Sample customers','03','Không phải KPI thật','Not a live KPI'],['Có thú cưng liên kết','With linked pets','02','Theo dữ liệu mẫu','From sample data'],['Cần cập nhật','Needs update','01','Xác minh consent','Verify consent']],columns:[['Mã / tên','Code / name'],['Liên hệ','Contact'],['Thú cưng','Pets'],['Trạng thái','Status']],rows:[['CUS-018 · Linh Anh','linh@example.test','Miso · Đậu','ACTIVE · demo'],['CUS-021 · Minh An','minh@example.test','Bông','ACTIVE · demo'],['CUS-026 · Hà My','ha@example.test','—','REVIEW · demo']]},
+      reservations:{title:['Đặt giữ & tiền cọc','Reservations & deposits'],eyebrow:['Giữ chỗ','Reservations'],description:['Theo dõi thời hạn giữ chỗ, khoản cọc đã ghi nhận và trạng thái. Không xử lý thanh toán hoặc tự động xác nhận giao dịch.','Review hold deadlines, recorded deposits and states. No payment processing or automatic transaction confirmation.'],permission:'services.manage',action:['Rà đặt giữ mẫu','Review sample reservation'],stats:[['Đang giữ','On hold','02','Mẫu minh họa','Illustrative sample'],['Chờ cọc','Deposit pending','01','Nhân viên xác minh','Staff verification'],['Sắp hết hạn','Expiring soon','01','Rà thời hạn','Review deadline']],columns:[['Mã','ID'],['Khách / thú cưng','Customer / pet'],['Hạn giữ','Hold until'],['Cọc','Deposit'],['Trạng thái','State']],rows:[['RSV-006','CUS-018 · Miso','2026-10-08','Đã ghi · mẫu','HELD'],['RSV-007','CUS-021 · Bông','2026-10-09','Chờ xác minh','PENDING'],['RSV-008','CUS-026 · Đậu','2026-10-10','Chưa ghi','HELD']]},
+      memberships:{title:['Hội viên & thanh toán nội bộ','Memberships & internal billing'],eyebrow:['Chương trình hội viên','Memberships'],description:['Xem gói, kỳ hạn và trạng thái hóa đơn nội bộ. Không phát sinh giao dịch; số dư và quyền lợi chỉ là dữ liệu demo.','Review plans, terms and internal billing states. No transactions are created; balances and benefits are demo data only.'],permission:'membership.manage',action:['Rà hồ sơ hội viên mẫu','Review sample membership'],stats:[['Hội viên mẫu','Sample members','12','Không phải số thật','Not a real count'],['Đang hoạt động','Active','09','Trạng thái demo','Demo state'],['Hóa đơn chờ','Bills pending','02','Xác nhận nội bộ','Internal confirmation']],columns:[['Mã hội viên','Membership'],['Khách hàng','Customer'],['Gói','Plan'],['Hóa đơn','Bill'],['Trạng thái','Status']],rows:[['MEM-014','CUS-018','Basic care · demo','SETTLED · sample','ACTIVE'],['MEM-015','CUS-021','Service plan · demo','UNPAID · sample','PENDING'],['MEM-016','CUS-026','Silver · demo','PARTIAL · sample','ACTIVE']]}
+    };
     const navButtons = [...document.querySelectorAll('.admin-nav [data-view]')];
     const views = [...document.querySelectorAll('[data-view-panel]')];
+    const moduleDataIds={platform:'module_01_platform',staff:'module_02_accounts',overview:'module_03_dashboard',animals:'module_04_pets',housing:'module_05_housing',suppliers:'module_06_suppliers',imports:'module_07_imports',health:'module_08_health',care:'module_09_care',customers:'module_10_customers',reservations:'module_11_reservations',sales:'module_12_orders',memberships:'module_13_memberships',services:'module_14_services',inventory:'module_15_inventory',reports:'module_16_reports',audit:'module_17_alerts'};
+    const moduleDataCache=new Map();
+    const moduleDataPageSize=20;
+    let moduleDataRoute='';
+    let moduleDataPage=1;
     const currentSection = document.getElementById('current-section');
     const globalSearch = document.getElementById('global-search');
     const serviceFilter = document.getElementById('service-filter');
-    const roleSwitch = document.getElementById('role-switch');
     const adminShell = document.getElementById('admin-shell');
     const loginStage = document.getElementById('login-stage');
     const toast = document.getElementById('toast');
     let toastTimer;
-    const rolePermissions = {
-      ADMIN: ['dashboard.view','animals.view','animals.manage','health.view','health.manage','care.view','care.manage','store.view','store.manage','imports.view','imports.manage','sales.view','sales.manage','membership.view','membership.manage','services.view','services.manage','services.catalog.manage','inventory.view','inventory.manage','reports.view','notifications.view','settings.manage','users.manage','audit.view'],
-      MANAGER: ['dashboard.view','animals.view','animals.manage','health.view','health.manage','care.view','care.manage','store.view','store.manage','imports.view','imports.manage','sales.view','sales.manage','membership.view','membership.manage','services.view','services.manage','services.catalog.manage','inventory.view','inventory.manage','reports.view','notifications.view','settings.manage','audit.view'],
-      VETERINARIAN: ['dashboard.view','animals.view','health.view','health.manage','care.view','inventory.view','inventory.manage','reports.view','notifications.view'],
-      CAREGIVER: ['dashboard.view','animals.view','health.view','care.view','care.manage','services.view','services.manage','inventory.view','inventory.manage','reports.view','notifications.view'],
-      SALES: ['dashboard.view','animals.view','store.view','imports.view','sales.view','sales.manage','membership.view','membership.manage','services.view','services.manage','reports.view','notifications.view'],
-      INVENTORY_MANAGER: ['dashboard.view','imports.view','imports.manage','inventory.view','inventory.manage','reports.view','notifications.view'],
-      SERVICE_COORDINATOR: ['dashboard.view','services.view','services.manage','membership.view','reports.view','notifications.view'],
-      CUSTOMER_SUPPORT: ['dashboard.view','animals.view','sales.view','membership.view','services.view','reports.view','notifications.view'],
-      REPORT_ANALYST: ['dashboard.view','reports.view'],
-      AUDITOR: ['dashboard.view','reports.view','audit.view']
-    };
     const roleLabels = { ADMIN:['Quản trị viên','Administrator'], MANAGER:['Quản lý','Store manager'], VETERINARIAN:['Bác sĩ thú y','Veterinarian'], CAREGIVER:['Nhân viên chăm sóc','Caregiver'], SALES:['Nhân viên bán hàng','Sales associate'], INVENTORY_MANAGER:['Quản lý kho','Inventory manager'], SERVICE_COORDINATOR:['Điều phối dịch vụ','Service coordinator'], CUSTOMER_SUPPORT:['Chăm sóc khách hàng','Customer support'], REPORT_ANALYST:['Chuyên viên báo cáo','Report analyst'], AUDITOR:['Kiểm toán viên','Auditor'] };
-    const sectionNames = { overview:['Tổng quan','Overview'], staff:['Nhân sự & quyền','Staff & roles'], inventory:['Kho & cảnh báo','Inventory & alerts'], services:['Lịch dịch vụ','Service schedule'], sales:['Đơn & hội viên','Orders & members'], reports:['Báo cáo & đối soát','Reports & reconciliation'], audit:['Audit & backup','Audit & backup'] };
-    let activeRole = 'ADMIN';
-    let activeUser = 'admin.demo';
-    const hasPermission = permission => rolePermissions[activeRole]?.includes(permission) ?? false;
+    const sectionNames = { overview:['Bảng điều khiển','Dashboard'], staff:['Tài khoản & quyền','Accounts & roles'], inventory:['Sản phẩm & tồn kho','Products & inventory'], services:['Dịch vụ & lịch hẹn','Services & scheduling'], sales:['Đơn hàng & thanh toán','Orders & payments'], reports:['Báo cáo vận hành','Operational reports'], audit:['Cảnh báo & sao lưu','Alerts & backup'] };
+    let activeRole = '';
+    let activeUser = '';
+    let activePermissions = new Set();
+    const apiBase = `${location.origin}/api`;
+    const apiFetch = async (path, options = {}) => {
+      const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+      const requestUrl = `${apiBase}${normalizedPath}`;
+      const response = await fetch(requestUrl, {
+        credentials: 'include',
+        ...options,
+        headers: {
+          ...(options.headers || {}),
+          ...(options.method && options.method !== 'GET' ? {'X-PetCare-Request': '1'} : {}),
+        },
+      });
+      if (response.status === 404 && !path.startsWith('/api')) {
+        const fallback = await fetch(`${location.origin}${normalizedPath}`, {
+          credentials: 'include',
+          ...options,
+          headers: {
+            ...(options.headers || {}),
+            ...(options.method && options.method !== 'GET' ? {'X-PetCare-Request': '1'} : {}),
+          },
+        });
+        if (fallback.ok || fallback.status === 401 || fallback.status === 403) {
+          return fallback;
+        }
+      }
+      return response;
+    };
+    const rolePermissionMatrix = {
+      ADMIN: ['dashboard.view','users.manage','animals.view','store.view','imports.view','imports.manage','health.view','care.view','sales.view','membership.view','services.view','inventory.view','reports.view','notifications.view','audit.view'],
+      MANAGER: ['dashboard.view','animals.view','store.view','imports.view','health.view','care.view','sales.view','membership.view','services.view','inventory.view','reports.view'],
+      VETERINARIAN: ['animals.view','health.view','care.view','dashboard.view'],
+      CAREGIVER: ['animals.view','care.view','health.view','dashboard.view'],
+      SALES: ['sales.view','membership.view','services.view','dashboard.view'],
+      INVENTORY_MANAGER: ['store.view','inventory.view','imports.view','dashboard.view'],
+      SERVICE_COORDINATOR: ['services.view','sales.view','dashboard.view'],
+      CUSTOMER_SUPPORT: ['sales.view','membership.view','dashboard.view'],
+      REPORT_ANALYST: ['reports.view','dashboard.view','audit.view'],
+      AUDITOR: ['audit.view','reports.view','dashboard.view']
+    };
+    const roleCrudMatrix = {
+      ADMIN: { view: true, add: true, edit: true, delete: true },
+      MANAGER: { view: true, add: true, edit: true, delete: true },
+      VETERINARIAN: { view: true, add: true, edit: true, delete: true },
+      CAREGIVER: { view: true, add: true, edit: true, delete: false },
+      SALES: { view: true, add: true, edit: true, delete: false },
+      INVENTORY_MANAGER: { view: true, add: true, edit: true, delete: true },
+      SERVICE_COORDINATOR: { view: true, add: true, edit: true, delete: false },
+      CUSTOMER_SUPPORT: { view: true, add: false, edit: false, delete: false },
+      REPORT_ANALYST: { view: true, add: false, edit: false, delete: false },
+      AUDITOR: { view: true, add: false, edit: false, delete: false },
+    };
+    const localFallbackDataRoots = ['HTML/data', 'data'];
+    const hasPermission = permission => activePermissions.has(permission);
+    const hasCrudPermission = action => Boolean(roleCrudMatrix[activeRole]?.[action]);
+    const escapeMarkup = value => String(value).replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
+    async function loadLocalModuleFallback(moduleId) {
+      for (const root of localFallbackDataRoots) {
+        try {
+          const response = await fetch(`${root}/${moduleId}.json`, { cache: 'no-store' });
+          if (response.ok) {
+            return await response.json();
+          }
+        } catch (error) {
+          // Ignore local-data fallback errors and continue to the backend path.
+        }
+      }
+      return null;
+    }
+    function applyDemoRolePreview(role) {
+      const currentRole = role || 'ADMIN';
+      activeRole = currentRole;
+      activePermissions = new Set(rolePermissionMatrix[currentRole] || []);
+      document.getElementById('demo-role-select').value = currentRole;
+      document.getElementById('role-label').textContent = roleLabels[currentRole]?.[document.body.classList.contains('show-en') ? 1 : 0] || currentRole;
+      if (activeRole) {
+        document.querySelectorAll('.admin-nav button').forEach(button => {
+          const requiresPermission = button.dataset.viewPermission;
+          const visible = !requiresPermission || hasPermission(requiresPermission);
+          button.hidden = !visible;
+        });
+      }
+      document.querySelectorAll('[data-role-action]').forEach(button => {
+        const permitted = hasCrudPermission(button.dataset.roleAction);
+        button.hidden = !permitted;
+        button.disabled = !permitted;
+      });
+    }
+    function formatModuleValue(value) {
+      if(value===null||value===undefined) return '—';
+      if(typeof value==='object') return JSON.stringify(value);
+      return String(value);
+    }
+    function getModuleDataRows() {
+      const dataset=moduleDataCache.get(moduleDataRoute);
+      if(!dataset) return [];
+      const query=globalSearch.value.trim().toLocaleLowerCase();
+      return dataset.records.filter(record=>!query||Object.entries(record).some(([key,value])=>`${key} ${formatModuleValue(value)}`.toLocaleLowerCase().includes(query)));
+    }
+    function renderModuleDataTable() {
+      const dataset=moduleDataCache.get(moduleDataRoute);
+      if(!dataset) return;
+      const rows=getModuleDataRows();
+      const pageCount=Math.max(1,Math.ceil(rows.length/moduleDataPageSize));
+      moduleDataPage=Math.min(moduleDataPage,pageCount);
+      const fields=[...new Set(rows.flatMap(record=>Object.keys(record).filter(key=>key!=='synthetic')))];
+      const head=document.querySelector('#module-data-table thead');
+      const body=document.querySelector('#module-data-table tbody');
+      const showImportActions=moduleDataRoute==='imports';
+      head.innerHTML=`<tr>${fields.map(field=>`<th>${escapeMarkup(field)}</th>`).join('')}${showImportActions?`<th>${document.body.classList.contains('show-en')?'Actions':'Thao tác'}</th>`:''}</tr>`;
+      const pageRows=rows.slice((moduleDataPage-1)*moduleDataPageSize,moduleDataPage*moduleDataPageSize);
+      body.innerHTML=pageRows.length?pageRows.map(record=>`<tr>${fields.map(field=>`<td>${escapeMarkup(formatModuleValue(record[field]))}</td>`).join('')}${showImportActions?`<td><button class="action-button small-action" type="button" data-import-batch="${Number(record.id)}" data-import-code="${escapeMarkup(record.batch_code||'')}" data-import-status="${escapeMarkup(record.status||'')}">${document.body.classList.contains('show-en')?'View intake':'Xem tiếp nhận'}</button></td>`:''}</tr>`).join(''):`<tr><td class="table-empty" colspan="${Math.max(fields.length,1)}">${document.body.classList.contains('show-en')?'No SQLite records match the search.':'Không có bản ghi SQLite phù hợp.'}</td></tr>`;
+      const english=document.body.classList.contains('show-en');
+      document.getElementById('module-data-badge').textContent=english?'LIVE SQLITE · READ ONLY':'SQLITE THẬT · CHỈ ĐỌC';
+      document.getElementById('module-data-meta').textContent=english?`${dataset.total.toLocaleString()} SQLite records · ${rows.length.toLocaleString()} match current search · read only${dataset.truncated?' · showing first 5,000':''}`:`${dataset.total.toLocaleString()} bản ghi SQLite · ${rows.length.toLocaleString()} bản ghi khớp tìm kiếm · chỉ đọc${dataset.truncated?' · chỉ tải 5.000 dòng đầu':''}`;
+      document.getElementById('module-data-page').textContent=english?`Page ${moduleDataPage} / ${pageCount}`:`Trang ${moduleDataPage} / ${pageCount}`;
+      document.getElementById('module-data-prev').disabled=moduleDataPage<=1;
+      document.getElementById('module-data-next').disabled=moduleDataPage>=pageCount;
+      document.getElementById('module-data-actions').hidden=moduleDataRoute!=='imports'||!hasPermission('imports.manage');
+      body.querySelectorAll('[data-import-batch]').forEach(button=>button.addEventListener('click',()=>loadImportBatchAnimals(Number(button.dataset.importBatch),button.dataset.importCode)));
+    }
+    async function loadModuleData(name) {
+      const panel=document.getElementById('module-data-panel');
+      const moduleId=moduleDataIds[name];
+      if(!moduleId){panel.hidden=true;return;}
+      panel.hidden=false;
+      moduleDataRoute=name;
+      moduleDataPage=1;
+      const english=document.body.classList.contains('show-en');
+      document.getElementById('module-data-title').textContent=english?`Module data · ${name}`:`Dữ liệu module · ${name}`;
+      document.getElementById('module-data-badge').textContent=english?'CONNECTING':'ĐANG KẾT NỐI';
+      document.getElementById('module-data-meta').textContent=english?'Loading SQLite data…':'Đang tải dữ liệu SQLite…';
+      document.querySelector('#module-data-table thead').innerHTML='';
+      document.querySelector('#module-data-table tbody').innerHTML=`<tr><td class="table-empty">${english?'Loading…':'Đang tải…'}</td></tr>`;
+      document.getElementById('module-data-page').textContent='—';
+      try {
+        const response=await apiFetch(`/modules/${moduleId}/records`);
+        if(response.status===401){logoutToLogin();return;}
+        if(response.status===403)throw new Error(english?'Your account cannot view this module.':'Tài khoản không có quyền xem module này.');
+        if(!response.ok)throw new Error(`HTTP ${response.status}`);
+        const dataset=await response.json();
+        moduleDataCache.set(name,dataset);
+        if(moduleDataRoute!==name)return;
+        document.getElementById('module-data-title').textContent=`${sectionNames[name]?.[english?1:0]||moduleDemos[name]?.title[english?1:0]||name} · ${english?'Live records':'Dữ liệu hiện có'}`;
+        renderModuleDataTable();
+      } catch(error) {
+        if(moduleDataRoute!==name)return;
+        try {
+          const fallback = await loadLocalModuleFallback(moduleId);
+          if (fallback) {
+            const records = Array.isArray(fallback.demoData) && fallback.demoData.length ? fallback.demoData.map((item, index) => ({ ...item, id: item.id || index + 1 })) : [{ moduleId, source: 'local-json', summary: fallback.purpose?.[document.body.classList.contains('show-en') ? 'en' : 'vi'] || 'Local metadata fallback' }];
+            const dataset = {
+              moduleId,
+              source: 'local-json',
+              readOnly: true,
+              total: records.length,
+              records,
+              truncated: false,
+            };
+            moduleDataCache.set(name, dataset);
+            document.getElementById('module-data-badge').textContent = english ? 'LOCAL DATA · DEMO' : 'DỮ LIỆU CỤC BỘ · DEMO';
+            document.getElementById('module-data-meta').textContent = english ? `Using local JSON metadata for ${moduleId} because the live SQLite bridge is unavailable.` : `Đang dùng dữ liệu JSON cục bộ cho ${moduleId} vì cầu nối SQLite đang không khả dụng.`;
+            renderModuleDataTable();
+            return;
+          }
+        } catch (fallbackError) {
+          // Ignore JSON fallback failures and continue to the generic error state.
+        }
+        document.getElementById('module-data-badge').textContent=english?'CONNECTION ERROR':'LỖI KẾT NỐI';
+        document.getElementById('module-data-meta').textContent=english?`Could not load live SQLite data: ${error.message}`:`Không tải được dữ liệu SQLite: ${error.message}`;
+        document.querySelector('#module-data-table thead').innerHTML='';
+        document.querySelector('#module-data-table tbody').innerHTML=`<tr><td class="table-empty">${escapeMarkup(error.message)}</td></tr>`;
+        document.getElementById('module-data-page').textContent='—';
+      }
+    }
+    async function loadImportBatchAnimals(batchId,batchCode='') {
+      const relatedPanel=document.getElementById('import-related-panel');
+      relatedPanel.hidden=false;
+      document.getElementById('import-related-title').textContent=`${document.body.classList.contains('show-en')?'Voucher':'Phiếu'} ${batchCode||`#${batchId}`}`;
+      document.getElementById('import-related-body').innerHTML='<tr><td class="table-empty">Loading…</td></tr>';
+      try{
+        const response=await apiFetch(`/imports/${batchId}/animals`);
+        const result=await response.json();
+        if(!response.ok)throw new Error(result.error||`HTTP ${response.status}`);
+        const records=result.records||[];
+        if(!records.length){document.getElementById('import-related-head').innerHTML='';document.getElementById('import-related-body').innerHTML=`<tr><td class="table-empty">${document.body.classList.contains('show-en')?'No animals received for this voucher yet.':'Phiếu này chưa có thú cưng tiếp nhận.'}</td></tr>`;return;}
+        const columns=Object.keys(records[0]).filter(key=>key!=='id');
+        document.getElementById('import-related-head').innerHTML=`<tr>${columns.map(key=>`<th>${escapeMarkup(key)}</th>`).join('')}<th>${document.body.classList.contains('show-en')?'Attachment':'Chứng từ'}</th></tr>`;
+        document.getElementById('import-related-body').innerHTML=records.map(record=>{const hasReceipt=Boolean(Number(record.receipt_confirmed));return `<tr>${columns.map(key=>`<td>${escapeMarkup(formatModuleValue(record[key]))}</td>`).join('')}<td>${hasReceipt?`<button class="action-button small-action" type="button" data-intake-photo="${Number(record.id)}" data-animal-code="${escapeMarkup(record.animal_code||'')}">${document.body.classList.contains('show-en')?'Open photo':'Mở ảnh'}</button>`:`<span class="status warn">${document.body.classList.contains('show-en')?'No file':'Chưa có file'}</span>`}</td></tr>`;}).join('');
+        document.getElementById('import-related-body').querySelectorAll('[data-intake-photo]').forEach(button=>button.addEventListener('click',()=>showIntakePhoto(Number(button.dataset.intakePhoto),button.dataset.animalCode)));
+      }catch(error){document.getElementById('import-related-body').innerHTML=`<tr><td class="table-empty">${escapeMarkup(error.message)}</td></tr>`;}
+    }
+    async function showIntakePhoto(animalId,animalCode) {
+      try{
+        const response=await apiFetch(`/intake-receipts/${animalId}/photo`);
+        if(!response.ok){const result=await response.json().catch(()=>({}));throw new Error(result.error||`HTTP ${response.status}`);}
+        const image=document.getElementById('intake-photo-image');
+        if(image.dataset.objectUrl)URL.revokeObjectURL(image.dataset.objectUrl);
+        const objectUrl=URL.createObjectURL(await response.blob());
+        image.dataset.objectUrl=objectUrl;
+        image.src=objectUrl;
+        document.getElementById('intake-photo-title').textContent=`${document.body.classList.contains('show-en')?'Intake attachment':'Ảnh chứng từ tiếp nhận'} · ${animalCode}`;
+        document.getElementById('intake-photo-dialog').showModal();
+      }catch(error){showToast(error.message);}
+    }
+    async function openImportVoucherDialog() {
+      const select=document.getElementById('import-supplier-select');
+      select.innerHTML='';
+      try{
+        const response=await apiFetch('/modules/module_06_suppliers/records');
+        const result=await response.json();
+        if(!response.ok)throw new Error(result.error||`HTTP ${response.status}`);
+        const suppliers=(result.records||[]).filter(record=>Number(record.is_active)!==0);
+        select.innerHTML=suppliers.map(supplier=>`<option value="${Number(supplier.id)}">${escapeMarkup(supplier.supplier_code||supplier.id)} · ${escapeMarkup(supplier.name)}</option>`).join('');
+        if(!suppliers.length)throw new Error(document.body.classList.contains('show-en')?'No active supplier record found.':'Không tìm thấy nhà cung cấp đang hoạt động.');
+        document.getElementById('import-voucher-error').textContent='';
+        document.getElementById('import-voucher-form').elements.import_date.value=new Date().toISOString().slice(0,10);
+        document.getElementById('import-voucher-dialog').showModal();
+      }catch(error){showToast(error.message);}
+    }
+    function openIntakeAnimalDialog(batchId=null) {
+      const select=document.getElementById('intake-batch-select');
+      const openBatches=(moduleDataCache.get('imports')?.records||[]).filter(record=>record.status==='OPEN');
+      select.innerHTML=openBatches.map(batch=>`<option value="${Number(batch.id)}">${escapeMarkup(batch.batch_code)} · ${escapeMarkup(batch.supplier_name||'')}</option>`).join('');
+      if(batchId!==null)select.value=String(batchId);
+      const error=document.getElementById('intake-animal-error');
+      error.textContent=openBatches.length?'':(document.body.classList.contains('show-en')?'Create or open an OPEN import voucher first.':'Hãy tạo phiếu nhập trạng thái OPEN trước.');
+      document.getElementById('intake-animal-form').querySelector('button[type="submit"]').disabled=!openBatches.length;
+      document.getElementById('intake-animal-dialog').showModal();
+    }
+    async function readFileAsDataUrl(file) {
+      return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(new Error('Could not read selected attachment.'));reader.onload=()=>resolve(String(reader.result||''));reader.readAsDataURL(file);});
+    }
+    async function submitImportVoucher(event) {
+      event.preventDefault();
+      const form=event.currentTarget;
+      const values=Object.fromEntries(new FormData(form).entries());
+      values.supplier_id=Number(values.supplier_id);
+      const error=document.getElementById('import-voucher-error');
+      error.textContent='';
+      try{
+        const response=await apiFetch('/imports/batches',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(values)});
+        const result=await response.json();
+        if(!response.ok)throw new Error(result.error||`HTTP ${response.status}`);
+        document.getElementById('import-voucher-dialog').close();
+        form.reset();
+        await loadModuleData('imports');
+        openIntakeAnimalDialog(result.id);
+        showToast(document.body.classList.contains('show-en')?'Import voucher saved to SQLite.':'Đã lưu phiếu nhập vào SQLite.');
+      }catch(problem){error.textContent=problem.message;}
+    }
+    async function submitIntakeAnimal(event) {
+      event.preventDefault();
+      const form=event.currentTarget;
+      const values=Object.fromEntries(new FormData(form).entries());
+      const file=document.getElementById('intake-photo-file').files[0];
+      const error=document.getElementById('intake-animal-error');
+      error.textContent='';
+      if(!file){error.textContent=document.body.classList.contains('show-en')?'Attach an intake photo first.':'Hãy chọn ảnh chứng từ tiếp nhận.';return;}
+      if(file.size>8*1024*1024){error.textContent=document.body.classList.contains('show-en')?'Photo must be 8 MB or smaller.':'Ảnh không được vượt quá 8 MB.';return;}
+      if(!['image/jpeg','image/png','image/webp'].includes(file.type)){error.textContent=document.body.classList.contains('show-en')?'Use JPEG, PNG or WebP.':'Chỉ chấp nhận JPEG, PNG hoặc WebP.';return;}
+      try{
+        const dataUrl=await readFileAsDataUrl(file);
+        values.purchase_price=Number(values.purchase_price||0);
+        values.sale_price=Number(values.sale_price||0);
+        values.photoMime=file.type;
+        values.photoBase64=dataUrl.split(',',2)[1];
+        const batchId=Number(values.batch_id);
+        delete values.photo;
+        delete values.batch_id;
+        const response=await apiFetch(`/imports/batches/${batchId}/animals`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(values)});
+        const result=await response.json();
+        if(!response.ok)throw new Error(result.error||`HTTP ${response.status}`);
+        document.getElementById('intake-animal-dialog').close();
+        form.reset();
+        await loadModuleData('imports');
+        await loadImportBatchAnimals(batchId,document.querySelector(`#module-data-table [data-import-batch="${batchId}"]`)?.dataset.importCode||'');
+        showToast(document.body.classList.contains('show-en')?'Animal intake and attachment saved to SQLite.':'Đã lưu tiếp nhận và ảnh chứng từ vào SQLite.');
+      }catch(problem){error.textContent=problem.message;}
+    }
+    function renderModuleDemo(name) {
+      const module=moduleDemos[name];
+      if(!module) return;
+      const english=document.body.classList.contains('show-en');
+      const panel=document.getElementById('module-demo-content');
+      const stats=module.stats.map(stat=>`<article class="metric-card"><span class="metric-label">${escapeMarkup(stat[english?1:0])}</span><strong class="metric-value">${escapeMarkup(stat[2])}</strong><span class="metric-note">${escapeMarkup(stat[english?4:3])}</span></article>`).join('');
+      const headings=module.columns.map(column=>`<th>${escapeMarkup(column[english?1:0])}</th>`).join('');
+      const rows=module.rows.map(row=>`<tr>${row.map(cell=>`<td>${escapeMarkup(cell)}</td>`).join('')}</tr>`).join('');
+      panel.innerHTML=`<div class="view-heading"><div><span class="view-eyebrow">${escapeMarkup(module.eyebrow[english?1:0])} · MODULE DEMO</span><h1>${escapeMarkup(module.title[english?1:0])}</h1><p>${escapeMarkup(module.description[english?1:0])}</p></div><button class="action-button" type="button" data-module-action>${escapeMarkup(module.action[english?1:0])}</button></div><div class="metric-grid">${stats}</div><section class="panel"><div class="panel-heading"><h2>${escapeMarkup(module.title[english?1:0])}</h2><span>${english?'Static sample records':'Bản ghi mẫu tĩnh'}</span></div><div class="data-table-wrap"><table class="data-table searchable-table"><thead><tr>${headings}</tr></thead><tbody>${rows}</tbody></table></div></section><p class="report-notice"><strong>${english?'Demo boundary':'Ranh giới demo'}</strong>${english?' Illustrative values only. This prototype does not connect to SQLite or persist actions.':' Số liệu chỉ minh họa. Prototype không kết nối SQLite và không lưu thao tác.'}</p>`;
+      const action=panel.querySelector('[data-module-action]');
+      action.hidden=!hasPermission(module.permission);
+      action.addEventListener('click',()=>showToast(`Demo only: ${module.title[english?1:0]} action is not persisted.`));
+    }
+    function enterWorkspace(session) {
+      const user=session.user;
+      activeUser=user.username;
+      activeRole=user.role;
+      activePermissions=new Set(session.permissions||[]);
+      document.body.classList.remove('login-required');
+      loginStage.hidden=true;
+      adminShell.hidden=false;
+      applyRole();
+    }
+    function logoutToLogin(callApi=true) {
+      if(callApi) apiFetch('/logout',{method:'POST'}).catch(()=>{});
+      moduleDataCache.clear();
+      moduleDataRoute='';
+      activePermissions.clear();
+      activeRole='';
+      activeUser='';
+      adminShell.hidden=true;
+      loginStage.hidden=false;
+      document.body.classList.add('login-required');
+      document.getElementById('login-password').value='';
+      document.getElementById('login-error').textContent='';
+    }
     function applyRole() {
-      navButtons.forEach(button => { button.hidden = !hasPermission(button.dataset.viewPermission); });
-      document.querySelectorAll('[data-requires-permission]').forEach(control => { control.hidden = !hasPermission(control.dataset.requiresPermission); });
+      navButtons.forEach(button => { button.hidden = !button.dataset.viewPermission.split('|').some(hasPermission); });
+      document.querySelectorAll('[data-requires-permission]').forEach(control => { control.hidden = !control.dataset.requiresPermission.split('|').some(hasPermission); });
+      document.querySelectorAll('[data-role-action]').forEach(button => {
+        const permitted = hasCrudPermission(button.dataset.roleAction);
+        button.hidden = !permitted;
+        button.disabled = !permitted;
+      });
       document.getElementById('signed-user-label').textContent = `${activeUser} · ${activeRole}`;
       document.getElementById('user-avatar').textContent = activeRole.slice(0,2);
+      document.getElementById('role-label').textContent=roleLabels[activeRole]?.[document.body.classList.contains('show-en')?1:0]||activeRole;
       const activeButton = document.querySelector('.admin-nav [aria-current="page"]');
       if (!activeButton || activeButton.hidden) setView('overview');
       else setView(activeButton.dataset.view);
+    }
+    function applyRolePreviewSelection(role) {
+      const selectedRole = role || document.getElementById('demo-role-select').value;
+      applyDemoRolePreview(selectedRole);
+      navButtons.forEach(button => button.setAttribute('aria-current', 'false'));
+      const overviewButton = navButtons.find(button => button.dataset.view === 'overview');
+      if (overviewButton) overviewButton.setAttribute('aria-current', 'page');
+      if (document.querySelector('.view.is-active')) setView('overview');
     }
     function setView(name) {
       const targetButton = navButtons.find(button => button.dataset.view === name);
@@ -298,10 +712,13 @@
         showToast(`Access unavailable for ${activeRole} in this demo.`);
         return;
       }
-      views.forEach(view => { const active=view.dataset.viewPanel===name; view.classList.toggle('is-active',active); view.hidden=!active; });
+      if(moduleDemos[name]) renderModuleDemo(name);
+      const targetPanel=moduleDemos[name]?'module-demo':name;
+      views.forEach(view => { const active=view.dataset.viewPanel===targetPanel; view.classList.toggle('is-active',active); view.hidden=!active; });
+      loadModuleData(name);
       navButtons.forEach(button => button.setAttribute('aria-current',String(button.dataset.view===name?'page':'false')));
       const english=document.body.classList.contains('show-en');
-      currentSection.textContent=sectionNames[name][english?1:0];
+      currentSection.textContent=(sectionNames[name]||moduleDemos[name]?.title)[english?1:0];
       globalSearch.value='';
       applySearch();
       document.querySelector('.admin-content').scrollTop=0;
@@ -312,49 +729,56 @@
       if(!activeView) return;
       activeView.querySelectorAll('.searchable-table tbody tr').forEach(row=>{ row.classList.toggle('hidden-row',!row.textContent.toLocaleLowerCase().includes(query)); });
       activeView.querySelectorAll('.metric-card,.queue-item,.role-card,.activity-row').forEach(item=>{ if(query) item.hidden=!item.textContent.toLocaleLowerCase().includes(query); else item.hidden=false; });
+      if(moduleDataRoute) renderModuleDataTable();
     }
     navButtons.forEach(button=>button.addEventListener('click',()=>setView(button.dataset.view)));
     document.querySelectorAll('[data-open-view]').forEach(button=>button.addEventListener('click',()=>setView(button.dataset.openView)));
-    document.getElementById('demo-login-form').addEventListener('submit',event=>{
+    document.getElementById('demo-login-form').addEventListener('submit',async event=>{
       event.preventDefault();
       const username=document.getElementById('login-username').value.trim();
       const password=document.getElementById('login-password').value;
-      if(!username||!password){document.getElementById('login-error').textContent='Enter demo values to continue.';return;}
-      activeUser=username;
-      activeRole=document.getElementById('login-role').value;
-      roleSwitch.value=activeRole;
-      document.body.classList.remove('login-required');
-      loginStage.hidden=true;
-      adminShell.hidden=false;
-      applyRole();
-      showToast(`Demo view only · ${activeRole} · credentials were not verified.`);
+      const errorNode=document.getElementById('login-error');
+      errorNode.textContent='';
+      try{
+        const response=await apiFetch('/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+        const result=await response.json();
+        if(!response.ok)throw new Error(result.error||`HTTP ${response.status}`);
+        const sessionResponse=await apiFetch('/session');
+        const session=await sessionResponse.json();
+        if(!sessionResponse.ok||!session.authenticated)throw new Error('Could not establish a session.');
+        enterWorkspace(session);
+        document.getElementById('login-password').value='';
+      }catch(error){errorNode.textContent=error.message.includes('Failed to fetch')?'Không kết nối được dịch vụ cục bộ. Hãy khởi động ứng dụng desktop và mở trang qua HTTP.':error.message;}
     });
-    document.getElementById('fill-manager-demo').addEventListener('click',()=>{
-      document.getElementById('login-username').value='manager.demo';
-      document.getElementById('login-password').value='PetCareDemo2026!';
-      document.getElementById('login-role').value='MANAGER';
-      document.getElementById('login-error').textContent='';
-      document.getElementById('login-username').focus();
-    });
-    roleSwitch.addEventListener('change',()=>{activeRole=roleSwitch.value;applyRole();showToast(`Demo role switched to ${activeRole}; no real permissions or session changed.`);});
-    document.getElementById('logout-demo').addEventListener('click',()=>{adminShell.hidden=true;loginStage.hidden=false;document.body.classList.add('login-required');document.getElementById('login-password').value='';document.getElementById('login-role').value='ADMIN';roleSwitch.value='ADMIN';activeRole='ADMIN';activeUser='admin.demo';});
+    document.getElementById('logout-demo').addEventListener('click',()=>logoutToLogin());
     globalSearch.addEventListener('input',applySearch);
+    document.getElementById('module-data-prev').addEventListener('click',()=>{moduleDataPage=Math.max(1,moduleDataPage-1);renderModuleDataTable();});
+    document.getElementById('module-data-next').addEventListener('click',()=>{moduleDataPage+=1;renderModuleDataTable();});
+    document.getElementById('create-import-voucher').addEventListener('click',openImportVoucherDialog);
+    document.getElementById('receive-import-animal').addEventListener('click',()=>openIntakeAnimalDialog());
+    document.getElementById('import-voucher-form').addEventListener('submit',submitImportVoucher);
+    document.getElementById('intake-animal-form').addEventListener('submit',submitIntakeAnimal);
+    document.getElementById('intake-photo-dialog').addEventListener('close',()=>{const image=document.getElementById('intake-photo-image');if(image.dataset.objectUrl){URL.revokeObjectURL(image.dataset.objectUrl);image.dataset.objectUrl='';image.removeAttribute('src');}});
     serviceFilter.addEventListener('change',()=>{ document.querySelectorAll('#view-services tbody tr[data-state]').forEach(row=>{row.hidden=serviceFilter.value!=='all'&&row.dataset.state!==serviceFilter.value;}); });
     document.querySelectorAll('[data-dialog]').forEach(button=>button.addEventListener('click',()=>document.getElementById(button.dataset.dialog).showModal()));
     document.querySelectorAll('[data-close-dialog]').forEach(button=>button.addEventListener('click',()=>button.closest('dialog').close()));
     document.querySelectorAll('dialog').forEach(dialog=>dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close();}));
     function showToast(message) { toast.textContent=message; toast.hidden=false; clearTimeout(toastTimer); toastTimer=setTimeout(()=>{toast.hidden=true;},3200); }
     document.querySelectorAll('[data-toast]').forEach(button=>button.addEventListener('click',()=>showToast(button.dataset.toast)));
-    document.getElementById('user-form').addEventListener('submit',event=>{
-      event.preventDefault();
-      const form=new FormData(event.currentTarget); const username=String(form.get('username')).trim(); const role=String(form.get('role'));
-      if(!username) return;
-      const row=document.createElement('tr'); row.innerHTML=`<td></td><td></td><td><span class="status">DEMO</span></td><td>Just now · sample</td><td><button class="action-button small-action" type="button" data-toast="Demo only: account changes are not persisted.">Review</button></td>`; row.cells[0].textContent=username; row.cells[1].textContent=role;
-      document.getElementById('user-rows').prepend(row); row.querySelector('[data-toast]').addEventListener('click',button=>showToast(button.currentTarget.dataset.toast));
-      event.currentTarget.closest('dialog').close(); event.currentTarget.reset(); showToast('Demo row added in this browser only; no account was created.'); applySearch();
-    });
-    document.querySelector('.site-header .lang-button').addEventListener('click',()=>{requestAnimationFrame(()=>{const active=document.querySelector('.admin-nav [aria-current="page"]');if(active)currentSection.textContent=sectionNames[active.dataset.view][document.body.classList.contains('show-en')?1:0];});});
-    roleSwitch.value=activeRole;
+    document.getElementById('user-form').addEventListener('submit',event=>{event.preventDefault();showToast('Tạo tài khoản web chưa được bật; hãy quản lý tài khoản trong ứng dụng desktop.');});
+    document.querySelector('.site-header .lang-button').addEventListener('click',()=>{requestAnimationFrame(()=>{const active=document.querySelector('.admin-nav [aria-current="page"]');if(active)currentSection.textContent=(sectionNames[active.dataset.view]||moduleDemos[active.dataset.view]?.title)[document.body.classList.contains('show-en')?1:0];if(activeRole)document.getElementById('role-label').textContent=roleLabels[activeRole]?.[document.body.classList.contains('show-en')?1:0]||activeRole;if(moduleDataRoute)loadModuleData(moduleDataRoute);});});
+    document.querySelectorAll('[data-close-dialog]').forEach(button=>button.addEventListener('click',()=>button.closest('dialog').close()));
+    document.querySelectorAll('dialog').forEach(dialog=>dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close();}));
+    async function bootstrapSession(){
+      if (loginStage) loginStage.hidden = false;
+      if (adminShell) adminShell.hidden = true;
+      document.body.classList.add('login-required');
+      try { const response = await apiFetch('/session'); if (response.ok) { const session = await response.json(); if (session.authenticated) enterWorkspace(session); } }
+      catch (error) {
+        document.getElementById('login-error').textContent = document.body.classList.contains('show-en') ? 'Local SQLite service is unavailable. Start the desktop app and open this page over HTTP.' : 'Chưa kết nối dịch vụ SQLite cục bộ. Hãy mở ứng dụng desktop rồi mở trang này qua HTTP.';
+      }
+    }
+    bootstrapSession();
   </script>
   <script src="scripts/document_language.js" defer></script>
 </body>
