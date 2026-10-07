@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Danh mục thức ăn mẫu PetCare, lọc theo loài, giai đoạn sống và nhóm kích thước; hiển thị đầy đủ 70 chỉ số dinh dưỡng.">
+  <meta name="description" content="Danh mục thức ăn cho mèo mẫu PetCare, lọc theo loài, giai đoạn sống và nhóm kích thước; hiển thị đầy đủ 70 chỉ số dinh dưỡng.">
   <title>PetCare | Nutrition & Product Guide (70 chỉ số)</title>
   <link rel="stylesheet" href="styles/petcare_pages.css">
   <style>
@@ -212,28 +212,6 @@
       background: #fff; color: var(--ink);
     }
     .feeding-note { margin: 0; color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
-    .feeding-advice-grid {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 14px;
-    }
-    .feeding-tip {
-      background: linear-gradient(180deg, rgba(240,250,244,0.95), rgba(255,255,255,0.96));
-      border: 1px solid rgba(255,255,255,0.9); border-radius: 18px; padding: 14px 14px 12px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 12px 20px rgba(15,108,77,0.06);
-    }
-    .feeding-tip .label {
-      display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--green-strong);
-      font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
-    }
-    .feeding-tip .label::before {
-      content: ""; width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(180deg, var(--green), var(--green-strong));
-      display: inline-block; box-shadow: 0 0 0 4px rgba(15,108,77,0.12);
-    }
-    .feeding-tip .label[data-icon="protein"]::before { content: "P"; width: 18px; height: 18px; border-radius: 50%; display: inline-grid; place-items: center; color: white; font-size: 0.7rem; font-weight: 900; background: linear-gradient(180deg, #6aa86d, #1c7a56); box-shadow: none; }
-    .feeding-tip .label[data-icon="age"]::before { content: "A"; width: 18px; height: 18px; border-radius: 50%; display: inline-grid; place-items: center; color: white; font-size: 0.7rem; font-weight: 900; background: linear-gradient(180deg, #7bc6a2, #1a7b5d); box-shadow: none; }
-    .feeding-tip .label[data-icon="pet"]::before { content: "P"; width: 18px; height: 18px; border-radius: 50%; display: inline-grid; place-items: center; color: white; font-size: 0.7rem; font-weight: 900; background: linear-gradient(180deg, #7ec08e, #1a7b5d); box-shadow: none; }
-    .feeding-tip p {
-      margin: 0; color: var(--ink); font-size: 0.84rem; line-height: 1.7;
-    }
     .catalog-header {
       display: flex; justify-content: space-between; align-items: end;
       gap: 12px; margin-bottom: 16px;
@@ -426,31 +404,27 @@
       .stats-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .product-grid { grid-template-columns: 1fr; }
       .breed-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
-      .feeding-advice-grid { grid-template-columns: 1fr; }
-      .pager-toolbar { justify-content: flex-start; }
-    }
-    @media (max-width: 600px) {
-      .topbar-inner { width: min(100% - 18px, 1200px); flex-wrap: wrap; justify-content: center; padding: 10px 0; }
-      .primary-nav { width: 100%; justify-content: center; }
-      .page-shell { width: min(100% - 18px, 1200px); }
-      .hero-panel { padding: 22px 18px; }
-      .toolbar-grid, .stats-strip, .breed-grid { grid-template-columns: 1fr; }
-      .catalog-header { flex-direction: column; align-items: flex-start; }
-      .card-top { padding: 16px 16px 0; }
-      .stack-grid, .mini-grid { grid-template-columns: 1fr 1fr; }
-      .card-footer { flex-direction: column; align-items: flex-start; }
-      .compare-button { width: 100%; }
-      .pager-toolbar { align-items: stretch; }
-      .page-status, .page-jump { width: 100%; justify-content: center; }
-      .pagination { gap: 8px; }
-      .page-button { flex: 1 1 calc(50% - 8px); min-width: 0; }
-      .feeding-advice-grid { grid-template-columns: 1fr; }
-      .feeding-tip { display: flex; align-items: flex-start; gap: 12px; }
-      .feeding-tip .label { margin-bottom: 0; }
-    }
+          .pager-toolbar { justify-content: flex-start; }
+        }
+        @media (max-width: 600px) {
+          .topbar-inner { width: min(100% - 18px, 1200px); flex-wrap: wrap; justify-content: center; padding: 10px 0; }
+          .primary-nav { width: 100%; justify-content: center; }
+          .page-shell { width: min(100% - 18px, 1200px); }
+          .hero-panel { padding: 22px 18px; }
+          .toolbar-grid, .stats-strip, .breed-grid { grid-template-columns: 1fr; }
+          .catalog-header { flex-direction: column; align-items: flex-start; }
+          .card-top { padding: 16px 16px 0; }
+          .stack-grid, .mini-grid { grid-template-columns: 1fr 1fr; }
+          .card-footer { flex-direction: column; align-items: flex-start; }
+          .compare-button { width: 100%; }
+          .pager-toolbar { align-items: stretch; }
+          .page-status, .page-jump { width: 100%; justify-content: center; }
+          .pagination { gap: 8px; }
+          .page-button { flex: 1 1 calc(50% - 8px); min-width: 0; }
+        }
   </style>
 </head>
-<body>
+<body data-default-species="cat">
   <header class="topbar">
     <div class="topbar-inner">
       <a class="brand" href="index.html" aria-label="PetCare home">
@@ -469,7 +443,7 @@
   <main class="page-shell">
     <section class="hero-panel">
       <div class="eyebrow">Nutrition Intelligence · 70 chỉ số</div>
-      <h1>Đồ ăn thú cưng theo giống, độ tuổi & nhu cầu dinh dưỡng</h1>
+      <h1>Đồ ăn cho mèo theo giống, độ tuổi & nhu cầu dinh dưỡng</h1>
       <p class="lede">Tra cứu nhanh hơn, so sánh rõ hơn và chọn sản phẩm phù hợp với trọng lượng, giai đoạn sống và giống loài của thú cưng. Hiển thị đầy đủ 70 chỉ số dinh dưỡng cho từng sản phẩm.</p>
       <div class="hero-tags">
         <span class="tag">8000 sản phẩm</span>
@@ -480,7 +454,7 @@
       <div class="species-summary" aria-label="Danh mục theo loài">
         <span class="summary-pill">4000 Chó / 4000 Mèo</span>
         <a class="secondary-button" href="nutrition_products_dog.html">Danh mục Chó</a>
-        <a class="secondary-button" href="nutrition_products_cat.html">Danh mục Mèo</a>
+        <a class="secondary-button" href="nutrition_products_cat.html">Danh mục Mèo (Hiện tại)</a>
       </div>
     </section>
 
@@ -609,7 +583,7 @@
               <option value="40+ kg">40+ kg</option>
             </select>
           </label>
-          <div id="feedingNote" class="feeding-note">Mỗi thú cưng có nhu cầu khẩu phần riêng. Chọn trọng lượng tham chiếu để xem khuyến nghị dạng gợi ý.</div>
+          <p id="feedingNote" class="feeding-note">Mỗi thú cưng có nhu cầu khẩu phần riêng. Chọn trọng lượng tham chiếu để xem khuyến nghị dạng gợi ý.</p>
         </div>
       </details>
     </section>
@@ -618,7 +592,7 @@
       <div class="catalog-header">
         <div>
           <span class="panel-kicker">Catalog</span>
-          <h2>Danh mục thức ăn</h2>
+          <h2>Danh mục thức ăn cho mèo</h2>
         </div>
         <span id="catalogMeta" class="catalog-meta">0 sản phẩm</span>
       </div>
@@ -790,40 +764,9 @@
 
     function updateFeedInsight() {
       const weight = state.preferredWeight || '10-20 kg';
-      const speciesLabel = state.species === 'Chó' ? 'Chó' : state.species === 'Mèo' ? 'Mèo' : 'Thú cưng';
-      const ageGroup = (state.age && state.age !== 'all') ? state.age : 'Adult';
-      const stageNote = ageGroup === 'Puppy'
-        ? 'Ở giai đoạn tăng trưởng, nên ưu tiên thức ăn giàu protein, năng lượng hợp lý và chất lượng dinh dưỡng cao để hỗ trợ xương và cơ bắp.'
-        : ageGroup === 'Senior'
-          ? 'Ở giai đoạn cao tuổi, nên ưu tiên thức ăn dễ tiêu, giàu chất xơ và hỗ trợ khớp, hệ tiêu hóa và kiểm soát calo.'
-          : 'Ở giai đoạn duy trì, nên chọn khẩu phần cân bằng với protein vừa đủ, chất béo hợp lý và lượng calo phù hợp vận động.';
-      const weightNote = weight.startsWith('2-5') || weight.startsWith('5-10')
-        ? `Với ${speciesLabel.toLowerCase()} nhẹ cân, nên ưu tiên khẩu phần nhỏ nhưng mật độ dinh dưỡng cao để đáp ứng nhu cầu năng lượng trên kg cơ thể.`
-        : weight.startsWith('10-20') || weight.startsWith('20-30')
-          ? `Với ${speciesLabel.toLowerCase()} trung bình, ưu tiên tỷ lệ protein cân bằng và đường tiêu hóa dễ sử dụng để hỗ trợ hệ miễn dịch và vận động.`
-          : `Với ${speciesLabel.toLowerCase()} lớn, nên cân nhắc khẩu phần theo trọng lượng thực tế, giảm thất thoát dinh dưỡng và ưu tiên xương khớp.`;
-      const speciesAdvice = speciesLabel === 'Chó'
-        ? 'Chó cần được điều chỉnh theo kích thước cơ thể, mức vận động và tuổi, vì nhu cầu năng lượng và cấu trúc xương khác nhau rõ giữa chó nhỏ, trung bình và lớn.'
-        : 'Mèo cần ưu tiên thức ăn dễ tiêu, chất lượng protein cao và hỗ trợ hệ tiêu hóa, đặc biệt ở mèo trưởng thành và mèo cao tuổi.';
-      const advice = `
-        <p class="feeding-note"><strong>Khuyến nghị cho ${speciesLabel} ${weight}</strong> — Thức ăn nên được chọn theo trọng lượng, độ tuổi và mức vận động để đảm bảo khẩu phần hợp lý, dễ tiêu và phù hợp từng giai đoạn.</p>
-        <div class="feeding-advice-grid">
-          <div class="feeding-tip">
-            <span class="label" data-icon="protein">Cân nặng</span>
-            <p>${weightNote}</p>
-          </div>
-          <div class="feeding-tip">
-            <span class="label" data-icon="age">Giai đoạn</span>
-            <p>${stageNote}</p>
-          </div>
-          <div class="feeding-tip">
-            <span class="label" data-icon="pet">Tư vấn theo loài</span>
-            <p>${speciesAdvice}</p>
-          </div>
-        </div>
-      `;
+      const note = `Khuyến nghị tham khảo: với thú cưng ở ${weight}, ưu tiên thức ăn có tỷ lệ protein cân bằng và đường tiêu hóa dễ sử dụng. Đối với thú cưng đang tăng trưởng, tăng chất lượng protein và năng lượng theo từng giai đoạn; với thú cưng cao tuổi, ưu tiên chất xơ, dễ tiêu và lượng calo phù hợp.`;
       const target = document.getElementById('feedingNote');
-      if (target) target.innerHTML = advice;
+      if (target) target.textContent = note;
     }
 
     function renderBrandOptions() {
@@ -1329,7 +1272,6 @@
       document.getElementById('speciesSelect')?.addEventListener('change', event => {
         state.species = event.target.value;
         state.currentPage = 1;
-        updateFeedInsight();
         renderProducts();
       });
 
@@ -1396,10 +1338,6 @@
         updateFeedInsight();
       });
 
-      document.getElementById('ageSelect')?.addEventListener('change', event => {
-        updateFeedInsight();
-      });
-
       document.getElementById('clearFilters')?.addEventListener('click', () => {
         state.species = 'all';
         state.breed = 'all';
@@ -1457,3 +1395,6 @@
   </script>
 </body>
 </html>
+
+
+

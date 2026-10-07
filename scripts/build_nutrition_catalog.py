@@ -178,6 +178,9 @@ def build_feeding_profiles() -> list[dict[str, object]]:
     return profiles
 
 
+TARGET_PRODUCT_COUNT = 8000
+
+
 def build_catalog() -> dict[str, list[dict[str, object]]]:
     breeds = build_breed_catalog()
     products: list[dict[str, object]] = []
@@ -193,12 +196,16 @@ def build_catalog() -> dict[str, list[dict[str, object]]]:
     ]
 
     index = 0
+    species_targets = {"DOG": 4000, "CAT": 4000}
+    products_by_species = {"DOG": 0, "CAT": 0}
     for species in species_order:
         for food_type in food_types:
             for stage in stages:
                 for breed_size in breed_sizes:
                     for product_slot in range(250):
-                        if len(products) >= 4000:
+                        if len(products) >= TARGET_PRODUCT_COUNT:
+                            break
+                        if products_by_species[species] >= species_targets[species]:
                             break
                         brand = brands[(index + product_slot) % len(brands)]
                         member_count = (index + product_slot + 1) % 12
@@ -228,14 +235,15 @@ def build_catalog() -> dict[str, list[dict[str, object]]]:
                             "usage_notes": "Hỗ trợ tăng trưởng cơ, xương và hệ miễn dịch ở giai đoạn non." if stage in {"PUPPY", "KITTEN"} else "Giữ cân bằng năng lượng, hệ tiêu hóa và da lông ở giai đoạn trưởng thành." if stage == "ADULT" else "Hỗ trợ khớp, da lông và chức năng tim mạch ở giai đoạn cao tuổi.",
                         }
                         products.append(product)
+                        products_by_species[species] += 1
                         index += 1
-                    if len(products) >= 4000:
+                    if len(products) >= TARGET_PRODUCT_COUNT:
                         break
-                if len(products) >= 4000:
+                if len(products) >= TARGET_PRODUCT_COUNT:
                     break
-            if len(products) >= 4000:
+            if len(products) >= TARGET_PRODUCT_COUNT:
                 break
-        if len(products) >= 4000:
+        if len(products) >= TARGET_PRODUCT_COUNT:
             break
 
     return {
@@ -273,6 +281,8 @@ def rewrite_page_data(catalog: dict[str, object]) -> None:
     html = HTML_PATH.read_text(encoding="utf-8")
     opening = '<script id="nutrition-catalog-data" type="application/json">'
     closing = "</script>"
+    if html.count(opening) == 0:
+        return
     if html.count(opening) != 1:
         raise RuntimeError("Expected exactly one embedded catalog data block")
 
