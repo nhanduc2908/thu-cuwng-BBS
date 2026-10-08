@@ -3,115 +3,456 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PetCare | Pitch deck</title>
-  <style>:root {
-  --bg-1: #071a2a;
-  --bg-2: #0d2338;
-  --bg-3: #123149;
-  --panel: rgba(9,17,25,0.95);
-  --panel-soft: rgba(16,24,35,0.92);
-  --line: rgba(148,163,184,0.22);
-  --text: #edf6ff;
-  --muted: #d9ebfb;
-  --gold: #d7b260;
-  --gold-soft: #f4d58a;
-  --primary: #8ad9ff;
-  --success: #7be0b2;
-  --danger: #ff8c7a;
-  --shadow: rgba(0,0,0,0.28);
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: var(--text);
-  background:
-    radial-gradient(circle at top left, rgba(215,178,96,0.12), transparent 18%),
-    radial-gradient(circle at bottom right, rgba(138,217,255,0.10), transparent 18%),
-    linear-gradient(135deg, var(--bg-1), var(--bg-2), var(--bg-3));
-}
-a { color: inherit; text-decoration: none; }
-.page { max-width: 1360px; margin: 0 auto; padding: 24px 20px 60px; }
-.topbar { position: sticky; top: 0; z-index: 30; backdrop-filter: blur(12px); background: rgba(7,26,42,0.72); border-bottom: 1px solid var(--line); }
-.topbar-inner { max-width: 1360px; margin: 0 auto; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; gap: 14px; }
-.brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; font-size: 11px; color: var(--gold-soft); }
-.brand-mark { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 10px; background: linear-gradient(135deg, var(--gold), var(--gold-soft)); color: #071a2a; font-weight: 900; }
-.nav { display: flex; flex-wrap: wrap; gap: 10px; }
-.nav a { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); color: var(--muted); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
-.hero { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 24px; margin-top: 24px; }
-.panel { background: linear-gradient(135deg, rgba(138,217,255,0.08), rgba(215,178,96,0.04), rgba(11,17,24,0.96)); border: 1px solid var(--line); border-radius: 26px; box-shadow: 0 20px 42px var(--shadow); overflow: hidden; }
-.panel-inner { padding: 28px 24px 22px; }
-.eyebrow { display: inline-block; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(215,178,96,0.35); background: rgba(215,178,96,0.08); color: var(--gold-soft); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; }
-h1 { margin: 18px 0 14px; font-size: clamp(2.7rem,5vw,4.8rem); line-height: 0.95; letter-spacing: -0.08em; }
-.lead { color: var(--muted); line-height: 1.8; font-size: 1.04rem; margin: 0; }
-.badge-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
-.badge { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); color: var(--text); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
-.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 18px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); color: var(--text); font-weight: 700; }
-.btn.primary { background: linear-gradient(135deg, rgba(215,178,96,0.12), rgba(138,217,255,0.08)); border-color: rgba(215,178,96,0.35); color: #f9df9f; }
-.stats-box { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 18px; }
-.stat { min-height: 150px; padding: 18px; border-radius: 18px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); position: relative; overflow: hidden; }
-.stat:before { content: ""; position: absolute; inset: 0 auto auto 0; width: 100%; height: 2px; background: linear-gradient(90deg, rgba(138,217,255,0.7), rgba(215,178,96,0.7)); }
-.stat-label { display: block; color: var(--muted); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
-.stat-value { display: block; margin-top: 14px; font-size: clamp(1.8rem, 2.5vw, 2.8rem); font-weight: 800; letter-spacing: -0.06em; }
-.stat small { display: inline-block; margin-top: 8px; color: var(--success); font-weight: 700; }
-.section { margin-top: 34px; }
-.section-head { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
-.section-head h2 { margin: 0; font-size: clamp(1.3rem,2vw,2rem); letter-spacing: -0.04em; }
-.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-.card { padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,0.02); }
-.card h3 { margin: 0 0 12px; font-size: 1.08rem; }
-.card ul { margin: 0; padding-left: 18px; color: var(--muted); line-height: 1.8; }
-.footer { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-@media (max-width: 1024px) { .hero { grid-template-columns: 1fr; } .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 700px) { .page { padding: 18px 14px 40px; } .grid { grid-template-columns: 1fr; } .topbar-inner { flex-direction: column; align-items: flex-start; } }</style>
+  <title>PetCare | Pitch Deck</title>
+  <style>
+    :root {
+      --bg: #edf5f1;
+      --bg-strong: #dfeee7;
+      --panel: #ffffff;
+      --panel-strong: #123d2f;
+      --panel-soft: #f5faf7;
+      --line: #dfe9e3;
+      --text: #18352d;
+      --muted: #587567;
+      --green: #176c4c;
+      --green-2: #2d865f;
+      --green-soft: #dff4ea;
+      --mint: #cfead6;
+      --gold: #e8b75d;
+      --gold-soft: #f8e7bb;
+      --shadow: 0 18px 40px rgba(16,57,45,0.10);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #eef7f1 0%, #edf3ef 100%);
+      color: var(--text);
+    }
+    a { color: inherit; text-decoration: none; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,0.8);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+    .topbar-inner {
+      max-width: 1420px;
+      margin: 0 auto;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px 10px 10px 4px;
+      background: linear-gradient(135deg, #dfe86a, #b9df68);
+      color: var(--green);
+      font-weight: 900;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .nav a {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.4);
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .page {
+      max-width: 1420px;
+      margin: 0 auto;
+      padding: 30px 22px 56px;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 22px;
+    }
+    .panel {
+      background: linear-gradient(135deg, #ffffff 0%, #f6faf7 40%, #edf6f1 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .panel-inner {
+      padding: 30px 28px 28px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 800;
+      border: 1px solid rgba(23,108,76,0.18);
+    }
+    h1 {
+      margin: 18px 0 12px;
+      font-size: clamp(2.8rem, 5vw, 5rem);
+      line-height: 0.96;
+      letter-spacing: -0.08em;
+    }
+    .lead {
+      margin: 0;
+      font-size: 1.03rem;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 760px;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--green);
+      font-weight: 800;
+    }
+    .btn.primary {
+      background: linear-gradient(135deg, var(--green), var(--green-2));
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(19,106,77,0.18);
+    }
+    .stats-box {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #1b4238 0%, #123b2f 100%);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius-xl);
+      color: #f4faf6;
+    }
+    .stat {
+      min-height: 150px;
+      position: relative;
+      padding: 18px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .stat:before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 3px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(90deg, rgba(185,223,104,0.9), rgba(232,183,93,0.9));
+    }
+    .stat-label {
+      display: block;
+      color: rgba(255,255,255,0.72);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .stat-value {
+      display: block;
+      margin-top: 14px;
+      font-size: clamp(1.6rem,2.5vw,2.4rem);
+      letter-spacing: -0.06em;
+      font-weight: 800;
+    }
+    .stat small {
+      display: inline-block;
+      margin-top: 8px;
+      color: #d5f0d6;
+      font-weight: 700;
+    }
+    .section {
+      margin-top: 34px;
+    }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.4rem, 2.1vw, 2.2rem);
+      letter-spacing: -0.05em;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .card {
+      padding: 20px 18px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 12px 24px rgba(18,58,45,0.04);
+    }
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 1.06rem;
+    }
+    .card ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.85;
+    }
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .metric {
+      padding: 18px 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.75);
+      min-height: 140px;
+    }
+    .metric-label {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .metric strong {
+      display: block;
+      margin-top: 12px;
+      font-size: clamp(2rem,4vw,3rem);
+      line-height: 1;
+      letter-spacing: -0.06em;
+      color: var(--green);
+    }
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.92rem;
+    }
+    .footer {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    @media (max-width: 1024px) {
+      .hero { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metrics-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 700px) {
+      .page { padding: 22px 14px 48px; }
+      .topbar-inner { flex-direction: column; align-items: flex-start; }
+      .grid { grid-template-columns: 1fr; }
+      .stats-box { grid-template-columns: 1fr; }
+      .metrics-row { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
   <header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand"><span class="brand-mark">P</span> PetCare</div>
-    <nav class="nav">
-      <a href="index.html">Home</a>
-      <a href="projext _Full.html">Master Hub</a>
-      <a href="project_overview.html">Overview</a>
-      <a href="report_kpi_board.html">KPI</a>
-      <a href="report_business_review.html">Reports</a>
-      <a href="roadmap.html">Roadmap</a>
-      <a href="slides_pitch.html">Pitch</a>
-      <a href="slides_demo.html">Demo</a>
-      <a href="Module/index.html">Modules</a>
-    </nav>
-  </div>
-</header>
+    <div class="topbar-inner">
+      <div class="brand"><span class="brand-mark">P</span> PetCare</div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="projext _Full.html">Master Hub</a>
+        <a href="workflow.html">Workflow</a>
+        <a href="slides_pitch.html">Pitch</a>
+        <a href="slides_demo.html">Demo</a>
+      </nav>
+    </div>
+  </header>
+
   <main class="page">
     <section class="hero">
       <div class="panel">
         <div class="panel-inner">
           <span class="eyebrow">Pitch deck</span>
-          <h1>PetCare product pitch</h1>
-          <p class="lead">A product pitch focused on customer experience and operational control. Business gains are hypotheses to validate with a store pilot, not measured results.</p>
+          <h1>Build trust through better care operations</h1>
+          <p class="lead">
+            PetCare is positioned as a premium operations platform for pet service businesses — combining
+            customer records, health care guidance, nutrition recommendations, and repeat-visit management
+            into a single experience. The pitch focuses on the practical value and simplicity of adoption.
+          </p>
           <div class="badge-row">
             <span class="badge">PetCare</span>
-            <span class="badge">Luxury</span>
-            <span class="badge">Enterprise</span>
-            <span class="badge">Demo ready</span>
+            <span class="badge">Growth</span>
+            <span class="badge">Retention</span>
+            <span class="badge">Premium</span>
           </div>
           <div class="actions">
             <a class="btn primary" href="projext _Full.html">Open Master Hub</a>
-            <a class="btn" href="Module/index.html">Browse Modules</a>
+            <a class="btn" href="business_case.html">Read business case</a>
           </div>
         </div>
       </div>
-      <div class="panel stats-box"><div class='stat'><span class='stat-label'>Fragmented operations</span><span class='stat-value'>Problem</span><small>Key signal</small></div><div class='stat'><span class='stat-label'>Unified platform</span><span class='stat-value'>Solution</span><small>Key signal</small></div><div class='stat'><span class='stat-label'>Better growth</span><span class='stat-value'>Impact</span><small>Key signal</small></div></div>
+
+      <div class="panel stats-box">
+        <div class="stat">
+          <span class="stat-label">Problem</span>
+          <span class="stat-value">Fragmented</span>
+          <small>Manual records</small>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Solution</span>
+          <span class="stat-value">Unified</span>
+          <small>One local workflow</small>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Value</span>
+          <span class="stat-value">Higher</span>
+          <small>Customer retention</small>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Outcome</span>
+          <span class="stat-value">Scalable</span>
+          <small>Operational clarity</small>
+        </div>
+      </div>
     </section>
+
     <section class="section">
-      <div class="section-head"><h2>Key points</h2></div>
-      <div class="grid"><div class='card'><h3>Business problem</h3><ul><li>Operational records can be spread across care, stock, reservations, and billing tasks.</li><li>Managers need consistent reports from saved records, with a defined period and source.</li><li>Useful comparisons depend on disciplined data entry and agreed metric definitions.</li></ul></div><div class='card'><h3>Product response</h3><ul><li>One local desktop application organizes core store workflows around a shared SQLite database.</li><li>Staff can review customer, care, sales, inventory, and service records in their relevant modules.</li><li>Rules-based recommendations operate locally; this is not a generative AI service.</li></ul></div><div class='card'><h3>Outcome to validate</h3><ul><li>Measure task handling time against a documented baseline.</li><li>Compare record completeness and operational exceptions during a pilot.</li><li>Assess retention only from a defined cohort and period; do not assume uplift.</li></ul></div></div>
+      <div class="section-head">
+        <h2>Why now</h2>
+      </div>
+      <div class="metrics-row">
+        <div class="metric">
+          <span class="metric-label">Customer need</span>
+          <strong>1</strong>
+          <span>Pet owners expect personalized service and nutrition guidance in one place.</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Store pain</span>
+          <strong>2</strong>
+          <span>Operations often remain split across care, inventory, and follow-up tasks.</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Opportunity</span>
+          <strong>3</strong>
+          <span>Better recommendations can improve trust, conversion, and repeat bookings.</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Impact</span>
+          <strong>4</strong>
+          <span>Standardized tracking creates cleaner reporting and faster decision-making.</span>
+        </div>
+      </div>
     </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Core value proposition</h2>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h3>Customer-centric experience</h3>
+          <ul>
+            <li>A single view of each pet, owner, and service record</li>
+            <li>Nutrition and care guidance explained simply</li>
+            <li>More confidence in recommended follow-up steps</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Operational control</h3>
+          <ul>
+            <li>Clear handling of service requests and statuses</li>
+            <li>Local system that keeps all data logically organized</li>
+            <li>Improved consistency for staff workflows</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Business scalability</h3>
+          <ul>
+            <li>Better data for product recommendations and upsell</li>
+            <li>Faster insight through stored customer behavior</li>
+            <li>Foundation for service expansion and report automation</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
     <div class="footer">
-      <span>PetCare executive presentation system</span>
-      <span>Master navigation aligns all project layers</span>
+      <span>PetCare Pitch Deck</span>
+      <span>Business case and demo walkthrough</span>
     </div>
   </main>
 </body>

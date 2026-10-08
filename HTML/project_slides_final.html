@@ -1,43 +1,104 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Bản trình bày ngắn gọn, đã chuẩn hóa tiếng Việt và tiếng Anh."><title>PetCare | PetCare / Project presentation</title><link rel="stylesheet" href="styles/petcare_pages.css"></head><body><header class="site-header"><div class="header-inner"><a class="brand" href="index.html"><span class="brand-mark">P</span> PetCare / PetCare / Thuyết trình dự án</a><div class="header-actions"><nav class="header-nav" aria-label="Primary navigation"><a href="index.html">Home / Trang chủ</a><a href="workflow.html">Workflow</a><a href="report_final.html">Report</a></nav><button class="lang-button" type="button" aria-label="Switch language" onclick="document.body.classList.toggle('show-en'); this.textContent=document.body.classList.contains('show-en')?'VI':'EN'">EN</button></div></div></header><main class="page-shell"><section class="page-hero"><span class="eyebrow">Bộ slide song ngữ / bilingual deck</span><h1><span class=" " data-lang="vi">PetCare / Thuyết trình dự án</span><span class="en " data-lang="en">PetCare / Project presentation</span></h1><p class="lede"><span class=" " data-lang="vi">Bản trình bày ngắn gọn, đã chuẩn hóa tiếng Việt và tiếng Anh.</span><span class="en " data-lang="en">A concise presentation with Vietnamese and English content.</span></p><div class="hero-foot"><span class="tag">Python + PySide6</span><span class="tag">Local SQLite</span><span class="tag">Presentation</span></div></section><section class="section deck" aria-live="polite"><div class="section-head"><div><span class="eyebrow">Presentation</span><h2 id="slide-title"></h2></div><p><span id="slide-count"></span></p></div><article class="page-hero" style="min-height:250px"><p class="lede" id="slide-body"></p></article><div class="actions" style="display:flex;gap:10px;margin-top:18px"><button class="lang-button" id="prev" type="button" aria-label="Previous slide">←</button><button class="lang-button" id="next" type="button" aria-label="Next slide">→</button></div></section><section class="section" id="evidence-and-scope">
-  <div class="section-head"><div><span class="eyebrow">Evidence / bằng chứng</span><h2><span data-lang="vi">Trạng thái, giới hạn & bước tiếp theo</span><span data-lang="en">Status, boundaries & next step</span></h2></div></div>
-  <div class="grid">
-    <article class="tile"><span class="tile-kicker">Implemented</span><h3><span data-lang="vi">Năng lực hiện có</span><span data-lang="en">Current capability</span></h3><p><span data-lang="vi">Ứng dụng desktop Windows, PySide6, SQLite cục bộ; nghiệp vụ cửa hàng và gợi ý theo luật ngoại tuyến.</span><span class="en" data-lang="en">Windows desktop app, PySide6, local SQLite, store workflows and offline rules-based recommendations.</span></p></article>
-    <article class="tile"><span class="tile-kicker">Evidence</span><h3><span data-lang="vi">Kiểm chứng</span><span data-lang="en">Verification</span></h3><p><span data-lang="vi">Bộ test chức năng tồn tại cho các luồng chính; chỉ công bố kết quả sau khi chạy trên đúng revision và lưu đầu ra.</span><span class="en" data-lang="en">Functional suites exist for key flows; report results only after running them on the submitted revision and recording output.</span></p></article>
-    <article class="tile"><span class="tile-kicker">Boundary</span><h3><span data-lang="vi">Giới hạn</span><span data-lang="en">Limitations</span></h3><p><span data-lang="vi">Không có payment gateway, cloud đa chi nhánh, đăng ký công khai hoặc chẩn đoán thú y. Số liệu trong deck là minh họa.</span><span class="en" data-lang="en">No payment gateway, multi-branch cloud, public signup or veterinary diagnosis. Figures in the deck are illustrative.</span></p></article>
-    <article class="tile"><span class="tile-kicker">Next decision</span><h3><span data-lang="vi">Quyết định tiếp theo</span><span data-lang="en">Next decision</span></h3><p><span data-lang="vi">Chọn pilot nhỏ, chủ sở hữu dữ liệu và đường cơ sở; đánh giá hiệu quả trước khi mở rộng.</span><span class="en" data-lang="en">Select a small pilot, data owner and baseline; evaluate outcomes before expanding scope.</span></p></article>
-  </div>
-</section><script>
-const slides = [
-  { title: ['Tên dự án', 'Project title'], body: ['PetCare Management System / Hệ thống quản lý cửa hàng thú cưng.', 'PetCare Management System / Pet business management.'] },
-  { title: ['Bối cảnh', 'Context'], body: ['Hồ sơ vật nuôi, khách hàng, kho và dịch vụ cần được theo dõi xuyên suốt các nghiệp vụ nội bộ.', 'Animal, customer, stock and service records need consistent tracking across internal workflows.'] },
-  { title: ['Mục tiêu', 'Goal'], body: ['Tập trung các quy trình cửa hàng trên một ứng dụng desktop cục bộ.', 'Bring store workflows together in one local desktop application.'] },
-  { title: ['Người dùng', 'Users'], body: ['Nhân viên vận hành và quản trị viên sử dụng các khu vực theo quyền được cấp.', 'Operational staff and administrators use areas according to assigned permissions.'] },
-  { title: ['Kiến trúc', 'Architecture'], body: ['Python và PySide6 xử lý ứng dụng desktop; SQLite lưu dữ liệu trên máy chạy ứng dụng; không có backend cloud riêng.', 'Python and PySide6 power the desktop app; SQLite stores records on the application machine; there is no separate cloud backend.'] },
-  { title: ['Nghiệp vụ', 'Operations'], body: ['Các phân hệ hỗ trợ tiếp nhận, chăm sóc, hồ sơ sức khỏe, kho, bán hàng, hội viên và lịch dịch vụ.', 'Modules support intake, care, health records, inventory, sales, memberships and service scheduling.'] },
-  { title: ['Khuyến nghị', 'Recommendations'], body: ['Gợi ý sản phẩm chạy bằng luật ngoại tuyến và dữ liệu cấu hình; không phải AI tạo sinh hoặc chẩn đoán thú y.', 'Product suggestions use offline rules and configured data; they are not generative AI or veterinary diagnoses.'] },
-  { title: ['Bằng chứng kiểm thử', 'Verification evidence'], body: ['Có test suite cho một số luồng chức năng. Chỉ báo cáo pass/fail sau khi chạy trên đúng revision nộp và lưu đầu ra.', 'Test suites exist for selected functional flows. Report pass/fail only after running them on the submitted revision and retaining output.'] },
-  { title: ['Đánh giá pilot', 'Pilot evaluation'], body: ['Định nghĩa baseline, mẫu số, nguồn và kỳ đo trước khi đánh giá hiệu quả; hiện chưa có kết quả pilot được cung cấp.', 'Define the baseline, denominator, source and measurement period before evaluating impact; no pilot results are supplied.'] },
-  { title: ['Giới hạn', 'Limits'], body: ['Không có payment gateway, cloud đa chi nhánh, đăng ký khách hàng công khai, tự gia hạn membership hoặc chẩn đoán y tế.', 'There is no payment gateway, multi-branch cloud, public customer signup, automatic membership renewal or medical diagnosis.'] },
-  { title: ['Quyết định tiếp theo', 'Next decision'], body: ['Chọn pilot nhỏ, chỉ định chủ sở hữu dữ liệu và sao lưu, xác nhận tiêu chí nghiệm thu, rồi đánh giá bằng dữ liệu có truy vết.', 'Choose a bounded pilot, name data and backup owners, agree acceptance criteria, then evaluate using traceable records.'] },
-  { title: ['Kết luận', 'Conclusion'], body: ['PetCare cung cấp nền tảng vận hành cục bộ có thể kiểm chứng; tác động kinh doanh cần được đo, không giả định trước.', 'PetCare provides a verifiable local operations foundation; business impact must be measured, not assumed.'] }
-];
-let current = 0;
-function showSlide() {
-  const slide = slides[current];
-  document.getElementById('slide-title').innerHTML = slide.title.map((text, index) => `<span data-lang="${index ? 'en' : 'vi'}">${text}</span>`).join('');
-  document.getElementById('slide-body').innerHTML = slide.body.map((text, index) => `<span class="${index ? 'en' : ''}" data-lang="${index ? 'en' : 'vi'}">${text}</span>`).join('');
-  document.getElementById('slide-count').textContent = `${current + 1} / ${slides.length}`;
-  document.getElementById('prev').disabled = current === 0;
-  document.getElementById('next').disabled = current === slides.length - 1;
-}
-document.getElementById('prev').addEventListener('click', () => { if (current > 0) current -= 1; showSlide(); });
-document.getElementById('next').addEventListener('click', () => { if (current < slides.length - 1) current += 1; showSlide(); });
-document.addEventListener('keydown', (event) => {
-  if (event.target.closest('button, a, input, select, textarea')) return;
-  if (event.key === 'ArrowRight' && current < slides.length - 1) { current += 1; showSlide(); }
-  if (event.key === 'ArrowLeft' && current > 0) { current -= 1; showSlide(); }
-});
-document.querySelector('.site-header .lang-button').addEventListener('click', () => requestAnimationFrame(showSlide));
-showSlide();
-</script><div class="note"><strong>Scope / Phạm vi.</strong> <span class=" " data-lang="vi">PetCare là ứng dụng desktop cục bộ. Dữ liệu demo không phải kết quả vận hành; tính năng chưa có trong mã nguồn được ghi là đề xuất.</span><span class="en " data-lang="en">PetCare is a local desktop app. Demo data is not an operational result; features not present in the source are labeled as proposals.</span></div><footer class="site-footer"><span>PetCare / Project documentation</span><a href="index.html">Back to project hub / Về trang dự án</a></footer></main>  <script src="scripts/document_language.js" defer></script>
-</body></html>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PetCare | Final Presentation</title>
+  <style>
+    :root {
+      --bg:#081b26; --bg-2:#0d2b38; --panel:#0f2431; --card:#102d39; --line:rgba(165,197,210,0.18); --text:#edf8ff; --muted:#c7dde5; --gold:#efc86d; --gold-soft:#f7dd9f; --sky:#8ad8ff; --green:#7fe8b4; --red:#ff8f7d; --shadow:0 22px 55px rgba(0,0,0,0.24);
+      --radius-xl:30px; --radius-lg:22px; --radius-md:18px;
+    }
+    * { box-sizing:border-box; }
+    html, body { margin:0; height:100%; }
+    body {
+      font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; color:var(--text);
+      background: radial-gradient(circle at top left, rgba(239,200,109,0.12), transparent 18%), linear-gradient(135deg, var(--bg), var(--bg-2), #123a4d 100%);
+    }
+    a { color:inherit; text-decoration:none; }
+    .page { max-width:1380px; margin:0 auto; padding:24px 20px 40px; }
+    .topbar { position:sticky; top:0; z-index:20; background:rgba(8,27,38,0.76); border-bottom:1px solid var(--line); backdrop-filter:blur(10px); }
+    .topbar-inner { max-width:1380px; margin:0 auto; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .brand { display:inline-flex; align-items:center; gap:12px; color:var(--gold-soft); font-size:11px; letter-spacing:0.16em; text-transform:uppercase; font-weight:800; }
+    .brand-mark { width:32px; height:32px; display:grid; place-items:center; border-radius:10px; background:linear-gradient(135deg,var(--gold),var(--gold-soft)); color:#081b26; font-weight:900; }
+    .nav { display:flex; flex-wrap:wrap; gap:10px; }
+    .nav a { padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid var(--line); color:var(--muted); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; }
+    .hero { margin-top:24px; background:linear-gradient(135deg, rgba(136,215,255,0.05), rgba(239,200,109,0.04), rgba(15,34,48,0.96)); border:1px solid var(--line); border-radius:var(--radius-xl); box-shadow:var(--shadow); }
+    .hero-inner { padding:30px 24px; }
+    .eyebrow { display:inline-flex; padding:8px 12px; border-radius:999px; background:rgba(239,200,109,0.08); border:1px solid rgba(239,200,109,0.30); color:var(--gold-soft); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; font-weight:800; }
+    h1 { margin:18px 0 14px; font-size:clamp(2.8rem,5vw,4.8rem); line-height:0.94; letter-spacing:-0.08em; }
+    .lead { margin:0; color:var(--muted); font-size:1.04rem; line-height:1.8; max-width:920px; }
+    .tag-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+    .tag { display:inline-flex; align-items:center; justify-content:center; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid var(--line); color:var(--text); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; }
+    .slides { margin-top:28px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+    .slide { padding:20px; border-radius:var(--radius-lg); background:rgba(255,255,255,0.02); border:1px solid var(--line); }
+    .slide h3 { margin:0 0 12px; font-size:1.2rem; }
+    .slide ul { margin:0; padding-left:20px; color:var(--muted); line-height:1.9; }
+    .footer { margin-top:30px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+    @media (max-width:700px) { .page { padding:18px 14px 40px; } .topbar-inner { flex-direction:column; align-items:flex-start; } .nav { justify-content:flex-start; } .slides { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="brand-mark">P</span> PetCare</div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="project_overview.html">Overview</a>
+        <a href="report_kpi_board.html">KPI</a>
+        <a href="roadmap.html">Roadmap</a>
+        <a href="slides_demo.html">Demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-inner">
+        <span class="eyebrow">Final presentation</span>
+        <h1>PetCare project presentation</h1>
+        <p class="lead">A concise executive summary of the platform, covering the core operational areas, the design objectives, and the strategic value of the local-first desktop solution for a pet care business.</p>
+        <div class="tag-row">
+          <span class="tag">Desktop app</span>
+          <span class="tag">SQLite data</span>
+          <span class="tag">Service ops</span>
+          <span class="tag">Business value</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slides">
+      <article class="slide">
+        <h3>1. Problem</h3>
+        <ul>
+          <li>Pet care businesses often split customer, health, stock, and service records across disconnected workflows.</li>
+          <li>Manual handoff leads to repeated entry, missed updates, and slower operational decisions.</li>
+        </ul>
+      </article>
+      <article class="slide">
+        <h3>2. Product idea</h3>
+        <ul>
+          <li>A single local desktop application that centralizes customer data, pet records, services, and inventory.</li>
+          <li>Role-aware workflow access makes the system easier to govern and scale.</li>
+        </ul>
+      </article>
+      <article class="slide">
+        <h3>3. Functional scope</h3>
+        <ul>
+          <li>Intake, records, health tracking, care operations, memberships, stock, orders, and reports.</li>
+          <li>Support for service scheduling, status-driven workflows, and business review reports.</li>
+        </ul>
+      </article>
+      <article class="slide">
+        <h3>4. Business impact</h3>
+        <ul>
+          <li>Improves consistency and speed across routine internal operations.</li>
+          <li>Creates cleaner customer follow-up and stronger staff accountability.</li>
+        </ul>
+      </article>
+    </section>
+
+    <div class="footer"><span>PetCare final presentation</span><span>Prepared for executive and stakeholder review</span></div>
+  </main>
+</body>
+</html>

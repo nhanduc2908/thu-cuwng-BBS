@@ -1,118 +1,177 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PetCare | KPI board</title>
-  <style>:root {
-  --bg-1: #071a2a;
-  --bg-2: #0d2338;
-  --bg-3: #123149;
-  --panel: rgba(9,17,25,0.95);
-  --panel-soft: rgba(16,24,35,0.92);
-  --line: rgba(148,163,184,0.22);
-  --text: #edf6ff;
-  --muted: #d9ebfb;
-  --gold: #d7b260;
-  --gold-soft: #f4d58a;
-  --primary: #8ad9ff;
-  --success: #7be0b2;
-  --danger: #ff8c7a;
-  --shadow: rgba(0,0,0,0.28);
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: var(--text);
-  background:
-    radial-gradient(circle at top left, rgba(215,178,96,0.12), transparent 18%),
-    radial-gradient(circle at bottom right, rgba(138,217,255,0.10), transparent 18%),
-    linear-gradient(135deg, var(--bg-1), var(--bg-2), var(--bg-3));
-}
-a { color: inherit; text-decoration: none; }
-.page { max-width: 1360px; margin: 0 auto; padding: 24px 20px 60px; }
-.topbar { position: sticky; top: 0; z-index: 30; backdrop-filter: blur(12px); background: rgba(7,26,42,0.72); border-bottom: 1px solid var(--line); }
-.topbar-inner { max-width: 1360px; margin: 0 auto; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; gap: 14px; }
-.brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; font-size: 11px; color: var(--gold-soft); }
-.brand-mark { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 10px; background: linear-gradient(135deg, var(--gold), var(--gold-soft)); color: #071a2a; font-weight: 900; }
-.nav { display: flex; flex-wrap: wrap; gap: 10px; }
-.nav a { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); color: var(--muted); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
-.hero { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 24px; margin-top: 24px; }
-.panel { background: linear-gradient(135deg, rgba(138,217,255,0.08), rgba(215,178,96,0.04), rgba(11,17,24,0.96)); border: 1px solid var(--line); border-radius: 26px; box-shadow: 0 20px 42px var(--shadow); overflow: hidden; }
-.panel-inner { padding: 28px 24px 22px; }
-.eyebrow { display: inline-block; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(215,178,96,0.35); background: rgba(215,178,96,0.08); color: var(--gold-soft); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; }
-h1 { margin: 18px 0 14px; font-size: clamp(2.7rem,5vw,4.8rem); line-height: 0.95; letter-spacing: -0.08em; }
-.lead { color: var(--muted); line-height: 1.8; font-size: 1.04rem; margin: 0; }
-.badge-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
-.badge { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); color: var(--text); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
-.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 18px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); color: var(--text); font-weight: 700; }
-.btn.primary { background: linear-gradient(135deg, rgba(215,178,96,0.12), rgba(138,217,255,0.08)); border-color: rgba(215,178,96,0.35); color: #f9df9f; }
-.stats-box { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 18px; }
-.stat { min-height: 150px; padding: 18px; border-radius: 18px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); position: relative; overflow: hidden; }
-.stat:before { content: ""; position: absolute; inset: 0 auto auto 0; width: 100%; height: 2px; background: linear-gradient(90deg, rgba(138,217,255,0.7), rgba(215,178,96,0.7)); }
-.stat-label { display: block; color: var(--muted); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
-.stat-value { display: block; margin-top: 14px; font-size: clamp(1.8rem, 2.5vw, 2.8rem); font-weight: 800; letter-spacing: -0.06em; }
-.stat small { display: inline-block; margin-top: 8px; color: var(--success); font-weight: 700; }
-.section { margin-top: 34px; }
-.section-head { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
-.section-head h2 { margin: 0; font-size: clamp(1.3rem,2vw,2rem); letter-spacing: -0.04em; }
-.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-.card { padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,0.02); }
-.card h3 { margin: 0 0 12px; font-size: 1.08rem; }
-.card ul { margin: 0; padding-left: 18px; color: var(--muted); line-height: 1.8; }
-.footer { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-@media (max-width: 1024px) { .hero { grid-template-columns: 1fr; } .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 700px) { .page { padding: 18px 14px 40px; } .grid { grid-template-columns: 1fr; } .topbar-inner { flex-direction: column; align-items: flex-start; } }</style>
+  <title>PetCare | KPI Board</title>
+  <style>
+    :root {
+      --bg-1: #071c27;
+      --bg-2: #0d2338;
+      --bg-3: #12334a;
+      --panel: rgba(9,17,25,0.95);
+      --line: rgba(164,190,205,0.18);
+      --text: #edf9ff;
+      --muted: #d9edf5;
+      --gold: #e7c572;
+      --gold-soft: #f3d891;
+      --sky: #8ad7ff;
+      --green: #7fe7b1;
+      --danger: #ff8d7d;
+      --shadow: rgba(0,0,0,0.25);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(231,197,114,0.14), transparent 18%),
+        radial-gradient(circle at bottom right, rgba(138,215,255,0.12), transparent 18%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2), var(--bg-3));
+      line-height: 1.7;
+    }
+    a { color: inherit; text-decoration: none; }
+    .page { max-width: 1360px; margin: 0 auto; padding: 24px 20px 60px; }
+    .topbar { position: sticky; top: 0; z-index: 30; background: rgba(7, 28, 39, 0.74); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .topbar-inner { max-width: 1360px; margin: 0 auto; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; color: var(--gold-soft); font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; }
+    .brand-mark { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 10px; background: linear-gradient(135deg, var(--gold), var(--gold-soft)); color: #071c27; font-weight: 900; }
+    .nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+    .nav a { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); color: var(--muted); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; }
+    .hero { display: grid; grid-template-columns: 1.4fr 0.8fr; gap: 24px; margin-top: 24px; }
+    .panel { background: linear-gradient(135deg, rgba(138,215,255,0.08), rgba(231,197,114,0.04), rgba(11,20,28,0.96)); border: 1px solid var(--line); border-radius: 28px; overflow: hidden; box-shadow: 0 24px 52px var(--shadow); }
+    .panel-inner { padding: 30px 26px 24px; }
+    .eyebrow { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(231,197,114,0.35); background: rgba(231,197,114,0.08); color: var(--gold-soft); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; }
+    h1 { margin: 18px 0 14px; font-size: clamp(2.8rem,5vw,4.8rem); line-height: 0.95; letter-spacing: -0.08em; }
+    .lead { margin: 0; color: var(--muted); font-size: 1.05rem; line-height: 1.8; }
+    .badge-row, .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .badge-row { margin-top: 20px; }
+    .badge { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); color: var(--text); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; }
+    .actions { margin-top: 24px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 18px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); color: var(--text); font-weight: 700; }
+    .btn.primary { background: linear-gradient(135deg, rgba(231,197,114,0.12), rgba(138,215,255,0.08)); border-color: rgba(231,197,114,0.35); color: #f9e6ae; }
+    .stats-box { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; padding: 18px; }
+    .stat { min-height: 150px; padding: 18px; border-radius: 18px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); position: relative; overflow: hidden; }
+    .stat::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, rgba(138,215,255,0.75), rgba(231,197,114,0.75)); }
+    .stat-label { display: block; color: var(--muted); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; }
+    .stat-value { display: block; margin-top: 12px; font-size: clamp(1.8rem,2.5vw,2.7rem); letter-spacing: -0.06em; font-weight: 800; }
+    .stat small { display: inline-block; margin-top: 8px; color: var(--green); font-weight: 700; }
+    .metrics { margin-top: 34px; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 18px; }
+    .card { padding: 18px; border-radius: 18px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); }
+    .card-label { display: block; color: var(--muted); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; }
+    .card strong { display: block; margin-top: 10px; font-size: clamp(1.8rem,2vw,2.6rem); letter-spacing: -0.06em; }
+    .bar { margin-top: 12px; height: 8px; border-radius: 999px; background: rgba(255,255,255,0.05); overflow: hidden; }
+    .bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--green), var(--sky)); border-radius: inherit; }
+    .card small { display: block; margin-top: 8px; color: var(--muted); }
+    .footer { margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--muted); }
+    @media (max-width: 1024px) { .hero { grid-template-columns: 1fr; } .metrics { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 700px) { .page { padding: 18px 14px 40px; } .topbar-inner { flex-direction: column; align-items: flex-start; } .nav { justify-content: flex-start; } .metrics, .stats-box { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body>
   <header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand"><span class="brand-mark">P</span> PetCare</div>
-    <nav class="nav">
-      <a href="index.html">Home</a>
-      <a href="projext _Full.html">Master Hub</a>
-      <a href="project_overview.html">Overview</a>
-      <a href="report_kpi_board.html">KPI</a>
-      <a href="report_business_review.html">Reports</a>
-      <a href="roadmap.html">Roadmap</a>
-      <a href="slides_pitch.html">Pitch</a>
-      <a href="slides_demo.html">Demo</a>
-      <a href="Module/index.html">Modules</a>
-    </nav>
-  </div>
-</header>
+    <div class="topbar-inner">
+      <div class="brand"><span class="brand-mark">P</span> PetCare</div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="report_kpi_board.html">KPI Board</a>
+        <a href="report_final.html">Final Report</a>
+        <a href="report_business_review.html">Business Review</a>
+        <a href="business_case.html">Business Case</a>
+        <a href="executive_summary.html">Executive</a>
+      </nav>
+    </div>
+  </header>
+
   <main class="page">
     <section class="hero">
       <div class="panel">
         <div class="panel-inner">
           <span class="eyebrow">KPI board</span>
-          <h1>Operational KPI board template</h1>
-          <p class="lead">A scorecard layout for service, sales, membership, customer, inventory, and alert measures. This standalone page contains illustrative sample values and is not connected to live SQLite data.</p>
+          <h1>PetCare operations and growth scorecard</h1>
+          <p class="lead">A strategic dashboard tracking commercial impact, customer trust, recurring value, and operational discipline. The sample values below are meant as an illustrative board for decision-making and future reporting calibration.</p>
           <div class="badge-row">
-            <span class="badge">PetCare</span>
-            <span class="badge">Luxury</span>
-            <span class="badge">Enterprise</span>
-            <span class="badge">Demo ready</span>
+            <span class="badge">Revenue</span>
+            <span class="badge">Retention</span>
+            <span class="badge">Service</span>
+            <span class="badge">Operations</span>
           </div>
           <div class="actions">
-            <a class="btn primary" href="projext _Full.html">Open Master Hub</a>
-            <a class="btn" href="Module/index.html">Browse Modules</a>
+            <a class="btn primary" href="report_business_review.html">Read review</a>
+            <a class="btn" href="business_case.html">Go to business case</a>
           </div>
         </div>
       </div>
-      <div class="panel stats-box"><div class='stat'><span class='stat-label'>Orders</span><span class='stat-value'>1.2K</span><small>Illustrative sample only</small></div><div class='stat'><span class='stat-label'>Revenue</span><span class='stat-value'>42.8M</span><small>Illustrative sample only</small></div><div class='stat'><span class='stat-label'>Pets tracked</span><span class='stat-value'>248</span><small>Illustrative sample only</small></div><div class='stat'><span class='stat-label'>Growth scenario</span><span class='stat-value'>7.8%</span><small>Illustrative assumption only</small></div></div>
+
+      <div class="panel stats-box">
+        <div class="stat"><span class="stat-label">Orders</span><span class="stat-value">1.2K</span><small>monthly volume</small></div>
+        <div class="stat"><span class="stat-label">Revenue</span><span class="stat-value">42.8M</span><small>illustrative sample</small></div>
+        <div class="stat"><span class="stat-label">Pets tracked</span><span class="stat-value">248</span><small>active records</small></div>
+        <div class="stat"><span class="stat-label">Growth</span><span class="stat-value">7.8%</span><small>assumption-based forecast</small></div>
+      </div>
     </section>
+
+    <section class="metrics">
+      <div class="card">
+        <span class="card-label">Gross margin</span>
+        <strong>34.8%</strong>
+        <div class="bar"><span style="width: 75%"></span></div>
+        <small>Healthy mix from services + products</small>
+      </div>
+      <div class="card">
+        <span class="card-label">Retention</span>
+        <strong>72%</strong>
+        <div class="bar"><span style="width: 72%"></span></div>
+        <small>Strong loyalty and care coverage</small>
+      </div>
+      <div class="card">
+        <span class="card-label">CSAT</span>
+        <strong>4.9/5</strong>
+        <div class="bar"><span style="width: 98%"></span></div>
+        <small>Trust-building experience</small>
+      </div>
+      <div class="card">
+        <span class="card-label">Service SLA</span>
+        <strong>91%</strong>
+        <div class="bar"><span style="width: 91%"></span></div>
+        <small>Operationally stable and trackable</small>
+      </div>
+    </section>
+
     <section class="section">
-      <div class="section-head"><h2>Key points</h2></div>
-      <div class="grid"><div class='card'><h3>Service performance</h3><ul><li>Completion rate = completed eligible appointments / eligible scheduled appointments.</li><li>Handling time requires recorded start and completion timestamps.</li><li>Show canceled and no-show counts separately from completed work.</li></ul></div><div class='card'><h3>Sales and retention</h3><ul><li>Define membership conversion with a period, eligible-customer denominator, and source.</li><li>Group revenue by recorded order lines; do not label a static export as real time.</li><li>Track repeat visits only with a documented customer cohort and time window.</li></ul></div><div class='card'><h3>Risk and controls</h3><ul><li>Review low-stock alerts against configured thresholds and current stock records.</li><li>Use an SLA measure only when its target and event timestamps are defined.</li><li>Record source, period, exclusions, and owner with each KPI export.</li></ul></div></div>
+      <div class="section-head"><h2>Board logic</h2><span>focus</span></div>
+      <div class="metrics" style="margin-top:0">
+        <div class="card">
+          <span class="card-label">Customer health</span>
+          <strong>Good</strong>
+          <div class="bar"><span style="width: 80%"></span></div>
+          <small>Repeat visits and retention signals remain strong</small>
+        </div>
+        <div class="card">
+          <span class="card-label">Operational discipline</span>
+          <strong>Strong</strong>
+          <div class="bar"><span style="width: 84%"></span></div>
+          <small>Standardized workflow improves accountability</small>
+        </div>
+        <div class="card">
+          <span class="card-label">Growth readiness</span>
+          <strong>High</strong>
+          <div class="bar"><span style="width: 88%"></span></div>
+          <small>Expansion potential is supported by product and service mix</small>
+        </div>
+        <div class="card">
+          <span class="card-label">Risk control</span>
+          <strong>Moderate</strong>
+          <div class="bar"><span style="width: 66%"></span></div>
+          <small>Governance and audit depth need monitoring</small>
+        </div>
+      </div>
     </section>
-    <div class="footer">
-      <span>PetCare executive presentation system</span>
-      <span>Master navigation aligns all project layers</span>
-    </div>
+
+    <footer class="footer">
+      <span>PetCare — KPI board</span>
+      <span>Management dashboard for strategic pulse checks</span>
+    </footer>
   </main>
 </body>
 </html>

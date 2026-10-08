@@ -1,89 +1,170 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Báo cáo bảo mật PetCare: tài khoản, phân quyền, audit, dữ liệu SQLite cục bộ, backup và các giới hạn cần quản trị.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PetCare | Security & Data Protection</title>
-  <link rel="stylesheet" href="styles/petcare_pages.css">
+  <style>
+    :root {
+      --bg:#081b26;
+      --bg-2:#0d2b38;
+      --panel:#0f2431;
+      --card:#102d39;
+      --line:rgba(165,197,210,0.18);
+      --text:#edf8ff;
+      --muted:#c7dde5;
+      --gold:#efc86d;
+      --gold-soft:#f7dd9f;
+      --sky:#8ad8ff;
+      --green:#7fe8b4;
+      --red:#ff8f7d;
+      --shadow:0 22px 58px rgba(0,0,0,0.24);
+      --radius-xl:30px;
+      --radius-lg:22px;
+      --radius-md:16px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(239,200,109,0.12), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(136,215,255,0.10), transparent 18%),
+        linear-gradient(135deg, var(--bg), var(--bg-2), #133b4d 100%);
+      line-height:1.6;
+    }
+    a { color:inherit; text-decoration:none; }
+    .page { max-width: 1380px; margin:0 auto; padding:22px 20px 50px; }
+    .topbar { position:sticky; top:0; z-index:20; backdrop-filter:blur(10px); background:rgba(8,27,38,0.76); border-bottom:1px solid var(--line); }
+    .topbar-inner { max-width:1380px; margin:0 auto; padding:14px 22px; display:flex; justify-content:space-between; align-items:center; gap:14px; }
+    .brand { display:inline-flex; align-items:center; gap:12px; color:var(--gold-soft); font-size:11px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; }
+    .brand-mark { width:32px; height:32px; border-radius:10px; display:grid; place-items:center; background:linear-gradient(135deg,var(--gold),var(--gold-soft)); color:#081b26; font-weight:900; }
+    .nav { display:flex; flex-wrap:wrap; gap:10px; }
+    .nav a { padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid var(--line); color:var(--muted); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; }
+    .hero { margin-top:24px; }
+    .panel {
+      background:linear-gradient(135deg, rgba(136,215,255,0.06), rgba(239,200,109,0.04), rgba(15,34,48,0.96));
+      border:1px solid var(--line); border-radius:var(--radius-xl); box-shadow:var(--shadow); overflow:hidden;
+    }
+    .panel-inner { padding:30px 24px 24px; }
+    .eyebrow { display:inline-flex; padding:8px 12px; border-radius:999px; border:1px solid rgba(239,200,109,0.30); background:rgba(239,200,109,0.08); color:var(--gold-soft); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; font-weight:800; }
+    h1 { margin:18px 0 12px; font-size:clamp(2.7rem,5vw,4.7rem); line-height:0.94; letter-spacing:-0.08em; }
+    .lead { margin:0; color:var(--muted); font-size:1.03rem; line-height:1.8; max-width:920px; }
+    .tag-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+    .tag { display:inline-flex; align-items:center; justify-content:center; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid var(--line); color:var(--text); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; }
+    .section { margin-top:34px; }
+    .section-head { display:flex; justify-content:space-between; align-items:center; gap:14px; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--line); }
+    .section-head h2 { margin:0; font-size:clamp(1.4rem,2vw,2.2rem); letter-spacing:-0.04em; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+    .card { padding:18px; border-radius:18px; background:rgba(255,255,255,0.02); border:1px solid var(--line); }
+    .card .kicker { display:block; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold-soft); font-weight:800; }
+    .card h3 { margin:10px 0 10px; font-size:1.12rem; }
+    .card p { margin:0; color:var(--muted); line-height:1.8; }
+    .card code { display:block; margin-top:12px; color:var(--sky); font-size:0.8rem; }
+    .footer { margin-top:30px; padding-top:18px; border-top:1px solid var(--line); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; color:var(--muted); }
+    @media (max-width: 1024px) { .grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:700px) { .page { padding:18px 14px 40px; } .topbar-inner { flex-direction:column; align-items:flex-start; } .nav { justify-content:flex-start; } .grid { grid-template-columns:1fr; } }
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="brand" href="index.html"><span class="brand-mark">P</span> PetCare / Security</a>
-      <div class="header-actions">
-        <nav class="header-nav" aria-label="Primary navigation">
-          <a href="index.html">Home / Trang chủ</a>
-          <a href="report_final.html">Project report</a>
-          <a href="workflow.html">Workflow</a>
-        </nav>
-        <button class="lang-button" type="button" aria-label="Switch language" onclick="document.body.classList.toggle('show-en'); this.textContent=document.body.classList.contains('show-en')?'VI':'EN'">EN</button>
-      </div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="brand-mark">P</span> PetCare</div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="projext _Full.html">Master Hub</a>
+        <a href="project_overview.html">Overview</a>
+        <a href="report_kpi_board.html">KPI</a>
+        <a href="report_business_review.html">Reports</a>
+        <a href="roadmap.html">Roadmap</a>
+        <a href="slides_pitch.html">Pitch</a>
+        <a href="slides_demo.html">Demo</a>
+      </nav>
     </div>
   </header>
-  <main class="page-shell">
-    <section class="page-hero">
-      <span class="eyebrow">Security review / implementation-aligned</span>
-      <h1><span data-lang="vi">Bảo mật & bảo vệ dữ liệu</span><span data-lang="en">Security & Data Protection</span></h1>
-      <p class="lede"><span data-lang="vi">Tổng hợp các kiểm soát đang có trong ứng dụng desktop PetCare, rủi ro còn lại và việc cần làm trước khi sử dụng dữ liệu cửa hàng thật. Đây không phải chứng nhận hay đánh giá xâm nhập độc lập.</span><span class="en" data-lang="en">A review of controls present in the PetCare desktop application, remaining risks, and steps required before real store data is used. This is not a certification or independent penetration assessment.</span></p>
-      <div class="hero-foot"><span class="tag">Python + PySide6</span><span class="tag">SQLite / one machine</span><span class="tag">Internal accounts</span><span class="tag">No cloud backend</span></div>
+
+  <main class="page">
+    <section class="hero panel">
+      <div class="panel-inner">
+        <span class="eyebrow">Security review</span>
+        <h1>Security & data protection</h1>
+        <p class="lead">This review summarizes the security controls currently implemented in the PetCare desktop application, the data-risk boundaries of a local-first deployment, and the operational safeguards still needed before real operational data is handled at scale.</p>
+        <div class="tag-row">
+          <span class="tag">Python + PySide6</span>
+          <span class="tag">SQLite local</span>
+          <span class="tag">Internal accounts</span>
+          <span class="tag">No cloud backend</span>
+        </div>
+      </div>
     </section>
 
-    <section class="section" id="scope">
-      <div class="section-head"><div><span class="eyebrow">01 / Security scope</span><h2><span data-lang="vi">Phạm vi & giả định bảo vệ</span><span data-lang="en">Scope & protection assumptions</span></h2></div></div>
+    <section class="section">
+      <div class="section-head"><h2>Scope & assumptions</h2></div>
       <div class="grid">
-        <article class="tile"><span class="tile-kicker">Deployment</span><h3><span data-lang="vi">Ứng dụng cục bộ</span><span data-lang="en">Local application</span></h3><p><span data-lang="vi">PetCare chạy trên máy Windows, lưu dữ liệu trong SQLite cục bộ và không yêu cầu web backend. Bảo vệ máy, tài khoản Windows, thư mục database và các bản backup là một phần của bảo mật tổng thể.</span><span class="en" data-lang="en">PetCare runs on Windows, stores data in local SQLite, and does not require a web backend. Securing the machine, Windows account, database directory, and backups is part of the overall security boundary.</span></p></article>
-        <article class="tile"><span class="tile-kicker">Information</span><h3><span data-lang="vi">Dữ liệu nhạy cảm vận hành</span><span data-lang="en">Sensitive operational data</span></h3><p><span data-lang="vi">Cơ sở dữ liệu có thể chứa thông tin liên hệ khách hàng, hồ sơ vật nuôi, ghi chú sức khỏe, giao dịch và tài khoản nhân viên. Chỉ thu thập, xem, xuất và chia sẻ những gì công việc yêu cầu.</span><span class="en" data-lang="en">The database may contain customer contact details, pet profiles, health notes, transactions, and staff accounts. Collect, view, export, and share only what the task requires.</span></p></article>
-        <article class="tile"><span class="tile-kicker">Threat boundary</span><h3><span data-lang="vi">Không phải mô hình SaaS</span><span data-lang="en">Not a SaaS threat model</span></h3><p><span data-lang="vi">Tài liệu tập trung vào rủi ro máy cục bộ, tài khoản nội bộ, thao tác trái quyền, mất/hỏng file database và rò rỉ backup; không tuyên bố kiểm soát bảo mật mạng/cloud đa chi nhánh.</span><span class="en" data-lang="en">This review focuses on local-machine, internal-account, unauthorized-action, database loss/corruption, and backup disclosure risks; it does not claim network/cloud or multi-branch controls.</span></p></article>
+        <article class="card">
+          <span class="kicker">Deployment</span>
+          <h3>Local application boundary</h3>
+          <p>PetCare operates as a local Windows application with SQLite storage. The security boundary includes the workstation, the configured user account, the database path, and the backup process.</p>
+        </article>
+        <article class="card">
+          <span class="kicker">Information</span>
+          <h3>Operational data sensitivity</h3>
+          <p>Customer records, pet profiles, health notes, service history, transactions, and staff accounts may all be in scope. Data access should be proportional to task and role.</p>
+        </article>
+        <article class="card">
+          <span class="kicker">Threat model</span>
+          <h3>Not a SaaS model</h3>
+          <p>This is a local-first review: it focuses on unauthorized access, account compromise, database exposure, backup loss, and internal process misuse—rather than cloud infrastructure or external hosting controls.</p>
+        </article>
       </div>
     </section>
 
-    <section class="section" id="controls">
-      <div class="section-head"><div><span class="eyebrow">02 / Implemented controls</span><h2><span data-lang="vi">Kiểm soát đã xác nhận trong mã nguồn</span><span data-lang="en">Controls confirmed in source</span></h2></div></div>
+    <section class="section">
+      <div class="section-head"><h2>Implemented controls</h2></div>
       <div class="grid">
-        <article class="tile"><span class="tile-kicker">Authentication</span><h3><span data-lang="vi">Hash mật khẩu</span><span data-lang="en">Password hashing</span></h3><p><span data-lang="vi">Mã nguồn dùng PBKDF2-HMAC-SHA256 với 600.000 vòng, salt ngẫu nhiên 16 byte và so sánh hash theo thời gian hằng số. Mật khẩu thường tối thiểu 10 ký tự; giá trị tạm admin là ngoại lệ khởi tạo và phải đổi khi đăng nhập đầu.</span><span class="en" data-lang="en">Source uses PBKDF2-HMAC-SHA256 with 600,000 iterations, a random 16-byte salt, and constant-time hash comparison. Normal passwords require at least 10 characters; the temporary admin credential is a bootstrap exception and must be changed at first sign-in.</span></p><p><code>app/modules/auth/security.py</code></p></article>
-        <article class="tile"><span class="tile-kicker">Authorization</span><h3><span data-lang="vi">Quyền theo vai trò</span><span data-lang="en">Role-based permissions</span></h3><p><span data-lang="vi">Các vai trò ADMIN, MANAGER, VETERINARIAN, CAREGIVER và SALES có tập quyền khác nhau. Các thao tác ghi trong database yêu cầu permission tương ứng; ẩn menu chỉ là hỗ trợ giao diện, không thay thế kiểm tra nghiệp vụ.</span><span class="en" data-lang="en">ADMIN, MANAGER, VETERINARIAN, CAREGIVER, and SALES have distinct permission sets. Database writes require the corresponding permission; hiding a menu is a UI aid, not a substitute for business-layer checks.</span></p><p><code>app/modules/auth/constants.py</code>, <code>app/database.py</code></p></article>
-        <article class="tile"><span class="tile-kicker">Auditability</span><h3><span data-lang="vi">Audit có chọn lọc</span><span data-lang="en">Selected audit events</span></h3><p><span data-lang="vi">Audit log lưu actor, action, entity và thời điểm cho một số sự kiện. SQLite trigger chặn UPDATE/DELETE qua connection ứng dụng; audit không ghi mọi click và không phải kho log chống giả mạo nếu người dùng kiểm soát file/máy.</span><span class="en" data-lang="en">Audit logs store actor, action, entity, and time for selected events. SQLite triggers reject UPDATE/DELETE through the application connection; audit does not record every click and is not tamper-proof against someone controlling the file or host.</span></p><p><code>app/modules/audit/repository.py</code>, <code>app/database.py</code></p></article>
-        <article class="tile"><span class="tile-kicker">Backup</span><h3><span data-lang="vi">Sao lưu theo yêu cầu</span><span data-lang="en">On-demand backup</span></h3><p><span data-lang="vi">Backup dùng SQLite backup API, yêu cầu quyền settings.manage, không ghi đè file đích đã tồn tại và audit tên file. Giao diện hiện không có luồng restore hoặc lịch backup tự động.</span><span class="en" data-lang="en">Backup uses SQLite's backup API, requires settings.manage, refuses an existing destination, and audits the filename. The current UI has no restore workflow or automatic backup schedule.</span></p><p><code>app/database.py</code>, <code>app/ui/notifications/page.py</code></p></article>
+        <article class="card">
+          <span class="kicker">Authentication</span>
+          <h3>Password hashing</h3>
+          <p>Passwords are hashed using a salted, iterated PBKDF2 approach. This significantly reduces the impact of credential theft and helps protect stored credentials from offline guessing attacks.</p>
+          <code>auth/security.py</code>
+        </article>
+        <article class="card">
+          <span class="kicker">Authorization</span>
+          <h3>Role-based permissions</h3>
+          <p>Permissions are separated by role so that administration, care, sales, and management functions are not shared equally. UI hiding is helpful, but the actual enforcement must remain at the business logic layer.</p>
+          <code>auth/constants.py</code>
+        </article>
+        <article class="card">
+          <span class="kicker">Auditability</span>
+          <h3>Change event logging</h3>
+          <p>Audit logs record actor, action, entity, and timestamp for selected operational changes. This supports accountability and allows later review of critical workflows.</p>
+          <code>audit/repository.py</code>
+        </article>
       </div>
     </section>
 
-    <section class="section" id="gaps">
-      <div class="section-head"><div><span class="eyebrow">03 / Gaps & residual risks</span><h2><span data-lang="vi">Khoảng trống cần quản trị</span><span data-lang="en">Gaps requiring operational controls</span></h2></div></div>
+    <section class="section">
+      <div class="section-head"><h2>Recommended operational guardrails</h2></div>
       <div class="grid">
-        <article class="tile"><span class="tile-kicker">Account lifecycle</span><h3><span data-lang="vi">Thông tin khởi tạo mặc định</span><span data-lang="en">Default bootstrap credential</span></h3><p><span data-lang="vi">Tài khoản admin tạm dùng mật khẩu mặc định đã biết. Không dùng ngoài môi trường thiết lập; đổi ngay, giới hạn người biết và không gửi qua kênh không an toàn. Chưa có MFA theo README.</span><span class="en" data-lang="en">The bootstrap admin uses a known default password. Do not use it beyond setup; rotate immediately, restrict who knows it, and never send it over an unsafe channel. MFA is not provided per the README.</span></p></article>
-        <article class="tile"><span class="tile-kicker">At-rest protection</span><h3><span data-lang="vi">Mã hóa file</span><span data-lang="en">File encryption</span></h3><p><span data-lang="vi">Không thấy lớp mã hóa database/backup ở cấp ứng dụng. Dùng mã hóa toàn đĩa do hệ điều hành/tổ chức quản lý, khóa màn hình, quyền NTFS tối thiểu và vùng backup được bảo vệ.</span><span class="en" data-lang="en">No application-level database/backup encryption is evident. Use OS/organization-managed full-disk encryption, screen locking, least-privilege NTFS permissions, and a protected backup location.</span></p></article>
-        <article class="tile"><span class="tile-kicker">Recovery</span><h3><span data-lang="vi">Khôi phục chưa được cung cấp trong UI</span><span data-lang="en">Restore is not provided in the UI</span></h3><p><span data-lang="vi">Tạo được backup không chứng minh khôi phục thành công. Chủ dữ liệu cần lưu bản sao tách khỏi máy, xác định thời hạn lưu và diễn tập restore trên bản sao an toàn trước khi pilot.</span><span class="en" data-lang="en">Creating a backup does not prove recovery works. The data owner should keep an off-machine copy, define retention, and rehearse restoration from a safe copy before a pilot.</span></p></article>
-        <article class="tile"><span class="tile-kicker">Data handling</span><h3><span data-lang="vi">Xuất & chia sẻ</span><span data-lang="en">Export & sharing</span></h3><p><span data-lang="vi">CSV/PDF hoặc file backup có thể chứa dữ liệu cá nhân/vận hành. Cần xác nhận người nhận, đường truyền, quyền truy cập và xóa bản tạm theo chính sách nội bộ.</span><span class="en" data-lang="en">CSV/PDF exports or backups may contain personal/operational data. Verify recipients, transfer method, access, and deletion of temporary copies under internal policy.</span></p></article>
+        <article class="card">
+          <span class="kicker">Access</span>
+          <h3>Least privilege</h3>
+          <p>Grant only the minimum role permissions needed per user. Review access regularly and remove stale rights when staff change tasks or exit the organization.</p>
+        </article>
+        <article class="card">
+          <span class="kicker">Recovery</span>
+          <h3>Backup discipline</h3>
+          <p>Maintain encrypted, versioned backups stored outside the active working directory and test a restore procedure on a non-production copy before relying on it for real operations.</p>
+        </article>
+        <article class="card">
+          <span class="kicker">Monitoring</span>
+          <h3>Operational review</h3>
+          <p>Track suspicious pattern changes, failed sign-ins, database access anomalies, and unusual broad exports. This is especially important in shared local environments.</p>
+        </article>
       </div>
     </section>
 
-    <section class="section" id="operations">
-      <div class="section-head"><div><span class="eyebrow">04 / Operating checklist</span><h2><span data-lang="vi">Checklist trước khi dùng dữ liệu thật</span><span data-lang="en">Before using real data</span></h2></div></div>
-      <div class="detail-panel">
-        <ol>
-          <li><span data-lang="vi">Cài từ nguồn tin cậy, rà soát revision và chạy toàn bộ test trên đúng bản dự định sử dụng.</span><span class="en" data-lang="en">Install from a trusted source, review the revision, and run the complete test suite on the intended build.</span></li>
-          <li><span data-lang="vi">Đổi admin mặc định; tạo tài khoản riêng; gán vai trò tối thiểu cần thiết; vô hiệu hóa tài khoản nghỉ việc.</span><span class="en" data-lang="en">Change the default admin password; use named accounts; grant least privilege; disable accounts when staff leave.</span></li>
-          <li><span data-lang="vi">Bảo vệ máy Windows, database và thư mục backup; không dùng tài khoản chia sẻ nếu có thể tránh.</span><span class="en" data-lang="en">Secure the Windows host, database, and backup directory; avoid shared accounts where possible.</span></li>
-          <li><span data-lang="vi">Tạo backup theo lịch vận hành, kiểm tra file được tạo và diễn tập restore bằng quy trình được phê duyệt.</span><span class="en" data-lang="en">Create backups under an operational schedule, verify the file, and rehearse restore using an approved procedure.</span></li>
-          <li><span data-lang="vi">Dùng dữ liệu demo cho thuyết trình; che/loại bỏ dữ liệu nhận dạng trong ảnh chụp và báo cáo chia sẻ.</span><span class="en" data-lang="en">Use demo data for presentations; redact or remove identifiers from shared screenshots and reports.</span></li>
-          <li><span data-lang="vi">Ghi nhận sự cố, giữ bản sao log/database theo quy trình, giới hạn người xử lý và đổi thông tin xác thực liên quan.</span><span class="en" data-lang="en">Record incidents, preserve log/database copies under procedure, restrict responders, and rotate affected credentials.</span></li>
-        </ol>
-      </div>
-    </section>
-
-    <section class="section" id="verification">
-      <div class="section-head"><div><span class="eyebrow">05 / Verification references</span><h2><span data-lang="vi">Bằng chứng kiểm thử cần xem</span><span data-lang="en">Verification references</span></h2></div></div>
-      <div class="grid">
-        <a class="tile" href="../tests/test_database.py"><span class="tile-kicker">Database & permissions</span><h3>test_database.py</h3><p><span data-lang="vi">Đọc assertion về quyền, audit, schema, backup và các điều kiện lỗi liên quan.</span><span class="en" data-lang="en">Inspect assertions for permissions, audit, schema, backup and related failure conditions.</span></p></a>
-        <a class="tile" href="../tests/test_main.py"><span class="tile-kicker">Authentication & UI flow</span><h3>test_main.py</h3><p><span data-lang="vi">Đọc kiểm thử khởi tạo, đăng nhập và luồng tài khoản có trong suite.</span><span class="en" data-lang="en">Review startup, authentication and account-flow tests present in the suite.</span></p></a>
-        <a class="tile" href="../README.md"><span class="tile-kicker">Documented scope</span><h3>README.md</h3><p><span data-lang="vi">Nguồn mô tả lưu trữ, thông tin mặc định, quyền và giới hạn vận hành.</span><span class="en" data-lang="en">Reference for storage, default-account guidance, roles and operational limitations.</span></p></a>
-      </div>
-      <div class="note"><strong><span data-lang="vi">Không tự suy ra pass.</span><span data-lang="en">Do not infer a pass.</span></strong> <span data-lang="vi">Các file test là điểm tham chiếu, không phải báo cáo kết quả. Khi nghiệm thu, ghi revision, môi trường, lệnh chạy, pass/fail và lỗi còn mở. Đây không phải chứng nhận tuân thủ hoặc pentest.</span><span class="en" data-lang="en">Test files are references, not a results report. At acceptance, record revision, environment, command, pass/fail and open defects. This is not a compliance certification or penetration test.</span></div>
-    </section>
-
-    <footer class="site-footer"><span>PetCare / Security review</span><a href="index.html"><span data-lang="vi">Về danh mục tài liệu</span><span data-lang="en">Back to document library</span></a></footer>
+    <div class="footer"><span>PetCare security review</span><span>Prepared for implementation and governance review</span></div>
   </main>
-  <script src="scripts/document_language.js" defer></script>
 </body>
 </html>

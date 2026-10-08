@@ -1,9 +1,131 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Luồng dưới đây mô tả ranh giới giữa giao diện, nghiệp vụ, lưu trữ và kiểm soát trong một ứng dụng desktop không cần backend riêng."><title>PetCare | Full system workflow</title><link rel="stylesheet" href="styles/petcare_pages.css"></head><body><header class="site-header"><div class="header-inner"><a class="brand" href="index.html"><span class="brand-mark">P</span> PetCare / Luồng hệ thống đầy đủ</a><div class="header-actions"><nav class="header-nav" aria-label="Primary navigation"><a href="index.html">Home / Trang chủ</a><a href="workflow.html">Workflow</a><a href="report_final.html">Report</a></nav><button class="lang-button" type="button" aria-label="Switch language" onclick="document.body.classList.toggle('show-en'); this.textContent=document.body.classList.contains('show-en')?'VI':'EN'">EN</button></div></div></header><main class="page-shell"><section class="page-hero"><span class="eyebrow">Architecture / data flow</span><h1><span class=" " data-lang="vi">Luồng hệ thống đầy đủ</span><span class="en " data-lang="en">Full system workflow</span></h1><p class="lede"><span class=" " data-lang="vi">Luồng dưới đây mô tả ranh giới giữa giao diện, nghiệp vụ, lưu trữ và kiểm soát trong một ứng dụng desktop không cần backend riêng.</span><span class="en " data-lang="en">The flow describes boundaries between interface, business logic, storage and controls in a desktop app with no separate backend.</span></p><div class="hero-foot"><span class="tag">Python + PySide6</span><span class="tag">Local SQLite</span><span class="tag">Project documentation</span></div></section><section class="section"><div class="section-head"><div><span class="eyebrow">01 / Initialize</span><h2><span class=" " data-lang="vi">Khởi tạo</span><span class="en " data-lang="en">Initialize</span></h2></div></div><div class="grid"><article class="tile"><h3><span data-lang="vi">Ứng dụng</span><span data-lang="en">Application</span></h3><p><span class="" data-lang="vi">main.py khởi tạo giao diện và các thành phần ứng dụng.</span><span class="en" data-lang="en">main.py initializes the interface and application components.</span></p></article><article class="tile"><h3><span data-lang="vi">Cơ sở dữ liệu</span><span data-lang="en">Database</span></h3><p><span class="" data-lang="vi">SQLite được mở tại máy; schema và bảng được tạo khi cần.</span><span class="en" data-lang="en">SQLite opens locally; schema and tables are created as needed.</span></p></article><article class="tile"><h3><span data-lang="vi">Xác thực</span><span data-lang="en">Authentication</span></h3><p><span class="" data-lang="vi">Thông tin đăng nhập được kiểm tra trước khi mở khu vực làm việc.</span><span class="en" data-lang="en">Credentials are checked before entering the workspace.</span></p></article></div></section><section class="section"><div class="section-head"><div><span class="eyebrow">02 / Business logic</span><h2><span class=" " data-lang="vi">Nghiệp vụ</span><span class="en " data-lang="en">Business logic</span></h2></div></div><div class="grid"><article class="tile"><h3><span data-lang="vi">Giao diện</span><span data-lang="en">UI</span></h3><p><span class="" data-lang="vi">PySide6 thu nhận thao tác người dùng và hiển thị kết quả.</span><span class="en" data-lang="en">PySide6 receives user actions and presents results.</span></p></article><article class="tile"><h3><span data-lang="vi">Phân hệ</span><span data-lang="en">Modules</span></h3><p><span class="" data-lang="vi">Logic miền xử lý quy tắc thú cưng, kho, đơn, hội viên và dịch vụ.</span><span class="en" data-lang="en">Domain modules handle animal, inventory, order, membership and service rules.</span></p></article><article class="tile"><h3><span data-lang="vi">Kiểm tra</span><span data-lang="en">Validation</span></h3><p><span class="" data-lang="vi">Quy tắc xác thực trước khi cập nhật trạng thái và lưu bản ghi.</span><span class="en" data-lang="en">Rules validate changes before updating state and records.</span></p></article></div></section><section class="section"><div class="section-head"><div><span class="eyebrow">03 / Persistence &amp; controls</span><h2><span class=" " data-lang="vi">Lưu trữ &amp; kiểm soát</span><span class="en " data-lang="en">Persistence &amp; controls</span></h2></div></div><div class="grid"><article class="tile"><h3><span data-lang="vi">Ghi dữ liệu</span><span data-lang="en">Write</span></h3><p><span class="" data-lang="vi">Thay đổi được lưu trong SQLite cục bộ.</span><span class="en" data-lang="en">Changes are persisted in local SQLite.</span></p></article><article class="tile"><h3><span data-lang="vi">Audit</span><span data-lang="en">Audit</span></h3><p><span class="" data-lang="vi">Một số thao tác ghi và sự kiện xác thực được ghi log.</span><span class="en" data-lang="en">Selected writes and authentication events are logged.</span></p></article><article class="tile"><h3><span data-lang="vi">Bảo vệ</span><span data-lang="en">Protection</span></h3><p><span class="" data-lang="vi">Bảo vệ tài khoản máy và sao lưu cơ sở dữ liệu là yêu cầu vận hành.</span><span class="en" data-lang="en">Protecting the machine account and backing up the database are operational requirements.</span></p></article></div></section><section class="section" id="verification-boundaries">
-  <div class="section-head"><div><span class="eyebrow">Implementation & evaluation boundary</span><h2><span data-lang="vi">Ranh giới dữ liệu và nghiệm thu</span><span data-lang="en">Data and acceptance boundaries</span></h2></div></div>
-  <div class="grid">
-    <article class="tile"><span class="tile-kicker">Ownership</span><h3><span data-lang="vi">Nguồn dữ liệu chính</span><span data-lang="en">System of record</span></h3><p><span data-lang="vi">SQLite cục bộ là nguồn lưu trữ của ứng dụng trên một máy; hồ sơ customer, pet, stock, order và appointment có quan hệ/schema cụ thể, không phải dịch vụ dữ liệu cloud.</span><span class="en" data-lang="en">Local SQLite is the application's store on one machine; customer, pet, stock, order and appointment records follow explicit schema relationships, not a cloud data service.</span></p></article>
-    <article class="tile"><span class="tile-kicker">Control points</span><h3><span data-lang="vi">Kiểm soát luồng</span><span data-lang="en">Flow controls</span></h3><p><span data-lang="vi">Đầu vào được xác thực ở các form/repository; trạng thái và quyền quyết định thao tác hợp lệ. Thanh toán, đối chiếu và xử lý ngoại lệ vẫn cần xác nhận của nhân viên.</span><span class="en" data-lang="en">Forms/repositories validate inputs; state and permissions constrain actions. Payment, reconciliation and exception handling still require staff confirmation.</span></p></article>
-    <article class="tile"><span class="tile-kicker">Acceptance</span><h3><span data-lang="vi">Cách nghiệm thu</span><span data-lang="en">Acceptance method</span></h3><p><span data-lang="vi">Đối chiếu sơ đồ với code và test suite liên quan; lưu revision, đầu ra kiểm thử, lỗi còn lại và quyết định người phụ trách. Không dùng sơ đồ làm bằng chứng pilot.</span><span class="en" data-lang="en">Compare the diagram with implementation and related test suites; retain revision, test output, open defects and owner decisions. The diagram is not pilot evidence.</span></p></article>
-  </div>
-</section><div class="note"><strong>Scope / Phạm vi.</strong> <span class=" " data-lang="vi">PetCare là ứng dụng desktop cục bộ. Dữ liệu demo không phải kết quả vận hành; tính năng chưa có trong mã nguồn được ghi là đề xuất.</span><span class="en " data-lang="en">PetCare is a local desktop app. Demo data is not an operational result; features not present in the source are labeled as proposals.</span></div><footer class="site-footer"><span>PetCare / Project documentation</span><a href="index.html">Back to project hub / Về trang dự án</a></footer></main>  <script src="scripts/document_language.js" defer></script>
-</body></html>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PetCare | Full Workflow</title>
+  <style>
+    :root {
+      --bg:#081b26; --bg-2:#0d2b38; --panel:#0f2431; --card:#102d39; --line:rgba(165,197,210,0.18); --text:#edf8ff; --muted:#c7dde5; --gold:#efc86d; --gold-soft:#f7dd9f; --sky:#8ad8ff; --green:#7fe8b4; --red:#ff8f7d; --shadow:0 22px 55px rgba(0,0,0,0.24);
+      --radius-xl:30px; --radius-lg:22px; --radius-md:18px;
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; color:var(--text);
+      background: radial-gradient(circle at top left, rgba(239,200,109,0.12), transparent 18%), linear-gradient(135deg, var(--bg), var(--bg-2), #123a4d 100%);
+      line-height:1.6;
+    }
+    a { color:inherit; text-decoration:none; }
+    .page { max-width:1380px; margin:0 auto; padding:22px 20px 50px; }
+    .topbar { position:sticky; top:0; z-index:20; background:rgba(8,27,38,0.76); border-bottom:1px solid var(--line); backdrop-filter:blur(10px); }
+    .topbar-inner { max-width:1380px; margin:0 auto; padding:14px 22px; display:flex; justify-content:space-between; align-items:center; gap:14px; }
+    .brand { display:inline-flex; align-items:center; gap:12px; color:var(--gold-soft); font-size:11px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; }
+    .brand-mark { width:32px; height:32px; display:grid; place-items:center; border-radius:10px; background:linear-gradient(135deg,var(--gold),var(--gold-soft)); color:#081b26; font-weight:900; }
+    .nav { display:flex; flex-wrap:wrap; gap:10px; }
+    .nav a { padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid var(--line); color:var(--muted); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; }
+    .hero { margin-top:24px; background:linear-gradient(135deg, rgba(136,215,255,0.05), rgba(239,200,109,0.04), rgba(15,34,48,0.96)); border:1px solid var(--line); border-radius:var(--radius-xl); box-shadow:var(--shadow); }
+    .hero-inner { padding:30px 24px; }
+    .eyebrow { display:inline-flex; padding:8px 12px; border-radius:999px; background:rgba(239,200,109,0.08); border:1px solid rgba(239,200,109,0.30); color:var(--gold-soft); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; font-weight:800; }
+    h1 { margin:18px 0 12px; font-size:clamp(2.8rem,5vw,4.8rem); line-height:0.94; letter-spacing:-0.08em; }
+    .lead { margin:0; color:var(--muted); font-size:1.04rem; line-height:1.8; max-width:900px; }
+    .tag-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+    .tag { display:inline-flex; align-items:center; justify-content:center; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid var(--line); color:var(--text); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; }
+    .section { margin-top:34px; }
+    .section-head { display:flex; justify-content:space-between; align-items:center; gap:14px; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--line); }
+    .section-head h2 { margin:0; font-size:clamp(1.4rem,2vw,2.2rem); letter-spacing:-0.04em; }
+    .flow-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; }
+    .step { padding:18px; border-radius:18px; background:rgba(255,255,255,0.02); border:1px solid var(--line); }
+    .step .n { display:block; color:var(--gold-soft); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; font-weight:800; }
+    .step h3 { margin:12px 0 8px; font-size:1.16rem; }
+    .step p { margin:0; color:var(--muted); line-height:1.8; }
+    .branch-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+    .branch { padding:18px; border-radius:18px; background:rgba(255,255,255,0.02); border:1px solid var(--line); }
+    .branch h3 { margin:10px 0 12px; font-size:1.2rem; }
+    .branch ul { margin:0; padding-left:20px; color:var(--muted); line-height:1.9; }
+    .footer { margin-top:30px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+    @media (max-width:1024px) { .flow-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .branch-grid { grid-template-columns:1fr; } }
+    @media (max-width:700px) { .page { padding:18px 14px 40px; } .topbar-inner { flex-direction:column; align-items:flex-start; } .nav { justify-content:flex-start; } .flow-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="brand-mark">P</span> PetCare</div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="project_overview.html">Overview</a>
+        <a href="project_security.html">Security</a>
+        <a href="workflow.html">Workflow</a>
+        <a href="report_final.html">Report</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-inner">
+        <span class="eyebrow">Full workflow</span>
+        <h1>PetCare operational workflow</h1>
+        <p class="lead">The platform is organized as a local-first stack of operational modules. Users start in an authenticated environment, move through role-based navigation, and then work across intake, care, inventory, service, and reporting flows.</p>
+        <div class="tag-row">
+          <span class="tag">Authentication</span>
+          <span class="tag">Role access</span>
+          <span class="tag">Service ops</span>
+          <span class="tag">Reporting</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Core workflow stages</h2></div>
+      <div class="flow-grid">
+        <article class="step"><span class="n">01</span><h3>Launch</h3><p>The application starts and loads the local data store, preparing the operational environment for user tasks.</p></article>
+        <article class="step"><span class="n">02</span><h3>Authenticate</h3><p>Users sign in with internal credentials. Permissions are assigned to guide the data access and actions available in the app.</p></article>
+        <article class="step"><span class="n">03</span><h3>Choose module</h3><p>Navigation branches into customer management, pet records, care workflows, services, inventory, shipping, and reporting.</p></article>
+        <article class="step"><span class="n">04</span><h3>Execute and review</h3><p>Records are updated, scheduled, and followed through with an explicit operational state to support accountability.</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Operational branches</h2></div>
+      <div class="branch-grid">
+        <article class="branch">
+          <h3>Customer & intake</h3>
+          <ul>
+            <li>New customer and pet onboarding</li>
+            <li>Initial health and care profile creation</li>
+            <li>Appointment and service scheduling</li>
+          </ul>
+        </article>
+        <article class="branch">
+          <h3>Care & service</h3>
+          <ul>
+            <li>Veterinary check-ins and treatment follow-up</li>
+            <li>Nutrition guidance and care plans</li>
+            <li>Service status updates and review</li>
+          </ul>
+        </article>
+        <article class="branch">
+          <h3>Sales & inventory</h3>
+          <ul>
+            <li>Orders, trims, and stock updates</li>
+            <li>Memberships and product tracking</li>
+            <li>Inventory visibility and replenishment management</li>
+          </ul>
+        </article>
+        <article class="branch">
+          <h3>Analytics & review</h3>
+          <ul>
+            <li>Operational dashboards and summaries</li>
+            <li>Leadership reporting and trend review</li>
+            <li>Exception handling and continuous improvement</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <div class="footer"><span>PetCare full workflow</span><span>Prepared for business and operational review</span></div>
+  </main>
+</body>
+</html>

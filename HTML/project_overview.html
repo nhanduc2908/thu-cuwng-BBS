@@ -1,89 +1,103 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PetCare | Project overview</title>
-  <style>:root {
-  --bg-1: #071a2a;
-  --bg-2: #0d2338;
-  --bg-3: #123149;
-  --panel: rgba(9,17,25,0.95);
-  --panel-soft: rgba(16,24,35,0.92);
-  --line: rgba(148,163,184,0.22);
-  --text: #edf6ff;
-  --muted: #d9ebfb;
-  --gold: #d7b260;
-  --gold-soft: #f4d58a;
-  --primary: #8ad9ff;
-  --success: #7be0b2;
-  --danger: #ff8c7a;
-  --shadow: rgba(0,0,0,0.28);
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: var(--text);
-  background:
-    radial-gradient(circle at top left, rgba(215,178,96,0.12), transparent 18%),
-    radial-gradient(circle at bottom right, rgba(138,217,255,0.10), transparent 18%),
-    linear-gradient(135deg, var(--bg-1), var(--bg-2), var(--bg-3));
-}
-a { color: inherit; text-decoration: none; }
-.page { max-width: 1360px; margin: 0 auto; padding: 24px 20px 60px; }
-.topbar { position: sticky; top: 0; z-index: 30; backdrop-filter: blur(12px); background: rgba(7,26,42,0.72); border-bottom: 1px solid var(--line); }
-.topbar-inner { max-width: 1360px; margin: 0 auto; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; gap: 14px; }
-.brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; font-size: 11px; color: var(--gold-soft); }
-.brand-mark { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 10px; background: linear-gradient(135deg, var(--gold), var(--gold-soft)); color: #071a2a; font-weight: 900; }
-.nav { display: flex; flex-wrap: wrap; gap: 10px; }
-.nav a { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); color: var(--muted); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
-.hero { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 24px; margin-top: 24px; }
-.panel { background: linear-gradient(135deg, rgba(138,217,255,0.08), rgba(215,178,96,0.04), rgba(11,17,24,0.96)); border: 1px solid var(--line); border-radius: 26px; box-shadow: 0 20px 42px var(--shadow); overflow: hidden; }
-.panel-inner { padding: 28px 24px 22px; }
-.eyebrow { display: inline-block; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(215,178,96,0.35); background: rgba(215,178,96,0.08); color: var(--gold-soft); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; }
-h1 { margin: 18px 0 14px; font-size: clamp(2.7rem,5vw,4.8rem); line-height: 0.95; letter-spacing: -0.08em; }
-.lead { color: var(--muted); line-height: 1.8; font-size: 1.04rem; margin: 0; }
-.badge-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
-.badge { display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); color: var(--text); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
-.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 18px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); color: var(--text); font-weight: 700; }
-.btn.primary { background: linear-gradient(135deg, rgba(215,178,96,0.12), rgba(138,217,255,0.08)); border-color: rgba(215,178,96,0.35); color: #f9df9f; }
-.stats-box { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 18px; }
-.stat { min-height: 150px; padding: 18px; border-radius: 18px; border: 1px solid var(--line); background: rgba(255,255,255,0.02); position: relative; overflow: hidden; }
-.stat:before { content: ""; position: absolute; inset: 0 auto auto 0; width: 100%; height: 2px; background: linear-gradient(90deg, rgba(138,217,255,0.7), rgba(215,178,96,0.7)); }
-.stat-label { display: block; color: var(--muted); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
-.stat-value { display: block; margin-top: 14px; font-size: clamp(1.8rem, 2.5vw, 2.8rem); font-weight: 800; letter-spacing: -0.06em; }
-.stat small { display: inline-block; margin-top: 8px; color: var(--success); font-weight: 700; }
-.section { margin-top: 34px; }
-.section-head { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
-.section-head h2 { margin: 0; font-size: clamp(1.3rem,2vw,2rem); letter-spacing: -0.04em; }
-.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-.card { padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,0.02); }
-.card h3 { margin: 0 0 12px; font-size: 1.08rem; }
-.card ul { margin: 0; padding-left: 18px; color: var(--muted); line-height: 1.8; }
-.footer { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-@media (max-width: 1024px) { .hero { grid-template-columns: 1fr; } .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 700px) { .page { padding: 18px 14px 40px; } .grid { grid-template-columns: 1fr; } .topbar-inner { flex-direction: column; align-items: flex-start; } }</style>
+  <title>PetCare | Project Overview</title>
+  <style>
+    :root {
+      --bg:#081b26;
+      --bg-2:#0e2a35;
+      --panel:#0f2330;
+      --panel-soft:#122e3a;
+      --card:#112d39;
+      --line:rgba(165, 197, 210, 0.18);
+      --text:#edf8ff;
+      --muted:#cadde5;
+      --gold:#efc86d;
+      --gold-soft:#f7dd9f;
+      --sky:#88d7ff;
+      --green:#7fe8b4;
+      --red:#ff8f7d;
+      --shadow:0 22px 55px rgba(0,0,0,0.26);
+      --radius-xl:32px;
+      --radius-lg:22px;
+      --radius-md:18px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(239, 200, 109, 0.12), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(136, 215, 255, 0.10), transparent 18%),
+        linear-gradient(135deg, var(--bg), var(--bg-2), #143b4d 100%);
+      line-height:1.6;
+    }
+    a { color:inherit; text-decoration:none; }
+    .page { max-width: 1380px; margin:0 auto; padding:22px 20px 60px; }
+    .topbar { position:sticky; top:0; z-index:30; backdrop-filter: blur(10px); background:rgba(8,27,38,0.74); border-bottom:1px solid var(--line); }
+    .topbar-inner { max-width:1380px; margin:0 auto; padding:14px 22px; display:flex; justify-content:space-between; align-items:center; gap:14px; }
+    .brand { display:inline-flex; align-items:center; gap:12px; color:var(--gold-soft); font-size:11px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; }
+    .brand-mark { width:32px; height:32px; border-radius:10px; display:grid; place-items:center; background:linear-gradient(135deg,var(--gold),var(--gold-soft)); color:#081b26; font-weight:900; }
+    .nav { display:flex; flex-wrap:wrap; gap:10px; }
+    .nav a { padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid var(--line); color:var(--muted); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; }
+    .hero { display:grid; grid-template-columns:1.4fr 0.8fr; gap:24px; margin-top:24px; }
+    .panel {
+      background:linear-gradient(135deg, rgba(136,215,255,0.05), rgba(239,200,109,0.04), rgba(15,34,48,0.96));
+      border:1px solid var(--line); border-radius:var(--radius-xl); box-shadow:var(--shadow); overflow:hidden;
+    }
+    .panel-inner { padding:30px 24px 24px; }
+    .eyebrow { display:inline-flex; padding:8px 12px; border-radius:999px; border:1px solid rgba(239,200,109,0.30); background:rgba(239,200,109,0.08); color:var(--gold-soft); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; font-weight:800; }
+    h1 { margin:18px 0 14px; font-size:clamp(2.8rem,5vw,4.8rem); line-height:0.94; letter-spacing:-0.08em; }
+    .lead { margin:0; color:var(--muted); font-size:1.04rem; line-height:1.8; max-width:760px; }
+    .badge-row, .actions { display:flex; flex-wrap:wrap; gap:10px; }
+    .badge-row { margin-top:22px; }
+    .badge { display:inline-flex; align-items:center; justify-content:center; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid var(--line); color:var(--text); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; }
+    .actions { margin-top:22px; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; min-height:46px; padding:0 18px; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,0.02); color:var(--text); font-weight:700; }
+    .btn.primary { background:linear-gradient(135deg, rgba(239,200,109,0.12), rgba(136,215,255,0.08)); border-color:rgba(239,200,109,0.35); color:#f9ecbb; }
+    .stats-box { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; padding:18px; }
+    .stat { min-height:150px; padding:18px; border-radius:18px; background:rgba(255,255,255,0.02); border:1px solid var(--line); position:relative; overflow:hidden; }
+    .stat::before { content:""; position:absolute; left:0; right:0; top:0; height:2px; background:linear-gradient(90deg, rgba(136,215,255,0.8), rgba(239,200,109,0.8)); }
+    .stat-label { display:block; color:var(--muted); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; }
+    .stat-value { display:block; margin-top:12px; font-size:clamp(1.8rem,2.5vw,2.7rem); letter-spacing:-0.06em; font-weight:800; }
+    .stat small { display:inline-block; margin-top:8px; color:var(--green); font-weight:700; }
+    .section { margin-top:34px; }
+    .section-head { display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--line); }
+    .section-head h2 { margin:0; font-size:clamp(1.4rem,2vw,2.2rem); letter-spacing:-0.04em; }
+    .section-head span { color:var(--muted); font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+    .card { padding:18px; border-radius:18px; background:rgba(255,255,255,0.02); border:1px solid var(--line); }
+    .card h3 { margin:0 0 12px; font-size:1.08rem; }
+    .card ul { margin:0; padding-left:18px; color:var(--muted); line-height:1.8; }
+    .mini-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; margin-top:18px; }
+    .mini { padding:18px; border-radius:16px; background:rgba(255,255,255,0.015); border:1px solid var(--line); }
+    .mini strong { display:block; font-size:1.5rem; letter-spacing:-0.05em; }
+    .mini span { display:block; margin-top:6px; color:var(--muted); font-size:0.82rem; }
+    .footer { margin-top:30px; padding-top:18px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:12px; color:var(--muted); flex-wrap:wrap; }
+    @media (max-width:1024px) { .hero { grid-template-columns:1fr; } .grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .mini-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:700px) { .page { padding:18px 14px 40px; } .topbar-inner { flex-direction:column; align-items:flex-start; } .nav { justify-content:flex-start; } .grid, .mini-grid, .stats-box { grid-template-columns:1fr; } }
+  </style>
 </head>
 <body>
   <header class="topbar">
-  <div class="topbar-inner">
-    <div class="brand"><span class="brand-mark">P</span> PetCare</div>
-    <nav class="nav">
-      <a href="index.html">Home</a>
-      <a href="projext _Full.html">Master Hub</a>
-      <a href="project_overview.html">Overview</a>
-      <a href="report_kpi_board.html">KPI</a>
-      <a href="report_business_review.html">Reports</a>
-      <a href="roadmap.html">Roadmap</a>
-      <a href="slides_pitch.html">Pitch</a>
-      <a href="slides_demo.html">Demo</a>
-      <a href="Module/index.html">Modules</a>
-    </nav>
-  </div>
-</header>
+    <div class="topbar-inner">
+      <div class="brand"><span class="brand-mark">P</span> PetCare</div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="projext _Full.html">Master Hub</a>
+        <a href="project_overview.html">Overview</a>
+        <a href="report_kpi_board.html">KPI</a>
+        <a href="report_business_review.html">Reports</a>
+        <a href="roadmap.html">Roadmap</a>
+        <a href="slides_pitch.html">Pitch</a>
+        <a href="slides_demo.html">Demo</a>
+        <a href="Module/index.html">Modules</a>
+      </nav>
+    </div>
+  </header>
+
   <main class="page">
     <section class="hero">
       <div class="panel">
@@ -103,16 +117,85 @@ h1 { margin: 18px 0 14px; font-size: clamp(2.7rem,5vw,4.8rem); line-height: 0.95
           </div>
         </div>
       </div>
-      <div class="panel stats-box"><div class='stat'><span class='stat-label'>Application areas</span><span class='stat-value'>17</span><small>Documented modules</small></div><div class='stat'><span class='stat-label'>Deployment</span><span class='stat-value'>Local</span><small>Single-machine desktop app</small></div><div class='stat'><span class='stat-label'>Persistence</span><span class='stat-value'>SQLite</span><small>Local operational records</small></div><div class='stat'><span class='stat-label'>Recommendations</span><span class='stat-value'>Rules-based</span><small>Offline; no external AI</small></div></div>
+      <div class="panel stats-box">
+        <div class="stat"><span class="stat-label">Application areas</span><span class="stat-value">17</span><small>documented modules</small></div>
+        <div class="stat"><span class="stat-label">Deployment</span><span class="stat-value">Local</span><small>single-machine desktop</small></div>
+        <div class="stat"><span class="stat-label">Persistence</span><span class="stat-value">SQLite</span><small>local operational data</small></div>
+        <div class="stat"><span class="stat-label">Recommendations</span><span class="stat-value">Rules</span><small>offline logic</small></div>
+      </div>
     </section>
+
     <section class="section">
-      <div class="section-head"><h2>Key points</h2></div>
-      <div class="grid"><div class='card'><h3>Strategic pillars</h3><ul><li>Shared operational records for care, sales, inventory, and service tracking.</li><li>Internal customer workflows include memberships, reservations, appointments, and order history.</li><li>Reports support review of saved records; they do not establish business impact by themselves.</li></ul></div><div class='card'><h3>Operating model</h3><ul><li>Health observations and vaccination schedules support internal follow-up, not diagnosis.</li><li>Inventory quantities require operational entry; supplier data does not create stock automatically.</li><li>Service prices are reference values that the store must validate before use.</li></ul></div><div class='card'><h3>Scope and evaluation</h3><ul><li>The application is local-first and does not provide multi-branch cloud sync or a payment gateway.</li><li>Retention, efficiency, and ROI remain hypotheses until measured against a defined baseline.</li><li>Future expansion should be prioritized from pilot evidence, not assumed impact.</li></ul></div></div>
+      <div class="section-head"><h2>Key points</h2><span>Why this matters</span></div>
+      <div class="grid">
+        <div class="card">
+          <h3>Strategic pillars</h3>
+          <ul>
+            <li>Shared operational records for care, sales, inventory, and service management.</li>
+            <li>Customer workflows include memberships, reservations, scheduling, and historical orders.</li>
+            <li>Reports help review service quality and operational consistency across the business.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Operational value</h3>
+          <ul>
+            <li>Standardized workflows reduce duplicated effort across teams and task types.</li>
+            <li>Permissions and status logic help keep accountability visible and controlled.</li>
+            <li>Module-based design supports future expansion without rebuilding the whole system.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Commercial fit</h3>
+          <ul>
+            <li>Ideal for pet-care businesses that need a disciplined internal operating system.</li>
+            <li>Supports premium service experiences, recurring care, and loyalty-driven operations.</li>
+            <li>Maintains a lower-complexity architecture suited to local deployment and team adoption.</li>
+          </ul>
+        </div>
+      </div>
     </section>
-    <div class="footer">
-      <span>PetCare executive presentation system</span>
-      <span>Master navigation aligns all project layers</span>
-    </div>
+
+    <section class="section">
+      <div class="section-head"><h2>Project value</h2><span>Potential impact</span></div>
+      <div class="mini-grid">
+        <div class="mini"><strong>1</strong><span>Unified data model across administration, care, and commerce.</span></div>
+        <div class="mini"><strong>2</strong><span>Clear status tracking raises accountability and follow-up quality.</span></div>
+        <div class="mini"><strong>3</strong><span>Operational visibility drives better inventory and service planning.</span></div>
+        <div class="mini"><strong>4</strong><span>Modular growth path supports future expansion without re-platforming.</span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>What should be validated next</h2><span>Implementation focus</span></div>
+      <div class="grid">
+        <div class="card">
+          <h3>Business baseline</h3>
+          <ul>
+            <li>Measure current time spent on care updates, stock checks, and order handling.</li>
+            <li>Compare time-to-close across service, appointment, and customer support workflows.</li>
+            <li>Define the pilot sample and success criteria before adoption rollout.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Operational KPIs</h3>
+          <ul>
+            <li>Task completion times and exception rates.</li>
+            <li>Inventory discrepancy rate and replenishment cycle time.</li>
+            <li>Customer follow-up speed and service satisfaction indicators.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Decision framework</h3>
+          <ul>
+            <li>Use measured ROI and workflow improvement as the go/no-go checkpoint.</li>
+            <li>Prioritize features that influence retention, staff productivity, and data quality.</li>
+            <li>Define the next investment decision based on evidence, not assumptions.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer"><span>PetCare project overview</span><span>Prepared for business evaluation</span></div>
   </main>
 </body>
 </html>
