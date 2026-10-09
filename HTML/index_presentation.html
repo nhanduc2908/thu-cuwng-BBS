@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PetCare presentation landing page optimized for full HD screens and pitch demos">
+  <title>PetCare | Presentation</title>
+  <style>
+    :root {
+      --bg: #eef6f0;
+      --panel: #ffffff;
+      --panel-soft: #f6faf7;
+      --green-900: #0f342c;
+      --green-800: #123f34;
+      --green-700: #225f4c;
+      --green-600: #2a6f59;
+      --green-500: #5aaa82;
+      --green-100: #dff5e9;
+      --line: #dfeae5;
+      --ink: #183129;
+      --muted: #64786f;
+      --gold: #e7c16d;
+      --shadow: 0 18px 46px rgba(15,52,44,0.12);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #eef8f1 0%, #e9f0ee 100%);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    .page {
+      width: min(1600px, calc(100% - 40px));
+      margin: 26px auto 50px;
+      display: grid;
+      gap: 18px;
+    }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+      padding: 16px 18px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,0.9); box-shadow: 0 8px 16px rgba(15,52,44,0.02);
+    }
+    .brand {
+      display: inline-flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.05rem; color: var(--green-900);
+    }
+    .brand-mark {
+      width: 34px; height: 34px; display: grid; place-items: center; border-radius: 12px 12px 12px 4px; background: linear-gradient(135deg, #dfe97d, #b9df68); font-weight: 900;
+    }
+    .nav { display: flex; align-items: center; gap: 14px; color: var(--muted); font-size: 0.82rem; font-weight: 700; }
+    .nav a:hover { color: var(--green-700); }
+    .nav .cta {
+      background: linear-gradient(135deg, #dff0bf, #bfe274); color: var(--green-900); border: 1px solid rgba(21,75,60,0.08); border-radius: 999px; padding: 9px 14px; font-weight: 800;
+    }
+
+    .hero {
+      display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(350px, 0.8fr);
+      gap: 18px; padding: 30px 28px; border-radius: 28px; background: linear-gradient(135deg, #0f332d 0%, #123d33 45%, #163a4c 100%); color: #f4faf7; box-shadow: var(--shadow); overflow: hidden; position: relative;
+    }
+    .hero::after {
+      content: ""; position: absolute; right: -50px; top: -28px; width: 260px; height: 260px; background: radial-gradient(circle, rgba(218,242,148,0.38), transparent 62%); border-radius: 50%;
+    }
+    .hero-copy, .hero-panel { position: relative; z-index: 1; }
+    .eyebrow {
+      display: inline-flex; align-items: center; justify-content: center; width: fit-content; padding: 8px 12px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(244,250,247,0.9); letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.66rem; font-weight: 800;
+    }
+    h1 {
+      margin: 18px 0 12px; letter-spacing: -0.08em; font-size: clamp(3.4rem, 5vw, 6.2rem); line-height: 0.92;
+    }
+    .hero-copy p { margin: 0; max-width: 760px; color: rgba(244,250,247,0.9); font-size: 1.08rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 22px; border-radius: 12px; font-weight: 800; border: 1px solid transparent;
+    }
+    .btn.primary { background: linear-gradient(135deg, #e2ed7a, #c2de70); color: var(--green-900); }
+    .btn.secondary { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); color: #fff; }
+    .hero-panel {
+      display: grid; gap: 12px; padding: 18px; border-radius: 20px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    }
+    .metric {
+      padding: 16px; border-radius: 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12);
+    }
+    .metric strong { display: block; font-size: 2.1rem; letter-spacing: -0.06em; }
+    .metric span { display: block; margin-top: 4px; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.72); }
+
+    .stats-row {
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px;
+    }
+    .stat-item {
+      padding: 18px 16px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(180deg, #ffffff 0%, #f8faf9 100%);
+    }
+    .stat-item strong { display: block; font-size: 2rem; letter-spacing: -0.06em; color: var(--green-900); }
+    .stat-item span { display: block; margin-top: 6px; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+
+    .main-grid {
+      display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr); gap: 18px;
+    }
+    .panel {
+      background: rgba(255,255,255,0.9); border: 1px solid var(--line); border-radius: 24px; padding: 20px;
+      box-shadow: 0 10px 20px rgba(15,52,44,0.03);
+    }
+    .panel h2 { margin: 8px 0 14px; font-size: clamp(1.8rem, 2.2vw, 2.5rem); letter-spacing: -0.05em; }
+    .card-list { display: grid; gap: 12px; }
+    .card {
+      display: grid; grid-template-columns: 52px minmax(0,1fr) auto; gap: 12px; align-items: center;
+      padding: 14px 14px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(180deg, #fff 0%, #f8faf9 100%);
+    }
+    .card .icon {
+      width: 52px; height: 52px; display: grid; place-items: center; border-radius: 14px; background: var(--green-100); color: var(--green-700); font-size: 1.4rem;
+    }
+    .card h3 { margin: 0 0 3px; font-size: 1.12rem; }
+    .card p { margin: 0; color: var(--muted); font-size: 0.88rem; }
+    .card .chip {
+      display: inline-flex; align-items: center; justify-content: center; padding: 6px 8px; border-radius: 999px; background: #edf7ef; color: var(--green-800); font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
+    }
+
+    .side-stack { display: grid; gap: 16px; }
+    .mini-panel { background: linear-gradient(180deg, #fff 0%, #f7faf8 100%); border: 1px solid var(--line); border-radius: 18px; padding: 16px; }
+    .mini-panel h3 { margin: 0 0 12px; font-size: 1.14rem; }
+    .list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+    .list li {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 10px 10px; border: 1px solid var(--line); border-radius: 10px; background: #fff;
+    }
+    .list span { color: var(--muted); font-size: 0.82rem; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(135deg, #dbf0bf, #b9dd68); }
+
+    @media (max-width: 1060px) {
+      .hero, .main-grid { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 620px) {
+      .page { width: min(100% - 18px, 1600px); }
+      .topbar { flex-wrap: wrap; justify-content: center; }
+      .nav { width: 100%; justify-content: center; }
+      .hero { padding: 22px 20px; }
+      .stats-row { grid-template-columns: 1fr; }
+      .hero-actions { flex-direction: column; }
+      .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">P</span> PetCare / Presentation</div>
+      <nav class="nav" aria-label="Main nav">
+        <a href="index.html">Investor</a>
+        <a href="index_customer.html">Customer</a>
+        <a href="workflow.html">Workflow</a>
+        <a href="nutrition_products.html">Catalog</a>
+        <a class="cta" href="slides_pitch.html">Open pitch</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">Full HD demo</span>
+        <h1>PetCare is built for trust, care and growth.</h1>
+        <p>Combined digital platform for nutrition, care scheduling, shopping, AI-style recommendations and operational visibility. Designed to impress stakeholders in a single presentation flow.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="slides_pitch.html">View deck</a>
+          <a class="btn secondary" href="app_interface_preview.html">Open product UI</a>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <div class="metric"><strong>8000</strong><span>Products</span></div>
+        <div class="metric"><strong>17</strong><span>Modules</span></div>
+        <div class="metric"><strong>4.9/5</strong><span>Customer care score</span></div>
+      </div>
+    </section>
+
+    <section class="stats-row">
+      <div class="stat-item"><strong>4K</strong><span>Dog products</span></div>
+      <div class="stat-item"><strong>4K</strong><span>Cat products</span></div>
+      <div class="stat-item"><strong>06</strong><span>Workflow groups</span></div>
+      <div class="stat-item"><strong>24/7</strong><span>Care visibility</span></div>
+    </section>
+
+    <section class="main-grid">
+      <div class="panel">
+        <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.08);">Value story</span>
+        <h2>Why this platform matters</h2>
+        <div class="card-list">
+          <div class="card">
+            <div class="icon">🥗</div>
+            <div>
+              <h3>Personalized nutrition</h3>
+              <p>Product recommendations by pet type, weight, age and wellness goals.</p>
+            </div>
+            <div class="chip">Core</div>
+          </div>
+          <div class="card">
+            <div class="icon">🩺</div>
+            <div>
+              <h3>Operational health</h3>
+              <p>Care schedule, reminders, service history and treatment visibility.</p>
+            </div>
+            <div class="chip">Ops</div>
+          </div>
+          <div class="card">
+            <div class="icon">📈</div>
+            <div>
+              <h3>Board-level reporting</h3>
+              <p>From KPI dashboards to business review and executive reporting.</p>
+            </div>
+            <div class="chip">Board</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-stack">
+        <div class="mini-panel">
+          <h3>Delivery areas</h3>
+          <ul class="list">
+            <li><span>Customer portal</span><div class="dot"></div></li>
+            <li><span>Store management</span><div class="dot"></div></li>
+            <li><span>Care operations</span><div class="dot"></div></li>
+            <li><span>Executive reporting</span><div class="dot"></div></li>
+          </ul>
+        </div>
+        <div class="mini-panel">
+          <h3>Next actions</h3>
+          <ul class="list">
+            <li><span>Review product catalog</span><div class="dot"></div></li>
+            <li><span>Review service flow</span><div class="dot"></div></li>
+            <li><span>Validate business case</span><div class="dot"></div></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

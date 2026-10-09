@@ -6,112 +6,526 @@
   <title>PetCare | Workflow</title>
   <style>
     :root {
-      --bg:#edf5ef;
-      --panel:#ffffff;
-      --panel-soft:#f5faf6;
-      --green-900:#113b2d;
-      --green-800:#184b3d;
-      --green-700:#1a6950;
-      --green-600:#2b7b5d;
-      --green-500:#50a27a;
-      --green-100:#e8f7ee;
-      --line:#dfeae3;
-      --ink:#183129;
-      --muted:#61776d;
-      --gold:#f0c86a;
-      --orange:#e99464;
-      --shadow:0 18px 42px rgba(16,57,45,0.08);
-      --radius-xl:28px;
-      --radius-lg:20px;
-      --radius-md:14px;
-      --radius-sm:10px;
+      --bg: #edf5ef;
+      --panel: #ffffff;
+      --panel-soft: #f5faf7;
+      --green-900: #113b2d;
+      --green-800: #184b3d;
+      --green-700: #1a6950;
+      --green-600: #2b7b5d;
+      --green-500: #57a77f;
+      --green-100: #e8f7ee;
+      --green-50: #f7fbf8;
+      --line: #dfeae3;
+      --ink: #183129;
+      --muted: #61776d;
+      --gold: #f0c86a;
+      --orange: #e99464;
+      --shadow: 0 18px 42px rgba(16,57,45,0.08);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
     }
-    * { box-sizing:border-box }
-    html { scroll-behavior:smooth }
-    body { margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; color:var(--ink); background:linear-gradient(180deg,#eef7ef,#edf3ee 100%); line-height:1.6 }
-    a { color:inherit; text-decoration:none }
-    button { font:inherit }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #eef7ef 0%, #edf3ee 100%);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, select { font: inherit; }
+
     .site-header {
-      position:sticky; top:0; z-index:10; backdrop-filter:blur(10px);
-      background:rgba(255,255,255,0.7); border-bottom:1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.75);
+      border-bottom: 1px solid var(--line);
     }
+
     .header-inner {
-      width:min(1280px,calc(100% - 28px)); margin:0 auto; min-height:76px;
-      display:flex; align-items:center; justify-content:space-between; gap:18px;
+      width: min(1280px, calc(100% - 28px));
+      margin: 0 auto;
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
     }
-    .brand { display:inline-flex; align-items:center; gap:12px; font-weight:800; font-size:1.1rem; color:var(--green-900) }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.08rem;
+      color: var(--green-900);
+    }
+
     .brand-mark {
-      width:36px; height:36px; display:grid; place-items:center; border-radius:12px 12px 12px 4px;
-      background:linear-gradient(135deg,#dfe97d,#b9df68); color:var(--green-900); font-size:1.2rem; font-weight:900;
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px 12px 12px 4px;
+      background: linear-gradient(135deg, #dfe97d, #b9df68);
+      color: var(--green-900);
+      font-size: 1.15rem;
+      font-weight: 900;
     }
-    .header-actions { display:flex; align-items:center; gap:14px }
-    .header-nav { display:flex; align-items:center; gap:18px; color:var(--muted); font-size:0.82rem; font-weight:700 }
-    .header-nav a:hover { color:var(--green-700) }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    .header-nav a:hover { color: var(--green-700); }
+
     .lang-button {
-      border:1px solid var(--line); background:#fff; border-radius:999px; color:var(--green-900); padding:9px 13px; font-weight:800; cursor:pointer;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      color: var(--green-900);
+      padding: 9px 13px;
+      font-weight: 800;
+      cursor: pointer;
     }
-    .page-shell { width:min(1280px,calc(100% - 28px)); margin:26px auto 42px; display:grid; gap:20px }
+
+    .page-shell {
+      width: min(1280px, calc(100% - 28px));
+      margin: 26px auto 42px;
+      display: grid;
+      gap: 20px;
+    }
+
     .hero {
-      background:linear-gradient(135deg, rgba(19,71,58,0.95), rgba(17,72,58,0.96), rgba(17,55,82,0.92));
-      border-radius:30px; padding:30px 30px 24px; color:#fff; position:relative; overflow:hidden; box-shadow:var(--shadow);
+      background: linear-gradient(135deg, rgba(19,71,58,0.96), rgba(17,72,58,0.96), rgba(17,55,82,0.92));
+      border-radius: 30px;
+      padding: 30px 30px 24px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
     }
+
     .hero::after {
-      content:""; position:absolute; right:-40px; top:-30px; width:250px; height:250px; background:radial-gradient(circle, rgba(216,239,114,0.34), transparent 62%); border-radius:50%;
+      content: "";
+      position: absolute;
+      right: -40px;
+      top: -30px;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(216,239,114,0.34), transparent 62%);
+      border-radius: 50%;
     }
-    .eyebrow { display:inline-block; color:rgba(236,245,238,0.75); letter-spacing:0.12em; font-size:0.66rem; font-weight:800; text-transform:uppercase }
-    .hero h1 { margin:12px 0 10px; max-width:620px; letter-spacing:-0.06em; font-size:clamp(2.2rem,4vw,3.8rem); line-height:1.08 }
-    .hero p { max-width:760px; margin:0; color:rgba(242,249,244,0.9); font-size:1rem }
-    .hero-foot { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px }
-    .tag { display:inline-flex; align-items:center; padding:8px 12px; border-radius:999px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.08); color:#f4f9f6; font-size:0.72rem; font-weight:700 }
+
+    .eyebrow {
+      display: inline-block;
+      color: rgba(236,245,238,0.76);
+      letter-spacing: 0.12em;
+      font-size: 0.66rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 12px 0 10px;
+      max-width: 720px;
+      letter-spacing: -0.06em;
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      line-height: 1.08;
+    }
+
+    .hero p {
+      max-width: 800px;
+      margin: 0;
+      color: rgba(242,249,244,0.9);
+      font-size: 1rem;
+    }
+
+    .hero-foot {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.08);
+      color: #f4f9f6;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
     .section {
-      background:rgba(255,255,255,0.84); border:1px solid var(--line); border-radius:24px; padding:20px 20px 18px; box-shadow:0 14px 26px rgba(18,48,36,0.03);
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px 20px 18px;
+      box-shadow: 0 14px 26px rgba(18,48,36,0.03);
     }
-    .section-head { display:flex; align-items:end; justify-content:space-between; gap:14px; margin-bottom:18px }
-    .section-head h2 { margin:8px 0 0; font-size:clamp(1.5rem,2vw,2.2rem); letter-spacing:-0.04em }
-    .section-head p { margin:0; color:var(--muted); font-size:0.92rem }
-    .flow-steps { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px }
-    .flow-step {
-      position:relative; background:linear-gradient(180deg,#ffffff 0%,#f7fbf8 100%); border:1px solid var(--line); border-radius:18px; padding:18px 18px 16px; min-height:210px; overflow:hidden;
+
+    .timeline-section {
+      background: linear-gradient(180deg, #ffffff 0%, #f7faf8 100%);
+      overflow: hidden;
     }
-    .flow-step::before { content:attr(data-index); position:absolute; top:14px; right:16px; font-size:0.68rem; font-weight:800; color:var(--green-700); letter-spacing:0.12em }
-    .flow-step h3 { margin:12px 0 8px; font-size:1.28rem; letter-spacing:-0.04em }
-    .flow-step p { margin:0; color:var(--muted); font-size:0.92rem }
-    .flow-step .state-line { display:block; margin-top:14px; padding-top:10px; border-top:1px solid var(--line); color:var(--green-800); font-size:0.73rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase }
-    .flow-key { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px }
-    .flow-key span { padding:7px 10px; border:1px solid var(--line); background:#fff; color:var(--muted); border-radius:999px; font-size:0.72rem; font-weight:700 }
-    .branch-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px }
-    .branch { background:linear-gradient(180deg, rgba(249,252,250,0.96), rgba(255,255,255,1)); border:1px solid var(--line); border-radius:18px; padding:18px }
-    .branch h3 { margin:8px 0 12px; font-size:1.3rem }
-    .branch ul, .branch ol { margin:0; padding-left:20px; color:var(--muted); font-size:0.92rem }
-    .branch li + li { margin-top:8px }
-    .table-wrap { overflow-x:auto }
-    .state-table { width:100%; min-width:760px; border-collapse:collapse; background:#fff; border:1px solid var(--line); border-radius:14px; overflow:hidden }
-    .state-table th, .state-table td { padding:12px 12px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line) }
-    .state-table th { background:linear-gradient(180deg,#edf7ef,#e9f2ea); color:var(--green-800); font-size:0.74rem; text-transform:uppercase; letter-spacing:0.08em }
-    .state-table td { font-size:0.9rem; color:var(--ink) }
-    .state-code { display:inline-flex; align-items:center; padding:5px 8px; border-radius:999px; background:#edf7ef; color:var(--green-800); border:1px solid rgba(18,92,66,0.06); font-weight:800; font-size:0.7rem; white-space:nowrap }
-    .role-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px }
-    .role { background:linear-gradient(180deg,#ffffff,#f8fbf9); border:1px solid var(--line); border-radius:18px; padding:18px }
-    .role strong { display:block; margin-bottom:8px; font-size:1.08rem }
-    .role p { margin:0; color:var(--muted); font-size:0.9rem }
-    .exception-list { list-style:none; padding:0; margin:0; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 18px }
-    .exception-list li { padding:14px 0; border-bottom:1px solid var(--line) }
-    .exception-list strong { display:block; margin-bottom:5px; font-size:0.98rem }
-    .exception-list p { margin:0; color:var(--muted); font-size:0.9rem }
-    @media (max-width:900px) {
-      .flow-steps { grid-template-columns:repeat(2,minmax(0,1fr)) }
-      .branch-grid { grid-template-columns:1fr }
-      .role-grid { grid-template-columns:1fr }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
     }
-    @media (max-width:640px) {
-      .header-inner { flex-wrap:wrap; justify-content:center; padding:12px 0 }
-      .header-nav { width:100%; justify-content:center }
-      .page-shell { width:min(100% - 18px,1280px) }
-      .hero { padding:22px 18px }
-      .section { padding:16px }
-      .flow-steps { grid-template-columns:1fr }
-      .exception-list { grid-template-columns:1fr }
-      .section-head { flex-direction:column; align-items:flex-start }
+
+    .section-head h2 {
+      margin: 8px 0 0;
+      font-size: clamp(1.6rem, 2vw, 2.4rem);
+      letter-spacing: -0.04em;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .workflow-card {
+      position: relative;
+      background: linear-gradient(180deg, #ffffff 0%, #f7fbf8 100%);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px 18px 16px;
+      min-height: 210px;
+      overflow: hidden;
+    }
+
+    .workflow-card::before {
+      content: attr(data-index);
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--green-700);
+      letter-spacing: 0.12em;
+    }
+
+    .workflow-card h3 {
+      margin: 12px 0 8px;
+      font-size: 1.25rem;
+      letter-spacing: -0.04em;
+    }
+
+    .workflow-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+
+    .workflow-card .state-line {
+      display: block;
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      color: var(--green-800);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .flow-key {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .flow-key span {
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .branch-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .branch {
+      background: linear-gradient(180deg, rgba(249,252,250,0.96), rgba(255,255,255,1));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .branch h3 {
+      margin: 8px 0 12px;
+      font-size: 1.35rem;
+      letter-spacing: -0.04em;
+    }
+
+    .branch ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.75;
+    }
+
+    .branch li + li { margin-top: 8px; }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    .state-table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .state-table th, .state-table td {
+      padding: 12px 12px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .state-table th {
+      background: linear-gradient(180deg, #edf7ef, #e9f2ea);
+      color: var(--green-800);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .state-table td {
+      font-size: 0.9rem;
+      color: var(--ink);
+    }
+
+    .state-code {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: #edf7ef;
+      color: var(--green-800);
+      border: 1px solid rgba(18,92,66,0.06);
+      font-weight: 800;
+      font-size: 0.7rem;
+      white-space: nowrap;
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .role {
+      background: linear-gradient(180deg, #ffffff, #f8fbf9);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .role strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.08rem;
+    }
+
+    .role p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .exception-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 18px;
+    }
+
+    .exception-list li {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .exception-list strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.98rem;
+    }
+
+    .exception-list p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .workflow-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .workflow-list .branch {
+      min-height: 220px;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+      position: relative;
+      margin-top: 18px;
+      padding-top: 10px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 30px;
+      left: 2.5%;
+      right: 2.5%;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(13,79,62,0.15), rgba(13,79,62,0.32), rgba(13,79,62,0.15));
+      z-index: 0;
+    }
+
+    .timeline-item {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(180deg, #ffffff, #f5faf7);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px 12px 12px;
+      min-height: 160px;
+      box-shadow: 0 8px 18px rgba(16,57,45,0.04);
+    }
+
+    .timeline-item .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d9f0bf, #b9dd68);
+      color: var(--green-900);
+      font-weight: 800;
+      font-size: 0.72rem;
+      margin-bottom: 10px;
+    }
+
+    .timeline-item h4 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      letter-spacing: -0.03em;
+      color: var(--green-900);
+    }
+
+    .timeline-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.7;
+    }
+
+    .timeline-item::after {
+      content: "→";
+      position: absolute;
+      top: 28px;
+      right: -15px;
+      color: var(--green-600);
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .timeline-item:last-child::after { content: ""; }
+
+    .mini-kicker {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--green-100);
+      color: var(--green-700);
+      border: 1px solid rgba(23,108,76,0.08);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    @media (max-width: 900px) {
+      .workflow-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .branch-grid, .workflow-list, .role-grid { grid-template-columns: 1fr; }
+      .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .timeline::before { display: none; }
+      .timeline-item::after { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .header-inner {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 12px 0;
+      }
+      .header-nav {
+        width: 100%;
+        justify-content: center;
+      }
+      .page-shell { width: min(100% - 18px, 1280px); }
+      .hero { padding: 22px 18px; }
+      .section { padding: 16px; }
+      .workflow-grid, .exception-list, .timeline { grid-template-columns: 1fr; }
+      .section-head { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -133,97 +547,92 @@
   <main class="page-shell">
     <section class="hero">
       <span class="eyebrow">Operations / implemented flow</span>
-      <h1>Bản đồ quy trình PetCare</h1>
-      <p>Từ khởi động hệ thống, quản lý quyền, tiếp nhận thú cưng, đến chăm sóc, mua sắm, dịch vụ và sao lưu dữ liệu. Đây là bản đồ vận hành nội bộ, giúp các phân hệ hoạt động đồng bộ trong một hệ thống desktop cục bộ.</p>
+      <h1>Bản đồ quy trình PetCare theo từng workflow</h1>
+      <p>Trang này mô tả chi tiết từng luồng xử lý chính trong dự án: từ đăng nhập, hồ sơ thú cưng, khuyến nghị dinh dưỡng, đặt lịch dịch vụ, chăm sóc theo giai đoạn, đến thanh toán, kho hàng và báo cáo. Mỗi workflow được xây dựng để hoạt động rõ ràng, có trạng thái, vai trò và ngưỡng xử lý riêng biệt.</p>
       <div class="hero-foot">
-        <span class="tag">Python + PySide6</span>
-        <span class="tag">SQLite local</span>
-        <span class="tag">17 phân hệ nghiệp vụ</span>
+        <span class="tag">Customer flow</span>
+        <span class="tag">Operations flow</span>
+        <span class="tag">Inventory flow</span>
+        <span class="tag">Reporting flow</span>
       </div>
     </section>
 
     <section class="section">
       <div class="section-head">
         <div>
-          <span class="eyebrow">01 / Shared workflow</span>
-          <h2>Luồng dùng chung</h2>
+          <span class="eyebrow">01 / Shared login workflow</span>
+          <h2>Luồng dùng chung của hệ thống</h2>
         </div>
-        <p>Các bước nền trước khi người dùng bước vào nhánh nghiệp vụ chính.</p>
+        <p>Đây là nền tảng cho mọi phân hệ trong dự án.</p>
       </div>
-      <div class="flow-steps">
-        <article class="flow-step" data-index="01">
-          <h3>Khởi chạy</h3>
-          <p>Ứng dụng desktop mở cơ sở dữ liệu SQLite cục bộ và tạo cấu trúc dữ liệu khi cần. Không cần máy chủ riêng để vận hành hệ thống.</p>
-          <span class="state-line">No backend required</span>
+      <div class="workflow-grid">
+        <article class="workflow-card" data-index="01">
+          <h3>Khởi chạy ứng dụng</h3>
+          <p>Hệ thống mở màn hình chính, kiểm tra cấu hình cục bộ, khởi tạo dữ liệu cơ bản và đảm bảo SQLite sẵn sàng để hoạt động trong môi trường desktop.</p>
+          <span class="state-line">Startup</span>
         </article>
-        <article class="flow-step" data-index="02">
-          <h3>Xác thực</h3>
-          <p>Người dùng đăng nhập bằng tài khoản nội bộ; nếu sai, hệ thống giữ nguyên trạng thái màn hình login và yêu cầu nhập lại.</p>
-          <span class="state-line">Admin onboarding</span>
+        <article class="workflow-card" data-index="02">
+          <h3>Đăng nhập</h3>
+          <p>Người dùng đăng nhập bằng tài khoản nội bộ. Nếu sai thông tin, hệ thống giữ lại trạng thái form và yêu cầu xác thực lại mà không chuyển trạng thái ứng dụng.</p>
+          <span class="state-line">Authentication</span>
         </article>
-        <article class="flow-step" data-index="03">
+        <article class="workflow-card" data-index="03">
           <h3>Phân quyền</h3>
-          <p>Vai trò quyết định route hiển thị và thao tác quản lý được phép; quyền xem, sửa, xoá có thể khác nhau theo nhóm người dùng.</p>
-          <span class="state-line">Permission layer</span>
+          <p>Hệ thống xác định vai trò như khách hàng, nhân viên, quản lý hoặc admin để mở chức năng tương ứng. Mỗi vai trò có quyền xem, điều chỉnh và báo cáo khác nhau.</p>
+          <span class="state-line">Authorization</span>
         </article>
-        <article class="flow-step" data-index="04">
-          <h3>Chọn phân hệ</h3>
-          <p>Sidebar chia ứng dụng thành hệ thống, tổng quan, hồ sơ, chăm sóc, cửa hàng, vật tư và báo cáo để người dùng vào đúng luồng.</p>
-          <span class="state-line">Navigation routing</span>
+        <article class="workflow-card" data-index="04">
+          <h3>Điều hướng phân hệ</h3>
+          <p>Sau đăng nhập thành công, người dùng đi vào dashboard chính, nơi chọn phân hệ như khách hàng, thú cưng, chăm sóc, sản phẩm, kho hàng, báo cáo và quản trị.</p>
+          <span class="state-line">Navigation</span>
         </article>
       </div>
       <div class="flow-key">
-        <span>Khởi tạo dữ liệu</span>
-        <span>Quản lý quyền</span>
-        <span>Phân nhánh theo vai trò</span>
-        <span>Hệ thống cục bộ</span>
+        <span>Khởi tạo môi trường</span>
+        <span>Quản lý tài khoản</span>
+        <span>Vai trò + quyền truy cập</span>
+        <span>Điều hướng theo chức năng</span>
       </div>
     </section>
 
-    <section class="section">
+    <section class="section timeline-section">
       <div class="section-head">
         <div>
-          <span class="eyebrow">02 / Operational branches</span>
-          <h2>Nhánh nghiệp vụ</h2>
+          <span class="eyebrow">02 / Journey timeline</span>
+          <h2>Timeline trải nghiệm workflow</h2>
         </div>
-        <p>Các luồng điều hướng theo chức năng và đối tượng xử lý chính.</p>
+        <p>Đây là bản đồ tuyến hành động chính theo thứ tự thực thi.</p>
       </div>
-      <div class="branch-grid">
-        <div class="branch">
-          <span class="eyebrow">Customer & intake</span>
-          <h3>Tiếp nhận & khách hàng</h3>
-          <ul>
-            <li>Quản lý hồ sơ khách hàng, lịch tiêm phòng, lịch khám và quyền thăm hỏi.</li>
-            <li>Tiếp nhận thú cưng mới theo nhận diện loài, giống, cân nặng và trạng thái sức khỏe khởi tạo.</li>
-            <li>Gắn hồ sơ cho từng thú cưng, theo dõi lịch chăm sóc và chẩn đoán ban đầu.</li>
-          </ul>
+      <div class="timeline" aria-label="Customer journey timeline">
+        <div class="timeline-item">
+          <div class="step-badge">1</div>
+          <h4>Khởi tạo</h4>
+          <p>Mở hệ thống, xác thực, và định nghĩa vai trò trên dashboard.</p>
         </div>
-        <div class="branch">
-          <span class="eyebrow">Care & health</span>
-          <h3>Chăm sóc & sức khỏe</h3>
-          <ul>
-            <li>Quản lý vaccine, xét nghiệm, thuốc, chế độ dinh dưỡng và chăm sóc hàng ngày.</li>
-            <li>Biểu đồ trạng thái sức khỏe, dự phòng bệnh, lời khuyên cho chủ nuôi.</li>
-            <li>Phân loại ưu tiên theo mức độ cần xử lý hoặc kiểm tra lại trong ngày.</li>
-          </ul>
+        <div class="timeline-item">
+          <div class="step-badge">2</div>
+          <h4>Khách hàng</h4>
+          <p>Tạo hồ sơ thú cưng với thông tin cá nhân, loài, giống và mục tiêu chăm sóc.</p>
         </div>
-        <div class="branch">
-          <span class="eyebrow">Sales & service</span>
-          <h3>Bán hàng & dịch vụ</h3>
-          <ul>
-            <li>Quản lý đơn hàng thức ăn, thuốc, sản phẩm chăm sóc và dịch vụ grooming.</li>
-            <li>Kiểm soát giá, khuyến mãi, thanh toán và phiếu dịch vụ liên quan.</li>
-            <li>Hỗ trợ tiếp cận sản phẩm theo nhu cầu từng loài và từng giai đoạn nuôi dưỡng.</li>
-          </ul>
+        <div class="timeline-item">
+          <div class="step-badge">3</div>
+          <h4>Tư vấn</h4>
+          <p>Chọn cân nặng, giai đoạn nuôi dưỡng và nhận gợi ý thức ăn / sản phẩm phù hợp.</p>
         </div>
-        <div class="branch">
-          <span class="eyebrow">Inventory & analytics</span>
-          <h3>Vật tư & báo cáo</h3>
-          <ul>
-            <li>Theo dõi tồn kho, nhập kho, hàng sắp hết, tồn đọng và lịch sử giao dịch.</li>
-            <li>Phân tích doanh số, hiệu suất chăm sóc, lịch hẹn và tần suất sử dụng dịch vụ.</li>
-            <li>Xuất báo cáo theo khoảng thời gian, theo cửa hàng hoặc theo phân hệ cụ thể.</li>
-          </ul>
+        <div class="timeline-item">
+          <div class="step-badge">4</div>
+          <h4>Đặt lịch</h4>
+          <p>Chọn loại dịch vụ, kiểm tra thời gian và xác nhận lịch chăm sóc.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="step-badge">5</div>
+          <h4>Thực thi</h4>
+          <p>Nhân viên chăm sóc thực hiện, ghi nhận tiến độ và lưu lịch sử xử lý.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="step-badge">6</div>
+          <h4>Hoàn tất</h4>
+          <p>Xuất hóa đơn, nâng cấp lịch tái khám, lưu báo cáo và kế hoạch tiếp theo.</p>
         </div>
       </div>
     </section>
@@ -231,44 +640,127 @@
     <section class="section">
       <div class="section-head">
         <div>
-          <span class="eyebrow">03 / Status matrix</span>
-          <h2>Ma trận trạng thái</h2>
+          <span class="eyebrow">03 / Primary business workflows</span>
+          <h2>Các workflow chính trong dự án</h2>
+        </div>
+        <p>Mỗi luồng dưới đây là một nhánh nghiệp vụ quan trọng của PetCare.</p>
+      </div>
+      <div class="workflow-list">
+        <div class="branch">
+          <span class="mini-kicker">Workflow 1</span>
+          <h3>Khách hàng & hồ sơ thú cưng</h3>
+          <ul>
+            <li>Khách hàng đăng ký hoặc được tạo hồ sơ trong hệ thống.</li>
+            <li>Điền thông tin cá nhân, thông tin thú cưng, loài, giống, cân nặng, giai đoạn nuôi dưỡng.</li>
+            <li>Hồ sơ được gắn với lịch sử chăm sóc, dịch vụ và mua sản phẩm.</li>
+            <li>Hệ thống lưu trạng thái như NEW, ACTIVE, PENDING, COMPLETED.</li>
+          </ul>
+        </div>
+
+        <div class="branch">
+          <span class="mini-kicker">Workflow 2</span>
+          <h3>Tư vấn dinh dưỡng & gợi ý sản phẩm</h3>
+          <ul>
+            <li>Người dùng chọn cân nặng, độ tuổi và mục tiêu chăm sóc.</li>
+            <li>Hệ thống gợi ý sản phẩm theo loài: Chó hoặc Mèo.</li>
+            <li>Hiển thị nhãn mục tiêu như protein, sức khỏe tiêu hóa, tăng trưởng, cao tuổi.</li>
+            <li>Quy trình này là tinh thần chính của catalog và recommendation engine.</li>
+          </ul>
+        </div>
+
+        <div class="branch">
+          <span class="mini-kicker">Workflow 3</span>
+          <h3>Đặt lịch chăm sóc / dịch vụ</h3>
+          <ul>
+            <li>Người dùng chọn loại dịch vụ: grooming, kiểm tra sức khỏe, tiêm phòng, nutrition consult.</li>
+            <li>Hệ thống kiểm tra thời gian trống, tài nguyên, nhân sự và lịch tương ứng.</li>
+            <li>Appointment được lưu với trạng thái SCHEDULED → CHECKED_IN → IN_PROGRESS → COMPLETED.</li>
+            <li>Nếu hủy, không đến hoặc thiếu dữ liệu, hệ thống chuyển sang trạng thái exception hợp lệ.</li>
+          </ul>
+        </div>
+
+        <div class="branch">
+          <span class="mini-kicker">Workflow 4</span>
+          <h3>Chăm sóc & theo dõi sức khỏe</h3>
+          <ul>
+            <li>Nhân viên ghi nhận dịch vụ thực hiện, thuốc, vaccine, xét nghiệm hoặc lịch tái khám.</li>
+            <li>Hệ thống lưu nhật ký hành động với thời gian và người xử lý.</li>
+            <li>Người quản lý quan sát các hồ sơ cần chú ý, cảnh báo hoặc tăng ưu tiên.</li>
+            <li>Điều này tạo cơ sở cho báo cáo chăm sóc và sức khỏe dài hạn.</li>
+          </ul>
+        </div>
+
+        <div class="branch">
+          <span class="mini-kicker">Workflow 5</span>
+          <h3>Thanh toán & hóa đơn</h3>
+          <ul>
+            <li>Sau khi dịch vụ kết thúc, hệ thống tạo hóa đơn dựa trên gói dịch vụ và số lượng sản phẩm.</li>
+            <li>Thanh toán có thể theo tiền mặt, chuyển khoản hoặc phần trăm giảm giá đã lưu.</li>
+            <li>Đơn chưa thanh toán được giữ ở trạng thái PENDING hoặc chờ xác nhận.</li>
+            <li>Hệ thống lưu toàn bộ lịch sử thu chi để phục vụ báo cáo cuối kỳ.</li>
+          </ul>
+        </div>
+
+        <div class="branch">
+          <span class="mini-kicker">Workflow 6</span>
+          <h3>Quản lý kho hàng & sản phẩm</h3>
+          <ul>
+            <li>Nhập tồn, xuất kho, kiểm đếm và cập nhật số lượng thực tế trong kho.</li>
+            <li>Hệ thống cảnh báo sản phẩm sắp hết, ưu tiên theo mùa, chiến dịch hoặc số lượng bán chạy.</li>
+            <li>Nhánh này kết nối trực tiếp với bán hàng, dinh dưỡng và chăm sóc thú cưng.</li>
+            <li>Dữ liệu kho giúp báo cáo doanh số, tồn kho và hiệu quả bán hàng.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">04 / Decision and state model</span>
+          <h2>Ma trận trạng thái & quy tắc chuyển đổi</h2>
         </div>
       </div>
       <div class="table-wrap">
-        <table class="state-table" aria-label="State matrix of workflow">
+        <table class="state-table" aria-label="State transitions for PetCare workflows">
           <thead>
             <tr>
-              <th>Trạng thái</th>
-              <th>Mô tả</th>
-              <th>Vai trò gắn với</th>
+              <th>State</th>
+              <th>Ý nghĩa</th>
+              <th>Vai trò liên quan</th>
               <th>Next action</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td><span class="state-code">NEW</span></td>
-              <td>Khách hàng hoặc thú cưng mới vừa được thêm vào hệ thống.</td>
+              <td>Hồ sơ hoặc yêu cầu mới vừa được tạo.</td>
               <td>Nhân viên tiếp nhận</td>
-              <td>Kiểm tra thông tin, gắn hồ sơ và lên lịch chăm sóc đầu tiên.</td>
+              <td>Kiểm tra, bổ sung thông tin và chuyển sang trạng thái active nếu đủ điều kiện.</td>
             </tr>
             <tr>
               <td><span class="state-code">ACTIVE</span></td>
-              <td>Hồ sơ đang hoạt động và có lịch chăm sóc hoặc dịch vụ liên tục.</td>
-              <td>Chăm sóc / quản lý</td>
-              <td>Tiếp tục theo dõi, cập nhật biểu đồ và kế hoạch dinh dưỡng.</td>
+              <td>Đang có hoạt động chính thức và công việc tương tác với khách.</td>
+              <td>Nhân viên chăm sóc, quản lý</td>
+              <td>Tiếp tục theo dõi, lên lịch hoặc đào sâu vào khuyến nghị chăm sóc.</td>
             </tr>
             <tr>
               <td><span class="state-code">PENDING</span></td>
-              <td>Đợi xác nhận, thanh toán, hoặc kế hoạch phục hồi thêm.</td>
+              <td>Đang chờ xác nhận, thanh toán, hoặc điều phối tiếp.</td>
               <td>Khách hàng / quản lý</td>
-              <td>Gửi thông báo, chốt lịch hoặc xử lý đơn hàng.</td>
+              <td>Xử lý chốt lịch, chốt giá, xác nhận thanh toán hoặc gửi nhắc.</td>
             </tr>
             <tr>
               <td><span class="state-code">COMPLETED</span></td>
-              <td>Hành động đã thực hiện xong và được lưu trong nhật ký hệ thống.</td>
+              <td>Công việc đã hoàn tất và lưu vào hệ thống.</td>
               <td>Mọi vai trò có quyền xem</td>
-              <td>Chốt kết quả, lưu báo cáo và chuẩn bị nhắc nhở tiếp theo.</td>
+              <td>Chuẩn bị báo cáo, đánh giá hiệu quả và lên lịch lần tiếp theo.</td>
+            </tr>
+            <tr>
+              <td><span class="state-code">CANCELLED</span></td>
+              <td>Hủy do không phù hợp, không thể thực hiện hoặc khách từ chối.</td>
+              <td>Quản lý / nhân viên</td>
+              <td>Ghi nhận nguyên nhân, tính hoàn tiền hoặc xử lý theo chính sách.</td>
             </tr>
           </tbody>
         </table>
@@ -278,22 +770,22 @@
     <section class="section">
       <div class="section-head">
         <div>
-          <span class="eyebrow">04 / Role map</span>
-          <h2>Vai trò & quyền</h2>
+          <span class="eyebrow">05 / Roles</span>
+          <h2>Vai trò và trách nhiệm</h2>
         </div>
       </div>
       <div class="role-grid">
         <article class="role">
           <strong>Khách hàng</strong>
-          <p>Quản lý hồ sơ thú cưng, xem lịch hẹn, theo dõi sản phẩm, và nhận nhắc nhở chăm sóc trong portal.</p>
+          <p>Quản lý hồ sơ thú cưng, xem lịch hẹn, chọn gói chăm sóc, đặt mua sản phẩm và nhận gợi ý dinh dưỡng theo loài và giai đoạn.</p>
         </article>
         <article class="role">
           <strong>Nhân viên chăm sóc</strong>
-          <p>Tiếp nhận hồ sơ, cập nhật tiến độ điều trị, ghi nhận chế độ dinh dưỡng, và phối hợp với tư vấn viên.</p>
+          <p>Tiếp nhận hồ sơ, cập nhật tiến độ, ghi nhận dịch vụ, theo dõi trạng thái thú cưng và hỗ trợ quản lý lịch hẹn.</p>
         </article>
         <article class="role">
           <strong>Quản lý / Admin</strong>
-          <p>Cấp quyền, theo dõi toàn bộ luồng nghiệp vụ, kiểm soát kho, báo cáo doanh số và xử lý ngoại lệ.</p>
+          <p>Quản trị quyền truy cập, theo dõi toàn bộ workflow, xử lý ngoại lệ, kiểm soát kho và đánh giá báo cáo tổng hợp.</p>
         </article>
       </div>
     </section>
@@ -301,26 +793,26 @@
     <section class="section">
       <div class="section-head">
         <div>
-          <span class="eyebrow">05 / Exceptions</span>
-          <h2>Trường hợp cần xử lý đặc biệt</h2>
+          <span class="eyebrow">06 / Exceptions & governance</span>
+          <h2>Trường hợp ngoại lệ và kiểm soát</h2>
         </div>
       </div>
       <ul class="exception-list">
         <li>
-          <strong>Quyền truy cập không đủ</strong>
-          <p>Người dùng không thể mở mục chưa được cấp quyền; hệ thống cảnh báo rõ và khuyến nghị chuyển sang vai trò phù hợp.</p>
+          <strong>Không đủ quyền truy cập</strong>
+          <p>Người dùng không thể thực hiện thao tác chưa được cấp phép. Hệ thống hiển thị cảnh báo và yêu cầu chuyển sang vai trò phù hợp.</p>
         </li>
         <li>
-          <strong>Thú cưng chưa có hồ sơ đủ điều kiện</strong>
-          <p>Yêu cầu người dùng hoàn thiện thông tin loài, cân nặng, lịch chăm sóc trước khi chuyển sang ứng dụng dịch vụ nâng cao.</p>
+          <strong>Hồ sơ thú cưng chưa đầy đủ</strong>
+          <p>Trước khi đặt lịch hoặc mua sản phẩm nâng cao, người dùng cần hoàn thiện thông tin loài, cân nặng, và lịch sử chăm sóc liên quan.</p>
         </li>
         <li>
           <strong>Đơn hàng chưa thanh toán</strong>
-          <p>Đặt vào trạng thái pending và giữ trong hệ thống cho đến khi khách xác nhận hoặc thực hiện thanh toán.</p>
+          <p>Đơn được giữ ở trạng thái pending; hệ thống không tự động xác nhận thanh toán nếu chưa có tác nhân hoặc chính sách rõ ràng.</p>
         </li>
         <li>
-          <strong>Nhật ký sai hoặc thiếu dữ liệu</strong>
-          <p>Chỉ admin hoặc quản lý mới được sửa trực tiếp ở cấp dữ liệu gốc; các vai trò khác chỉ cộng tác và cập nhật trạng thái.</p>
+          <strong>Dữ liệu thiếu / sai</strong>
+          <p>Chỉ người có quyền quản lý mới được chỉnh sửa dữ liệu gốc hoặc đối chiếu thông tin quan trọng; nhân sự khác chỉ cập nhật theo quy trình.</p>
         </li>
       </ul>
     </section>
