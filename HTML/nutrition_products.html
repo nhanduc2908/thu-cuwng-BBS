@@ -421,6 +421,61 @@
       color: var(--ink); background: rgba(244,248,245,0.8);
       font-size: 0.72rem; letter-spacing: 0.02em;
     }
+
+    .disease-section {
+      margin-top: 20px;
+      padding: 18px;
+    }
+    .disease-toolbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(180px, 0.8fr)) auto;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .disease-toolbar label {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .disease-toolbar input, .disease-toolbar select {
+      width: 100%; min-height: 44px; background: #fff; border: 1px solid rgba(18,39,31,0.12); border-radius: 12px; padding: 10px 12px; color: var(--ink);
+    }
+    .disease-grid {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;
+    }
+    .disease-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f8faf9 100%);
+      border: 1px solid rgba(18,39,31,0.08); border-radius: 16px; padding: 14px 14px 12px;
+      box-shadow: 0 12px 18px rgba(18,48,35,0.02);
+    }
+    .disease-card-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .species-badge {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 28px; padding: 5px 9px; border-radius: 999px; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .species-badge.dog { background: rgba(15,108,77,0.1); color: var(--green-strong); }
+    .species-badge.cat { background: rgba(196,149,71,0.12); color: #7d5d1d; }
+    .disease-card h3 {
+      margin: 0 0 8px; font-size: 1.05rem; line-height: 1.4; color: var(--ink);
+      letter-spacing: -0.03em;
+    }
+    .disease-meta {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;
+    }
+    .meta-chip {
+      display: inline-flex; align-items: center; padding: 5px 8px; border-radius: 999px; background: #f4faf5; border: 1px solid rgba(18,39,31,0.08); color: var(--green-strong); font-size: 0.64rem; font-weight: 800;
+    }
+    .disease-card p { margin: 0 0 8px; color: var(--muted); font-size: 0.82rem; }
+    .drug-box, .sign-box {
+      margin-top: 10px; background: rgba(15,108,77,0.04); border: 1px solid rgba(15,108,77,0.08); border-radius: 12px; padding: 10px;
+    }
+    .drug-box strong, .sign-box strong { display: block; margin-bottom: 6px; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green-strong); }
+    .drug-box span, .sign-box ul { color: var(--ink); font-size: 0.8rem; }
+    .sign-box ul { margin: 0; padding-left: 18px; }
+    .disease-empty { padding: 18px; border-radius: 14px; border: 1px dashed rgba(18,39,31,0.18); background: rgba(255,255,255,0.5); color: var(--muted); }
     @media (max-width: 980px) {
       .toolbar-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .stats-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -481,6 +536,7 @@
         <span class="summary-pill">4000 Chó / 4000 Mèo</span>
         <a class="secondary-button" href="nutrition_products_dog.html">Danh mục Chó</a>
         <a class="secondary-button" href="nutrition_products_cat.html">Danh mục Mèo</a>
+        <a class="secondary-button" href="disease_support.html">AI gán bệnh</a>
       </div>
     </section>
 
@@ -581,6 +637,39 @@
         <strong id="compareCount">0</strong>
         <small>tối đa 3 sp</small>
       </article>
+    </section>
+
+    <section class="disease-section section">
+      <div class="panel-head">
+        <div>
+          <span class="panel-kicker">Disease support</span>
+          <h2>AI hỗ trợ gán bệnh theo loài</h2>
+        </div>
+        <span class="catalog-meta" id="diseaseMeta">0 bệnh</span>
+      </div>
+      <div class="disease-toolbar">
+        <label>
+          <span>Tìm bệnh</span>
+          <input id="diseaseSearch" type="text" placeholder="Nhập tên bệnh, cơ quan, triệu chứng..." />
+        </label>
+        <label>
+          <span>Loài</span>
+          <select id="diseaseSpeciesFilter">
+            <option value="all">Tất cả</option>
+            <option value="dog">Chó</option>
+            <option value="cat">Mèo</option>
+          </select>
+        </label>
+        <label>
+          <span>Nhóm bệnh</span>
+          <select id="diseaseCategoryFilter">
+            <option value="all">Tất cả</option>
+          </select>
+        </label>
+        <button id="resetDiseaseFilters" type="button" class="secondary-button">Xóa lọc</button>
+      </div>
+      <div id="diseaseGrid" class="disease-grid" aria-live="polite"></div>
+      <div id="diseasePagination" class="pagination" aria-label="Phân trang bệnh"></div>
     </section>
 
     <section class="breed-panel section hidden" id="breedPanel" aria-live="polite">
@@ -1306,6 +1395,171 @@
     }
 
     /* ============================================================
+       DISEASE DATASET SUPPORT
+       ============================================================ */
+    const diseaseState = {
+      species: 'all',
+      category: 'all',
+      query: '',
+      page: 1,
+      pageSize: 20
+    };
+    let diseaseItems = [];
+
+    async function loadDiseaseCatalogs() {
+      const files = [
+        { key: 'dog', path: 'data/disease_catalog_dog_6000.json' },
+        { key: 'cat', path: 'data/disease_catalog_cat_6000.json' }
+      ];
+
+      const loaded = await Promise.all(files.map(async ({ key, path }) => {
+        try {
+          const response = await fetch(path, { cache: 'no-store' });
+          if (!response.ok) return [];
+          const data = await response.json();
+          if (!Array.isArray(data.items)) return [];
+          return data.items.map(item => ({
+            ...item,
+            speciesKey: key,
+            speciesLabel: item.speciesLabel || (key === 'dog' ? 'Chó' : 'Mèo')
+          }));
+        } catch (error) {
+          console.warn('Unable to load disease catalog', path, error);
+          return [];
+        }
+      }));
+
+      diseaseItems = loaded.flat();
+      renderDiseaseCategoryOptions();
+      renderDiseaseCards();
+      renderDiseasePagination();
+    }
+
+    function filteredDiseaseItems() {
+      const q = String(diseaseState.query || '').trim().toLowerCase();
+      return diseaseItems.filter(item => {
+        const inSpecies = diseaseState.species === 'all' || item.speciesKey === diseaseState.species;
+        const inCategory = diseaseState.category === 'all' || item.category === diseaseState.category;
+        const haystack = [
+          item.nameVi,
+          item.nameEn,
+          item.category,
+          item.bodySystem,
+          item.descriptionVi,
+          item.descriptionEn,
+          item.specialMedicationVi,
+          item.specialMedicationEn,
+          ...(Array.isArray(item.symptomsVi) ? item.symptomsVi : []),
+          ...(Array.isArray(item.symptomsEn) ? item.symptomsEn : [])
+        ].join(' ').toLowerCase();
+        const matchesQuery = !q || haystack.includes(q);
+        return inSpecies && inCategory && matchesQuery;
+      });
+    }
+
+    function renderDiseaseCategoryOptions() {
+      const select = document.getElementById('diseaseCategoryFilter');
+      if (!select) return;
+      const categories = [...new Set(diseaseItems.map(item => item.category).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+      const value = diseaseState.category;
+      select.innerHTML = '<option value="all">Tất cả</option>' + categories.map(category => `<option value="${category}">${category}</option>`).join('');
+      if (categories.includes(value)) {
+        select.value = value;
+      } else {
+        select.value = 'all';
+        diseaseState.category = 'all';
+      }
+    }
+
+    function renderDiseaseCards() {
+      const grid = document.getElementById('diseaseGrid');
+      const meta = document.getElementById('diseaseMeta');
+      if (!grid) return;
+
+      const filtered = filteredDiseaseItems();
+      if (meta) meta.textContent = `${filtered.length} bệnh`;
+
+      const totalPages = Math.max(1, Math.ceil(filtered.length / diseaseState.pageSize));
+      if (diseaseState.page > totalPages) diseaseState.page = totalPages;
+
+      const start = (diseaseState.page - 1) * diseaseState.pageSize;
+      const slice = filtered.slice(start, start + diseaseState.pageSize);
+
+      if (!slice.length) {
+        grid.innerHTML = '<div class="disease-empty">Không tìm thấy bệnh nào phù hợp với bộ lọc hiện tại.</div>';
+        return;
+      }
+
+      grid.innerHTML = slice.map(item => {
+        const signs = Array.isArray(item.detectionSignsVi) ? item.detectionSignsVi.slice(0, 3) : [];
+        const signsHtml = signs.length ? `<ul>${signs.map(sign => `<li>${sign}</li>`).join('')}</ul>` : '<ul><li>Không có mô tả dấu hiệu.</li></ul>';
+        const speciesClass = item.speciesKey === 'dog' ? 'dog' : 'cat';
+        return `
+          <article class="disease-card">
+            <div class="disease-card-header">
+              <span class="species-badge ${speciesClass}">${item.speciesLabel}</span>
+              <span class="meta-chip">${item.severityVi || item.severity || 'trung bình'}</span>
+            </div>
+            <h3>${item.nameVi || item.nameEn}</h3>
+            <div class="disease-meta">
+              <span class="meta-chip">${item.category}</span>
+              <span class="meta-chip">${item.bodySystem}</span>
+            </div>
+            <p>${item.descriptionVi || item.descriptionEn || 'Mô tả bệnh hỗ trợ demo.'}</p>
+            <div class="drug-box">
+              <strong>Thuốc đặc hiệu</strong>
+              <span>${item.specialMedicationVi || item.specialMedicationEn || 'Theo hướng dẫn bác sĩ thú y'}</span>
+            </div>
+            <div class="sign-box">
+              <strong>Dấu hiệu phát hiện</strong>
+              ${signsHtml}
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function renderDiseasePagination() {
+      const pager = document.getElementById('diseasePagination');
+      if (!pager) return;
+
+      const filtered = filteredDiseaseItems();
+      const totalPages = Math.max(1, Math.ceil(filtered.length / diseaseState.pageSize));
+      diseaseState.page = Math.min(Math.max(1, diseaseState.page), totalPages);
+      const pages = [];
+      const range = new Set([1, totalPages, diseaseState.page, diseaseState.page - 1, diseaseState.page + 1]);
+      [...range].filter(page => page >= 1 && page <= totalPages).sort((a, b) => a - b).forEach((page, index, arr) => {
+        if (index > 0 && page - arr[index - 1] > 1) pages.push({ type: 'ellipsis' });
+        pages.push({ type: 'page', value: page });
+      });
+
+      const buttons = [
+        `<button type="button" class="page-button ${diseaseState.page === 1 ? 'is-disabled' : ''}" data-disease-page="${diseaseState.page - 1}" ${diseaseState.page === 1 ? 'disabled' : ''}>Trước</button>`
+      ];
+
+      pages.forEach(item => {
+        if (item.type === 'ellipsis') {
+          buttons.push('<button type="button" class="page-button is-disabled" disabled>…</button>');
+          return;
+        }
+        const isActive = item.value === diseaseState.page;
+        buttons.push(`<button type="button" class="page-button ${isActive ? 'is-active' : ''}" data-disease-page="${item.value}">${item.value}</button>`);
+      });
+
+      buttons.push(`<button type="button" class="page-button ${diseaseState.page >= totalPages ? 'is-disabled' : ''}" data-disease-page="${diseaseState.page + 1}" ${diseaseState.page >= totalPages ? 'disabled' : ''}>Sau</button>`);
+      pager.innerHTML = buttons.join('');
+      pager.querySelectorAll('[data-disease-page]').forEach(button => {
+        button.addEventListener('click', () => {
+          const page = Number(button.dataset.diseasePage || 0);
+          if (!Number.isFinite(page) || page < 1 || page > totalPages) return;
+          diseaseState.page = page;
+          renderDiseaseCards();
+          renderDiseasePagination();
+        });
+      });
+    }
+
+    /* ============================================================
        EVENTS
        ============================================================ */
     function applyInitialSpeciesPreset() {
@@ -1439,6 +1693,42 @@
         renderComparison();
       });
 
+      document.getElementById('diseaseSearch')?.addEventListener('input', event => {
+        diseaseState.query = event.target.value;
+        diseaseState.page = 1;
+        renderDiseaseCards();
+        renderDiseasePagination();
+      });
+
+      document.getElementById('diseaseSpeciesFilter')?.addEventListener('change', event => {
+        diseaseState.species = event.target.value;
+        diseaseState.page = 1;
+        renderDiseaseCards();
+        renderDiseasePagination();
+      });
+
+      document.getElementById('diseaseCategoryFilter')?.addEventListener('change', event => {
+        diseaseState.category = event.target.value;
+        diseaseState.page = 1;
+        renderDiseaseCards();
+        renderDiseasePagination();
+      });
+
+      document.getElementById('resetDiseaseFilters')?.addEventListener('click', () => {
+        diseaseState.species = 'all';
+        diseaseState.category = 'all';
+        diseaseState.query = '';
+        diseaseState.page = 1;
+        const search = document.getElementById('diseaseSearch');
+        if (search) search.value = '';
+        const species = document.getElementById('diseaseSpeciesFilter');
+        if (species) species.value = 'all';
+        const category = document.getElementById('diseaseCategoryFilter');
+        if (category) category.value = 'all';
+        renderDiseaseCards();
+        renderDiseasePagination();
+      });
+
       document.getElementById('langToggle')?.addEventListener('click', () => {
         document.body.classList.toggle('lang-en');
         const btn = document.getElementById('langToggle');
@@ -1453,6 +1743,7 @@
       bindEvents();
       applyInitialSpeciesPreset();
       loadCatalog();
+      loadDiseaseCatalogs();
     });
   </script>
 </body>
