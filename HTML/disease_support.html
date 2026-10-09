@@ -1,0 +1,1077 @@
+﻿<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="AI hỗ trợ gán bệnh cho chó và mèo, hiển thị 6000 bệnh mỗi loài kèm thuốc đặc hiệu và dấu hiệu phát hiện.">
+  <title>PetCare | Disease AI Support</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #f2f7f4;
+      --panel: #ffffff;
+      --panel-soft: #f8faf9;
+      --green-900: #103b2d;
+      --green-800: #184c3f;
+      --green-700: #1d654f;
+      --green-600: #2d7c60;
+      --green-500: #64ae88;
+      --green-100: #e0f5e7;
+      --line: #dde8e1;
+      --ink: #1a322b;
+      --muted: #64796e;
+      --gold: #ebc877;
+      --shadow: 0 22px 48px rgba(16,59,47,0.08);
+      --danger: #c95d47;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Be Vietnam Pro", "Inter", "Segoe UI", "Arial Unicode MS", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #f6faf7 0%, #eef6f2 42%, #edf3f0 100%);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      letter-spacing: 0.01em;
+    }
+    body, button, input, select, textarea, table, th, td, .tag, .chip, .status-pill, .field span, .top-bar label span, .nav, .eyebrow {
+      font-family: "Be Vietnam Pro", "Inter", "Segoe UI", "Arial Unicode MS", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; }
+    .site-header {
+      position: sticky; top: 0; z-index: 20; backdrop-filter: blur(14px);
+      background: rgba(255,255,255,0.82); border-bottom: 1px solid rgba(125, 160, 146, 0.18);
+      box-shadow: 0 8px 24px rgba(16,59,47,0.04);
+    }
+    .header-inner {
+      width: min(1400px, calc(100% - 28px)); min-height: 78px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .brand {
+      display: inline-flex; align-items: center; gap: 12px; color: var(--green-900); font-weight: 800; letter-spacing: -0.03em;
+    }
+    .brand-mark {
+      width: 36px; height: 36px; display: grid; place-items: center; border-radius: 12px 12px 12px 4px;
+      background: linear-gradient(135deg, #dfe97d, #bfe26a); color: var(--green-900); font-weight: 900; box-shadow: 0 10px 20px rgba(144, 182, 58, 0.2);
+    }
+    .nav { display: flex; align-items: center; gap: 18px; color: var(--muted); font-size: 0.8rem; font-weight: 700; }
+    .nav a { transition: color 0.2s ease; }
+    .nav a:hover { color: var(--green-700); }
+    .nav-cta {
+      display: inline-flex; min-height: 36px; padding: 0 14px; align-items: center; justify-content: center;
+      border-radius: 999px; background: rgba(255,255,255,0.9); border: 1px solid rgba(17,80,65,0.08); color: var(--green-900); font-weight: 800; box-shadow: 0 6px 14px rgba(16,59,47,0.04);
+    }
+
+    .page-shell {
+      width: min(1440px, calc(100% - 28px)); margin: 26px auto 42px; display: grid; gap: 20px;
+    }
+    .dashboard-shell {
+      display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 20px; align-items: start;
+      transition: grid-template-columns 0.25s ease;
+    }
+    .dashboard-shell.collapsed {
+      grid-template-columns: 84px minmax(0, 1fr);
+    }
+    .dashboard-main {
+      display: grid; gap: 20px;
+    }
+    .stat-strip {
+      display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px;
+    }
+    .stat-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(246,250,248,0.97)); border: 1px solid rgba(133,169,156,0.18); border-radius: 20px; padding: 16px; box-shadow: 0 10px 22px rgba(17,43,35,0.03);
+      display: grid; gap: 10px; transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 30px rgba(17,43,35,0.04);
+    }
+    .stat-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      color: var(--muted); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800;
+    }
+    .mini-icon {
+      width: 36px; height: 36px; display: grid; place-items: center; border-radius: 12px; background: linear-gradient(135deg, rgba(223,233,125,0.28), rgba(116,191,145,0.18)); color: var(--green-800); font-size: 1rem;
+    }
+    .stat-value {
+      font-size: 2rem; letter-spacing: -0.06em; font-weight: 800; color: var(--green-900);
+    }
+    .mini-chart {
+      height: 38px; display: flex; align-items: end; gap: 4px;
+    }
+    .mini-chart span {
+      flex: 1; display: block; border-radius: 8px 8px 0 0; background: linear-gradient(180deg, rgba(111,192,148,0.9), rgba(58,121,100,0.8));
+      min-height: 12px;
+    }
+    .mini-chart span:nth-child(2n) { background: linear-gradient(180deg, rgba(223,233,125,0.9), rgba(181,204,88,0.8)); }
+    .main-chart-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.99), rgba(246,250,248,0.97)); border: 1px solid rgba(133,169,156,0.18); border-radius: 26px; padding: 18px; box-shadow: 0 12px 26px rgba(17,43,35,0.04); display: grid; gap: 14px;
+    }
+    .chart-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    }
+    .line-area-chart {
+      position: relative; height: 220px; border-radius: 18px; overflow: hidden; border: 1px solid rgba(133,169,156,0.12); background: linear-gradient(180deg, rgba(19,89,74,0.02), rgba(255,255,255,0.6));
+    }
+    .line-area-chart svg {
+      width: 100%; height: 100%; display: block;
+    }
+    .chart-label {
+      display: flex; align-items: center; gap: 8px; color: var(--green-800); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.72rem;
+    }
+    .chart-legend {
+      display: flex; flex-wrap: wrap; gap: 10px; color: var(--muted); font-size: 0.75rem; font-weight: 700;
+    }
+    .dot {
+      display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle;
+    }
+    .chart-box {
+      height: 230px;
+      display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); align-items: end; gap: 10px; padding: 12px 10px 8px; background: linear-gradient(180deg, rgba(18,89,74,0.02), rgba(18,89,74,0.01)); border-radius: 18px; border: 1px solid rgba(133,169,156,0.12);
+    }
+    .chart-box span {
+      display: block; border-radius: 12px 12px 0 0;
+      background: linear-gradient(180deg, rgba(124,181,111,0.92), rgba(34,108,91,0.85));
+      min-height: 24px;
+      position: relative;
+    }
+    .chart-box span:nth-child(2n) {
+      background: linear-gradient(180deg, rgba(223,233,125,0.9), rgba(181,204,88,0.8));
+    }
+    .sidebar {
+      position: sticky; top: 96px; display: grid; gap: 14px;
+      transition: all 0.25s ease;
+    }
+    .dashboard-shell.collapsed .sidebar .side-title,
+    .dashboard-shell.collapsed .sidebar .side-item,
+    .dashboard-shell.collapsed .sidebar .nav-item span:not(.nav-icon),
+    .dashboard-shell.collapsed .sidebar .nav-item {
+      display: none;
+    }
+    .dashboard-shell.collapsed .sidebar .nav-item {
+      justify-content: center;
+      padding: 11px 8px;
+    }
+    .dashboard-shell.collapsed .sidebar .nav-icon {
+      margin: 0;
+    }
+    .dashboard-shell.collapsed .sidebar .side-section {
+      align-items: center;
+    }
+    .sidebar-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(245,249,247,0.98));
+      border: 1px solid rgba(133,169,156,0.18); border-radius: 22px; padding: 16px; box-shadow: 0 10px 22px rgba(17,43,35,0.03);
+    }
+    .sidebar-menu {
+      display: grid; gap: 8px; margin-top: 6px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px; width: 100%; border: 0; background: transparent; color: var(--ink); text-align: left; padding: 11px 12px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
+    }
+    .nav-item:hover {
+      background: rgba(19,89,74,0.04);
+    }
+    .nav-item.active {
+      background: linear-gradient(135deg, rgba(19,89,74,0.08), rgba(124,181,111,0.12)); color: var(--green-900); box-shadow: inset 0 0 0 1px rgba(19,89,74,0.08);
+    }
+    .nav-icon {
+      width: 28px; height: 28px; display: grid; place-items: center; border-radius: 8px; background: rgba(19,89,74,0.06); font-size: 0.95rem;
+    }
+    .side-section {
+      display: grid; gap: 10px;
+    }
+    .side-title {
+      display: flex; align-items: center; gap: 10px; color: var(--green-800); font-weight: 800; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .side-icon {
+      width: 30px; height: 30px; display: grid; place-items: center; border-radius: 10px; background: linear-gradient(135deg, rgba(223,233,125,0.25), rgba(116,191,145,0.18)); color: var(--green-800); font-size: 1rem;
+    }
+    .side-list {
+      display: grid; gap: 8px;
+    }
+    .side-item {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px; border-radius: 12px; padding: 10px 10px; background: rgba(19,89,74,0.03); color: var(--ink); font-weight: 600; transition: all 0.2s ease;
+    }
+    .side-item:hover {
+      background: rgba(19,89,74,0.06);
+      transform: translateX(2px);
+    }
+    .side-item small {
+      display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 26px; border-radius: 50%; background: rgba(21,82,68,0.08); color: var(--green-800); font-size: 0.7rem; font-weight: 800;
+    }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .status-badge::before {
+      content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; display: inline-block;
+    }
+    .status-critical { background: rgba(201,93,71,0.08); color: var(--danger); }
+    .status-moderate { background: rgba(235,200,119,0.16); color: #8b6d12; }
+    .status-normal { background: rgba(15,108,77,0.08); color: var(--green-800); }
+    .hero {
+      position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.7fr);
+      gap: 18px; padding: 28px 28px 20px; border-radius: 30px; background: linear-gradient(135deg, rgba(21,82,68,0.97), rgba(16,67,58,0.96), rgba(9,46,70,0.94)); color: #f3faf7; box-shadow: 0 28px 60px rgba(12, 46, 38, 0.18);
+      transform: translateY(0);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .hero:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 32px 72px rgba(12, 46, 38, 0.28);
+    }
+    .hero::after {
+      content: ""; position: absolute; right: -60px; top: -60px; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, rgba(202,233,130,0.34), transparent 65%);
+    }
+    .hero-copy, .hero-side { position: relative; z-index: 1; }
+    .eyebrow {
+      display: inline-flex; align-items: center; justify-content: center; width: fit-content; padding: 8px 12px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(246,250,247,0.9); letter-spacing: 0.12em; font-size: 0.68rem; font-weight: 800; text-transform: uppercase;
+    }
+    h1 {
+      margin: 18px 0 12px; font-size: clamp(2.6rem, 3.6vw, 4.5rem); line-height: 0.96; letter-spacing: -0.07em; font-weight: 800; text-wrap: balance;
+    }
+    h2 {
+      font-weight: 800; letter-spacing: -0.05em;
+    }
+    h3 {
+      font-weight: 800; letter-spacing: -0.04em;
+    }
+    .hero p { margin: 0; max-width: 720px; color: rgba(243,250,247,0.9); font-size: 1.05rem; }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    .tag {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 34px; padding: 0 12px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #edf8f1; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 800;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .tag:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.12);
+    }
+    .hero-side { display: grid; gap: 12px; }
+    .metric-box {
+      padding: 16px; border-radius: 18px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+      transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+      position: relative; overflow: hidden;
+    }
+    .metric-box::before {
+      content: "";
+      position: absolute; inset: -30% auto auto -20%;
+      width: 120px; height: 120px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.18), rgba(255,255,255,0));
+      pointer-events: none;
+    }
+    .metric-box:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(255,255,255,0.18);
+    }
+    .metric-box strong { display: block; font-size: 2.1rem; letter-spacing: -0.06em; }
+    .metric-box span { display: block; margin-top: 5px; color: rgba(255,255,255,0.7); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.99), rgba(246,250,248,0.97)); border: 1px solid rgba(133,169,156,0.16); border-radius: 26px; padding: 18px; box-shadow: 0 12px 26px rgba(17,43,35,0.04);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, rgba(223,233,125,0.95), rgba(155,209,168,0.78), rgba(155,209,168,0));
+    }
+    .panel:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 40px rgba(17,43,35,0.07);
+    }
+    .panel-head {
+      display: flex; align-items: end; justify-content: space-between; gap: 14px; margin-bottom: 14px;
+    }
+    .panel-head h2 {
+      margin: 8px 0 0; font-size: clamp(1.7rem, 2vw, 2.5rem); letter-spacing: -0.04em;
+    }
+    .panel-head p { margin: 0; color: var(--muted); }
+
+    .ai-layout {
+      display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 18px;
+    }
+    .form-shell { display: grid; gap: 14px; }
+    .field {
+      display: grid; gap: 8px;
+    }
+    .field span { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+    .field:hover input, .field:hover select, .field:hover textarea {
+      border-color: rgba(24, 76, 63, 0.26);
+    }
+    .field input, .field select, .field textarea {
+      width: 100%; border: 1px solid rgba(125, 160, 146, 0.38); border-radius: 12px; background: linear-gradient(180deg, #ffffff, #f8fbf9); padding: 12px 13px; color: var(--ink); box-shadow: inset 0 1px 2px rgba(14, 46, 38, 0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .field input, .field select, .field textarea,
+    .top-bar input, .top-bar select {
+      appearance: none;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus,
+    .top-bar input:focus, .top-bar select:focus {
+      outline: none; border-color: rgba(24, 76, 63, 0.45); box-shadow: 0 0 0 4px rgba(100, 174, 136, 0.12);
+    }
+    .field textarea { resize: vertical; min-height: 110px; }
+    .button-row { display: flex; flex-wrap: wrap; gap: 10px; }
+    .primary-btn, .secondary-btn {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 18px; border-radius: 12px; border: 1px solid transparent; cursor: pointer; font-weight: 800;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease, border-color 0.2s ease;
+    }
+    .primary-btn {
+      background: linear-gradient(135deg, #e6f29c 0%, #cfe86c 42%, #b8dd5a 100%); color: var(--green-900); box-shadow: 0 16px 28px rgba(149, 197, 75, 0.2);
+    }
+    .primary-btn:hover, .secondary-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.02);
+    }
+    .primary-btn:hover {
+      box-shadow: 0 18px 34px rgba(179, 214, 88, 0.34);
+    }
+    .secondary-btn {
+      background: linear-gradient(180deg, #ffffff, #f7fbf8); border-color: rgba(26, 82, 67, 0.12); color: var(--green-700);
+      box-shadow: 0 8px 18px rgba(16,59,47,0.03);
+    }
+    .secondary-btn:hover {
+      border-color: rgba(26, 82, 67, 0.2);
+      box-shadow: 0 12px 24px rgba(16,59,47,0.06);
+    }
+    .result-card {
+      border: 1px solid var(--line); background: linear-gradient(180deg, #ffffff 0%, #f8faf9 100%); border-radius: 18px; padding: 18px;
+      display: grid; gap: 14px;
+      box-shadow: 0 8px 22px rgba(18,39,31,0.03);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .result-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 28px rgba(18,39,31,0.05);
+    }
+    .result-card h3 { margin: 0; font-size: 1.5rem; letter-spacing: -0.04em; }
+    .result-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      display: inline-flex; align-items: center; padding: 6px 9px; border-radius: 999px; border: 1px solid rgba(18,39,31,0.08); background: rgba(15,108,77,0.07); color: var(--green-800); font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .result-card p { margin: 0; color: var(--muted); }
+    .detail-grid {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;
+    }
+    .detail-box {
+      border: 1px solid var(--line); border-radius: 12px; background: linear-gradient(180deg, rgba(15,108,77,0.03), rgba(255,255,255,0.5)); padding: 12px; transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .detail-box:hover {
+      border-color: rgba(23, 90, 73, 0.18);
+      transform: translateY(-1px);
+    }
+    .detail-box strong { display: block; font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .detail-box span { color: var(--ink); }
+
+    .top-bar {
+      display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(160px, 0.7fr)) auto; gap: 12px; margin-bottom: 16px;
+    }
+    .top-bar label {
+      display: grid; gap: 8px; color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .top-bar input, .top-bar select {
+      width: 100%; min-height: 44px; border: 1px solid rgba(125, 160, 146, 0.38); border-radius: 12px; background: linear-gradient(180deg, #ffffff, #f8fbf9); padding: 10px 12px; color: var(--ink); transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .top-bar input:hover, .top-bar select:hover {
+      border-color: rgba(24, 76, 63, 0.28);
+    }
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%; min-width: 980px; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 18px; overflow: hidden;
+    }
+    th, td {
+      border-bottom: 1px solid rgba(122, 161, 148, 0.2); padding: 12px 10px; text-align: left; vertical-align: top;
+    }
+    thead th {
+      background: linear-gradient(180deg, rgba(20, 92, 72, 0.08), rgba(20, 92, 72, 0.04)); color: var(--green-800); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 800;
+      position: sticky; top: 0; z-index: 1;
+      padding-top: 14px; padding-bottom: 14px;
+    }
+    tbody td {
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+    tbody tr {
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    tbody tr:hover {
+      background: linear-gradient(90deg, rgba(114, 194, 154, 0.08), rgba(255,255,255,0));
+      transform: scale(1.002);
+    }
+    .status-pill {
+      display: inline-flex; align-items: center; padding: 6px 8px; border-radius: 999px; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .status-pill.high { background: rgba(201,93,71,0.08); color: var(--danger); }
+    .status-pill.medium { background: rgba(235,200,119,0.16); color: #8d6703; }
+    .status-pill.low { background: rgba(15,108,77,0.08); color: var(--green-800); }
+    .food-grid {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;
+    }
+    .food-card {
+      border: 1px solid var(--line); background: linear-gradient(180deg, #fff 0%, #f7faf8 100%); border-radius: 16px; padding: 12px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .food-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(26, 82, 67, 0.18);
+      box-shadow: 0 16px 28px rgba(17,43,35,0.04);
+    }
+    .food-card .title { font-size: 1rem; font-weight: 800; margin: 0 0 6px; }
+    .food-card .meta { color: var(--muted); font-size: 0.8rem; }
+    .food-card .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .food-card .tags span { display: inline-flex; padding: 5px 7px; border-radius: 999px; background: #f4faf5; border: 1px solid rgba(18,39,31,0.08); color: var(--green-700); font-size: 0.62rem; font-weight: 800; }
+    .pagination { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
+    .page-button {
+      min-width: 42px; min-height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid rgba(18, 39, 31, 0.08); background: #fff; color: var(--ink); cursor: pointer; font-weight: 800; transition: all 0.2s ease;
+    }
+    .page-button:not([disabled]):hover {
+      border-color: rgba(18, 39, 31, 0.15);
+      box-shadow: 0 8px 16px rgba(16,59,47,0.06);
+    }
+    .page-button:hover:not([disabled]) {
+      border-color: rgba(18, 39, 31, 0.2);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(16,59,47,0.08);
+    }
+    .page-button.active { background: linear-gradient(135deg, var(--green-800), var(--green-700)); color: white; border-color: transparent; box-shadow: 0 12px 26px rgba(24, 76, 63, 0.24); }
+    .page-button[disabled] { opacity: 0.45; pointer-events: none; }
+    .muted { color: var(--muted); }
+    @media (max-width: 980px) {
+        .dashboard-shell { grid-template-columns: 1fr; }
+        .sidebar { position: static; }
+        .hero, .ai-layout { grid-template-columns: 1fr; }
+        .food-grid { grid-template-columns: 1fr; }
+        .top-bar { grid-template-columns: repeat(2, minmax(0,1fr)); }
+        .panel-head { align-items: start; flex-direction: column; }
+        .header-inner { min-height: 72px; }
+      }
+      @media (max-width: 620px) {
+      .header-inner { flex-wrap: wrap; justify-content: center; padding: 10px 0; }
+      .nav { width: 100%; justify-content: center; flex-wrap: wrap; }
+      .page-shell { width: min(100% - 18px, 1400px); }
+      .hero { padding: 22px 18px; border-radius: 22px; }
+      .eyebrow { letter-spacing: 0.08em; }
+      h1 { font-size: clamp(2.1rem, 9vw, 3rem); }
+      .hero p { font-size: 0.96rem; }
+      .top-bar { grid-template-columns: 1fr; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .button-row { flex-direction: column; }
+      .primary-btn, .secondary-btn { width: 100%; }
+      .food-card { padding: 14px; }
+      .result-card { padding: 16px; }
+      .metric-box strong { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html"><span class="brand-mark">P</span> PetCare / Disease AI</a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="nutrition_products.html">Nutrition catalog</a>
+        <a href="index.html">Project hub</a>
+        <a href="app_interface_preview.html">App preview</a>
+      </nav>
+      <span class="nav-cta">AI support</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <div class="dashboard-shell">
+      <aside class="sidebar" aria-label="Dashboard sidebar">
+        <div class="sidebar-card">
+          <div class="side-section">
+            <div class="side-title"><span class="side-icon">📊</span> Overview</div>
+            <div class="sidebar-menu">
+              <button class="nav-item active" data-target="overview"><span class="nav-icon">📈</span><span>Overview</span></button>
+              <button class="nav-item" data-target="ai-panel"><span class="nav-icon">🤖</span><span>AI Diagnosis</span></button>
+              <button class="nav-item" data-target="catalog"><span class="nav-icon">📋</span><span>Disease Catalog</span></button>
+              <button class="nav-item" data-target="nutrition"><span class="nav-icon">🥗</span><span>Nutrition</span></button>
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-card">
+          <div class="side-section">
+            <div class="side-title"><span class="side-icon">🩺</span> Clinical</div>
+            <div class="side-list">
+              <div class="side-item"><span>Hô hấp</span><small>24</small></div>
+              <div class="side-item"><span>Da liễu</span><small>15</small></div>
+              <div class="side-item"><span>Tiêu hóa</span><small>19</small></div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="dashboard-main">
+        <div class="stat-strip">
+          <div class="stat-card">
+            <div class="stat-head"><span>Monitor</span><span class="mini-icon">📈</span></div>
+            <div class="stat-value">1,284</div>
+            <div class="mini-chart" aria-label="monitor chart"><span style="height:45%"></span><span style="height:60%"></span><span style="height:48%"></span><span style="height:80%"></span><span style="height:66%"></span><span style="height:92%"></span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-head"><span>Priority</span><span class="mini-icon">⚠️</span></div>
+            <div class="stat-value">287</div>
+            <div class="mini-chart" aria-label="priority chart"><span style="height:28%"></span><span style="height:36%"></span><span style="height:52%"></span><span style="height:48%"></span><span style="height:68%"></span><span style="height:58%"></span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-head"><span>Alert</span><span class="mini-icon">🚨</span></div>
+            <div class="stat-value">34</div>
+            <div class="mini-chart" aria-label="alert chart"><span style="height:52%"></span><span style="height:64%"></span><span style="height:58%"></span><span style="height:76%"></span><span style="height:83%"></span><span style="height:90%"></span></div>
+          </div>
+        </div>
+
+        <div class="main-chart-card">
+          <div class="chart-head">
+            <div class="chart-label"><span class="mini-icon" style="width:30px;height:30px;">📊</span> Clinical trend</div>
+            <div class="chart-legend">
+              <span><span class="dot" style="background:#5ea679"></span>Chó</span>
+              <span><span class="dot" style="background:#d9df73"></span>Mèo</span>
+            </div>
+          </div>
+          <div class="line-area-chart" aria-label="large chart">
+            <svg viewBox="0 0 760 220" preserveAspectRatio="none" role="img" aria-label="Clinical trend chart">
+              <defs>
+                <linearGradient id="areaGreen" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(76, 160, 124, 0.42)" />
+                  <stop offset="100%" stop-color="rgba(76, 160, 124, 0.03)" />
+                </linearGradient>
+                <linearGradient id="areaYellow" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(214, 212, 104, 0.38)" />
+                  <stop offset="100%" stop-color="rgba(214, 212, 104, 0.03)" />
+                </linearGradient>
+              </defs>
+              <g opacity="0.25" stroke="#9bb5aa" stroke-width="1">
+                <line x1="0" x2="760" y1="40" y2="40"/>
+                <line x1="0" x2="760" y1="90" y2="90"/>
+                <line x1="0" x2="760" y1="140" y2="140"/>
+                <line x1="0" x2="760" y1="190" y2="190"/>
+              </g>
+              <path d="M 0 150 C 40 138, 70 118, 100 122 S 180 102, 210 90 S 300 62, 330 70 S 420 80, 460 60 S 540 42, 580 50 S 660 36, 690 40 L 690 220 L 0 220 Z" fill="url(#areaGreen)"/>
+              <path d="M 0 170 C 50 160, 90 142, 130 146 S 220 138, 260 126 S 350 118, 390 122 S 480 110, 520 100 S 610 95, 650 80 S 710 70, 760 50 L 760 220 L 0 220 Z" fill="url(#areaYellow)"/>
+              <path d="M 0 150 C 40 138, 70 118, 100 122 S 180 102, 210 90 S 300 62, 330 70 S 420 80, 460 60 S 540 42, 580 50 S 660 36, 690 40" fill="none" stroke="#4da06e" stroke-width="3" stroke-linecap="round"/>
+              <path d="M 0 170 C 50 160, 90 142, 130 146 S 220 138, 260 126 S 350 118, 390 122 S 480 110, 520 100 S 610 95, 650 80 S 710 70, 760 50" fill="none" stroke="#dace72" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+
+    <section class="hero" id="overview-panel">
+      <div class="hero-copy">
+        <span class="eyebrow">🩺 PetCare AI support</span>
+        <h1>Hệ thống gán bệnh theo loài và triệu chứng</h1>
+        <p>Chọn loài, nhập dấu hiệu quan sát hoặc chọn nhóm bệnh để xem đề xuất bệnh phù hợp, thuốc đặc hiệu, dấu hiệu phát hiện và khuyến nghị dinh dưỡng hỗ trợ liên quan.</p>
+        <div class="hero-tags">
+          <span class="tag">6000 Chó</span>
+          <span class="tag">6000 Mèo</span>
+          <span class="tag">20 / trang</span>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="metric-box"><strong id="totalDiseaseCount">0</strong><span>Tổng bệnh</span></div>
+        <div class="metric-box"><strong id="dogCount">0</strong><span>Chó</span></div>
+        <div class="metric-box"><strong id="catCount">0</strong><span>Mèo</span></div>
+      </div>
+    </section>
+
+    <section class="panel" id="ai-panel">
+      <div class="panel-head">
+        <div>
+          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(15,108,77,0.08);">🤖 AI diagnosis support</span>
+          <h2>AI hỗ trợ gán bệnh</h2>
+        </div>
+        <span class="status-badge status-normal">Normal</span>
+      </div>
+
+      <div class="ai-layout">
+        <div class="form-shell">
+          <label class="field">
+            <span>Loài</span>
+            <select id="aiSpecies">
+              <option value="dog">Chó</option>
+              <option value="cat">Mèo</option>
+              <option value="all">Cả hai</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Triệu chứng quan sát</span>
+            <textarea id="aiSymptoms" placeholder="Ví dụ: ho, sốt, khó thở, nôn, đau bụng, ngứa da, mất thăng bằng...">ho, sốt, khó thở</textarea>
+          </label>
+          <label class="field">
+            <span>Nhóm bệnh</span>
+            <select id="aiCategory">
+              <option value="all">Tất cả</option>
+            </select>
+          </label>
+          <div class="button-row">
+            <button class="primary-btn" id="runAi">Tạo đề xuất bệnh</button>
+            <button class="secondary-btn" id="resetAi">Reset</button>
+          </div>
+        </div>
+
+        <div id="aiResult" class="result-card">
+          <div>
+            <h3>Đề xuất bệnh</h3>
+            <div class="result-badges">
+              <span class="chip">Chờ đầu vào</span>
+            </div>
+          </div>
+          <p>Nhập triệu chứng hoặc chọn loài để hệ thống gợi ý bệnh phù hợp. Kết quả chỉ mang tính hỗ trợ demo, không thay thế chẩn đoán chuyên gia.</p>
+          <div class="detail-grid">
+            <div class="detail-box"><strong>Thuốc đặc hiệu</strong><span>—</span></div>
+            <div class="detail-box"><strong>Dấu hiệu phát hiện</strong><span>—</span></div>
+            <div class="detail-box"><strong>Nhóm bệnh</strong><span>—</span></div>
+            <div class="detail-box"><strong>Khuyến nghị</strong><span>—</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="catalog">
+      <div class="panel-head">
+        <div>
+          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(15,108,77,0.08);">📋 Disease catalog</span>
+          <h2>Danh sách bệnh theo loài + phân trang</h2>
+        </div>
+        <span class="status-badge status-moderate">Moderate</span>
+      </div>
+
+      <div class="top-bar">
+        <label>
+          <span>Tìm bệnh</span>
+          <input id="searchDisease" type="text" placeholder="Nhập tên bệnh, triệu chứng, cơ quan..." />
+        </label>
+        <label>
+          <span>Loài</span>
+          <select id="speciesFilter">
+            <option value="all">Tất cả</option>
+            <option value="dog">Chó</option>
+            <option value="cat">Mèo</option>
+          </select>
+        </label>
+        <label>
+          <span>Nhóm bệnh</span>
+          <select id="categoryFilter">
+            <option value="all">Tất cả</option>
+          </select>
+        </label>
+        <button class="secondary-btn" id="resetDiseases" style="align-self: end;">Xóa lọc</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Loài</th>
+              <th>Bệnh</th>
+              <th>Nhóm bệnh</th>
+              <th>Cơ quan</th>
+              <th>Thuốc đặc hiệu</th>
+              <th>Dấu hiệu</th>
+              <th>Độ nặng</th>
+            </tr>
+          </thead>
+          <tbody id="diseaseTableBody"></tbody>
+        </table>
+      </div>
+
+      <div id="diseasePagination" class="pagination" aria-label="Phân trang bệnh"></div>
+    </section>
+
+    <section class="panel" id="nutrition">
+      <div class="panel-head">
+        <div>
+          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(15,108,77,0.08);">🥗 Pet nutrition + disease match</span>
+          <h2>Thực phẩm &amp; bệnh theo nhóm loài</h2>
+        </div>
+        <span class="status-badge status-critical">Critical</span>
+      </div>
+      <div id="foodMatch" class="food-grid"></div>
+    </section>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const state = {
+      page: 1,
+      pageSize: 20,
+      species: 'all',
+      category: 'all',
+      query: '',
+      diseaseItems: []
+    };
+
+    let nutritionCache = [];
+
+    function normalizeVietnameseText(value) {
+      if (value === null || value === undefined) return '';
+      let text = String(value)
+        .replace(/\uFFFD/g, '')
+        .replace(/\?/g, '');
+
+      const replacements = [
+        ['Ch?', 'Chó'], ['M?o', 'Mèo'], ['M?u', 'Mèo'], ['B?nh', 'Bệnh'], ['b?nh', 'bệnh'],
+        ['B?nh vi?m ph?i c?p t?nh', 'Bệnh viêm phổi cấp tính'], ['vi?m', 'viêm'], ['ph?i', 'phổi'],
+        ['c?p t?nh', 'cấp tính'], ['c?p', 'cấp'], ['t?nh', 'tính'], ['h? h?p', 'hô hấp'],
+        ['H? h?p', 'Hô hấp'], ['h? th?ng', 'hệ thống'], ['H? th?ng', 'Hệ thống'], ['da ?u', 'da đầu'],
+        ['d? liu', 'dữ liệu'], ['D? liu', 'Dữ liệu'], ['D? li?u', 'Dữ liệu'], ['m?ng', 'miệng'], ['mi?ng', 'miệng'],
+        ['th? c?ng non', 'thú cưng non'], ['th? c?ng tr?', 'thú cưng trẻ'], ['th? c?ng gi?', 'thú cưng già'],
+        ['th? y', 'thú y'], ['b?c s? th? y', 'bác sĩ thú y'], ['b?c s? th? y v?', 'bác sĩ thú y và'],
+        ['h??ng d?n', 'hướng dẫn'], ['??c hi?u', 'đặc hiệu'], ['Thu?c ??c hi?u', 'Thuốc đặc hiệu'],
+        ['Thu?c ??c hi?u:', 'Thuốc đặc hiệu:'], ['?u', 'đau'], ['s?t', 'sốt'], ['kh? th?', 'khó thở'],
+        ['co gi?t', 'co giật'], ['gi?ng', 'giống'], ['?n', 'ăn'], ['d?ng', 'đừng'], ['m?t', 'mất'], ['n?u', 'nếu'],
+        ['th?c ?n', 'thức ăn'], ['?i?u tr?', 'điều trị'], ['?i?u', 'điều'], ['?m', 'êm'], ['?i', 'ổi'],
+        ['?u?ng', 'đường'], ['h? tr?', 'hỗ trợ'], ['??u', 'đầu'], ['??ng', 'đường'], ['??', 'đ'], ['?ng', 'đông'],
+        ['c? bi?u hi?n', 'có biểu hiện'], ['bi?u hi?n', 'biểu hiện'], ['kh?ng', 'không'], ['m?i', 'môi'],
+        ['v?i', 'với'], ['m? t?', 'mặt'], ['?p', 'ấp'], ['?ng ho?', 'động hổ'], ['t?ng', 'tăng'], ['th?m', 'thêm'],
+        ['h?p', 'hấp'], ['d?u', 'đầu'], ['m?u', 'mẫu'], ['?a li?u', 'da liễu'], ['?au', 'đau'], ['n?ng', 'nặng'],
+        ['kh? c?ng', 'không còn'], ['??c', 'đặc'], ['??u', 'đầu'], ['?u', 'đầu'], ['th?c', 'thuốc'],
+        ['H? h?p', 'Hô hấp'], ['h? h?p', 'hô hấp'], ['h? h?p c?', 'hô hấp có'], ['g?n', 'gần'], ['?u?ng ti?t ni?u', 'đường tiết niệu'],
+        ['???ng ti?t ni?u', 'đường tiết niệu'], ['Ti?t ni?u', 'Tiết niệu'], ['ti?t ni?u', 'tiết niệu'],
+        ['thuc', 'thuốc'], ['Thuc', 'Thuốc'], ['bc s', 'bác sĩ'], ['Bc s', 'Bác sĩ'], ['ngy', 'ngày'], ['Ngy', 'Ngày'],
+        ['tuđi', 'tuổi'], ['Tuđi', 'Tuổi'], ['môi trđường', 'môi trường'], ['Môi trđường', 'Môi trường'],
+        ['nhiêm khun', 'nhiễm khuẩn'], ['Nhiêm khun', 'Nhiễm khuẩn'], ['h hô hấp', 'hô hấp'], ['H hô hấp', 'Hô hấp'],
+        ['khđông', 'không'], ['Khđông', 'Không'], ['lêm', 'làm'], ['Lêm', 'Làm'], ['nô n', 'nôn'], ['nô', 'nôn'],
+        ['đđi', 'đi'], ['đđ', 'đ'], ['trđường', 'trường'], ['đơ', 'đúng'], ['m?t nặng', 'mất nặng'], ['Thú cưng trẻđông thnh', 'Thú cưng trẻ tuổi trưởng thành'],
+        ['đâu hiđau', 'đầu hiđau'], ['dđa', 'đã'], ['đn', 'đến'], ['đau h', 'đau h'], ['mặt h', 'mặt h'], ['đy', 'đầy'], ['sđông', 'sóng'],
+        ['nhêm', 'nhằm'], ['l?m', 'làm'], ['b?c', 'bác'], ['b?c s', 'bác sĩ'], ['h? h?p c?', 'hô hấp có'], ['l?u', 'lưu'], ['lđau', 'Lưu'],
+        ['hiđau', 'hiệu'], ['đau hiđau', 'đầu hiệu'], ['dđi', 'đi'], ['cđông thđông', 'căng thẳng'], ['gi?u', 'giữa'], ['m?u', 'mẫu']
+      ];
+
+      text = replacements.reduce((result, [bad, good]) => result.replaceAll(bad, good), text);
+      text = text.replace(/\s+/g, ' ').replace(/\s+([,.;:!?])/g, '$1').trim();
+      return text;
+    }
+
+    function normalizeSpecies(value) {
+      const text = String(value || '').trim().toLowerCase();
+      if (text.includes('dog') || text.includes('chó') || text.includes('canine')) return 'dog';
+      if (text.includes('cat') || text.includes('mèo') || text.includes('feline')) return 'cat';
+      return 'dog';
+    }
+
+    function severityClass(level) {
+      const key = String(level || '').toLowerCase();
+      if (key.includes('critical') || key.includes('nguy hiểm') || key.includes('nặng')) return 'high';
+      if (key.includes('medium') || key.includes('trung bình')) return 'medium';
+      return 'low';
+    }
+
+    function toDisplayLabel(value) {
+      return value && value !== 'all' ? value : 'Tất cả';
+    }
+
+    function buildPageButtons(totalPages) {
+      const buttons = [];
+      const candidates = new Set([1, totalPages, state.page, state.page - 1, state.page + 1]);
+      const pages = [...candidates].filter(page => page >= 1 && page <= totalPages).sort((a, b) => a - b);
+      for (let i = 0; i < pages.length; i++) {
+        if (i > 0 && pages[i] - pages[i - 1] > 1) {
+          buttons.push('<button class="page-button" disabled>…</button>');
+        }
+        buttons.push(`<button class="page-button ${pages[i] === state.page ? 'active' : ''}" data-page="${pages[i]}">${pages[i]}</button>`);
+      }
+      buttons.unshift(`<button class="page-button" data-page="${state.page - 1}" ${state.page <= 1 ? 'disabled' : ''}>Trước</button>`);
+      buttons.push(`<button class="page-button" data-page="${state.page + 1}" ${state.page >= totalPages ? 'disabled' : ''}>Sau</button>`);
+      return buttons.join('');
+    }
+
+    function renderPagination() {
+      const pager = document.getElementById('diseasePagination');
+      const filtered = getFilteredDiseases();
+      const totalPages = Math.max(1, Math.ceil(filtered.length / state.pageSize));
+      if (state.page > totalPages) state.page = totalPages;
+      pager.innerHTML = buildPageButtons(totalPages);
+      pager.querySelectorAll('[data-page]').forEach((button) => {
+        const page = Number(button.dataset.page || 0);
+        if (!Number.isFinite(page) || page < 1 || page > totalPages) return;
+        button.addEventListener('click', () => {
+          state.page = page;
+          renderTable();
+        });
+      });
+    }
+
+    function getFilteredDiseases() {
+      const q = String(document.getElementById('searchDisease')?.value || '').trim().toLowerCase();
+      return state.diseaseItems.filter((item) => {
+        const speciesMatch = state.species === 'all' || normalizeSpecies(item.speciesLabel || item.species) === state.species;
+        const categoryMatch = state.category === 'all' || item.category === state.category;
+        const haystack = [
+          item.nameVi, item.nameEn, item.category, item.bodySystem, item.descriptionVi, item.descriptionEn,
+          item.specialMedicationVi, item.specialMedicationEn,
+          ...(Array.isArray(item.symptomsVi) ? item.symptomsVi : []),
+          ...(Array.isArray(item.symptomsEn) ? item.symptomsEn : [])
+        ].join(' ').toLowerCase();
+        const queryMatch = !q || haystack.includes(q);
+        return speciesMatch && categoryMatch && queryMatch;
+      });
+    }
+
+    function renderTable() {
+      const tableBody = document.getElementById('diseaseTableBody');
+      const filtered = getFilteredDiseases();
+      const totalPages = Math.max(1, Math.ceil(filtered.length / state.pageSize));
+      if (state.page > totalPages) state.page = totalPages;
+      const start = (state.page - 1) * state.pageSize;
+      const pageItems = filtered.slice(start, start + state.pageSize);
+
+      if (!pageItems.length) {
+        tableBody.innerHTML = '<tr><td colspan="7" class="muted">Không có dữ liệu bệnh phù hợp.</td></tr>';
+        renderPagination();
+        return;
+      }
+
+      tableBody.innerHTML = pageItems.map((item) => {
+        const speciesLabel = normalizeVietnameseText(item.speciesLabel || (normalizeSpecies(item.species) === 'dog' ? 'Chó' : 'Mèo'));
+        const diseaseName = normalizeVietnameseText(item.nameVi || item.nameEn);
+        const categoryName = normalizeVietnameseText(item.category || '');
+        const bodySystem = normalizeVietnameseText(item.bodySystem || '');
+        const med = normalizeVietnameseText(item.specialMedicationVi || item.specialMedicationEn || 'Theo hướng dẫn bác sĩ thú y');
+        const symptoms = normalizeVietnameseText(Array.isArray(item.detectionSignsVi) ? item.detectionSignsVi.slice(0, 2).join('; ') : (item.symptomsVi || []).slice(0, 2).join('; '));
+        const severity = normalizeVietnameseText(item.severityVi || item.severity || 'Trung bình');
+        return `
+          <tr>
+            <td><strong>${speciesLabel}</strong></td>
+            <td>${diseaseName}</td>
+            <td>${categoryName}</td>
+            <td>${bodySystem}</td>
+            <td>${med}</td>
+            <td>${symptoms || '—'}</td>
+            <td><span class="status-pill ${severityClass(item.severityVi || item.severity)}">${severity}</span></td>
+          </tr>
+        `;
+      }).join('');
+
+      renderPagination();
+    }
+
+    async function loadDiseaseData() {
+      const files = [
+        { species: 'dog', path: 'data/disease_catalog_dog_6000.json' },
+        { species: 'cat', path: 'data/disease_catalog_cat_6000.json' }
+      ];
+
+      const results = await Promise.all(files.map(async ({ species, path }) => {
+        try {
+          const res = await fetch(path, { cache: 'no-store' });
+          if (!res.ok) throw new Error('Load failed');
+          const data = await res.json();
+          return Array.isArray(data.items) ? data.items.map(item => ({ ...item, speciesKey: species, speciesLabel: species === 'dog' ? 'Chó' : 'Mèo' })) : [];
+        } catch (error) {
+          console.warn('Load disease file failed', species, error);
+          return [];
+        }
+      }));
+
+      state.diseaseItems = results.flat();
+      document.getElementById('totalDiseaseCount').textContent = String(state.diseaseItems.length);
+      document.getElementById('dogCount').textContent = String(state.diseaseItems.filter(item => normalizeSpecies(item.speciesLabel || item.species) === 'dog').length);
+      document.getElementById('catCount').textContent = String(state.diseaseItems.filter(item => normalizeSpecies(item.speciesLabel || item.species) === 'cat').length);
+
+      const categories = [...new Set(state.diseaseItems.map(item => item.category).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+      const categoryFilter = document.getElementById('categoryFilter');
+      const aiCategory = document.getElementById('aiCategory');
+      const categoryOptions = '<option value="all">Tất cả</option>' + categories.map(c => `<option value="${c}">${c}</option>`).join('');
+      categoryFilter.innerHTML = categoryOptions;
+      aiCategory.innerHTML = categoryOptions;
+
+      renderTable();
+      renderFoodRecommendations();
+    }
+
+    function renderFoodRecommendations() {
+      const matches = document.getElementById('foodMatch');
+      if (!matches) return;
+
+      const grouped = {
+        dog: [
+          { title: 'Thức ăn hỗ trợ hô hấp', tags: ['protein cao', 'không gluten', 'hỗ trợ phổi'], category: 'Hô hấp' },
+          { title: 'Thức ăn hỗ trợ tiêu hóa', tags: ['dễ tiêu', 'hàm lượng xơ', 'kháng kích ứng'], category: 'Tiêu hóa' },
+          { title: 'Thức ăn hỗ trợ xương khớp', tags: ['glucosamine', 'omega-3', 'khớp'], category: 'Xương khớp' }
+        ],
+        cat: [
+          { title: 'Thức ăn hỗ trợ da & lông', tags: ['omega-6', 'tinh dầu', 'lông khỏe'], category: 'Da liễu' },
+          { title: 'Thức ăn hỗ trợ tiêu hóa', tags: ['dễ tiêu', 'đạm cao', 'hỗ trợ ruột'], category: 'Tiêu hóa' },
+          { title: 'Thức ăn hỗ trợ mắt & tai', tags: ['lutein', 'taurine', 'hỗ trợ thị lực'], category: 'Tai mắt' }
+        ]
+      };
+
+      const html = ['dog', 'cat'].map((species) => {
+        const list = grouped[species];
+        return `
+          <div class="food-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px;">
+              <span class="chip">${species === 'dog' ? 'Chó' : 'Mèo'}</span>
+            </div>
+            ${list.map(item => `
+              <div style="margin-top: 10px; border-top:1px solid var(--line); padding-top: 10px;">
+                <p class="title">${item.title}</p>
+                <div class="meta">Nhóm bệnh: ${item.category}</div>
+                <div class="tags">${item.tags.map(tag => `<span>${tag}</span>`).join('')}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }).join('');
+
+      matches.innerHTML = html;
+    }
+
+    function calculateAIResult() {
+      const species = document.getElementById('aiSpecies').value;
+      const input = document.getElementById('aiSymptoms').value || '';
+      const category = document.getElementById('aiCategory').value || 'all';
+      const tokens = input.toLowerCase().split(/[^a-zA-Za-zÀ-ỹ]+/).map(v => v.trim()).filter(Boolean);
+      const scope = state.diseaseItems.filter((item) => {
+        const speciesMatch = species === 'all' || normalizeSpecies(item.speciesLabel || item.species) === species;
+        const categoryMatch = category === 'all' || item.category === category;
+        if (!speciesMatch || !categoryMatch) return false;
+        const haystack = [
+          item.nameVi, item.nameEn, item.category, item.bodySystem,
+          ...(Array.isArray(item.symptomsVi) ? item.symptomsVi : []),
+          ...(Array.isArray(item.symptomsEn) ? item.symptomsEn : []),
+          ...(Array.isArray(item.detectionSignsVi) ? item.detectionSignsVi : []),
+          ...(Array.isArray(item.detectionSignsEn) ? item.detectionSignsEn : [])
+        ].join(' ').toLowerCase();
+        const matchScore = tokens.reduce((score, token) => score + (haystack.includes(token) ? 1 : 0), 0);
+        return matchScore > 0;
+      });
+
+      const best = scope.sort((a, b) => {
+        const scoreA = (a.nameVi + ' ' + (a.descriptionVi || '')).length;
+        const scoreB = (b.nameVi + ' ' + (b.descriptionVi || '')).length;
+        return scoreB - scoreA;
+      })[0] || state.diseaseItems.filter(item => species === 'all' || normalizeSpecies(item.speciesLabel || item.species) === species)[0];
+
+      const result = document.getElementById('aiResult');
+      if (!best) {
+        result.innerHTML = '<div class="result-card"><h3>Không có mẫu phù hợp</h3><p>Hãy thay đổi loài hoặc nhập triệu chứng rõ hơn.</p></div>';
+        return;
+      }
+
+      const displaySpecies = normalizeVietnameseText(best.speciesLabel || (normalizeSpecies(best.species) === 'dog' ? 'Chó' : 'Mèo'));
+      const diseaseName = normalizeVietnameseText(best.nameVi || best.nameEn);
+      const categoryName = normalizeVietnameseText(best.category || '');
+      const bodySystemName = normalizeVietnameseText(best.bodySystem || '');
+      const description = normalizeVietnameseText(best.descriptionVi || best.descriptionEn || '');
+      const medication = normalizeVietnameseText(best.specialMedicationVi || best.specialMedicationEn || '');
+      const detectionSigns = normalizeVietnameseText((best.detectionSignsVi || best.detectionSignsEn || []).slice(0, 2).join('; ') || 'Không có mô tả chi tiết.');
+      const caution = normalizeVietnameseText(best.cautionVi || best.cautionEn || 'Theo dõi chặt chẽ và cần bác sĩ thú y xác nhận.');
+      const card = `
+        <div class="result-card">
+          <div>
+            <h3>${diseaseName}</h3>
+            <div class="result-badges">
+              <span class="chip">${displaySpecies}</span>
+              <span class="chip">${categoryName}</span>
+              <span class="chip">${bodySystemName}</span>
+            </div>
+          </div>
+          <p>${description}</p>
+          <div class="detail-grid">
+            <div class="detail-box"><strong>Thuốc đặc hiệu</strong><span>${medication}</span></div>
+            <div class="detail-box"><strong>Dấu hiệu phát hiện</strong><span>${detectionSigns}</span></div>
+            <div class="detail-box"><strong>Nhóm bệnh</strong><span>${categoryName}</span></div>
+            <div class="detail-box"><strong>Khuyến nghị</strong><span>${caution}</span></div>
+          </div>
+        </div>
+      `;
+      result.innerHTML = card;
+    }
+
+    function bindEvents() {
+      const shell = document.querySelector('.dashboard-shell');
+      const sidebarCard = document.querySelector('.sidebar .sidebar-card');
+      if (sidebarCard && !document.querySelector('.sidebar-toggle')) {
+        const collapseToggle = document.createElement('button');
+        collapseToggle.className = 'secondary-btn sidebar-toggle';
+        collapseToggle.type = 'button';
+        collapseToggle.textContent = '⟨';
+        collapseToggle.style.width = '100%';
+        collapseToggle.style.marginTop = '10px';
+        collapseToggle.addEventListener('click', () => {
+          shell.classList.toggle('collapsed');
+          collapseToggle.textContent = shell.classList.contains('collapsed') ? '⟩' : '⟨';
+        });
+        sidebarCard.appendChild(collapseToggle);
+      }
+
+      document.querySelectorAll('.nav-item').forEach((item) => {
+        item.addEventListener('click', () => {
+          const target = item.dataset.target;
+          document.querySelectorAll('.nav-item').forEach((btn) => btn.classList.toggle('active', btn === item));
+
+          const sectionMap = {
+            overview: document.getElementById('overview-panel'),
+            'ai-panel': document.getElementById('ai-panel'),
+            catalog: document.getElementById('catalog'),
+            nutrition: document.getElementById('nutrition')
+          };
+
+          const section = sectionMap[target];
+          if (section) {
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      document.getElementById('searchDisease').addEventListener('input', (event) => {
+        state.query = event.target.value;
+        state.page = 1;
+        renderTable();
+      });
+
+      document.getElementById('speciesFilter').addEventListener('change', (event) => {
+        state.species = event.target.value;
+        state.page = 1;
+        renderTable();
+      });
+
+      document.getElementById('categoryFilter').addEventListener('change', (event) => {
+        state.category = event.target.value;
+        state.page = 1;
+        renderTable();
+      });
+
+      document.getElementById('resetDiseases').addEventListener('click', () => {
+        state.species = 'all';
+        state.category = 'all';
+        state.query = '';
+        state.page = 1;
+        document.getElementById('searchDisease').value = '';
+        document.getElementById('speciesFilter').value = 'all';
+        document.getElementById('categoryFilter').value = 'all';
+        renderTable();
+      });
+
+      document.getElementById('runAi').addEventListener('click', calculateAIResult);
+      document.getElementById('resetAi').addEventListener('click', () => {
+        document.getElementById('aiSpecies').value = 'dog';
+        document.getElementById('aiSymptoms').value = 'ho, sốt, khó thở';
+        document.getElementById('aiCategory').value = 'all';
+        calculateAIResult();
+      });
+
+      document.getElementById('aiSpecies').addEventListener('change', calculateAIResult);
+      document.getElementById('aiCategory').addEventListener('change', calculateAIResult);
+      document.getElementById('aiSymptoms').addEventListener('input', calculateAIResult);
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      bindEvents();
+      await loadDiseaseData();
+      calculateAIResult();
+    });
+  </script>
+</body>
+</html>
