@@ -1,10 +1,10 @@
 ﻿<!doctype html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="AI hỗ trợ gán bệnh cho chó và mèo, hiển thị 6000 bệnh mỗi loài kèm thuốc đặc hiệu và dấu hiệu phát hiện.">
-  <title>PetCare | Disease AI Support</title>
+  <meta name="description" content="AI-assisted veterinary disease support dashboard for dogs and cats, featuring 6,000 disease records per species with medication guidance and clinical signals.">
+  <title>PetCare | Veterinary Disease Support</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
 
@@ -475,10 +475,10 @@
 <body>
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="index.html"><span class="brand-mark">P</span> PetCare / Disease AI</a>
+      <a class="brand" href="index.html"><span class="brand-mark">P</span> PetCare / Veterinary AI</a>
       <nav class="nav" aria-label="Main navigation">
         <a href="nutrition_products.html">Nutrition catalog</a>
-        <a href="index.html">Project hub</a>
+        <a href="index.html">Project center</a>
         <a href="app_interface_preview.html">App preview</a>
       </nav>
       <span class="nav-cta">AI support</span>
@@ -493,8 +493,8 @@
             <div class="side-title"><span class="side-icon">📊</span> Overview</div>
             <div class="sidebar-menu">
               <button class="nav-item active" data-target="overview"><span class="nav-icon">📈</span><span>Overview</span></button>
-              <button class="nav-item" data-target="ai-panel"><span class="nav-icon">🤖</span><span>AI Diagnosis</span></button>
-              <button class="nav-item" data-target="catalog"><span class="nav-icon">📋</span><span>Disease Catalog</span></button>
+              <button class="nav-item" data-target="ai-panel"><span class="nav-icon">🤖</span><span>AI diagnosis</span></button>
+              <button class="nav-item" data-target="catalog"><span class="nav-icon">📋</span><span>Disease catalog</span></button>
               <button class="nav-item" data-target="nutrition"><span class="nav-icon">🥗</span><span>Nutrition</span></button>
             </div>
           </div>
@@ -503,9 +503,9 @@
           <div class="side-section">
             <div class="side-title"><span class="side-icon">🩺</span> Clinical</div>
             <div class="side-list">
-              <div class="side-item"><span>Hô hấp</span><small>24</small></div>
-              <div class="side-item"><span>Da liễu</span><small>15</small></div>
-              <div class="side-item"><span>Tiêu hóa</span><small>19</small></div>
+              <div class="side-item"><span>Respiratory</span><small>24</small></div>
+              <div class="side-item"><span>Dermatology</span><small>15</small></div>
+              <div class="side-item"><span>Gastrointestinal</span><small>19</small></div>
             </div>
           </div>
         </div>
@@ -514,9 +514,9 @@
       <div class="dashboard-main">
         <div class="stat-strip">
           <div class="stat-card">
-            <div class="stat-head"><span>Monitor</span><span class="mini-icon">📈</span></div>
+            <div class="stat-head"><span>Monitoring</span><span class="mini-icon">📈</span></div>
             <div class="stat-value">1,284</div>
-            <div class="mini-chart" aria-label="monitor chart"><span style="height:45%"></span><span style="height:60%"></span><span style="height:48%"></span><span style="height:80%"></span><span style="height:66%"></span><span style="height:92%"></span></div>
+            <div class="mini-chart" aria-label="monitoring chart"><span style="height:45%"></span><span style="height:60%"></span><span style="height:48%"></span><span style="height:80%"></span><span style="height:66%"></span><span style="height:92%"></span></div>
           </div>
           <div class="stat-card">
             <div class="stat-head"><span>Priority</span><span class="mini-icon">⚠️</span></div>
@@ -524,9 +524,9 @@
             <div class="mini-chart" aria-label="priority chart"><span style="height:28%"></span><span style="height:36%"></span><span style="height:52%"></span><span style="height:48%"></span><span style="height:68%"></span><span style="height:58%"></span></div>
           </div>
           <div class="stat-card">
-            <div class="stat-head"><span>Alert</span><span class="mini-icon">🚨</span></div>
+            <div class="stat-head"><span>Alerts</span><span class="mini-icon">🚨</span></div>
             <div class="stat-value">34</div>
-            <div class="mini-chart" aria-label="alert chart"><span style="height:52%"></span><span style="height:64%"></span><span style="height:58%"></span><span style="height:76%"></span><span style="height:83%"></span><span style="height:90%"></span></div>
+            <div class="mini-chart" aria-label="alerts chart"><span style="height:52%"></span><span style="height:64%"></span><span style="height:58%"></span><span style="height:76%"></span><span style="height:83%"></span><span style="height:90%"></span></div>
           </div>
         </div>
 
@@ -534,8 +534,8 @@
           <div class="chart-head">
             <div class="chart-label"><span class="mini-icon" style="width:30px;height:30px;">📊</span> Clinical trend</div>
             <div class="chart-legend">
-              <span><span class="dot" style="background:#5ea679"></span>Chó</span>
-              <span><span class="dot" style="background:#d9df73"></span>Mèo</span>
+              <span><span class="dot" style="background:#5ea679"></span>Dog</span>
+              <span><span class="dot" style="background:#d9df73"></span>Cat</span>
             </div>
           </div>
           <div class="line-area-chart" aria-label="large chart">
@@ -567,18 +567,18 @@
     <section class="hero" id="overview-panel">
       <div class="hero-copy">
         <span class="eyebrow">🩺 PetCare AI support</span>
-        <h1>Hệ thống gán bệnh theo loài và triệu chứng</h1>
-        <p>Chọn loài, nhập dấu hiệu quan sát hoặc chọn nhóm bệnh để xem đề xuất bệnh phù hợp, thuốc đặc hiệu, dấu hiệu phát hiện và khuyến nghị dinh dưỡng hỗ trợ liên quan.</p>
+        <h1>Veterinary disease matching system</h1>
+        <p>Select a species, enter observed clinical signs, or choose a disease group to review relevant condition suggestions, target medication, detection indicators, and associated nutrition recommendations.</p>
         <div class="hero-tags">
-          <span class="tag">6000 Chó</span>
-          <span class="tag">6000 Mèo</span>
-          <span class="tag">20 / trang</span>
+          <span class="tag">6000 dogs</span>
+          <span class="tag">6000 cats</span>
+          <span class="tag">20 / page</span>
         </div>
       </div>
       <div class="hero-side">
-        <div class="metric-box"><strong id="totalDiseaseCount">0</strong><span>Tổng bệnh</span></div>
-        <div class="metric-box"><strong id="dogCount">0</strong><span>Chó</span></div>
-        <div class="metric-box"><strong id="catCount">0</strong><span>Mèo</span></div>
+        <div class="metric-box"><strong id="totalDiseaseCount">0</strong><span>Total conditions</span></div>
+        <div class="metric-box"><strong id="dogCount">0</strong><span>Dogs</span></div>
+        <div class="metric-box"><strong id="catCount">0</strong><span>Cats</span></div>
       </div>
     </section>
 
@@ -586,7 +586,7 @@
       <div class="panel-head">
         <div>
           <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(15,108,77,0.08);">🤖 AI diagnosis support</span>
-          <h2>AI hỗ trợ gán bệnh</h2>
+          <h2>AI disease matching</h2>
         </div>
         <span class="status-badge status-normal">Normal</span>
       </div>
@@ -594,42 +594,42 @@
       <div class="ai-layout">
         <div class="form-shell">
           <label class="field">
-            <span>Loài</span>
+            <span>Species</span>
             <select id="aiSpecies">
-              <option value="dog">Chó</option>
-              <option value="cat">Mèo</option>
-              <option value="all">Cả hai</option>
+              <option value="dog">Dog</option>
+              <option value="cat">Cat</option>
+              <option value="all">Both</option>
             </select>
           </label>
           <label class="field">
-            <span>Triệu chứng quan sát</span>
-            <textarea id="aiSymptoms" placeholder="Ví dụ: ho, sốt, khó thở, nôn, đau bụng, ngứa da, mất thăng bằng...">ho, sốt, khó thở</textarea>
+            <span>Observed symptoms</span>
+            <textarea id="aiSymptoms" placeholder="Example: cough, fever, breathing difficulty, vomiting, abdominal pain, skin itching, loss of balance...">cough, fever, breathing difficulty</textarea>
           </label>
           <label class="field">
-            <span>Nhóm bệnh</span>
+            <span>Disease group</span>
             <select id="aiCategory">
-              <option value="all">Tất cả</option>
+              <option value="all">All</option>
             </select>
           </label>
           <div class="button-row">
-            <button class="primary-btn" id="runAi">Tạo đề xuất bệnh</button>
+            <button class="primary-btn" id="runAi">Generate disease suggestion</button>
             <button class="secondary-btn" id="resetAi">Reset</button>
           </div>
         </div>
 
         <div id="aiResult" class="result-card">
           <div>
-            <h3>Đề xuất bệnh</h3>
+            <h3>Disease suggestion</h3>
             <div class="result-badges">
-              <span class="chip">Chờ đầu vào</span>
+              <span class="chip">Awaiting input</span>
             </div>
           </div>
-          <p>Nhập triệu chứng hoặc chọn loài để hệ thống gợi ý bệnh phù hợp. Kết quả chỉ mang tính hỗ trợ demo, không thay thế chẩn đoán chuyên gia.</p>
+          <p>Enter symptoms or select a species to generate a relevant disease suggestion. Results are for demo support only and do not replace veterinary diagnosis.</p>
           <div class="detail-grid">
-            <div class="detail-box"><strong>Thuốc đặc hiệu</strong><span>—</span></div>
-            <div class="detail-box"><strong>Dấu hiệu phát hiện</strong><span>—</span></div>
-            <div class="detail-box"><strong>Nhóm bệnh</strong><span>—</span></div>
-            <div class="detail-box"><strong>Khuyến nghị</strong><span>—</span></div>
+            <div class="detail-box"><strong>Target medication</strong><span>—</span></div>
+            <div class="detail-box"><strong>Detection signs</strong><span>—</span></div>
+            <div class="detail-box"><strong>Disease group</strong><span>—</span></div>
+            <div class="detail-box"><strong>Recommendation</strong><span>—</span></div>
           </div>
         </div>
       </div>
@@ -639,58 +639,58 @@
       <div class="panel-head">
         <div>
           <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(15,108,77,0.08);">📋 Disease catalog</span>
-          <h2>Danh sách bệnh theo loài + phân trang</h2>
+          <h2>Disease list by species + pagination</h2>
         </div>
         <span class="status-badge status-moderate">Moderate</span>
       </div>
 
       <div class="top-bar">
         <label>
-          <span>Tìm bệnh</span>
-          <input id="searchDisease" type="text" placeholder="Nhập tên bệnh, triệu chứng, cơ quan..." />
+          <span>Search disease</span>
+          <input id="searchDisease" type="text" placeholder="Enter disease name, symptom, organ..." />
         </label>
         <label>
-          <span>Loài</span>
+          <span>Species</span>
           <select id="speciesFilter">
-            <option value="all">Tất cả</option>
-            <option value="dog">Chó</option>
-            <option value="cat">Mèo</option>
+            <option value="all">All</option>
+            <option value="dog">Dog</option>
+            <option value="cat">Cat</option>
           </select>
         </label>
         <label>
-          <span>Nhóm bệnh</span>
+          <span>Disease group</span>
           <select id="categoryFilter">
-            <option value="all">Tất cả</option>
+            <option value="all">All</option>
           </select>
         </label>
-        <button class="secondary-btn" id="resetDiseases" style="align-self: end;">Xóa lọc</button>
+        <button class="secondary-btn" id="resetDiseases" style="align-self: end;">Clear filters</button>
       </div>
 
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Loài</th>
-              <th>Bệnh</th>
-              <th>Nhóm bệnh</th>
-              <th>Cơ quan</th>
-              <th>Thuốc đặc hiệu</th>
-              <th>Dấu hiệu</th>
-              <th>Độ nặng</th>
+              <th>Species</th>
+              <th>Disease</th>
+              <th>Disease group</th>
+              <th>Body system</th>
+              <th>Target medication</th>
+              <th>Signs</th>
+              <th>Severity</th>
             </tr>
           </thead>
           <tbody id="diseaseTableBody"></tbody>
         </table>
       </div>
 
-      <div id="diseasePagination" class="pagination" aria-label="Phân trang bệnh"></div>
+      <div id="diseasePagination" class="pagination" aria-label="Disease pagination"></div>
     </section>
 
     <section class="panel" id="nutrition">
       <div class="panel-head">
         <div>
           <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(15,108,77,0.08);">🥗 Pet nutrition + disease match</span>
-          <h2>Thực phẩm &amp; bệnh theo nhóm loài</h2>
+          <h2>Food &amp; disease recommendations by species group</h2>
         </div>
         <span class="status-badge status-critical">Critical</span>
       </div>
@@ -714,60 +714,31 @@
 
     function normalizeVietnameseText(value) {
       if (value === null || value === undefined) return '';
-      let text = String(value)
+      return String(value)
         .replace(/\uFFFD/g, '')
-        .replace(/\?/g, '');
-
-      const replacements = [
-        ['Ch?', 'Chó'], ['M?o', 'Mèo'], ['M?u', 'Mèo'], ['B?nh', 'Bệnh'], ['b?nh', 'bệnh'],
-        ['B?nh vi?m ph?i c?p t?nh', 'Bệnh viêm phổi cấp tính'], ['vi?m', 'viêm'], ['ph?i', 'phổi'],
-        ['c?p t?nh', 'cấp tính'], ['c?p', 'cấp'], ['t?nh', 'tính'], ['h? h?p', 'hô hấp'],
-        ['H? h?p', 'Hô hấp'], ['h? th?ng', 'hệ thống'], ['H? th?ng', 'Hệ thống'], ['da ?u', 'da đầu'],
-        ['d? liu', 'dữ liệu'], ['D? liu', 'Dữ liệu'], ['D? li?u', 'Dữ liệu'], ['m?ng', 'miệng'], ['mi?ng', 'miệng'],
-        ['th? c?ng non', 'thú cưng non'], ['th? c?ng tr?', 'thú cưng trẻ'], ['th? c?ng gi?', 'thú cưng già'],
-        ['th? y', 'thú y'], ['b?c s? th? y', 'bác sĩ thú y'], ['b?c s? th? y v?', 'bác sĩ thú y và'],
-        ['h??ng d?n', 'hướng dẫn'], ['??c hi?u', 'đặc hiệu'], ['Thu?c ??c hi?u', 'Thuốc đặc hiệu'],
-        ['Thu?c ??c hi?u:', 'Thuốc đặc hiệu:'], ['?u', 'đau'], ['s?t', 'sốt'], ['kh? th?', 'khó thở'],
-        ['co gi?t', 'co giật'], ['gi?ng', 'giống'], ['?n', 'ăn'], ['d?ng', 'đừng'], ['m?t', 'mất'], ['n?u', 'nếu'],
-        ['th?c ?n', 'thức ăn'], ['?i?u tr?', 'điều trị'], ['?i?u', 'điều'], ['?m', 'êm'], ['?i', 'ổi'],
-        ['?u?ng', 'đường'], ['h? tr?', 'hỗ trợ'], ['??u', 'đầu'], ['??ng', 'đường'], ['??', 'đ'], ['?ng', 'đông'],
-        ['c? bi?u hi?n', 'có biểu hiện'], ['bi?u hi?n', 'biểu hiện'], ['kh?ng', 'không'], ['m?i', 'môi'],
-        ['v?i', 'với'], ['m? t?', 'mặt'], ['?p', 'ấp'], ['?ng ho?', 'động hổ'], ['t?ng', 'tăng'], ['th?m', 'thêm'],
-        ['h?p', 'hấp'], ['d?u', 'đầu'], ['m?u', 'mẫu'], ['?a li?u', 'da liễu'], ['?au', 'đau'], ['n?ng', 'nặng'],
-        ['kh? c?ng', 'không còn'], ['??c', 'đặc'], ['??u', 'đầu'], ['?u', 'đầu'], ['th?c', 'thuốc'],
-        ['H? h?p', 'Hô hấp'], ['h? h?p', 'hô hấp'], ['h? h?p c?', 'hô hấp có'], ['g?n', 'gần'], ['?u?ng ti?t ni?u', 'đường tiết niệu'],
-        ['???ng ti?t ni?u', 'đường tiết niệu'], ['Ti?t ni?u', 'Tiết niệu'], ['ti?t ni?u', 'tiết niệu'],
-        ['thuc', 'thuốc'], ['Thuc', 'Thuốc'], ['bc s', 'bác sĩ'], ['Bc s', 'Bác sĩ'], ['ngy', 'ngày'], ['Ngy', 'Ngày'],
-        ['tuđi', 'tuổi'], ['Tuđi', 'Tuổi'], ['môi trđường', 'môi trường'], ['Môi trđường', 'Môi trường'],
-        ['nhiêm khun', 'nhiễm khuẩn'], ['Nhiêm khun', 'Nhiễm khuẩn'], ['h hô hấp', 'hô hấp'], ['H hô hấp', 'Hô hấp'],
-        ['khđông', 'không'], ['Khđông', 'Không'], ['lêm', 'làm'], ['Lêm', 'Làm'], ['nô n', 'nôn'], ['nô', 'nôn'],
-        ['đđi', 'đi'], ['đđ', 'đ'], ['trđường', 'trường'], ['đơ', 'đúng'], ['m?t nặng', 'mất nặng'], ['Thú cưng trẻđông thnh', 'Thú cưng trẻ tuổi trưởng thành'],
-        ['đâu hiđau', 'đầu hiđau'], ['dđa', 'đã'], ['đn', 'đến'], ['đau h', 'đau h'], ['mặt h', 'mặt h'], ['đy', 'đầy'], ['sđông', 'sóng'],
-        ['nhêm', 'nhằm'], ['l?m', 'làm'], ['b?c', 'bác'], ['b?c s', 'bác sĩ'], ['h? h?p c?', 'hô hấp có'], ['l?u', 'lưu'], ['lđau', 'Lưu'],
-        ['hiđau', 'hiệu'], ['đau hiđau', 'đầu hiệu'], ['dđi', 'đi'], ['cđông thđông', 'căng thẳng'], ['gi?u', 'giữa'], ['m?u', 'mẫu']
-      ];
-
-      text = replacements.reduce((result, [bad, good]) => result.replaceAll(bad, good), text);
-      text = text.replace(/\s+/g, ' ').replace(/\s+([,.;:!?])/g, '$1').trim();
-      return text;
+        .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
+        .replace(/\?+/g, '')
+        .replace(/\s+/g, ' ')
+        .replace(/\s+([,.;:!?])/g, '$1')
+        .trim();
     }
 
     function normalizeSpecies(value) {
       const text = String(value || '').trim().toLowerCase();
-      if (text.includes('dog') || text.includes('chó') || text.includes('canine')) return 'dog';
-      if (text.includes('cat') || text.includes('mèo') || text.includes('feline')) return 'cat';
+      if (text.includes('dog') || text.includes('canine') || text.includes('cho')) return 'dog';
+      if (text.includes('cat') || text.includes('feline') || text.includes('meo')) return 'cat';
       return 'dog';
     }
 
     function severityClass(level) {
       const key = String(level || '').toLowerCase();
-      if (key.includes('critical') || key.includes('nguy hiểm') || key.includes('nặng')) return 'high';
-      if (key.includes('medium') || key.includes('trung bình')) return 'medium';
+      if (key.includes('critical') || key.includes('severe') || key.includes('high') || key.includes('urgent')) return 'high';
+      if (key.includes('moderate') || key.includes('medium')) return 'medium';
       return 'low';
     }
 
     function toDisplayLabel(value) {
-      return value && value !== 'all' ? value : 'Tất cả';
+      return value && value !== 'all' ? value : 'All';
     }
 
     function buildPageButtons(totalPages) {
@@ -780,8 +751,8 @@
         }
         buttons.push(`<button class="page-button ${pages[i] === state.page ? 'active' : ''}" data-page="${pages[i]}">${pages[i]}</button>`);
       }
-      buttons.unshift(`<button class="page-button" data-page="${state.page - 1}" ${state.page <= 1 ? 'disabled' : ''}>Trước</button>`);
-      buttons.push(`<button class="page-button" data-page="${state.page + 1}" ${state.page >= totalPages ? 'disabled' : ''}>Sau</button>`);
+      buttons.unshift(`<button class="page-button" data-page="${state.page - 1}" ${state.page <= 1 ? 'disabled' : ''}>Prev</button>`);
+      buttons.push(`<button class="page-button" data-page="${state.page + 1}" ${state.page >= totalPages ? 'disabled' : ''}>Next</button>`);
       return buttons.join('');
     }
 
@@ -826,19 +797,19 @@
       const pageItems = filtered.slice(start, start + state.pageSize);
 
       if (!pageItems.length) {
-        tableBody.innerHTML = '<tr><td colspan="7" class="muted">Không có dữ liệu bệnh phù hợp.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="7" class="muted">No matching disease data.</td></tr>';
         renderPagination();
         return;
       }
 
       tableBody.innerHTML = pageItems.map((item) => {
-        const speciesLabel = normalizeVietnameseText(item.speciesLabel || (normalizeSpecies(item.species) === 'dog' ? 'Chó' : 'Mèo'));
+        const speciesLabel = normalizeVietnameseText(item.speciesLabel || (normalizeSpecies(item.species) === 'dog' ? 'Dog' : 'Cat'));
         const diseaseName = normalizeVietnameseText(item.nameVi || item.nameEn);
         const categoryName = normalizeVietnameseText(item.category || '');
         const bodySystem = normalizeVietnameseText(item.bodySystem || '');
-        const med = normalizeVietnameseText(item.specialMedicationVi || item.specialMedicationEn || 'Theo hướng dẫn bác sĩ thú y');
+        const med = normalizeVietnameseText(item.specialMedicationVi || item.specialMedicationEn || 'Follow veterinary guidance');
         const symptoms = normalizeVietnameseText(Array.isArray(item.detectionSignsVi) ? item.detectionSignsVi.slice(0, 2).join('; ') : (item.symptomsVi || []).slice(0, 2).join('; '));
-        const severity = normalizeVietnameseText(item.severityVi || item.severity || 'Trung bình');
+        const severity = normalizeVietnameseText(item.severityVi || item.severity || 'Moderate');
         return `
           <tr>
             <td><strong>${speciesLabel}</strong></td>
@@ -866,7 +837,7 @@
           const res = await fetch(path, { cache: 'no-store' });
           if (!res.ok) throw new Error('Load failed');
           const data = await res.json();
-          return Array.isArray(data.items) ? data.items.map(item => ({ ...item, speciesKey: species, speciesLabel: species === 'dog' ? 'Chó' : 'Mèo' })) : [];
+          return Array.isArray(data.items) ? data.items.map(item => ({ ...item, speciesKey: species, speciesLabel: species === 'dog' ? 'Dog' : 'Cat' })) : [];
         } catch (error) {
           console.warn('Load disease file failed', species, error);
           return [];
@@ -881,7 +852,7 @@
       const categories = [...new Set(state.diseaseItems.map(item => item.category).filter(Boolean))].sort((a, b) => a.localeCompare(b));
       const categoryFilter = document.getElementById('categoryFilter');
       const aiCategory = document.getElementById('aiCategory');
-      const categoryOptions = '<option value="all">Tất cả</option>' + categories.map(c => `<option value="${c}">${c}</option>`).join('');
+      const categoryOptions = '<option value="all">All</option>' + categories.map(c => `<option value="${c}">${c}</option>`).join('');
       categoryFilter.innerHTML = categoryOptions;
       aiCategory.innerHTML = categoryOptions;
 
@@ -895,14 +866,14 @@
 
       const grouped = {
         dog: [
-          { title: 'Thức ăn hỗ trợ hô hấp', tags: ['protein cao', 'không gluten', 'hỗ trợ phổi'], category: 'Hô hấp' },
-          { title: 'Thức ăn hỗ trợ tiêu hóa', tags: ['dễ tiêu', 'hàm lượng xơ', 'kháng kích ứng'], category: 'Tiêu hóa' },
-          { title: 'Thức ăn hỗ trợ xương khớp', tags: ['glucosamine', 'omega-3', 'khớp'], category: 'Xương khớp' }
+          { title: 'Respiratory support food', tags: ['high protein', 'gluten-free', 'lung support'], category: 'Respiratory' },
+          { title: 'Digestive support food', tags: ['easy digestion', 'fiber-rich', 'anti-irritant'], category: 'Gastrointestinal' },
+          { title: 'Joint support food', tags: ['glucosamine', 'omega-3', 'joint care'], category: 'Musculoskeletal' }
         ],
         cat: [
-          { title: 'Thức ăn hỗ trợ da & lông', tags: ['omega-6', 'tinh dầu', 'lông khỏe'], category: 'Da liễu' },
-          { title: 'Thức ăn hỗ trợ tiêu hóa', tags: ['dễ tiêu', 'đạm cao', 'hỗ trợ ruột'], category: 'Tiêu hóa' },
-          { title: 'Thức ăn hỗ trợ mắt & tai', tags: ['lutein', 'taurine', 'hỗ trợ thị lực'], category: 'Tai mắt' }
+          { title: 'Skin & coat support food', tags: ['omega-6', 'essential oils', 'healthy coat'], category: 'Dermatology' },
+          { title: 'Digestive support food', tags: ['easy digestion', 'high protein', 'gut support'], category: 'Gastrointestinal' },
+          { title: 'Eye & ear support food', tags: ['lutein', 'taurine', 'vision support'], category: 'Ophthalmic' }
         ]
       };
 
@@ -911,12 +882,12 @@
         return `
           <div class="food-card">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px;">
-              <span class="chip">${species === 'dog' ? 'Chó' : 'Mèo'}</span>
+              <span class="chip">${species === 'dog' ? 'Dog' : 'Cat'}</span>
             </div>
             ${list.map(item => `
               <div style="margin-top: 10px; border-top:1px solid var(--line); padding-top: 10px;">
                 <p class="title">${item.title}</p>
-                <div class="meta">Nhóm bệnh: ${item.category}</div>
+                <div class="meta">Disease group: ${item.category}</div>
                 <div class="tags">${item.tags.map(tag => `<span>${tag}</span>`).join('')}</div>
               </div>
             `).join('')}
@@ -955,18 +926,18 @@
 
       const result = document.getElementById('aiResult');
       if (!best) {
-        result.innerHTML = '<div class="result-card"><h3>Không có mẫu phù hợp</h3><p>Hãy thay đổi loài hoặc nhập triệu chứng rõ hơn.</p></div>';
+        result.innerHTML = '<div class="result-card"><h3>No matching case</h3><p>Please adjust the species or enter clearer symptoms.</p></div>';
         return;
       }
 
-      const displaySpecies = normalizeVietnameseText(best.speciesLabel || (normalizeSpecies(best.species) === 'dog' ? 'Chó' : 'Mèo'));
+      const displaySpecies = normalizeVietnameseText(best.speciesLabel || (normalizeSpecies(best.species) === 'dog' ? 'Dog' : 'Cat'));
       const diseaseName = normalizeVietnameseText(best.nameVi || best.nameEn);
       const categoryName = normalizeVietnameseText(best.category || '');
       const bodySystemName = normalizeVietnameseText(best.bodySystem || '');
       const description = normalizeVietnameseText(best.descriptionVi || best.descriptionEn || '');
       const medication = normalizeVietnameseText(best.specialMedicationVi || best.specialMedicationEn || '');
-      const detectionSigns = normalizeVietnameseText((best.detectionSignsVi || best.detectionSignsEn || []).slice(0, 2).join('; ') || 'Không có mô tả chi tiết.');
-      const caution = normalizeVietnameseText(best.cautionVi || best.cautionEn || 'Theo dõi chặt chẽ và cần bác sĩ thú y xác nhận.');
+      const detectionSigns = normalizeVietnameseText((best.detectionSignsVi || best.detectionSignsEn || []).slice(0, 2).join('; ') || 'No detailed description available.');
+      const caution = normalizeVietnameseText(best.cautionVi || best.cautionEn || 'Monitor closely and confirm with a veterinarian.');
       const card = `
         <div class="result-card">
           <div>
@@ -979,10 +950,10 @@
           </div>
           <p>${description}</p>
           <div class="detail-grid">
-            <div class="detail-box"><strong>Thuốc đặc hiệu</strong><span>${medication}</span></div>
-            <div class="detail-box"><strong>Dấu hiệu phát hiện</strong><span>${detectionSigns}</span></div>
-            <div class="detail-box"><strong>Nhóm bệnh</strong><span>${categoryName}</span></div>
-            <div class="detail-box"><strong>Khuyến nghị</strong><span>${caution}</span></div>
+            <div class="detail-box"><strong>Target medication</strong><span>${medication}</span></div>
+            <div class="detail-box"><strong>Detection signs</strong><span>${detectionSigns}</span></div>
+            <div class="detail-box"><strong>Disease group</strong><span>${categoryName}</span></div>
+            <div class="detail-box"><strong>Recommendation</strong><span>${caution}</span></div>
           </div>
         </div>
       `;
@@ -1057,7 +1028,7 @@
       document.getElementById('runAi').addEventListener('click', calculateAIResult);
       document.getElementById('resetAi').addEventListener('click', () => {
         document.getElementById('aiSpecies').value = 'dog';
-        document.getElementById('aiSymptoms').value = 'ho, sốt, khó thở';
+        document.getElementById('aiSymptoms').value = 'cough, fever, breathing difficulty';
         document.getElementById('aiCategory').value = 'all';
         calculateAIResult();
       });
