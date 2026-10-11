@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Tổng quan chuẩn dinh dưỡng và quản lý thức ăn chó mèo tại Hoa Kỳ: FDA, AAFCO, cách đọc nhãn và tra cứu 50 bang cùng 3 khu vực bổ sung.">
+  <meta name="description" content="Hướng dẫn so sánh quy định và hướng dẫn dinh dưỡng thức ăn chó mèo tại Hoa Kỳ (FDA/AAFCO), Liên minh Châu Âu (FEDIAF), Trung Quốc và Việt Nam, kèm tra cứu 53 khu vực Hoa Kỳ.">
   <meta name="theme-color" content="#12392f">
-  <title>Chuẩn dinh dưỡng thú cưng Hoa Kỳ | PetCare</title>
+  <title>Chuẩn thức ăn thú cưng: Hoa Kỳ, EU, Trung Quốc, Việt Nam | PetCare</title>
   <style>
     :root {
       color-scheme: light;
@@ -66,6 +66,7 @@
     h3 { margin: 0; color: var(--green-950); font-size: 1.07rem; line-height: 1.3; }
     .section-head p, .muted { color: var(--muted); }
     .framework { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+    .markets { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .framework-card { padding: 18px; border: 1px solid var(--line); border-radius: 17px; background: linear-gradient(150deg, #fff, #f5f9f6); }
     .framework-card .number { display: grid; width: 34px; height: 34px; margin-bottom: 12px; place-items: center; border-radius: 11px; background: var(--green-100); color: var(--green-700); font-weight: 900; }
     .framework-card p { margin: 8px 0 0; color: var(--muted); font-size: .9rem; }
@@ -90,6 +91,14 @@
     .code { flex: 0 0 auto; color: var(--green-700); font: 800 .76rem/1.5 Consolas, monospace; }
     .type { display: inline-flex; margin-top: 10px; padding: 4px 8px; border-radius: 999px; background: var(--green-100); color: #315e47; font-size: .68rem; font-weight: 800; }
     .type.territory { background: #fff3d6; color: #765b17; }
+    .jurisdiction-detail { margin-top: 11px; border-top: 1px solid var(--line); }
+    .jurisdiction-detail summary { padding: 10px 0 2px; color: var(--green-700); cursor: pointer; font-size: .78rem; font-weight: 800; }
+    .jurisdiction-detail summary:hover { color: var(--green-950); }
+    .jurisdiction-detail p { margin: 8px 0 0; }
+    .jurisdiction-detail ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); font-size: .78rem; }
+    .jurisdiction-detail li + li { margin-top: 4px; }
+    .jurisdiction-detail a { display: inline-block; margin-top: 8px; color: var(--green-700); font-size: .78rem; font-weight: 800; }
+    .verification { display: inline-flex; margin-top: 9px; padding: 4px 8px; border-radius: 999px; background: var(--amber-bg); color: var(--amber-ink); font-size: .66rem; font-weight: 800; }
     .empty { display: none; margin-top: 12px; padding: 18px; border: 1px dashed #b9cbbd; border-radius: 12px; color: var(--muted); text-align: center; }
     .empty.visible { display: block; }
     .source-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
@@ -114,45 +123,115 @@
 <body>
   <div class="shell">
     <header class="topline">
-      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">P</span><span>PetCare <span class="muted">/ Chuẩn Hoa Kỳ</span></span></a>
+      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">P</span><span>PetCare <span class="muted">/ Chuẩn đa thị trường</span></span></a>
       <a class="home-link" href="../menu.html">Danh mục toàn bộ trang</a>
     </header>
 
     <main>
       <section class="hero" aria-labelledby="page-title">
-        <span class="eyebrow">Pet food standards · United States</span>
-        <h1 id="page-title">Chuẩn dinh dưỡng thú cưng tại Hoa Kỳ</h1>
+        <span class="eyebrow">Pet food standards · AAFCO · FEDIAF · Asia</span>
+        <h1 id="page-title">Chuẩn thức ăn thú cưng ở 4 thị trường</h1>
         <p>
-          Hướng dẫn cách hiểu vai trò của FDA, AAFCO, thông tin dinh dưỡng trên nhãn
-          thức ăn chó/mèo và tra cứu phạm vi 50 bang cùng 3 khu vực bổ sung.
+          So sánh khung quản lý thức ăn chó mèo tại Hoa Kỳ, Liên minh Châu Âu, Trung Quốc
+          và Việt Nam; phân biệt văn bản pháp luật với hướng dẫn dinh dưỡng của AAFCO/FEDIAF.
         </p>
         <div class="hero-actions">
-          <a class="button primary" href="#jurisdictions">Tra cứu 53 khu vực</a>
-          <a class="button" href="#framework">Xem khung quản lý</a>
+          <a class="button primary" href="#markets">So sánh 4 thị trường</a>
+          <a class="button primary" href="#products-breeds">Sản phẩm · giống · 70 trường</a>
+          <a class="button" href="#jurisdictions">Mở 53 hồ sơ khu vực</a>
           <a class="button" href="#sources">Nguồn chính thức</a>
         </div>
-        <p class="scope-note">Phạm vi danh mục: 50 bang + Washington, D.C. + Puerto Rico + Guam. D.C., Puerto Rico và Guam không phải bang.</p>
+        <p class="scope-note">Danh mục Hoa Kỳ gồm 50 bang + Washington, D.C. + Puerto Rico + Guam. Ba khu vực sau không phải bang; danh mục không đại diện cho toàn bộ EU hay toàn bộ thị trường Trung Quốc/Việt Nam.</p>
       </section>
 
       <aside class="notice" aria-label="Lưu ý về phạm vi pháp lý">
         <span aria-hidden="true">ℹ</span>
         <div>
-          <strong>Không có một bộ luật “53 bang” đồng nhất.</strong>
+          <strong>Không có một bộ chuẩn chung cho cả bốn thị trường.</strong>
           <p>
-            Hoa Kỳ có 50 bang. AAFCO ban hành mô hình/quy chuẩn tham khảo nhưng không tự
-            quản lý, phê duyệt hay chứng nhận sản phẩm; các cơ quan liên bang và cơ quan
-            cấp bang/lãnh thổ thực thi các yêu cầu áp dụng tại phạm vi của họ. Danh mục
-            dưới đây giúp xác định nơi cần tra cứu, không khẳng định đã kiểm toán luật
-            hoặc tình trạng đăng ký riêng của từng khu vực.
+            FDA, AAFCO, FEDIAF và các cơ quan quản lý tại Trung Quốc/Việt Nam có vai trò
+            khác nhau. Không xem hướng dẫn ngành là luật bắt buộc, hay xem việc đáp ứng
+            một bộ tiêu chuẩn dinh dưỡng là bằng chứng đã đăng ký/lưu hành ở mọi quốc gia
+            hoặc bang. Tình trạng hiệu lực và thủ tục phải được kiểm tra theo SKU, nơi sản
+            xuất, nơi nhập khẩu và văn bản chính thức mới nhất.
           </p>
         </div>
       </aside>
 
+      <section class="section" id="markets" aria-labelledby="markets-title">
+        <div class="section-head">
+          <span class="kicker">Bản đồ tiêu chuẩn đa thị trường</span>
+          <h2 id="markets-title">Bốn khung quản lý — không phải một bộ chuẩn dùng chung</h2>
+          <p>
+            “Đầy đủ dinh dưỡng” (nutrition adequacy) và “được phép sản xuất/nhập khẩu/bán”
+            là hai việc phải xác minh riêng. Tiêu chuẩn dinh dưỡng không thay thế quy định
+            về an toàn, nhãn, đăng ký cơ sở, nhập khẩu hoặc phân phối.
+          </p>
+        </div>
+        <div class="framework markets">
+          <article class="framework-card">
+            <span class="number">US</span>
+            <h3>Hoa Kỳ · FDA + AAFCO</h3>
+            <p>
+              FDA thực thi yêu cầu liên bang về thức ăn động vật trong phạm vi áp dụng. AAFCO
+              công bố mô hình quy định và hồ sơ dinh dưỡng; đây không phải cơ quan phê duyệt
+              sản phẩm hay luật liên bang. Nhiều bang căn cứ vào mô hình AAFCO nhưng việc áp
+              dụng/đăng ký cần kiểm tra theo nơi phân phối.
+            </p>
+            <a href="#framework">Xem vai trò FDA, AAFCO và bang</a>
+          </article>
+          <article class="framework-card">
+            <span class="number">EU</span>
+            <h3>Liên minh Châu Âu · luật EU + hướng dẫn FEDIAF</h3>
+            <p>
+              Quy định (EC) 767/2009 điều chỉnh việc đưa thức ăn chăn nuôi ra thị trường và sử
+              dụng; Quy định (EC) 183/2005 về vệ sinh thức ăn chăn nuôi; Quy định (EC) 178/2002
+              đặt nguyên tắc chung về luật thực phẩm/an toàn thức ăn. FEDIAF xuất bản hướng dẫn
+              dinh dưỡng ngành, không phải văn bản pháp luật của EU.
+            </p>
+            <a href="https://eur-lex.europa.eu/eli/reg/2009/767/oj" target="_blank" rel="noopener noreferrer">EU 767/2009 · EUR-Lex ↗</a>
+            <a href="https://eur-lex.europa.eu/eli/reg/2005/183/oj" target="_blank" rel="noopener noreferrer">EU 183/2005 · EUR-Lex ↗</a>
+            <a href="https://eur-lex.europa.eu/eli/reg/2002/178/oj" target="_blank" rel="noopener noreferrer">EU 178/2002 · EUR-Lex ↗</a>
+            <a href="https://europeanpetfood.org/self-regulation/nutritional-guidelines/" target="_blank" rel="noopener noreferrer">FEDIAF · Nutritional Guidelines ↗</a>
+          </article>
+          <article class="framework-card">
+            <span class="number">CN</span>
+            <h3>Trung Quốc · MARA + tiêu chuẩn quốc gia</h3>
+            <p>
+              Điểm tra cứu gồm “Administrative Measures for Pet Feed” (MARA Order No. 20 of
+              2018) và GB/T 31216-2014 (thức ăn chó), GB/T 31217-2014 (thức ăn mèo). Ký hiệu
+              GB/T là tiêu chuẩn quốc gia khuyến nghị; không tự hiểu là yêu cầu bắt buộc.
+              Các mã này là tài liệu cần tra cứu, không phải xác nhận tình trạng hiện hành.
+              Kiểm tra phiên bản, hiệu lực, tiêu chuẩn bắt buộc liên quan, giấy phép và điều
+              kiện nhập khẩu tại cơ quan Trung Quốc trước khi kinh doanh.
+            </p>
+            <a href="https://www.moa.gov.cn/" target="_blank" rel="noopener noreferrer">MARA · Bộ Nông nghiệp và Nông thôn Trung Quốc ↗</a>
+            <a href="https://openstd.samr.gov.cn/" target="_blank" rel="noopener noreferrer">SAMR · Cơ sở dữ liệu tiêu chuẩn quốc gia ↗</a>
+            <a href="https://flk.npc.gov.cn/" target="_blank" rel="noopener noreferrer">Cơ sở dữ liệu pháp luật quốc gia Trung Quốc ↗</a>
+            <span class="verification">Đối chiếu trạng thái hiệu lực trước khi giao dịch</span>
+          </article>
+          <article class="framework-card">
+            <span class="number">VN</span>
+            <h3>Việt Nam · Luật Chăn nuôi + quy chuẩn</h3>
+            <p>
+              Các văn bản cần đối chiếu theo sản phẩm gồm Luật Chăn nuôi 32/2018/QH14,
+              Nghị định 13/2020/NĐ-CP và QCVN 01-190:2020/BNNPTNT về thức ăn chăn nuôi cho
+              chó, mèo. Trước khi kết luận nghĩa vụ cụ thể, cần kiểm tra văn bản sửa đổi/thay
+              thế, phạm vi sản phẩm, công bố hợp quy, đăng ký lưu hành và thủ tục nhập khẩu
+              trên cơ sở dữ liệu pháp luật/cơ quan có thẩm quyền.
+            </p>
+            <a href="https://vbpl.vn/" target="_blank" rel="noopener noreferrer">Cơ sở dữ liệu quốc gia về văn bản pháp luật ↗</a>
+            <a href="https://vanban.chinhphu.vn/" target="_blank" rel="noopener noreferrer">Cổng văn bản Chính phủ ↗</a>
+            <span class="verification">Cần kiểm tra văn bản hợp nhất và tình trạng hiện hành</span>
+          </article>
+        </div>
+      </section>
+
       <section class="section" id="framework" aria-labelledby="framework-title">
         <div class="section-head">
-          <span class="kicker">Khung quản lý</span>
-          <h2 id="framework-title">Ai đặt chuẩn, ai thực thi?</h2>
-          <p>Phân biệt hướng dẫn mô hình với quy định pháp luật là bước đầu khi đánh giá sản phẩm hoặc phân phối qua nhiều bang.</p>
+          <span class="kicker">Hoa Kỳ · chi tiết</span>
+          <h2 id="framework-title">FDA, AAFCO và cơ quan bang làm gì?</h2>
+          <p>Phần này đi sâu vào Hoa Kỳ; so sánh tiêu chuẩn các thị trường nằm ở phía trên.</p>
         </div>
         <div class="framework">
           <article class="framework-card">
@@ -214,14 +293,79 @@
         </div>
       </section>
 
+      <section class="section" id="products-breeds" aria-labelledby="products-breeds-title">
+        <div class="section-head">
+          <span class="kicker">Sản phẩm · giống chó · 70 trường</span>
+          <h2 id="products-breeds-title">Cách xác minh đúng một sản phẩm theo nhãn</h2>
+          <p>
+            Không có danh sách chung các loại thức ăn “được FDA chứng nhận” hoặc bảng nhu cầu
+            dinh dưỡng AAFCO riêng cho từng bang và từng giống chó. Xác minh theo đúng SKU,
+            nhãn hiện hành, loài và giai đoạn sống; tra cứu đăng ký phân phối riêng theo nơi bán.
+          </p>
+        </div>
+        <div class="framework">
+          <article class="framework-card">
+            <span class="number">01</span>
+            <h3>FDA · quản lý, không phải huy hiệu chứng nhận</h3>
+            <p>
+              FDA đặt và thực thi yêu cầu liên bang về an toàn, thành phần và ghi nhãn trong
+              phạm vi áp dụng. Không gắn nhãn “FDA-approved” cho thức ăn thương mại thông
+              thường trừ khi có căn cứ pháp lý cụ thể cho chính tuyên bố đó.
+            </p>
+          </article>
+          <article class="framework-card">
+            <span class="number">02</span>
+            <h3>AAFCO · kiểm tra tuyên bố trên đúng bao bì</h3>
+            <p>
+              Đọc tuyên bố đầy đủ/cân bằng dinh dưỡng của đúng sản phẩm, loài và giai đoạn sống;
+              kiểm tra sản phẩm nói đáp ứng profile dinh dưỡng hay được chứng minh bằng thử
+              nghiệm cho ăn. AAFCO không phê duyệt SKU và không có profile theo từng bang/giống.
+            </p>
+          </article>
+          <article class="framework-card">
+            <span class="number">03</span>
+            <h3>Giống chó · theo nhãn, kích thước và cá thể</h3>
+            <p>
+              Chọn theo loài, giai đoạn sống, kích thước/nhóm cân nặng nếu nhãn nêu, khẩu phần,
+              năng lượng và tình trạng sức khỏe. Không suy ra một mức dinh dưỡng riêng cho
+              Labrador, Poodle hay giống khác nếu nhà sản xuất không công bố cho SKU đó.
+            </p>
+          </article>
+        </div>
+        <div class="notice" role="note">
+          <span aria-hidden="true">!</span>
+          <div>
+            <strong>“70 thông số” trong catalog là 70 trường hồ sơ sản phẩm, không phải 70 chuẩn dinh dưỡng.</strong>
+            <p>
+              Bộ dữ liệu hiện có 70 trường tổng cộng; một phần là nhận diện, đối tượng, hướng
+              dẫn, nguồn và trạng thái xác minh. Catalog hiện ghi thị trường Việt Nam, chưa có
+              hồ sơ SKU Hoa Kỳ được xác minh. Giá trị nhãn không công bố phải để trống/chưa xác
+              minh, không được nhân bản thành 70 chỉ số cho mỗi bang hoặc giống.
+            </p>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <a class="button primary" href="../Trang thông số của các sản phẩm/index.html">Mở catalog sản phẩm 70 trường</a>
+          <a class="button" href="../Trang thông số của các sản phẩm/thuong-hieu.html">Tra cứu danh mục thương hiệu</a>
+        </div>
+        <div class="stage-grid" style="margin-top: 18px">
+          <article class="stage"><strong>Chó con đang tăng trưởng</strong><p>Đối chiếu tuyên bố cho growth/all life stages và hướng dẫn theo cân nặng. Với chó con giống lớn, xác minh rõ nhãn có phù hợp tăng trưởng giống lớn khi điều đó liên quan.</p></article>
+          <article class="stage"><strong>Chó trưởng thành</strong><p>Chọn thức ăn ghi cho duy trì trưởng thành; điều chỉnh khẩu phần theo năng lượng, thể trạng và vận động. Tên giống không thay thế đánh giá cá thể.</p></article>
+          <article class="stage"><strong>Chó cao tuổi hoặc có bệnh lý</strong><p>“Senior” không tự tạo thành profile AAFCO riêng. Chế độ ăn điều trị hoặc bệnh lý cần bác sĩ thú y lựa chọn; không suy ra tác dụng điều trị từ marketing trên nhãn.</p></article>
+        </div>
+      </section>
+
       <section class="section" id="jurisdictions" aria-labelledby="jurisdictions-title">
         <div class="section-head">
-          <span class="kicker">Danh mục 53 khu vực</span>
-          <h2 id="jurisdictions-title">Tra cứu nơi cần xác nhận quy định địa phương</h2>
+          <span class="kicker">Hồ sơ tra cứu 53 khu vực</span>
+          <h2 id="jurisdictions-title">Hồ sơ từng bang, D.C. và lãnh thổ</h2>
           <p>
-            Chọn khu vực để chuẩn bị câu hỏi về đăng ký thức ăn thú cưng, giấy phép phân phối,
-            ghi nhãn và điều kiện bán hàng. Các thẻ không tuyên bố trạng thái pháp lý cụ thể;
-            hãy xác nhận trực tiếp với cơ quan địa phương và nguồn AAFCO hiện hành.
+            Mở từng hồ sơ để xem thủ phủ, đầu mối quản lý cần tìm và danh sách việc phải xác minh
+            trước khi bán hoặc gửi thức ăn thú cưng. Mỗi nơi có thể có luật, biểu phí và thủ tục
+            khác nhau. Trang không đánh dấu yêu cầu nào là luật hiện hành nếu chưa kiểm chứng
+            bằng văn bản chính thức của chính quyền sở tại. Yêu cầu đăng ký/giấy phép địa phương
+            không đồng nghĩa mỗi nơi có một bộ profile dinh dưỡng AAFCO hoặc một chuẩn riêng cho
+            từng giống chó.
           </p>
         </div>
         <div class="directory-tools">
@@ -246,16 +390,32 @@
       <section class="section" id="sources" aria-labelledby="sources-title">
         <div class="section-head">
           <span class="kicker">Nguồn gốc và giới hạn</span>
-          <h2 id="sources-title">Tài liệu tham khảo chính thức</h2>
-          <p>Trang này là bản tổng quan giáo dục; không thay thế văn bản luật, tư vấn tuân thủ, bác sĩ thú y hoặc kiểm tra nhãn sản phẩm thực tế.</p>
+          <h2 id="sources-title">Nguồn chính thức và hướng dẫn ngành</h2>
+          <p>
+            Trang tổng quan giáo dục, không phải ý kiến pháp lý/thú y. Liên kết đến cơ sở dữ
+            liệu chính thức được dùng để kiểm tra văn bản; riêng trạng thái hiệu lực và nghĩa
+            vụ cụ thể ở Trung Quốc/Việt Nam cần xác minh lại theo sản phẩm và ngày giao dịch.
+          </p>
         </div>
         <div class="source-list">
           <article class="source"><a href="https://www.fda.gov/animal-veterinary/animal-foods-feeds/pet-food" target="_blank" rel="noopener noreferrer">FDA · Pet Food</a><p>Thông tin liên bang về an toàn, thành phần, ghi nhãn, thức ăn đầy đủ/cân bằng và quản lý thức ăn thú cưng.</p></article>
           <article class="source"><a href="https://www.aafco.org/consumers/understanding-pet-food/" target="_blank" rel="noopener noreferrer">AAFCO · Understanding Pet Food</a><p>Vai trò của AAFCO và giải thích vì sao AAFCO không quản lý, kiểm nghiệm, phê duyệt hay chứng nhận thức ăn vật nuôi.</p></article>
           <article class="source"><a href="https://www.aafco.org/consumers/understanding-pet-food/reading-labels/" target="_blank" rel="noopener noreferrer">AAFCO · Reading Labels</a><p>Giải thích các phần của nhãn thức ăn chó/mèo, tuyên bố đầy đủ dinh dưỡng và loại nhãn bắt buộc/tùy chọn.</p></article>
+          <article class="source"><a href="https://www.aafco.org/consumers/understanding-pet-food/selecting-the-right-pet-food/" target="_blank" rel="noopener noreferrer">AAFCO · Selecting the Right Pet Food</a><p>Hướng dẫn chọn theo loài, giai đoạn sống và tình trạng; giải thích vì sao câu tuyên bố đầy đủ dinh dưỡng trên nhãn là trọng yếu.</p></article>
           <article class="source"><a href="https://www.aafco.org/resources/startups/internet-farmers-market/" target="_blank" rel="noopener noreferrer">AAFCO · Internet Sales</a><p>Nhắc nhà bán hàng kiểm tra yêu cầu đăng ký/giấy phép của từng bang khi phân phối hoặc gửi sản phẩm qua bang.</p></article>
+          <article class="source"><a href="https://www.aafco.org/about/membership/" target="_blank" rel="noopener noreferrer">AAFCO · Membership</a><p>Giải thích AAFCO gồm các cơ quan chính phủ thực thi quy định thức ăn chăn nuôi; dùng cùng cổng chính quyền địa phương để xác định đúng đầu mối hiện hành.</p></article>
+          <article class="source"><a href="https://www.usa.gov/state-governments" target="_blank" rel="noopener noreferrer">USA.gov · State and territory governments</a><p>Cổng chính phủ Hoa Kỳ giúp tìm website chính thức của bang/lãnh thổ và cơ quan phụ trách. Liên hệ đúng chương trình feed control trước khi dựa vào thông tin thương mại hoặc nguồn bên thứ ba.</p></article>
           <article class="source"><a href="https://www.ecfr.gov/current/title-21/chapter-I/subchapter-E/part-507" target="_blank" rel="noopener noreferrer">eCFR · 21 CFR Part 507</a><p>Quy định liên bang về thực hành sản xuất tốt hiện hành và phân tích mối nguy/kiểm soát phòng ngừa cho thức ăn động vật, trong phạm vi áp dụng.</p></article>
           <article class="source"><a href="https://www.ecfr.gov/current/title-21/chapter-I/subchapter-E/part-501" target="_blank" rel="noopener noreferrer">eCFR · 21 CFR Part 501</a><p>Quy định liên bang về ghi nhãn thức ăn động vật; quy định cấp bang/lãnh thổ có thể bổ sung yêu cầu địa phương.</p></article>
+          <article class="source"><a href="https://eur-lex.europa.eu/eli/reg/2009/767/oj" target="_blank" rel="noopener noreferrer">EUR-Lex · Regulation (EC) No 767/2009</a><p>Văn bản EU về đưa thức ăn chăn nuôi ra thị trường và sử dụng; kiểm tra bản hợp nhất/sửa đổi trên EUR-Lex.</p></article>
+          <article class="source"><a href="https://eur-lex.europa.eu/eli/reg/2005/183/oj" target="_blank" rel="noopener noreferrer">EUR-Lex · Regulation (EC) No 183/2005</a><p>Văn bản EU về yêu cầu vệ sinh thức ăn chăn nuôi.</p></article>
+          <article class="source"><a href="https://eur-lex.europa.eu/eli/reg/2002/178/oj" target="_blank" rel="noopener noreferrer">EUR-Lex · Regulation (EC) No 178/2002</a><p>Nguyên tắc chung của luật thực phẩm EU và nguyên tắc áp dụng liên quan đến thức ăn chăn nuôi.</p></article>
+          <article class="source"><a href="https://europeanpetfood.org/self-regulation/nutritional-guidelines/" target="_blank" rel="noopener noreferrer">FEDIAF · Nutritional Guidelines</a><p>Hướng dẫn dinh dưỡng của ngành thức ăn thú cưng Châu Âu; không phải văn bản pháp luật EU.</p></article>
+          <article class="source"><a href="https://openstd.samr.gov.cn/" target="_blank" rel="noopener noreferrer">SAMR · National Standards Database</a><p>Tra cứu mã GB/T 31216 và GB/T 31217, phiên bản và trạng thái tiêu chuẩn; không suy luận hiệu lực chỉ từ số hiệu.</p></article>
+          <article class="source"><a href="https://flk.npc.gov.cn/" target="_blank" rel="noopener noreferrer">China · National Laws and Regulations Database</a><p>Cơ sở dữ liệu pháp luật quốc gia Trung Quốc để tra cứu văn bản và cập nhật hiện hành.</p></article>
+          <article class="source"><a href="https://www.moa.gov.cn/" target="_blank" rel="noopener noreferrer">MARA · Ministry of Agriculture and Rural Affairs</a><p>Cổng Bộ Nông nghiệp và Nông thôn Trung Quốc; tra cứu quy định quản lý thức ăn thú cưng và nhập khẩu.</p></article>
+          <article class="source"><a href="https://vbpl.vn/" target="_blank" rel="noopener noreferrer">Việt Nam · Cơ sở dữ liệu quốc gia về văn bản pháp luật</a><p>Tra cứu Luật Chăn nuôi 32/2018/QH14, Nghị định 13/2020/NĐ-CP và tình trạng sửa đổi/thay thế của QCVN 01-190:2020/BNNPTNT.</p></article>
+          <article class="source"><a href="https://vanban.chinhphu.vn/" target="_blank" rel="noopener noreferrer">Việt Nam · Cổng văn bản Chính phủ</a><p>Nguồn tra cứu bổ sung văn bản quy phạm pháp luật và văn bản hợp nhất do cơ quan nhà nước công bố.</p></article>
         </div>
       </section>
     </main>
@@ -270,25 +430,61 @@
       "use strict";
 
       const states = [
-        ["Alabama", "AL"], ["Alaska", "AK"], ["Arizona", "AZ"], ["Arkansas", "AR"],
-        ["California", "CA"], ["Colorado", "CO"], ["Connecticut", "CT"], ["Delaware", "DE"],
-        ["Florida", "FL"], ["Georgia", "GA"], ["Hawaii", "HI"], ["Idaho", "ID"],
-        ["Illinois", "IL"], ["Indiana", "IN"], ["Iowa", "IA"], ["Kansas", "KS"],
-        ["Kentucky", "KY"], ["Louisiana", "LA"], ["Maine", "ME"], ["Maryland", "MD"],
-        ["Massachusetts", "MA"], ["Michigan", "MI"], ["Minnesota", "MN"], ["Mississippi", "MS"],
-        ["Missouri", "MO"], ["Montana", "MT"], ["Nebraska", "NE"], ["Nevada", "NV"],
-        ["New Hampshire", "NH"], ["New Jersey", "NJ"], ["New Mexico", "NM"], ["New York", "NY"],
-        ["North Carolina", "NC"], ["North Dakota", "ND"], ["Ohio", "OH"], ["Oklahoma", "OK"],
-        ["Oregon", "OR"], ["Pennsylvania", "PA"], ["Rhode Island", "RI"], ["South Carolina", "SC"],
-        ["South Dakota", "SD"], ["Tennessee", "TN"], ["Texas", "TX"], ["Utah", "UT"],
-        ["Vermont", "VT"], ["Virginia", "VA"], ["Washington", "WA"], ["West Virginia", "WV"],
-        ["Wisconsin", "WI"], ["Wyoming", "WY"]
-      ].map(([name, code]) => ({ name, code, kind: "state", type: "Bang" }));
+        ["Alabama", "AL", "Montgomery"], ["Alaska", "AK", "Juneau"], ["Arizona", "AZ", "Phoenix"],
+        ["Arkansas", "AR", "Little Rock"], ["California", "CA", "Sacramento"], ["Colorado", "CO", "Denver"],
+        ["Connecticut", "CT", "Hartford"], ["Delaware", "DE", "Dover"], ["Florida", "FL", "Tallahassee"],
+        ["Georgia", "GA", "Atlanta"], ["Hawaii", "HI", "Honolulu"], ["Idaho", "ID", "Boise"],
+        ["Illinois", "IL", "Springfield"], ["Indiana", "IN", "Indianapolis"], ["Iowa", "IA", "Des Moines"],
+        ["Kansas", "KS", "Topeka"], ["Kentucky", "KY", "Frankfort"], ["Louisiana", "LA", "Baton Rouge"],
+        ["Maine", "ME", "Augusta"], ["Maryland", "MD", "Annapolis"], ["Massachusetts", "MA", "Boston"],
+        ["Michigan", "MI", "Lansing"], ["Minnesota", "MN", "Saint Paul"], ["Mississippi", "MS", "Jackson"],
+        ["Missouri", "MO", "Jefferson City"], ["Montana", "MT", "Helena"], ["Nebraska", "NE", "Lincoln"],
+        ["Nevada", "NV", "Carson City"], ["New Hampshire", "NH", "Concord"], ["New Jersey", "NJ", "Trenton"],
+        ["New Mexico", "NM", "Santa Fe"], ["New York", "NY", "Albany"], ["North Carolina", "NC", "Raleigh"],
+        ["North Dakota", "ND", "Bismarck"], ["Ohio", "OH", "Columbus"], ["Oklahoma", "OK", "Oklahoma City"],
+        ["Oregon", "OR", "Salem"], ["Pennsylvania", "PA", "Harrisburg"], ["Rhode Island", "RI", "Providence"],
+        ["South Carolina", "SC", "Columbia"], ["South Dakota", "SD", "Pierre"], ["Tennessee", "TN", "Nashville"],
+        ["Texas", "TX", "Austin"], ["Utah", "UT", "Salt Lake City"], ["Vermont", "VT", "Montpelier"],
+        ["Virginia", "VA", "Richmond"], ["Washington", "WA", "Olympia"], ["West Virginia", "WV", "Charleston"],
+        ["Wisconsin", "WI", "Madison"], ["Wyoming", "WY", "Cheyenne"]
+      ].map(([name, code, capital]) => ({
+        name,
+        code,
+        capital,
+        kind: "state",
+        type: "Bang · cơ quan có thẩm quyền cấp bang",
+        authority: "Tìm chương trình quản lý commercial feed hoặc pet food của cơ quan bang có thẩm quyền. Cơ quan này thường thuộc Sở Nông nghiệp, nhưng tên đơn vị và cách phân công phải được xác nhận tại bang.",
+        locator: "https://www.usa.gov/state-governments"
+      }));
 
       const additional = [
-        { name: "District of Columbia", code: "DC", kind: "territory", type: "Đặc khu liên bang · không phải bang" },
-        { name: "Puerto Rico", code: "PR", kind: "territory", type: "Lãnh thổ Hoa Kỳ · không phải bang" },
-        { name: "Guam", code: "GU", kind: "territory", type: "Lãnh thổ Hoa Kỳ · không phải bang" }
+        {
+          name: "District of Columbia",
+          code: "DC",
+          capital: "Washington",
+          kind: "territory",
+          type: "Đặc khu liên bang · không phải bang",
+          authority: "Xác định cơ quan D.C. phụ trách commercial feed/pet food; không mặc định thủ tục của một bang áp dụng cho đặc khu.",
+          locator: "https://dc.gov/"
+        },
+        {
+          name: "Puerto Rico",
+          code: "PR",
+          capital: "San Juan",
+          kind: "territory",
+          type: "Lãnh thổ Hoa Kỳ · không phải bang",
+          authority: "Xác nhận cơ quan Puerto Rico có thẩm quyền và yêu cầu địa phương; kiểm tra riêng ngôn ngữ nhãn, đăng ký và phân phối liên đảo nếu có.",
+          locator: "https://www.pr.gov/"
+        },
+        {
+          name: "Guam",
+          code: "GU",
+          capital: "Hagåtña",
+          kind: "territory",
+          type: "Lãnh thổ Hoa Kỳ · không phải bang",
+          authority: "Xác định cơ quan Guam phụ trách thức ăn chăn nuôi/pet food; hỏi riêng yêu cầu địa phương và điều kiện nhập hàng vào lãnh thổ.",
+          locator: "https://www.guam.gov/"
+        }
       ];
       const search = document.getElementById("jurisdiction-search");
       const filter = document.getElementById("jurisdiction-type");
@@ -315,11 +511,41 @@
         code.textContent = jurisdiction.code;
         heading.append(name, code);
         const description = document.createElement("p");
-        description.textContent = "Xác nhận yêu cầu thức ăn thú cưng với cơ quan địa phương trước khi phân phối.";
+        description.textContent = `Thủ phủ: ${jurisdiction.capital}. Hồ sơ tra cứu địa phương cho nhà bán và người mua.`;
         const type = document.createElement("span");
         type.className = `type${jurisdiction.kind === "territory" ? " territory" : ""}`;
         type.textContent = jurisdiction.type;
-        card.append(heading, description, type);
+        const status = document.createElement("span");
+        status.className = "verification";
+        status.textContent = "Cần xác minh văn bản địa phương";
+
+        const details = document.createElement("details");
+        details.className = "jurisdiction-detail";
+        const summary = document.createElement("summary");
+        summary.textContent = "Mở hồ sơ và checklist";
+        const authority = document.createElement("p");
+        authority.textContent = jurisdiction.authority;
+        const checklist = document.createElement("ul");
+        for (const item of [
+          "Đăng ký/đăng danh mục sản phẩm trước khi bán; hỏi rõ từng sản phẩm, công thức, nhãn hiệu và thủ tục gia hạn.",
+          "Giấy phép hoặc đăng ký nhà sản xuất, nhà phân phối, nhà bán lẻ; xác nhận có áp dụng cho đơn hàng trực tuyến/gửi từ ngoài bang hay không.",
+          "Phí, báo cáo sản lượng (tonnage), kỳ nộp, cơ sở tính phí, biểu mẫu và thời hạn xử lý.",
+          "Quy tắc ghi nhãn địa phương, tuyên bố dinh dưỡng, tên/địa chỉ đơn vị chịu trách nhiệm và ngôn ngữ bắt buộc.",
+          "Ngoại lệ cho treats, sản phẩm bổ sung, hàng mẫu, cơ sở nhỏ hoặc sản xuất tại nhà; không tự suy rộng ngoại lệ giữa các bang."
+        ]) {
+          const listItem = document.createElement("li");
+          listItem.textContent = item;
+          checklist.append(listItem);
+        }
+        const locator = document.createElement("a");
+        locator.href = jurisdiction.locator;
+        locator.target = "_blank";
+        locator.rel = "noopener noreferrer";
+        locator.textContent = jurisdiction.kind === "state"
+          ? "Tìm cổng chính quyền chính thức của bang ↗"
+          : "Mở cổng chính quyền chính thức ↗";
+        details.append(summary, authority, checklist, locator);
+        card.append(heading, description, type, status, details);
         return card;
       });
       grid.replaceChildren(...cards);

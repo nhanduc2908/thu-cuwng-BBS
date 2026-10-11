@@ -24,7 +24,7 @@
         ["Danh mục dinh dưỡng", "TRrang chính/nutrition_products.html"],
         ["Dinh dưỡng cho chó", "TRrang chính/nutrition_products_dog.html"],
         ["Dinh dưỡng cho mèo", "TRrang chính/nutrition_products_cat.html"],
-        ["Chuẩn dinh dưỡng thú cưng Hoa Kỳ · 53 khu vực", "Trang hỗ trợ/chuan-dinh-duong-thu-cung-hoa-ky.html"],
+        ["Chuẩn dinh dưỡng · Hoa Kỳ, EU, Trung Quốc, Việt Nam", "Trang hỗ trợ/chuan-dinh-duong-thu-cung-hoa-ky.html"],
         ["Nghiên cứu khoa học tiềm năng · chờ xác thực", "Trang hỗ trợ/bao-cao-khoa-hoc-trien-vong.html"],
         ["Thông số sản phẩm chó mèo · 70 trường", "Trang thông số của các sản phẩm/index.html"],
         ["Thương hiệu thức ăn chó mèo toàn cầu", "Trang thông số của các sản phẩm/thuong-hieu.html"],
