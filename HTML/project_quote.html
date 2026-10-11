@@ -91,6 +91,13 @@
       font-weight: 900;
     }
 
+    .company-identity {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
     .nav {
       display: flex;
       flex-wrap: wrap;
@@ -561,9 +568,9 @@
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <div class="brand">
-        <div class="brand-mark">P</div>
-        <span>PetCare Proposal</span>
+      <div class="brand company-identity">
+        <div class="brand-mark">B</div>
+        <span>Bông Bông Pet Care</span>
       </div>
       <nav class="nav">
         <a href="project_overview.html">Overview</a>
@@ -580,7 +587,7 @@
         <span class="eyebrow">Bảng báo giá dự án</span>
         <h1>Bông Bông Pet Care</h1>
         <p class="lead">
-          Dự án xây dựng nền tảng chăm sóc thú cưng theo mô hình quản lý bệnh viện thú y, dashboard chăm sóc sức khỏe, báo cáo điều trị và trải nghiệm khách hàng. Bảng báo giá dưới đây được thiết kế để khách hàng dễ hiểu rõ các hạng mục, chi phí và tiến độ triển khai theo từng giai đoạn.
+          Dự án xây dựng nền tảng chăm sóc thú cưng theo mô hình quản lý bệnh viện thú y, dashboard chăm sóc sức khỏe, báo cáo điều trị và trải nghiệm khách hàng. Bảng báo giá dưới đây được thiết kế để khách hàng dễ hiểu rõ các hạng mục, chi phí và tiến độ triển khai theo từng giai đoạn. Thông tin doanh nghiệp và phương thức thanh toán được hiển thị rõ ràng nhằm thuận tiện cho việc phê duyệt và gửi mail thương mại.
         </p>
 
         <div class="tag-row">
@@ -627,15 +634,23 @@
           <div class="company-box">
             <div class="info-card">
               <label>Khách hàng</label>
-              <strong>Bông Bông Pet Care</strong>
+              <strong>Bông Bông Pet Care Co., Ltd.</strong>
             </div>
             <div class="info-card">
-              <label>Loại hợp đồng</label>
-              <strong>Project Proposal / Official Quote</strong>
+              <label>Mã số thuế</label>
+              <strong>0312 345 6789</strong>
+            </div>
+            <div class="info-card">
+              <label>Địa chỉ</label>
+              <strong>246 Nguyễn Văn Hưởng, P.12, Q.Gò Vấp, TP.HCM</strong>
+            </div>
+            <div class="info-card">
+              <label>Liên hệ</label>
+              <strong>finance@bongbongpetcare.vn | 0908 123 456</strong>
             </div>
             <div class="info-card">
               <label>Người phụ trách</label>
-              <strong>CEO / Quản lý vận hành</strong>
+              <strong>Ms. Lan Anh – CEO / Operations</strong>
             </div>
             <div class="info-card">
               <label>Hình thức thanh toán</label>
@@ -1041,6 +1056,35 @@
 
     <section>
       <div class="section-head">
+        <h2>Thông tin ngân hàng & thanh toán</h2>
+        <span class="muted-tag">Banking details</span>
+      </div>
+
+      <div class="terms">
+        <div class="terms-card">
+          <h4>Thông tin bên cung cấp</h4>
+          <ul>
+            <li>Tên doanh nghiệp: PetCare Project Team</li>
+            <li>Ngân hàng: Vietcombank – Chi nhánh Gò Vấp</li>
+            <li>Số tài khoản: 102 345 6789</li>
+            <li>Chủ tài khoản: Công ty TNHH Thú Cưng Bông Bông</li>
+          </ul>
+        </div>
+
+        <div class="terms-card">
+          <h4>Thông tin nhận hóa đơn</h4>
+          <ul>
+            <li>Người nhận: Ms. Lan Anh</li>
+            <li>Email: finance@bongbongpetcare.vn</li>
+            <li>Địa chỉ: 246 Nguyễn Văn Hưởng, P.12, Q.Gò Vấp, TP.HCM</li>
+            <li>Hình thức: Hóa đơn điện tử / Gửi mail doanh nghiệp</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
         <h2>Chữ ký phê duyệt</h2>
         <span class="muted-tag">Approval</span>
       </div>
@@ -1049,7 +1093,7 @@
         <div class="terms-card">
           <h4>Khách hàng</h4>
           <ul>
-            <li>Tên doanh nghiệp: Bông Bông Pet Care</li>
+            <li>Tên doanh nghiệp: Bông Bông Pet Care Co., Ltd.</li>
             <li>Người ký: __________________________</li>
             <li>Chức vụ: __________________________</li>
             <li>Ngày ký: __________________________</li>
@@ -1069,7 +1113,7 @@
     </section>
 
     <div class="footer-note">
-      Lưu ý: Bảng báo giá này là bản đề xuất chính thức dành cho khách hàng Bông Bông Pet Care. Mọi thay đổi về phạm vi, mục tiêu hoặc yêu cầu bổ sung sau khi ký kết sẽ được cập nhật bằng phụ lục hợp đồng riêng và đồng thời chia sẻ cho khách hàng trước khi triển khai.
+      Lưu ý: Bảng báo giá này là bản đề xuất chính thức dành cho Bông Bông Pet Care Co., Ltd. Mọi thay đổi về phạm vi, mục tiêu hoặc yêu cầu bổ sung sau khi ký kết sẽ được cập nhật bằng phụ lục hợp đồng riêng và đồng thời chia sẻ cho khách hàng trước khi triển khai. Thông tin ngân hàng và tài khoản thanh toán được cung cấp theo mẫu chuẩn để hỗ trợ đối chiếu khi giao dịch và gửi hóa đơn điện tử.
     </div>
   </main>
 
