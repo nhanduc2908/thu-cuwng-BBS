@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PetCare | Cổng khách hàng</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #17382e;
+      background: #edf5ef;
+    }
+    * { box-sizing: border-box }
+    body { margin: 0; min-height: 100vh; background: linear-gradient(145deg, #edf5ef, #f6faf7) }
+    button, input { font: inherit }
+    button { cursor: pointer }
+    [hidden] { display: none !important }
+    .shell { width: min(1080px, calc(100% - 32px)); margin: 32px auto; }
+    header { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px }
+    .brand { display: flex; align-items: center; gap: 12px }
+    .mark { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 14px 14px 14px 5px; background: #cde979; color: #12392d; font-weight: 900; font-size: 1.2rem }
+    .brand strong { display: block; font-size: 1.12rem }
+    .brand small { color: #648074 }
+    .card { background: #fff; border: 1px solid #dce9e1; border-radius: 20px; padding: 22px; box-shadow: 0 16px 38px #143d2d0d }
+    .auth { max-width: 560px; margin: 8vh auto }
+    h1, h2, h3, p { margin-top: 0 }
+    h1 { margin-bottom: 8px; font-size: clamp(1.6rem, 4vw, 2.3rem); letter-spacing: -.04em }
+    h2 { margin: 0; font-size: 1.15rem }
+    h3 { margin-bottom: 8px; font-size: 1rem }
+    .muted { color: #61786c }
+    .small { font-size: .88rem }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0 }
+    .tabs button, .secondary, .logout { border: 1px solid #dce9e1; border-radius: 10px; padding: 9px 12px; background: #fff; color: #285b47; font-weight: 700 }
+    .tabs button[aria-pressed="true"] { border-color: #2d7859; background: #eaf6ee }
+    form { display: grid; gap: 12px }
+    label { display: grid; gap: 6px; color: #486456; font-size: .9rem; font-weight: 700 }
+    input { width: 100%; border: 1px solid #ceded4; border-radius: 10px; padding: 11px 12px; color: #17382e; background: #fff }
+    input:focus { outline: 3px solid #cde97980; border-color: #43835f }
+    .primary { border: 0; border-radius: 10px; padding: 12px 16px; background: #1d684b; color: #fff; font-weight: 800 }
+    .notice { margin: 12px 0; border-radius: 12px; padding: 12px 14px; background: #edf6ef; color: #285b47 }
+    .notice.error { background: #fff0ee; color: #9a3936 }
+    .top-actions { display: flex; align-items: center; gap: 12px }
+    .person { text-align: right }
+    .person strong { display: block }
+    .hero { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 18px; margin-bottom: 18px; padding: 26px; border-radius: 22px; color: #fff; background: linear-gradient(120deg, #174f3e, #1d684b) }
+    .hero h1 { max-width: 650px }
+    .hero p { margin: 0; color: #e5f1e9 }
+    .summary { min-width: 130px; padding: 16px; border: 1px solid #ffffff30; border-radius: 16px; text-align: center; background: #ffffff12 }
+    .summary strong { display: block; font-size: 2rem }
+    .summary small { color: #e5f1e9 }
+    .disclaimer { border-left: 4px solid #d2a740; border-radius: 8px; padding: 12px 14px; background: #fff8e7; color: #655323; margin-bottom: 18px }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px }
+    .section-card { min-width: 0 }
+    .section-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px }
+    .count { min-width: 26px; padding: 4px 8px; border-radius: 99px; text-align: center; background: #edf6ef; color: #285b47; font-weight: 800; font-size: .8rem }
+    .records { display: grid; gap: 10px }
+    .record { padding: 12px; border: 1px solid #e2ece6; border-radius: 12px; background: #f7faf8 }
+    .record strong { display: block; margin-bottom: 4px }
+    .record small { display: block; margin-top: 3px; color: #61786c }
+    .empty { color: #718479; padding: 12px 0 }
+    @media (max-width: 700px) {
+      .shell { width: min(100% - 20px, 560px); margin: 16px auto }
+      .hero { grid-template-columns: 1fr }
+      .summary { text-align: left }
+      .summary strong { display: inline; margin-right: 6px }
+      .grid { grid-template-columns: 1fr }
+      header { align-items: flex-start }
+      .top-actions { align-items: flex-end }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand">
+        <div class="mark" aria-hidden="true">P</div>
+        <div><strong>PetCare</strong><small>Cổng thông tin khách hàng</small></div>
+      </div>
+      <div id="signed-in-tools" class="top-actions" hidden>
+        <div class="person"><small class="muted">Đang đăng nhập</small><strong id="signed-in-name"></strong></div>
+        <button id="logout-button" class="logout" type="button">Đăng xuất</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="auth-panel" class="card auth">
+        <h1>Đăng nhập cổng khách hàng</h1>
+        <p class="muted">Tài khoản khách hàng tách biệt với tài khoản nhân viên. Đăng ký mới cần được nhân viên duyệt, hoặc dùng mã mời gắn với hồ sơ khách hàng có sẵn.</p>
+        <div class="tabs" role="tablist" aria-label="Tác vụ tài khoản">
+          <button type="button" data-mode="login" aria-pressed="true">Đăng nhập</button>
+          <button type="button" data-mode="register" aria-pressed="false">Đăng ký chờ duyệt</button>
+          <button type="button" data-mode="invite" aria-pressed="false">Chấp nhận lời mời</button>
+        </div>
+        <div id="auth-message" class="notice" role="status" hidden></div>
+        <form id="login-form" data-auth-form>
+          <label>Tên đăng nhập<input name="username" autocomplete="username" required maxlength="50"></label>
+          <label>Mật khẩu<input name="password" type="password" autocomplete="current-password" required maxlength="1024"></label>
+          <button class="primary" type="submit">Đăng nhập</button>
+        </form>
+        <form id="register-form" data-auth-form hidden>
+          <label>Họ tên hiển thị<input name="display_name" autocomplete="name" required maxlength="120"></label>
+          <label>Tên đăng nhập<input name="username" autocomplete="username" required minlength="3" maxlength="50" pattern="[A-Za-z0-9_.-]+"></label>
+          <label>Mật khẩu (ít nhất 10 ký tự)<input name="password" type="password" autocomplete="new-password" required minlength="10" maxlength="1024"></label>
+          <button class="primary" type="submit">Gửi đăng ký</button>
+        </form>
+        <form id="invite-form" data-auth-form hidden>
+          <label>Mã mời<input name="invite_code" autocomplete="one-time-code" required maxlength="256"></label>
+          <label>Họ tên hiển thị<input name="display_name" autocomplete="name" required maxlength="120"></label>
+          <label>Tên đăng nhập<input name="username" autocomplete="username" required minlength="3" maxlength="50" pattern="[A-Za-z0-9_.-]+"></label>
+          <label>Mật khẩu (ít nhất 10 ký tự)<input name="password" type="password" autocomplete="new-password" required minlength="10" maxlength="1024"></label>
+          <button class="primary" type="submit">Tạo tài khoản từ lời mời</button>
+        </form>
+      </section>
+
+      <section id="portal-panel" hidden>
+        <div class="hero">
+          <div>
+            <h1 id="welcome-heading">Hồ sơ khách hàng</h1>
+            <p id="customer-contact"></p>
+          </div>
+          <div class="summary"><strong id="pet-count">0</strong><small>thú cưng trong hồ sơ</small></div>
+        </div>
+        <div class="disclaimer">Thông tin bên dưới được đọc từ dữ liệu đang lưu trong ứng dụng PetCare tại máy chủ cục bộ. Dữ liệu do cửa hàng nhập chưa được xác minh độc lập; vui lòng liên hệ nhân viên nếu có sai lệch. Cổng này chỉ hoạt động khi bridge chạy trên loopback.</div>
+        <div id="portal-message" class="notice" role="status" hidden></div>
+        <div class="grid">
+          <section class="card section-card">
+            <div class="section-head"><h2>Thú cưng</h2><span class="count" data-count="pets">0</span></div>
+            <div id="pets-list" class="records"></div>
+          </section>
+          <section class="card section-card">
+            <div class="section-head"><h2>Lịch hẹn dịch vụ</h2><span class="count" data-count="appointments">0</span></div>
+            <div id="appointments-list" class="records"></div>
+          </section>
+          <section class="card section-card">
+            <div class="section-head"><h2>Đơn hàng</h2><span class="count" data-count="orders">0</span></div>
+            <div id="orders-list" class="records"></div>
+          </section>
+          <section class="card section-card">
+            <div class="section-head"><h2>Đặt giữ thú cưng</h2><span class="count" data-count="reservations">0</span></div>
+            <div id="reservations-list" class="records"></div>
+          </section>
+          <section class="card section-card">
+            <div class="section-head"><h2>Gói thành viên</h2><span class="count" data-count="memberships">0</span></div>
+            <div id="memberships-list" class="records"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script>
+    (() => {
+      const authPanel = document.getElementById("auth-panel");
+      const portalPanel = document.getElementById("portal-panel");
+      const authMessage = document.getElementById("auth-message");
+      const portalMessage = document.getElementById("portal-message");
+      const forms = [...document.querySelectorAll("[data-auth-form]")];
+      const formByMode = { login: "login-form", register: "register-form", invite: "invite-form" };
+      const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[character]);
+      const showMessage = (element, message, isError = false) => {
+        element.textContent = message;
+        element.classList.toggle("error", isError);
+        element.hidden = !message;
+      };
+      const api = async (path, method = "GET", body) => {
+        const headers = { "X-PetCare-Request": "1" };
+        const options = { method, headers, credentials: "same-origin" };
+        if (body !== undefined) {
+          headers["Content-Type"] = "application/json";
+          options.body = JSON.stringify(body);
+        }
+        const response = await fetch(`/api/customer/${path}`, options);
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          const error = new Error(payload.error || "Không thể hoàn tất yêu cầu.");
+          error.pendingApproval = Boolean(payload.pendingApproval);
+          throw error;
+        }
+        return payload;
+      };
+      const formData = (form) => Object.fromEntries(new FormData(form).entries());
+      document.querySelectorAll("[data-mode]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const mode = button.dataset.mode;
+          document.querySelectorAll("[data-mode]").forEach((item) => {
+            item.setAttribute("aria-pressed", String(item === button));
+          });
+          forms.forEach((form) => { form.hidden = form.id !== formByMode[mode]; });
+          showMessage(authMessage, "");
+        });
+      });
+      const showPortal = (user, data) => {
+        authPanel.hidden = true;
+        portalPanel.hidden = false;
+        document.getElementById("signed-in-tools").hidden = false;
+        document.getElementById("signed-in-name").textContent = user.display_name || user.username;
+        document.getElementById("welcome-heading").textContent = `Xin chào, ${data.customer.name}`;
+        document.getElementById("customer-contact").textContent =
+          [data.customer.phone, data.customer.email].filter(Boolean).join(" · ") || "Hồ sơ khách hàng";
+        document.getElementById("pet-count").textContent = data.pets.length;
+        const specs = {
+          pets: (item) => [item.species, item.breed_name, item.birth_date, item.weight_kg ? `${item.weight_kg} kg` : ""].filter(Boolean).join(" · "),
+          appointments: (item) => [item.service_name, item.pet_name, item.scheduled_at, item.status].filter(Boolean).join(" · "),
+          orders: (item) => [item.order_code, item.ordered_at, item.status, item.total_amount == null ? "" : `${Number(item.total_amount).toLocaleString("vi-VN")} ₫`].filter(Boolean).join(" · "),
+          reservations: (item) => [item.animal_name, item.animal_species, item.reserved_at, item.status].filter(Boolean).join(" · "),
+          memberships: (item) => [item.plan_name, item.membership_code, `${item.start_date} – ${item.end_date}`, item.status].filter(Boolean).join(" · ")
+        };
+        for (const key of Object.keys(specs)) {
+          const list = document.getElementById(`${key}-list`);
+          const records = data[key] || [];
+          document.querySelector(`[data-count="${key}"]`).textContent = records.length;
+          list.innerHTML = records.length
+            ? records.map((item) => `<article class="record"><strong>${escapeHtml(item.name || item.pet_name || item.order_code || item.animal_name || item.plan_name || item.appointment_code || "Hồ sơ")}</strong><small>${escapeHtml(specs[key](item))}</small></article>`).join("")
+            : '<p class="empty">Chưa có hồ sơ nào được lưu.</p>';
+        }
+      };
+      const loadPortal = async () => {
+        const [session, data] = await Promise.all([api("session"), api("portal")]);
+        showPortal(session.user, data);
+      };
+      document.getElementById("login-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        showMessage(authMessage, "");
+        try {
+          const response = await api("login", "POST", formData(event.currentTarget));
+          await loadPortal();
+        } catch (error) {
+          showMessage(authMessage, error.message, true);
+        }
+      });
+      document.getElementById("register-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        showMessage(authMessage, "");
+        try {
+          await api("register", "POST", formData(event.currentTarget));
+          event.currentTarget.reset();
+          showMessage(authMessage, "Đã gửi đăng ký. Tài khoản chỉ được liên kết hồ sơ khách hàng sau khi nhân viên duyệt.");
+        } catch (error) {
+          showMessage(authMessage, error.message, true);
+        }
+      });
+      document.getElementById("invite-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        showMessage(authMessage, "");
+        try {
+          await api("accept-invite", "POST", formData(event.currentTarget));
+          await loadPortal();
+        } catch (error) {
+          showMessage(authMessage, error.message, true);
+        }
+      });
+      document.getElementById("logout-button").addEventListener("click", async () => {
+        try { await api("logout", "POST", {}); } finally { window.location.reload(); }
+      });
+      loadPortal().catch(() => { authPanel.hidden = false; });
+    })();
+  </script>
+  <script src="../scripts/site_navigation.js" defer></script>
+</body>
+</html>

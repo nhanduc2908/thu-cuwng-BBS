@@ -1,4 +1,8 @@
 from pathlib import Path
+from datetime import datetime, timedelta, timezone
+import hashlib
+import json
+import secrets
 import sqlite3
 from typing import Any
 
@@ -1089,6 +1093,43 @@ class Database:
                     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
                 );
 
+                CREATE TABLE IF NOT EXISTS web_dataset_records (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    module_id TEXT NOT NULL,
+                    source_key TEXT NOT NULL,
+                    record_json TEXT NOT NULL,
+                    is_archived INTEGER NOT NULL DEFAULT 0 CHECK (is_archived IN (0, 1)),
+                    created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+                    archived_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE (module_id, source_key)
+                );
+
+                CREATE TABLE IF NOT EXISTS customer_portal_accounts (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT NOT NULL UNIQUE COLLATE NOCASE,
+                    display_name TEXT NOT NULL,
+                    password_salt TEXT NOT NULL,
+                    password_hash TEXT NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'PENDING'
+                        CHECK (status IN ('PENDING', 'ACTIVE', 'REJECTED')),
+                    customer_id INTEGER UNIQUE REFERENCES customers(id) ON DELETE RESTRICT,
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    approved_at TEXT,
+                    reviewed_at TEXT
+                );
+
+                CREATE TABLE IF NOT EXISTS customer_portal_invites (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    customer_id INTEGER NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+                    token_hash TEXT NOT NULL UNIQUE,
+                    created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    expires_at TEXT NOT NULL,
+                    redeemed_at TEXT
+                );
+
                 CREATE INDEX IF NOT EXISTS idx_audit_logs_occurred
                     ON audit_logs(occurred_at DESC);
                 CREATE INDEX IF NOT EXISTS idx_audit_logs_actor
@@ -1118,6 +1159,11 @@ class Database:
                     ON recommendation_interactions(animal_id, event_type, item_id);
                 CREATE INDEX IF NOT EXISTS idx_animal_product_preferences_item
                     ON animal_product_preferences(item_id, preference);
+                CREATE INDEX IF NOT EXISTS idx_web_dataset_records_module
+                    ON web_dataset_records(module_id, is_archived, id);
+                CREATE INDEX IF NOT EXISTS idx_customer_portal_invites_customer
+                    ON customer_portal_invites(customer_id, expires_at, redeemed_at);
+
                 """
             )
             animal_columns = {
@@ -1142,6 +1188,16 @@ class Database:
                     self.connection.execute(
                         f"ALTER TABLE animals ADD COLUMN {column} {definition}"
                     )
+            customer_account_columns = {
+                row["name"]
+                for row in self.connection.execute(
+                    "PRAGMA table_info(customer_portal_accounts)"
+                )
+            }
+            if "reviewed_at" not in customer_account_columns:
+                self.connection.execute(
+                    "ALTER TABLE customer_portal_accounts ADD COLUMN reviewed_at TEXT"
+                )
 
             self.connection.executescript(
                 """
@@ -2335,6 +2391,262 @@ class Database:
         self._require_permission("audit.view")
         return self.audit.list_events(limit, actor_id, entity_type)
 
+    def list_web_dataset_records(
+        self, module_id: str, include_archived: bool = False
+    ) -> list[sqlite3.Row]:
+        where = "module_id = ?"
+        parameters: tuple[Any, ...] = (module_id,)
+        if not include_archived:
+            where += " AND is_archived = 0"
+        return self.connection.execute(
+            f"""
+            SELECT id, source_key, record_json, is_archived, created_at, updated_at
+            FROM web_dataset_records
+            WHERE {where}
+            ORDER BY id
+            """,
+            parameters,
+        ).fetchall()
+
+    def create_web_dataset_record(
+        self, module_id: str, source_key: str, record: dict[str, Any], actor_id: int
+    ) -> int:
+        with self.connection:
+            cursor = self.connection.execute(
+                """
+                INSERT INTO web_dataset_records
+                    (module_id, source_key, record_json, created_by)
+                VALUES (?, ?, ?, ?)
+                """,
+                (module_id, source_key, json.dumps(record, ensure_ascii=False), actor_id),
+            )
+        return int(cursor.lastrowid)
+
+    def update_web_dataset_record(
+        self,
+        module_id: str,
+        record_id: int,
+        record: dict[str, Any],
+    ) -> None:
+        with self.connection:
+            cursor = self.connection.execute(
+                """
+                UPDATE web_dataset_records
+                SET record_json = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE module_id = ? AND id = ? AND is_archived = 0
+                """,
+                (json.dumps(record, ensure_ascii=False), module_id, record_id),
+            )
+            if cursor.rowcount != 1:
+                raise ValueError("Bản ghi không tồn tại hoặc đã được lưu trữ.")
+
+    def archive_web_dataset_record(
+        self, module_id: str, record_id: int, actor_id: int
+    ) -> None:
+        with self.connection:
+            cursor = self.connection.execute(
+                """
+                UPDATE web_dataset_records
+                SET is_archived = 1, archived_by = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE module_id = ? AND id = ? AND is_archived = 0
+                """,
+                (actor_id, module_id, record_id),
+            )
+            if cursor.rowcount != 1:
+                raise ValueError("Bản ghi không tồn tại hoặc đã được lưu trữ.")
+
+    def import_web_dataset_records(
+        self,
+        module_id: str,
+        records: list[dict[str, Any]],
+        actor_id: int,
+    ) -> tuple[int, int]:
+        inserted = 0
+        skipped = 0
+        with self.connection:
+            for index, record in enumerate(records):
+                source_key = str(index)
+                cursor = self.connection.execute(
+                    """
+                    INSERT OR IGNORE INTO web_dataset_records
+                        (module_id, source_key, record_json, created_by)
+                    VALUES (?, ?, ?, ?)
+                    """,
+                    (
+                        module_id,
+                        source_key,
+                        json.dumps(record, ensure_ascii=False),
+                        actor_id,
+                    ),
+                )
+                if cursor.rowcount:
+                    inserted += 1
+                else:
+                    skipped += 1
+        return inserted, skipped
+
+    def list_customer_portal_accounts(
+        self, status: str = "PENDING"
+    ) -> list[sqlite3.Row]:
+        self._require_staff_permission("sales.manage")
+        if status not in {"PENDING", "ACTIVE", "REJECTED", "ALL"}:
+            raise ValueError("status must be PENDING, ACTIVE, REJECTED, or ALL.")
+        where = "" if status == "ALL" else "WHERE a.status = ?"
+        parameters: tuple[Any, ...] = () if status == "ALL" else (status,)
+        return self.connection.execute(
+            f"""
+            SELECT a.id, a.username, a.display_name, a.status, a.customer_id,
+                   a.created_at, a.approved_at, a.reviewed_at,
+                   c.customer_code, c.name AS customer_name
+            FROM customer_portal_accounts a
+            LEFT JOIN customers c ON c.id = a.customer_id
+            {where}
+            ORDER BY a.created_at DESC, a.id DESC
+            """,
+            parameters,
+        ).fetchall()
+
+    def approve_customer_portal_account(
+        self, account_id: int, customer_id: int
+    ) -> bool:
+        self._require_staff_permission("sales.manage")
+        if self.get_customer(customer_id) is None:
+            raise ValueError("An existing customer record is required.")
+        with self.connection:
+            cursor = self.connection.execute(
+                """
+                UPDATE customer_portal_accounts
+                SET customer_id = ?, status = 'ACTIVE',
+                    approved_at = CURRENT_TIMESTAMP, reviewed_at = CURRENT_TIMESTAMP
+                WHERE id = ? AND status = 'PENDING' AND customer_id IS NULL
+                """,
+                (customer_id, account_id),
+            )
+            if cursor.rowcount:
+                self._audit(
+                    "CUSTOMER_PORTAL_APPROVE",
+                    "customer_portal_account",
+                    account_id,
+                    f"customer_id={customer_id}",
+                )
+        return cursor.rowcount == 1
+
+    def reject_customer_portal_account(self, account_id: int) -> bool:
+        self._require_staff_permission("sales.manage")
+        with self.connection:
+            cursor = self.connection.execute(
+                """
+                UPDATE customer_portal_accounts
+                SET status = 'REJECTED', reviewed_at = CURRENT_TIMESTAMP
+                WHERE id = ? AND status = 'PENDING' AND customer_id IS NULL
+                """,
+                (account_id,),
+            )
+            if cursor.rowcount:
+                self._audit(
+                    "CUSTOMER_PORTAL_REJECT",
+                    "customer_portal_account",
+                    account_id,
+                )
+        return cursor.rowcount == 1
+
+    def create_customer_portal_invite(
+        self, customer_id: int, expires_in_hours: int = 24
+    ) -> dict[str, Any]:
+        self._require_staff_permission("sales.manage")
+        if self.get_customer(customer_id) is None:
+            raise ValueError("An existing customer record is required.")
+        linked_account = self.connection.execute(
+            """
+            SELECT 1 FROM customer_portal_accounts
+            WHERE customer_id = ? AND status = 'ACTIVE'
+            """,
+            (customer_id,),
+        ).fetchone()
+        if linked_account is not None:
+            raise ValueError("Customer already has an active portal account.")
+        if not 1 <= expires_in_hours <= 168:
+            raise ValueError("Invitation expiry must be between 1 and 168 hours.")
+        invite_code = secrets.token_urlsafe(32)
+        expires_at = (
+            datetime.now(timezone.utc) + timedelta(hours=expires_in_hours)
+        ).strftime("%Y-%m-%d %H:%M:%S")
+        with self.connection:
+            cursor = self.connection.execute(
+                """
+                INSERT INTO customer_portal_invites
+                    (customer_id, token_hash, created_by, expires_at)
+                VALUES (?, ?, ?, ?)
+                """,
+                (
+                    customer_id,
+                    hashlib.sha256(invite_code.encode("utf-8")).hexdigest(),
+                    self.actor_id,
+                    expires_at,
+                ),
+            )
+            invite_id = int(cursor.lastrowid)
+            self._audit(
+                "CUSTOMER_PORTAL_INVITE",
+                "customer",
+                customer_id,
+                f"invite_id={invite_id}",
+            )
+        return {
+            "id": invite_id,
+            "invite_code": invite_code,
+            "customer_id": customer_id,
+            "expires_at": expires_at,
+        }
+
+    def list_customer_portal_invites(
+        self, status: str = "ALL"
+    ) -> list[sqlite3.Row]:
+        self._require_staff_permission("sales.manage")
+        if status not in {"ACTIVE", "EXPIRED", "REDEEMED", "ALL"}:
+            raise ValueError("status must be ACTIVE, EXPIRED, REDEEMED, or ALL.")
+        state_sql = """
+            CASE
+                WHEN i.redeemed_at IS NOT NULL THEN 'REDEEMED'
+                WHEN i.expires_at <= CURRENT_TIMESTAMP THEN 'EXPIRED'
+                ELSE 'ACTIVE'
+            END
+        """
+        where = "" if status == "ALL" else f"WHERE {state_sql} = ?"
+        parameters: tuple[Any, ...] = () if status == "ALL" else (status,)
+        return self.connection.execute(
+            f"""
+            SELECT i.id, i.customer_id, c.customer_code, c.name AS customer_name,
+                   i.created_by, i.created_at, i.expires_at, i.redeemed_at,
+                   {state_sql} AS status
+            FROM customer_portal_invites i
+            JOIN customers c ON c.id = i.customer_id
+            {where}
+            ORDER BY i.created_at DESC, i.id DESC
+            """,
+            parameters,
+        ).fetchall()
+
+    def expire_customer_portal_invite(self, invite_id: int) -> bool:
+        self._require_staff_permission("sales.manage")
+        with self.connection:
+            cursor = self.connection.execute(
+                """
+                UPDATE customer_portal_invites
+                SET expires_at = CURRENT_TIMESTAMP
+                WHERE id = ? AND redeemed_at IS NULL
+                  AND expires_at > CURRENT_TIMESTAMP
+                """,
+                (invite_id,),
+            )
+            if cursor.rowcount:
+                self._audit(
+                    "CUSTOMER_PORTAL_INVITE_EXPIRE",
+                    "customer_portal_invite",
+                    invite_id,
+                )
+        return cursor.rowcount == 1
+
     def close(self) -> None:
         self.connection.close()
 
@@ -2346,6 +2658,12 @@ class Database:
 
     def _require_permission(self, permission: str) -> None:
         if self.actor_id is not None and not self.auth.has_permission(
+            self.actor_id, permission
+        ):
+            raise PermissionError(f"Tài khoản không có quyền: {permission}.")
+
+    def _require_staff_permission(self, permission: str) -> None:
+        if self.actor_id is None or not self.auth.has_permission(
             self.actor_id, permission
         ):
             raise PermissionError(f"Tài khoản không có quyền: {permission}.")

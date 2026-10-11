@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PetCare enterprise landing page for investor and executive presentation.">
+  <title>PetCare | Investor Landing</title>
+  <style>
+    :root {
+      --bg: #edf6f0;
+      --panel: #ffffff;
+      --panel-soft: #f7faf8;
+      --green-900: #113b2d;
+      --green-800: #184b3d;
+      --green-700: #1d5e49;
+      --green-600: #2d7f5d;
+      --green-500: #59a77f;
+      --green-100: #e3f6e7;
+      --line: #ddeae3;
+      --ink: #183129;
+      --muted: #61776d;
+      --gold: #efc86b;
+      --shadow: 0 18px 42px rgba(16,57,45,0.08);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 10px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #eff8f2 0%, #edf3ef 100%);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    .site-header {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(255,255,255,0.82);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+    .header-inner {
+      width: min(1300px, calc(100% - 28px));
+      min-height: 74px;
+      margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 18px;
+    }
+    .brand {
+      display: inline-flex; align-items: center; gap: 12px;
+      color: var(--green-900); font-size: 1.08rem; font-weight: 800;
+    }
+    .brand-mark {
+      width: 35px; height: 35px; display: grid; place-items: center; border-radius: 12px 12px 12px 4px;
+      background: linear-gradient(135deg, #dfe97d, #b9df68); color: var(--green-900); font-weight: 900;
+    }
+    .header-nav {
+      display: flex; align-items: center; gap: 18px; color: var(--muted); font-weight: 700; font-size: 0.82rem;
+    }
+    .header-nav a:hover { color: var(--green-700); }
+    .nav-cta {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 0 14px; border-radius: 999px; background: #fff; color: var(--green-900); border: 1px solid var(--line); font-weight: 800;
+    }
+
+    .page-shell {
+      width: min(1300px, calc(100% - 28px));
+      margin: 26px auto 40px;
+      display: grid;
+      gap: 22px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(18,79,64,0.96), rgba(17,59,48,0.96), rgba(17,55,82,0.92));
+      border-radius: var(--radius-xl);
+      padding: 28px 30px 24px;
+      color: #f3faf6;
+      box-shadow: var(--shadow);
+      overflow: hidden; position: relative;
+    }
+    .hero::after {
+      content: ""; position: absolute; right: -50px; top: -30px; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(214,240,122,0.36), transparent 62%);
+    }
+    .hero-inner {
+      position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.7fr); gap: 18px; align-items: end;
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.08); color: rgba(244,250,247,0.9); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    h1 {
+      margin: 18px 0 12px; max-width: 720px; letter-spacing: -0.07em; font-size: clamp(2.8rem, 5vw, 4.8rem); line-height: 0.95; color: #fff;
+    }
+    .hero p {
+      margin: 0; max-width: 720px; color: rgba(244,250,247,0.92); font-size: 1.04rem;
+    }
+    .hero-tags {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px;
+    }
+    .tag {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.08); color: #eef8f2; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700;
+    }
+    .hero-side {
+      display: grid; gap: 12px; padding: 18px 18px 16px; border-radius: var(--radius-lg); background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    }
+    .stat-box {
+      padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+    }
+    .stat-box strong {
+      display: block; color: #fff; font-size: 2rem; letter-spacing: -0.06em; line-height: 1.1;
+    }
+    .stat-box span {
+      display: block; margin-top: 4px; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.72);
+    }
+
+    .section {
+      background: rgba(255,255,255,0.9); border: 1px solid var(--line); border-radius: 24px; padding: 22px 20px 18px; box-shadow: 0 12px 22px rgba(18,48,36,0.02);
+    }
+    .hero-slider {
+      position: relative; margin-top: 26px; border-radius: 26px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); background: linear-gradient(135deg, rgba(13,61,75,0.96), rgba(12,33,42,0.96));
+    }
+    .slider-track { display: flex; transition: transform 0.5s ease; }
+    .slide {
+      min-width: 100%; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 18px; padding: 28px; min-height: 330px;
+    }
+    .slide-copy { display: flex; flex-direction: column; justify-content: center; }
+    .slide-kicker {
+      display: inline-flex; align-items: center; width: fit-content; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800;
+    }
+    .slide h3 { margin: 14px 0 8px; font-size: clamp(2rem, 3vw, 3rem); letter-spacing: -0.06em; color: #fff; }
+    .slide p { margin: 0; color: rgba(255,255,255,0.82); font-size: 1rem; line-height: 1.8; }
+    .slide-visual {
+      display: grid; place-items: center; min-height: 220px; border-radius: 20px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 1.3rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .slider-controls {
+      display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 18px 18px;
+    }
+    .slider-dots { display: flex; gap: 8px; }
+    .dot {
+      width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.38); background: rgba(255,255,255,0.18); cursor: pointer;
+    }
+    .dot.active { background: var(--gold); border-color: rgba(239,200,109,0.8); box-shadow: 0 0 16px rgba(239,200,109,0.4); }
+    .arrow-btn {
+      border: 1px solid var(--line); background: rgba(255,255,255,0.05); color: var(--ink); width: 42px; height: 42px; border-radius: 12px; cursor: pointer; font-weight: 800;
+    }
+    .section-head {
+      display: flex; align-items: end; justify-content: space-between; gap: 14px; margin-bottom: 18px;
+    }
+    .section-head h2 {
+      margin: 8px 0 0; font-size: clamp(1.6rem, 2vw, 2.4rem); letter-spacing: -0.04em; color: var(--green-900);
+    }
+    .section-head p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
+    .feature-grid {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;
+    }
+    .feature-card {
+      display: flex; flex-direction: column; min-height: 220px; padding: 18px 18px 16px; border-radius: 20px; border: 1px solid var(--line); background: linear-gradient(180deg, #fff 0%, #f7faf8 100%);
+    }
+    .testimonial-grid {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px;
+    }
+    .testimonial {
+      padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(180deg, #fff 0%, #f8faf9 100%);
+    }
+    .stars { color: #f4c95b; letter-spacing: 0.08em; font-size: 1rem; }
+    .testimonial p { margin: 12px 0 14px; color: var(--muted); font-size: 0.96rem; line-height: 1.8; }
+    .person { display: flex; align-items: center; gap: 10px; }
+    .avatar {
+      width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, var(--green-500), var(--green-700)); color: white; font-weight: 900;
+    }
+    .person strong { display: block; font-size: 0.94rem; }
+    .person span { color: var(--muted); font-size: 0.76rem; }
+    .feature-card .chip {
+      display: inline-flex; width: fit-content; align-items: center; padding: 5px 9px; border-radius: 999px; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(23,108,76,0.08); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800;
+    }
+    .feature-card h3 { margin: 14px 0 8px; font-size: 1.4rem; letter-spacing: -0.04em; }
+    .feature-card p { margin: 0; color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+    .feature-card .card-link {
+      margin-top: auto; padding-top: 14px; display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .feature-card .card-link a {
+      display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 999px; background: #fff; border: 1px solid var(--line); color: var(--green-700); font-size: 0.7rem; font-weight: 700;
+    }
+
+    .list-grid {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;
+    }
+    .link-panel {
+      padding: 18px 18px 14px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(180deg, #fff 0%, #f7faf8 100%);
+    }
+    .link-panel h3 { margin: 0 0 12px; font-size: 1.14rem; color: var(--green-900); }
+    .link-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+    .link-list a {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font-weight: 600;
+    }
+    .link-list a:hover { border-color: var(--green-600); color: var(--green-900); }
+    .link-list small { color: var(--muted); }
+
+    .module-strip {
+      display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px;
+    }
+    .module-pill {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); text-align: center; font-size: 0.72rem; font-weight: 700;
+    }
+    .metrics-grid {
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 16px;
+    }
+    .metric-card {
+      padding: 18px; border-radius: 18px; border: 1px solid var(--line); background: linear-gradient(180deg, #fff 0%, #f6faf8 100%);
+    }
+    .metric-card .kicker {
+      display: block; color: var(--muted); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800;
+    }
+    .metric-card strong {
+      display: block; margin-top: 10px; font-size: clamp(2rem, 3vw, 3rem); letter-spacing: -0.07em; line-height: 1;
+    }
+    .metric-card span {
+      display: block; margin-top: 8px; color: var(--muted); font-size: 0.84rem;
+    }
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px;
+    }
+    .pricing-plan {
+      padding: 22px 20px; border-radius: 20px; border: 1px solid var(--line); background: linear-gradient(180deg, #fff 0%, #f9faf9 100%);
+    }
+    .pricing-plan.featured {
+      background: linear-gradient(180deg, rgba(17, 59, 48, 0.96), rgba(18, 82, 66, 0.92));
+      color: #fff;
+      border-color: rgba(255,255,255,0.12);
+      box-shadow: var(--shadow);
+    }
+    .pricing-plan h3 { margin: 0 0 8px; font-size: 1.3rem; }
+    .pricing-plan .price {
+      display: flex; align-items: end; gap: 6px; margin: 10px 0 12px; font-size: 2.4rem; font-weight: 900; letter-spacing: -0.08em;
+    }
+    .pricing-plan .price small { font-size: 0.86rem; color: inherit; opacity: 0.8; }
+    .pricing-plan ul {
+      list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; color: var(--muted);
+    }
+    .pricing-plan.featured ul { color: rgba(255,255,255,0.85); }
+    .pricing-plan li { position: relative; padding-left: 18px; }
+    .pricing-plan li::before {
+      content: "•"; position: absolute; left: 0; color: var(--green-500);
+    }
+    .pricing-plan.featured li::before { color: #d6f1b2; }
+
+    @media (max-width: 980px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .feature-grid, .list-grid { grid-template-columns: 1fr; }
+      .module-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      .header-inner { flex-wrap: wrap; justify-content: center; padding: 12px 0; }
+      .header-nav { width: 100%; justify-content: center; }
+      .page-shell { width: min(100% - 18px, 1300px); }
+      .hero { padding: 22px 18px; }
+      .section { padding: 16px; }
+      .section-head { flex-direction: column; align-items: flex-start; }
+      .module-strip { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html"><span class="brand-mark">B</span> Bông Bông Pet Care</a>
+      <nav class="header-nav" aria-label="Primary navigation">
+        <a href="petcare_system.html">Pet Care System</a>
+        <a href="../Trang hỗ trợ/project_master_summary.html">Master Summary</a>
+        <a href="../Trang hỗ trợ/project_overview.html">Overview</a>
+        <a href="../Trang hỗ trợ/project_quote.html">Quote</a>
+        <a href="../Trang hỗ trợ/project_invoice.html">Invoice</a>
+        <a href="../Trang hỗ trợ/Module/index.html">Modules</a>
+        <a href="index_customer.html">Customer</a>
+        <a href="../Trang hỗ trợ/index_presentation.html">Presentation</a>
+        <a href="workflow.html">Workflow</a>
+        <a href="../Trang hỗ trợ/report_final.html">Reports</a>
+      </nav>
+      <span class="nav-cta">Live prototype</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <span class="eyebrow">Pet Care SYSTEM by Bông Bông</span>
+          <h1>Smarter pet nutrition and care platform</h1>
+          <p>Pet Care SYSTEM combines nutrition catalog, service workflow, care operations and executive reporting into one premium platform for Bông Bông Pet Care. Built to support trustworthy customer experience, stronger operational control and investor-ready growth foundations.</p>
+          <div class="hero-tags">
+            <span class="tag">8,000 products</span>
+            <span class="tag">17 modules</span>
+            <span class="tag">Premium UX</span>
+          </div>
+          <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="nav-cta" href="petcare_system.html">Open landing page</a>
+            <a class="nav-cta" href="../Trang hỗ trợ/project_quote.html">Official Quote</a>
+          </div>
+        </div>
+        <aside class="hero-side">
+          <div class="stat-box"><strong>4K</strong><span>Dog SKUs</span></div>
+          <div class="stat-box"><strong>4K</strong><span>Cat SKUs</span></div>
+          <div class="stat-box"><strong>6</strong><span>Workflow pillars</span></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Core capability</span>
+          <h2>Business value at a glance</h2>
+        </div>
+        <p>Designed for strategic review and product demonstration.</p>
+      </div>
+
+      <div class="hero-slider" aria-label="PetCare highlights slider">
+        <div class="slider-track" id="sliderTrack">
+          <div class="slide">
+            <div class="slide-copy">
+              <span class="slide-kicker">Growth engine</span>
+              <h3>Pet nutrition marketplace</h3>
+              <p>Transform your catalog into a premium pet-commerce and wellness experience with recommendations, filters and trust-driven product discovery.</p>
+            </div>
+            <div class="slide-visual">Catalog</div>
+          </div>
+          <div class="slide">
+            <div class="slide-copy">
+              <span class="slide-kicker">Operations</span>
+              <h3>Clinical efficiency</h3>
+              <p>Monitor pet health, disease support routes and care delivery in a single operational command center built for clinic teams.</p>
+            </div>
+            <div class="slide-visual">Care</div>
+          </div>
+          <div class="slide">
+            <div class="slide-copy">
+              <span class="slide-kicker">Strategy</span>
+              <h3>Board-ready reporting</h3>
+              <p>Turn business metrics and portfolio performance into crisp, executive-friendly insights for expansion and investment conversations.</p>
+            </div>
+            <div class="slide-visual">Reports</div>
+          </div>
+        </div>
+        <div class="slider-controls">
+          <div class="slider-dots">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="arrow-btn" type="button" id="prevSlide">←</button>
+            <button class="arrow-btn" type="button" id="nextSlide">→</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card">
+          <span class="chip">Catalog</span>
+          <h3>Nutrition marketplace</h3>
+          <p>Large SKU catalog with filters by species, age, allergy, gluten-free status and clear nutrition goals for each product.</p>
+          <div class="card-link">
+            <a href="nutrition_products.html">Catalog</a>
+            <a href="nutrition_products_dog.html">Dog</a>
+          </div>
+        </article>
+        <article class="feature-card">
+          <span class="chip">Operations</span>
+          <h3>Care operations</h3>
+          <p>Customer records, appointment scheduling, service tracking and personalized health guidance within a single workflow.</p>
+          <div class="card-link">
+            <a href="workflow.html">Workflow</a>
+            <a href="../Trang hỗ trợ/app_interface_preview.html">Dashboard</a>
+          </div>
+        </article>
+        <article class="feature-card">
+          <span class="chip">Reporting</span>
+          <h3>Board reporting</h3>
+          <p>Executive-ready business review, KPI dashboard, market positioning and security context for stakeholder trust.</p>
+          <div class="card-link">
+            <a href="../Trang hỗ trợ/report_final.html">Report</a>
+            <a href="../Trang hỗ trợ/business_case.html">Business case</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Routes</span>
+          <h2>Project access points</h2>
+        </div>
+        <p>All critical views in one entry point.</p>
+      </div>
+      <div class="list-grid">
+        <div class="link-panel">
+          <h3>Strategic overview</h3>
+          <ul class="link-list">
+            <li><a href="../Trang hỗ trợ/project_master_summary.html"><span>Project master summary</span><small>Hub</small></a></li>
+            <li><a href="../Trang hỗ trợ/project_overview.html"><span>Project overview</span><small>Overview</small></a></li>
+            <li><a href="../Trang hỗ trợ/business_case.html"><span>Business case</span><small>Case</small></a></li>
+            <li><a href="../Trang hỗ trợ/executive_summary.html"><span>Executive summary</span><small>Executive</small></a></li>
+            <li><a href="../Trang hỗ trợ/project_security.html"><span>Project security</span><small>Security</small></a></li>
+          </ul>
+        </div>
+        <div class="link-panel">
+          <h3>Proposal & commercial</h3>
+          <ul class="link-list">
+            <li><a href="../Trang hỗ trợ/project_quote.html"><span>Official quote</span><small>Proposal</small></a></li>
+            <li><a href="../Trang hỗ trợ/project_invoice.html"><span>Invoice / Payment</span><small>Billing</small></a></li>
+            <li><a href="../Trang hỗ trợ/slides_pitch.html"><span>Pitch deck</span><small>Pitch</small></a></li>
+            <li><a href="../Trang hỗ trợ/project_slides_final.html"><span>Final deck</span><small>Final</small></a></li>
+          </ul>
+        </div>
+        <div class="link-panel">
+          <h3>Demo delivery</h3>
+          <ul class="link-list">
+            <li><a href="index_customer.html"><span>Customer demo</span><small>Demo</small></a></li>
+            <li><a href="../Trang hỗ trợ/index_presentation.html"><span>Presentation view</span><small>Presentation</small></a></li>
+            <li><a href="workflow.html"><span>Workspace flow</span><small>Flow</small></a></li>
+            <li><a href="../Trang hỗ trợ/workflow_story.html"><span>Workflow story</span><small>Story</small></a></li>
+          </ul>
+        </div>
+        <div class="link-panel">
+          <h3>Care, reports & modules</h3>
+          <ul class="link-list">
+            <li><a href="../Trang hỗ trợ/pet_health_report.html"><span>Pet health report</span><small>Health</small></a></li>
+            <li><a href="../Trang hỗ trợ/disease_support.html"><span>Disease support</span><small>Care</small></a></li>
+            <li><a href="../Trang hỗ trợ/report_final.html"><span>Final report</span><small>Report</small></a></li>
+            <li><a href="../Trang hỗ trợ/Module/index.html"><span>Module hub</span><small>Modules</small></a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Testimonials</span>
+          <h2>What stakeholders say</h2>
+        </div>
+        <p>Validation from product, operations and management stakeholders.</p>
+      </div>
+      <div class="testimonial-grid">
+        <article class="testimonial">
+          <div class="stars">★★★★★</div>
+          <p>“The platform gives our team a premium, business-ready experience. It makes pet care operations feel more structured and trustworthy.”</p>
+          <div class="person">
+            <div class="avatar">L</div>
+            <div><strong>Lan Anh</strong><span>Operations Director</span></div>
+          </div>
+        </article>
+        <article class="testimonial">
+          <div class="stars">★★★★★</div>
+          <p>“The reporting and dashboard experience is clean, useful and executive-friendly. This helps us communicate the business story clearly.”</p>
+          <div class="person">
+            <div class="avatar">M</div>
+            <div><strong>Minh Hoàng</strong><span>Business Manager</span></div>
+          </div>
+        </article>
+        <article class="testimonial">
+          <div class="stars">★★★★★</div>
+          <p>“The product architecture is practical and scalable, covering nutrition, clinic care, and service management in one connected system.”</p>
+          <div class="person">
+            <div class="avatar">N</div>
+            <div><strong>Nam Anh</strong><span>Product Lead</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">KPI</span>
+          <h2>Enterprise performance overview</h2>
+        </div>
+        <p>Operational pulse across growth, care quality and customer value.</p>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span class="kicker">Active pets</span>
+          <strong>18.4K</strong>
+          <span>Across care, nutrition and service plans</span>
+        </div>
+        <div class="metric-card">
+          <span class="kicker">Retention</span>
+          <strong>92%</strong>
+          <span>Repeat customer rate in 12 months</span>
+        </div>
+        <div class="metric-card">
+          <span class="kicker">Avg. order</span>
+          <strong>₫1.6M</strong>
+          <span>Average services + nutrition value</span>
+        </div>
+        <div class="metric-card">
+          <span class="kicker">Service SLAs</span>
+          <strong>99.2%</strong>
+          <span>Operational uptime and care responsiveness</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Pricing</span>
+          <h2>Commercial model</h2>
+        </div>
+        <p>Transparent package options for scaling operations.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="pricing-plan">
+          <h3>Starter</h3>
+          <div class="price">₫189M<small>/project</small></div>
+          <ul>
+            <li>Core pet management flows</li>
+            <li>Nutrition catalog overview</li>
+            <li>Basic dashboard reporting</li>
+            <li>Mobile-first UX</li>
+          </ul>
+        </div>
+        <div class="pricing-plan featured">
+          <h3>Premium</h3>
+          <div class="price">₫275.6M<small>/project</small></div>
+          <ul>
+            <li>Full admin + customer portal</li>
+            <li>Health analytics and PDF export</li>
+            <li>Premium design system</li>
+            <li>Implementation + staff training</li>
+          </ul>
+        </div>
+        <div class="pricing-plan">
+          <h3>Enterprise</h3>
+          <div class="price">₫420M<small>+</small></div>
+          <ul>
+            <li>Multi-branch configuration</li>
+            <li>Tailored compliance workflows</li>
+            <li>Priority support and SLA</li>
+            <li>Custom integrations</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Modules</span>
+          <h2>Platform architecture</h2>
+        </div>
+        <p>Business functionality mapped across the PetCare platform.</p>
+      </div>
+      <div class="module-strip">
+        <span class="module-pill">Platform</span>
+        <span class="module-pill">Accounts</span>
+        <span class="module-pill">Dashboard</span>
+        <span class="module-pill">Pets</span>
+        <span class="module-pill">Health</span>
+        <span class="module-pill">Orders</span>
+        <span class="module-pill">Services</span>
+        <span class="module-pill">Inventory</span>
+        <span class="module-pill">Reports</span>
+        <span class="module-pill">Alerts</span>
+        <span class="module-pill">Customers</span>
+        <span class="module-pill">Resv.</span>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const track = document.getElementById('sliderTrack');
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const dots = Array.from(document.querySelectorAll('.dot'));
+    const nextBtn = document.getElementById('nextSlide');
+    const prevBtn = document.getElementById('prevSlide');
+    let current = 0;
+
+    function renderSlider(index) {
+      current = (index + slides.length) % slides.length;
+      track.style.transform = `translateX(-${current * 100}%)`;
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
+    }
+
+    nextBtn.addEventListener('click', () => renderSlider(current + 1));
+    prevBtn.addEventListener('click', () => renderSlider(current - 1));
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => renderSlider(Number(dot.dataset.index)));
+    });
+
+    setInterval(() => renderSlider(current + 1), 5000);
+  </script>
+  <script src="../scripts/site_navigation.js" defer></script>
+</body>
+</html>

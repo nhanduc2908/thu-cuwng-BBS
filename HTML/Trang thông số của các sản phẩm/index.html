@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Tra cứu hồ sơ thông số sản phẩm chó mèo với bộ 70 trường, nguồn nhãn chính thức, công dụng, đối tượng sử dụng và phân tích dinh dưỡng.">
+  <meta name="theme-color" content="#103a2c">
+  <title>PetCare | Thông số sản phẩm chó mèo</title>
+  <link rel="stylesheet" href="../styles/product_specs.css">
+  <link rel="stylesheet" href="../styles/global_food_brands.css">
+</head>
+<body>
+  <main class="spec-shell">
+    <header class="spec-top">
+      <a class="spec-brand" href="../index.html"><span class="spec-mark">P</span><span>PetCare · Hồ sơ sản phẩm</span></a>
+      <nav class="spec-links" aria-label="Điều hướng">
+        <a href="thuong-hieu.html">Thương hiệu toàn cầu</a>
+        <a href="../index.html">Cổng hệ thống</a>
+        <a href="../TRrang chính/index.html">Trang chính</a>
+        <a href="../menu.html">Menu trang</a>
+      </nav>
+    </header>
+    <section class="spec-hero">
+      <span class="spec-kicker">Pet Product Intelligence · Vietnam</span>
+      <h1>Thông số minh bạch cho sản phẩm chó & mèo</h1>
+      <p>Tra cứu và so sánh hồ sơ sản phẩm theo nhãn, loài, giai đoạn sống, công dụng được công bố, thành phần và chỉ số dinh dưỡng. Hỗ trợ người nuôi, cửa hàng và phòng khám đối chiếu thông tin — không đưa ra chẩn đoán hay thay thế tư vấn thú y.</p>
+      <div class="spec-badges">
+        <span class="spec-badge"><strong id="fieldCount">70</strong> trường / sản phẩm</span>
+        <span class="spec-badge"><strong id="verifiedCount">0</strong> hồ sơ có nguồn chính thức</span>
+        <span class="spec-badge">Thị trường Việt Nam</span>
+      </div>
+    </section>
+    <div class="spec-notice" role="note">
+      <strong>Chuẩn dữ liệu an toàn</strong>
+      Chỉ điền giá trị tìm được trên nhãn hoặc tài liệu chính thức của nhà sản xuất/đơn vị được ủy quyền. Thành phần, khẩu phần, giống, độ tuổi và công dụng chưa có nguồn sẽ được ghi rõ là chưa xác minh; không suy đoán số dinh dưỡng. Thuốc thú y không phải hướng dẫn tự điều trị.
+    </div>
+    <section class="spec-panel" aria-label="Bộ lọc sản phẩm">
+      <div class="brand-actions">
+        <a class="spec-button primary" href="thuong-hieu.html">Duyệt thương hiệu & dòng sản phẩm theo quốc gia</a>
+        <span>Danh sách tham khảo theo đầu vào người dùng; cần xác minh trước khi dùng làm dữ liệu hàng hóa.</span>
+      </div>
+      <div class="spec-controls">
+        <label>Tìm tên, thương hiệu, công dụng
+          <input id="productSearch" type="search" placeholder="Ví dụ: thức ăn mèo, chăm sóc da..." autocomplete="off">
+        </label>
+        <label>Loài
+          <select id="speciesFilter"></select>
+        </label>
+        <label>Nhóm sản phẩm
+          <select id="categoryFilter"></select>
+        </label>
+        <label>Giai đoạn sống
+          <select id="lifeStageFilter"></select>
+        </label>
+      </div>
+      <div class="spec-results-head">
+        <div><h2>Danh mục sản phẩm</h2><p id="catalogStatus">Đang tải chuẩn thông số và nguồn sản phẩm…</p></div>
+        <span class="spec-count" id="resultCount" aria-live="polite"></span>
+      </div>
+      <div class="spec-cards" id="productResults" aria-live="polite"></div>
+    </section>
+    <section class="spec-panel" id="productDetails" aria-label="70 thông số sản phẩm" hidden></section>
+    <section class="spec-panel" id="comparison" aria-label="So sánh sản phẩm" hidden></section>
+    <p class="data-foot">Các chỉ số phân tích có thể dùng cơ sở tính khác nhau (nguyên trạng, chất khô, trên khẩu phần hoặc theo đơn vị khác). Chỉ so sánh khi đơn vị và cơ sở phân tích tương thích, và kiểm tra lại nhãn của đúng quy cách/lô hàng.</p>
+    <footer>PetCare · Catalog tham khảo sản phẩm chó mèo · Giá trị nhãn, đăng ký và công thức có thể thay đổi theo thị trường hoặc thời điểm sản xuất. Luôn kiểm tra bao bì hiện hành.</footer>
+  </main>
+  <script src="../scripts/product_specs.js" defer></script>
+  <script src="../scripts/site_navigation.js" defer></script>
+</body>
+</html>

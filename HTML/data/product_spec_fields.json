@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "description": "Chuẩn trường thống nhất cho từng hồ sơ sản phẩm chó/mèo. Giá trị chỉ được công bố khi có nguồn nhãn/tài liệu phù hợp; dữ liệu thiếu không được ước đoán.",
+  "groups": [
+    {
+      "id": "identity",
+      "label": "01 · Nhận diện sản phẩm",
+      "fields": [
+        {"id":"brand","label":"Thương hiệu","unit":"","kind":"identity"},
+        {"id":"product_name","label":"Tên sản phẩm trên nhãn","unit":"","kind":"identity"},
+        {"id":"product_line","label":"Dòng sản phẩm","unit":"","kind":"identity"},
+        {"id":"category","label":"Nhóm sản phẩm","unit":"","kind":"identity"},
+        {"id":"subcategory","label":"Phân nhóm / công thức","unit":"","kind":"identity"},
+        {"id":"species","label":"Loài được ghi trên nhãn","unit":"","kind":"identity"},
+        {"id":"form","label":"Dạng sản phẩm","unit":"","kind":"identity"},
+        {"id":"package_size","label":"Quy cách / khối lượng tịnh","unit":"","kind":"identity"},
+        {"id":"barcode","label":"Mã vạch / GTIN","unit":"","kind":"identity"},
+        {"id":"manufacturer","label":"Nhà sản xuất","unit":"","kind":"identity"},
+        {"id":"country_of_origin","label":"Nước sản xuất","unit":"","kind":"identity"},
+        {"id":"vietnam_distributor","label":"Đơn vị nhập khẩu / phân phối tại Việt Nam","unit":"","kind":"identity"}
+      ]
+    },
+    {
+      "id": "suitability",
+      "label": "02 · Công dụng & đối tượng phù hợp",
+      "fields": [
+        {"id":"intended_use","label":"Công dụng / mục đích trên nhãn","unit":"","kind":"use"},
+        {"id":"label_claims","label":"Tuyên bố / công bố của nhà sản xuất","unit":"","kind":"use"},
+        {"id":"life_stage","label":"Giai đoạn sống","unit":"","kind":"suitability"},
+        {"id":"minimum_age","label":"Độ tuổi tối thiểu","unit":"","kind":"suitability"},
+        {"id":"maximum_age","label":"Độ tuổi tối đa","unit":"","kind":"suitability"},
+        {"id":"target_breeds","label":"Giống được nhà sản xuất nêu cụ thể","unit":"","kind":"suitability"},
+        {"id":"size_class","label":"Nhóm kích thước giống","unit":"","kind":"suitability"},
+        {"id":"minimum_weight","label":"Cân nặng tối thiểu áp dụng","unit":"kg","kind":"suitability"},
+        {"id":"maximum_weight","label":"Cân nặng tối đa áp dụng","unit":"kg","kind":"suitability"},
+        {"id":"activity_profile","label":"Mức độ vận động ghi trên nhãn","unit":"","kind":"suitability"},
+        {"id":"dietary_profile","label":"Kiểu ăn / mục tiêu dinh dưỡng","unit":"","kind":"suitability"},
+        {"id":"allergen_statement","label":"Dị nguyên / thành phần cần lưu ý","unit":"","kind":"safety"},
+        {"id":"contraindications","label":"Chống chỉ định / trường hợp không phù hợp","unit":"","kind":"safety"},
+        {"id":"veterinary_oversight","label":"Yêu cầu giám sát của bác sĩ thú y","unit":"","kind":"safety"}
+      ]
+    },
+    {
+      "id": "directions",
+      "label": "03 · Cách dùng, bảo quản & cảnh báo",
+      "fields": [
+        {"id":"administration_route","label":"Đường dùng / cách sử dụng","unit":"","kind":"directions"},
+        {"id":"label_directions","label":"Hướng dẫn sử dụng nguyên văn/tóm lược từ nhãn","unit":"","kind":"directions"},
+        {"id":"label_dose","label":"Liều lượng ghi trên nhãn (không thay chỉ định chuyên môn)","unit":"","kind":"directions"},
+        {"id":"frequency","label":"Tần suất sử dụng ghi trên nhãn","unit":"","kind":"directions"},
+        {"id":"maximum_daily_amount","label":"Mức tối đa mỗi ngày ghi trên nhãn","unit":"","kind":"directions"},
+        {"id":"serving_size","label":"Khẩu phần / lượng dùng tham chiếu","unit":"","kind":"directions"},
+        {"id":"transition_instructions","label":"Hướng dẫn chuyển đổi thức ăn","unit":"","kind":"directions"},
+        {"id":"storage_unopened","label":"Bảo quản khi chưa mở","unit":"","kind":"storage"},
+        {"id":"storage_opened","label":"Bảo quản sau khi mở","unit":"","kind":"storage"},
+        {"id":"shelf_life_after_opening","label":"Thời hạn sau khi mở","unit":"","kind":"storage"},
+        {"id":"expiry_information","label":"Hạn sử dụng / cách đọc hạn dùng","unit":"","kind":"storage"},
+        {"id":"precautions","label":"Cảnh báo & thận trọng trên nhãn","unit":"","kind":"safety"}
+      ]
+    },
+    {
+      "id": "nutrition",
+      "label": "04 · Phân tích dinh dưỡng",
+      "fields": [
+        {"id":"metabolizable_energy_kcal_kg","label":"Năng lượng chuyển hóa","unit":"kcal/kg","kind":"nutrition"},
+        {"id":"metabolizable_energy_kcal_100g","label":"Năng lượng chuyển hóa","unit":"kcal/100 g","kind":"nutrition"},
+        {"id":"crude_protein","label":"Protein thô","unit":"% / g","kind":"nutrition"},
+        {"id":"crude_fat","label":"Béo thô","unit":"% / g","kind":"nutrition"},
+        {"id":"crude_fiber","label":"Xơ thô","unit":"% / g","kind":"nutrition"},
+        {"id":"moisture","label":"Độ ẩm","unit":"% / g","kind":"nutrition"},
+        {"id":"crude_ash","label":"Tro thô","unit":"% / g","kind":"nutrition"},
+        {"id":"carbohydrate","label":"Carbohydrate (ghi rõ giá trị nhãn hay tính toán)","unit":"% / g","kind":"nutrition"},
+        {"id":"calcium","label":"Canxi","unit":"% / g / mg","kind":"nutrition"},
+        {"id":"phosphorus","label":"Phốt pho","unit":"% / g / mg","kind":"nutrition"},
+        {"id":"calcium_phosphorus_ratio","label":"Tỷ lệ Ca:P","unit":"tỷ lệ","kind":"nutrition"},
+        {"id":"sodium","label":"Natri","unit":"% / g / mg","kind":"nutrition"},
+        {"id":"potassium","label":"Kali","unit":"% / g / mg","kind":"nutrition"},
+        {"id":"magnesium","label":"Magiê","unit":"% / g / mg","kind":"nutrition"},
+        {"id":"omega_3","label":"Omega-3","unit":"% / g / mg","kind":"nutrition"},
+        {"id":"omega_6","label":"Omega-6","unit":"% / g / mg","kind":"nutrition"},
+        {"id":"taurine","label":"Taurine","unit":"% / g / mg","kind":"nutrition"},
+        {"id":"vitamin_a","label":"Vitamin A","unit":"IU / mg / µg","kind":"nutrition"},
+        {"id":"vitamin_d3","label":"Vitamin D3","unit":"IU / mg / µg","kind":"nutrition"},
+        {"id":"vitamin_e","label":"Vitamin E","unit":"IU / mg / µg","kind":"nutrition"},
+        {"id":"vitamin_b1","label":"Vitamin B1 (thiamine)","unit":"mg / µg","kind":"nutrition"},
+        {"id":"vitamin_b12","label":"Vitamin B12 (cobalamin)","unit":"mg / µg","kind":"nutrition"},
+        {"id":"zinc","label":"Kẽm","unit":"mg / kg","kind":"nutrition"},
+        {"id":"iron","label":"Sắt","unit":"mg / kg","kind":"nutrition"}
+      ]
+    },
+    {
+      "id": "actives_sources",
+      "label": "05 · Thành phần hoạt tính & xác minh",
+      "fields": [
+        {"id":"active_ingredients","label":"Hoạt chất / thành phần chức năng","unit":"","kind":"composition"},
+        {"id":"active_concentration","label":"Hàm lượng hoạt chất","unit":"","kind":"composition"},
+        {"id":"ingredient_list","label":"Thành phần đầy đủ theo nhãn","unit":"","kind":"composition"},
+        {"id":"registration_number","label":"Số đăng ký / lưu hành (nếu áp dụng)","unit":"","kind":"regulatory"},
+        {"id":"official_source_url","label":"Liên kết nguồn chính thức","unit":"","kind":"source"},
+        {"id":"source_type","label":"Loại nguồn đối chiếu","unit":"","kind":"source"},
+        {"id":"verified_at","label":"Ngày đối chiếu nguồn","unit":"","kind":"source"},
+        {"id":"verification_status","label":"Trạng thái xác minh","unit":"","kind":"source"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+"""HTML page catalog UI."""

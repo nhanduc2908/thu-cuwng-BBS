@@ -1,0 +1,23 @@
+.brand-hero h1 { max-width: 920px; }
+.brand-notice { border-left-color: #a76a35; }
+.brand-actions { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin:15px 1px; }
+.brand-actions > span { color:var(--spec-muted); font-size:.82rem; }
+.brand-controls { grid-template-columns:minmax(240px,1.7fr) minmax(190px,1fr); }
+.brand-groups { display:grid; gap:14px; }
+.brand-country { overflow:hidden; border:1px solid var(--spec-line); border-radius:16px; background:#fff; }
+.brand-country-head { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 15px; border-bottom:1px solid var(--spec-line); background:linear-gradient(105deg,#f2f8f1,#fff); }
+.brand-country-title { display:flex; align-items:center; gap:9px; margin:0; font-size:1rem; }
+.brand-flag { font-size:1.35rem; }
+.brand-country-kind,.brand-country-count { color:var(--spec-muted); font-size:.73rem; font-weight:750; }
+.brand-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; padding:12px; }
+.brand-card { min-width:0; padding:12px; border:1px solid #e6eee7; border-radius:12px; background:#fcfefc; transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease; }
+.brand-card:hover { transform:translateY(-2px); border-color:#a9c9b3; box-shadow:0 10px 22px #183f2b0c; }
+.brand-card h3 { margin:0; font-size:.9rem; }
+.brand-lines { margin:5px 0 0; color:var(--spec-muted); font-size:.77rem; }
+.brand-entry-note { margin:7px 0 0; color:#7b5c35; font-size:.7rem; }
+.brand-card-label { display:inline-block; margin-top:8px; padding:3px 7px; border-radius:99px; color:#6b5941; background:#f7f0e4; font-size:.64rem; font-weight:800; }
+.brand-empty { padding:22px; border:1px dashed #b9cbbd; border-radius:13px; color:var(--spec-muted); text-align:center; }
+.brand-country[hidden] { display:none; }
+@media(max-width:900px) { .brand-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:620px) { .brand-controls,.brand-grid { grid-template-columns:1fr; } .brand-country-head { align-items:flex-start; flex-direction:column; gap:3px; } .brand-actions { align-items:flex-start; flex-direction:column; } }
+@media(prefers-reduced-motion:reduce) { .brand-card { transition:none; } }

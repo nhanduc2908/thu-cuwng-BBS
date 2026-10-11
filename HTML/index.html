@@ -3,594 +3,120 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="PetCare enterprise landing page for investor and executive presentation.">
-  <title>PetCare | Investor Landing</title>
+  <meta name="theme-color" content="#102c24">
+  <meta name="description" content="Cổng điều hướng hệ thống PetCare: bảng điều hành, website chính, 17 phân hệ, báo cáo và hồ sơ dự án.">
+  <title>PetCare | Cổng hệ thống</title>
   <style>
-    :root {
-      --bg: #edf6f0;
-      --panel: #ffffff;
-      --panel-soft: #f7faf8;
-      --green-900: #113b2d;
-      --green-800: #184b3d;
-      --green-700: #1d5e49;
-      --green-600: #2d7f5d;
-      --green-500: #59a77f;
-      --green-100: #e3f6e7;
-      --line: #ddeae3;
-      --ink: #183129;
-      --muted: #61776d;
-      --gold: #efc86b;
-      --shadow: 0 18px 42px rgba(16,57,45,0.08);
-      --radius-xl: 30px;
-      --radius-lg: 22px;
-      --radius-md: 16px;
-      --radius-sm: 10px;
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(180deg, #eff8f2 0%, #edf3ef 100%);
-      color: var(--ink);
-      line-height: 1.6;
-    }
-    a { color: inherit; text-decoration: none; }
-    .site-header {
-      position: sticky; top: 0; z-index: 20;
-      background: rgba(255,255,255,0.82);
-      border-bottom: 1px solid var(--line);
-      backdrop-filter: blur(10px);
-    }
-    .header-inner {
-      width: min(1300px, calc(100% - 28px));
-      min-height: 74px;
-      margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between; gap: 18px;
-    }
-    .brand {
-      display: inline-flex; align-items: center; gap: 12px;
-      color: var(--green-900); font-size: 1.08rem; font-weight: 800;
-    }
-    .brand-mark {
-      width: 35px; height: 35px; display: grid; place-items: center; border-radius: 12px 12px 12px 4px;
-      background: linear-gradient(135deg, #dfe97d, #b9df68); color: var(--green-900); font-weight: 900;
-    }
-    .header-nav {
-      display: flex; align-items: center; gap: 18px; color: var(--muted); font-weight: 700; font-size: 0.82rem;
-    }
-    .header-nav a:hover { color: var(--green-700); }
-    .nav-cta {
-      display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 0 14px; border-radius: 999px; background: #fff; color: var(--green-900); border: 1px solid var(--line); font-weight: 800;
-    }
-
-    .page-shell {
-      width: min(1300px, calc(100% - 28px));
-      margin: 26px auto 40px;
-      display: grid;
-      gap: 22px;
-    }
-
-    .hero {
-      background: linear-gradient(135deg, rgba(18,79,64,0.96), rgba(17,59,48,0.96), rgba(17,55,82,0.92));
-      border-radius: var(--radius-xl);
-      padding: 28px 30px 24px;
-      color: #f3faf6;
-      box-shadow: var(--shadow);
-      overflow: hidden; position: relative;
-    }
-    .hero::after {
-      content: ""; position: absolute; right: -50px; top: -30px; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(214,240,122,0.36), transparent 62%);
-    }
-    .hero-inner {
-      position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.7fr); gap: 18px; align-items: end;
-    }
-    .eyebrow {
-      display: inline-flex; align-items: center; padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.08); color: rgba(244,250,247,0.9); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
-    }
-    h1 {
-      margin: 18px 0 12px; max-width: 720px; letter-spacing: -0.07em; font-size: clamp(2.8rem, 5vw, 4.8rem); line-height: 0.95; color: #fff;
-    }
-    .hero p {
-      margin: 0; max-width: 720px; color: rgba(244,250,247,0.92); font-size: 1.04rem;
-    }
-    .hero-tags {
-      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px;
-    }
-    .tag {
-      display: inline-flex; align-items: center; justify-content: center; min-height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.08); color: #eef8f2; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700;
-    }
-    .hero-side {
-      display: grid; gap: 12px; padding: 18px 18px 16px; border-radius: var(--radius-lg); background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
-    }
-    .stat-box {
-      padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
-    }
-    .stat-box strong {
-      display: block; color: #fff; font-size: 2rem; letter-spacing: -0.06em; line-height: 1.1;
-    }
-    .stat-box span {
-      display: block; margin-top: 4px; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.72);
-    }
-
-    .section {
-      background: rgba(255,255,255,0.9); border: 1px solid var(--line); border-radius: 24px; padding: 22px 20px 18px; box-shadow: 0 12px 22px rgba(18,48,36,0.02);
-    }
-    .hero-slider {
-      position: relative; margin-top: 26px; border-radius: 26px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); background: linear-gradient(135deg, rgba(13,61,75,0.96), rgba(12,33,42,0.96));
-    }
-    .slider-track { display: flex; transition: transform 0.5s ease; }
-    .slide {
-      min-width: 100%; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 18px; padding: 28px; min-height: 330px;
-    }
-    .slide-copy { display: flex; flex-direction: column; justify-content: center; }
-    .slide-kicker {
-      display: inline-flex; align-items: center; width: fit-content; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800;
-    }
-    .slide h3 { margin: 14px 0 8px; font-size: clamp(2rem, 3vw, 3rem); letter-spacing: -0.06em; color: #fff; }
-    .slide p { margin: 0; color: rgba(255,255,255,0.82); font-size: 1rem; line-height: 1.8; }
-    .slide-visual {
-      display: grid; place-items: center; min-height: 220px; border-radius: 20px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 1.3rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
-    }
-    .slider-controls {
-      display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 18px 18px;
-    }
-    .slider-dots { display: flex; gap: 8px; }
-    .dot {
-      width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.38); background: rgba(255,255,255,0.18); cursor: pointer;
-    }
-    .dot.active { background: var(--gold); border-color: rgba(239,200,109,0.8); box-shadow: 0 0 16px rgba(239,200,109,0.4); }
-    .arrow-btn {
-      border: 1px solid var(--line); background: rgba(255,255,255,0.05); color: var(--ink); width: 42px; height: 42px; border-radius: 12px; cursor: pointer; font-weight: 800;
-    }
-    .section-head {
-      display: flex; align-items: end; justify-content: space-between; gap: 14px; margin-bottom: 18px;
-    }
-    .section-head h2 {
-      margin: 8px 0 0; font-size: clamp(1.6rem, 2vw, 2.4rem); letter-spacing: -0.04em; color: var(--green-900);
-    }
-    .section-head p { margin: 0; color: var(--muted); font-size: 0.92rem; }
-
-    .feature-grid {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;
-    }
-    .feature-card {
-      display: flex; flex-direction: column; min-height: 220px; padding: 18px 18px 16px; border-radius: 20px; border: 1px solid var(--line); background: linear-gradient(180deg, #fff 0%, #f7faf8 100%);
-    }
-    .testimonial-grid {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px;
-    }
-    .testimonial {
-      padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(180deg, #fff 0%, #f8faf9 100%);
-    }
-    .stars { color: #f4c95b; letter-spacing: 0.08em; font-size: 1rem; }
-    .testimonial p { margin: 12px 0 14px; color: var(--muted); font-size: 0.96rem; line-height: 1.8; }
-    .person { display: flex; align-items: center; gap: 10px; }
-    .avatar {
-      width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, var(--green-500), var(--green-700)); color: white; font-weight: 900;
-    }
-    .person strong { display: block; font-size: 0.94rem; }
-    .person span { color: var(--muted); font-size: 0.76rem; }
-    .feature-card .chip {
-      display: inline-flex; width: fit-content; align-items: center; padding: 5px 9px; border-radius: 999px; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(23,108,76,0.08); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800;
-    }
-    .feature-card h3 { margin: 14px 0 8px; font-size: 1.4rem; letter-spacing: -0.04em; }
-    .feature-card p { margin: 0; color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
-    .feature-card .card-link {
-      margin-top: auto; padding-top: 14px; display: flex; flex-wrap: wrap; gap: 8px;
-    }
-    .feature-card .card-link a {
-      display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 999px; background: #fff; border: 1px solid var(--line); color: var(--green-700); font-size: 0.7rem; font-weight: 700;
-    }
-
-    .list-grid {
-      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;
-    }
-    .link-panel {
-      padding: 18px 18px 14px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(180deg, #fff 0%, #f7faf8 100%);
-    }
-    .link-panel h3 { margin: 0 0 12px; font-size: 1.14rem; color: var(--green-900); }
-    .link-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-    .link-list a {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font-weight: 600;
-    }
-    .link-list a:hover { border-color: var(--green-600); color: var(--green-900); }
-    .link-list small { color: var(--muted); }
-
-    .module-strip {
-      display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px;
-    }
-    .module-pill {
-      display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); text-align: center; font-size: 0.72rem; font-weight: 700;
-    }
-    .metrics-grid {
-      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 16px;
-    }
-    .metric-card {
-      padding: 18px; border-radius: 18px; border: 1px solid var(--line); background: linear-gradient(180deg, #fff 0%, #f6faf8 100%);
-    }
-    .metric-card .kicker {
-      display: block; color: var(--muted); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800;
-    }
-    .metric-card strong {
-      display: block; margin-top: 10px; font-size: clamp(2rem, 3vw, 3rem); letter-spacing: -0.07em; line-height: 1;
-    }
-    .metric-card span {
-      display: block; margin-top: 8px; color: var(--muted); font-size: 0.84rem;
-    }
-    .pricing-grid {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px;
-    }
-    .pricing-plan {
-      padding: 22px 20px; border-radius: 20px; border: 1px solid var(--line); background: linear-gradient(180deg, #fff 0%, #f9faf9 100%);
-    }
-    .pricing-plan.featured {
-      background: linear-gradient(180deg, rgba(17, 59, 48, 0.96), rgba(18, 82, 66, 0.92));
-      color: #fff;
-      border-color: rgba(255,255,255,0.12);
-      box-shadow: var(--shadow);
-    }
-    .pricing-plan h3 { margin: 0 0 8px; font-size: 1.3rem; }
-    .pricing-plan .price {
-      display: flex; align-items: end; gap: 6px; margin: 10px 0 12px; font-size: 2.4rem; font-weight: 900; letter-spacing: -0.08em;
-    }
-    .pricing-plan .price small { font-size: 0.86rem; color: inherit; opacity: 0.8; }
-    .pricing-plan ul {
-      list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; color: var(--muted);
-    }
-    .pricing-plan.featured ul { color: rgba(255,255,255,0.85); }
-    .pricing-plan li { position: relative; padding-left: 18px; }
-    .pricing-plan li::before {
-      content: "•"; position: absolute; left: 0; color: var(--green-500);
-    }
-    .pricing-plan.featured li::before { color: #d6f1b2; }
-
-    @media (max-width: 980px) {
-      .hero-inner { grid-template-columns: 1fr; }
-      .feature-grid, .list-grid { grid-template-columns: 1fr; }
-      .module-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    }
-    @media (max-width: 640px) {
-      .header-inner { flex-wrap: wrap; justify-content: center; padding: 12px 0; }
-      .header-nav { width: 100%; justify-content: center; }
-      .page-shell { width: min(100% - 18px, 1300px); }
-      .hero { padding: 22px 18px; }
-      .section { padding: 16px; }
-      .section-head { flex-direction: column; align-items: flex-start; }
-      .module-strip { grid-template-columns: 1fr; }
-    }
+    :root{color-scheme:light;--ink:#18342b;--muted:#6c7d74;--green:#176547;--green-dark:#102c24;--lime:#d9f18c;--line:#dfe9e2;--paper:#f1f6f1;--white:#fff;--gold:#e9bd64;--shadow:0 18px 55px rgba(18,55,39,.09)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 "Segoe UI",Arial,sans-serif}a{color:inherit;text-decoration:none}button,input{font:inherit}.shell{width:min(1240px,calc(100% - 36px));margin:auto}
+    .topbar{position:sticky;top:0;z-index:10;border-bottom:1px solid rgba(223,233,226,.9);background:rgba(255,255,255,.9);backdrop-filter:blur(16px)}.top-inner{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:11px;font-weight:850;letter-spacing:-.03em}.brand-mark{display:grid;place-items:center;width:39px;height:39px;border-radius:14px 14px 14px 5px;background:var(--green-dark);color:var(--lime);font-size:20px}.top-links{display:flex;align-items:center;gap:9px}.top-links a,.button{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:#fff;font-weight:750;font-size:13px}.top-links a:hover,.button:hover{border-color:#9fc9ae;color:var(--green)}
+    .hero{position:relative;overflow:hidden;margin:28px 0 20px;padding:clamp(27px,5vw,58px);border-radius:30px;color:#f3faf5;background:radial-gradient(circle at 83% 5%,rgba(217,241,140,.20),transparent 25%),linear-gradient(125deg,#102c24,#174d3a 58%,#1b5942);box-shadow:var(--shadow)}.hero:after{position:absolute;content:"";width:360px;height:360px;right:-80px;bottom:-230px;border:1px solid rgba(255,255,255,.13);border-radius:50%;box-shadow:0 0 0 36px rgba(255,255,255,.025),0 0 0 72px rgba(255,255,255,.02)}.hero-content{position:relative;z-index:1;max-width:790px}.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--lime);font-size:11px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}.hero h1{max-width:760px;margin:14px 0 12px;font-size:clamp(37px,6vw,66px);line-height:.99;letter-spacing:-.065em}.hero p{max-width:680px;margin:0;color:#d3e5d9;font-size:16px}.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:23px}.hero .button{min-height:46px;padding:0 19px;border:0}.button-primary{background:var(--lime);color:#18342b}.button-glass{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2)!important}
+    .quick-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 36px}.quick-card{display:flex;align-items:center;gap:13px;min-height:91px;padding:15px;border:1px solid var(--line);border-radius:17px;background:#fff;transition:transform .2s,border-color .2s,box-shadow .2s}.quick-card:hover{transform:translateY(-3px);border-color:#a8cbb4;box-shadow:var(--shadow)}.quick-icon{display:grid;place-items:center;flex:0 0 43px;height:43px;border-radius:14px;background:#edf6ed;font-size:20px}.quick-card strong{display:block;font-size:14px}.quick-card small{display:block;margin-top:2px;color:var(--muted);font-size:11px}
+    .section{margin:34px 0}.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:15px}.section-head h2{margin:3px 0 0;font-size:clamp(23px,3vw,30px);letter-spacing:-.045em}.section-head p{margin:0;color:var(--muted);font-size:13px}.section-kicker{color:var(--green);font-size:10px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
+    .search-row{display:flex;gap:9px;align-items:center;margin:18px 0}.search{width:min(470px,100%);height:45px;padding:0 15px;border:1px solid var(--line);border-radius:13px;background:#fff;outline:none}.search:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(23,101,71,.1)}.count{color:var(--muted);font-size:12px}.card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.page-card{display:flex;flex-direction:column;min-height:161px;padding:18px;border:1px solid var(--line);border-radius:17px;background:#fff;transition:transform .2s,border-color .2s,box-shadow .2s}.page-card:hover{transform:translateY(-3px);border-color:#a8cbb4;box-shadow:var(--shadow)}.card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.card-icon{font-size:20px}.tag{padding:4px 8px;border-radius:999px;background:#eff6ee;color:#426b50;font-size:10px;font-weight:800}.page-card h3{margin:12px 0 5px;font-size:16px;letter-spacing:-.02em}.page-card p{margin:0 0 13px;color:var(--muted);font-size:12px;line-height:1.55}.card-link{margin-top:auto;color:var(--green);font-size:12px;font-weight:850}.empty{display:none;padding:28px;border:1px dashed #b7cbbd;border-radius:15px;text-align:center;color:var(--muted)}.note{padding:13px 15px;border:1px solid #eadcad;border-radius:13px;background:#fff9e9;color:#705c28;font-size:12px}
+    footer{margin-top:48px;padding:22px 0 30px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:11px}
+    @media(max-width:900px){.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:580px){.shell{width:min(100% - 24px,1240px)}.top-inner{min-height:60px}.top-links a:first-child{display:none}.top-links a{min-height:36px;padding:0 11px;font-size:11px}.hero{margin-top:15px;border-radius:22px}.quick-grid{gap:8px}.quick-card{min-height:80px;padding:10px;gap:9px}.quick-icon{flex-basis:36px;height:36px;font-size:17px}.quick-card strong{font-size:12px}.quick-card small{font-size:10px}.card-grid{grid-template-columns:1fr}.page-card{min-height:138px}.section-head{align-items:flex-start;flex-direction:column}.search-row{align-items:flex-start;flex-direction:column}footer{flex-direction:column}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="brand" href="index.html"><span class="brand-mark">B</span> Bông Bông Pet Care</a>
-      <nav class="header-nav" aria-label="Primary navigation">
-        <a href="petcare_system.html">Pet Care System</a>
-        <a href="project_master_summary.html">Master Summary</a>
-        <a href="project_overview.html">Overview</a>
-        <a href="project_quote.html">Quote</a>
-        <a href="project_invoice.html">Invoice</a>
-        <a href="Module/index.html">Modules</a>
-        <a href="index_customer.html">Customer</a>
-        <a href="index_presentation.html">Presentation</a>
-        <a href="workflow.html">Workflow</a>
-        <a href="report_final.html">Reports</a>
-      </nav>
-      <span class="nav-cta">Live prototype</span>
+  <header class="topbar">
+    <div class="shell top-inner">
+      <a class="brand" href="index.html" aria-label="PetCare home"><span class="brand-mark">P</span><span>PetCare <span style="color:#71857a;font-weight:650">/ System Hub</span></span></a>
+      <nav class="top-links" aria-label="Điều hướng chính"><a href="menu.html">Danh sách trang</a><a href="TRrang chính/index.html">Website thương hiệu</a><a href="TRrang chính/petcare_management.html">Mở bảng điều hành&nbsp; ↗</a></nav>
     </div>
   </header>
-
-  <main class="page-shell">
+  <main class="shell">
     <section class="hero">
-      <div class="hero-inner">
-        <div>
-          <span class="eyebrow">Pet Care SYSTEM by Bông Bông</span>
-          <h1>Smarter pet nutrition and care platform</h1>
-          <p>Pet Care SYSTEM combines nutrition catalog, service workflow, care operations and executive reporting into one premium platform for Bông Bông Pet Care. Built to support trustworthy customer experience, stronger operational control and investor-ready growth foundations.</p>
-          <div class="hero-tags">
-            <span class="tag">8,000 products</span>
-            <span class="tag">17 modules</span>
-            <span class="tag">Premium UX</span>
-          </div>
-          <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="nav-cta" href="petcare_system.html">Open landing page</a>
-            <a class="nav-cta" href="project_quote.html">Official Quote</a>
-          </div>
-        </div>
-        <aside class="hero-side">
-          <div class="stat-box"><strong>4K</strong><span>Dog SKUs</span></div>
-          <div class="stat-box"><strong>4K</strong><span>Cat SKUs</span></div>
-          <div class="stat-box"><strong>6</strong><span>Workflow pillars</span></div>
-        </aside>
+      <div class="hero-content">
+        <span class="eyebrow">✦ Bông Bông Pet Care · Enterprise workspace</span>
+        <h1>Một cổng vào.<br>Mọi hoạt động chăm sóc.</h1>
+        <p>Điều hướng website chính, bảng vận hành, hồ sơ dự án và 17 phân hệ quản lý thú cưng trong một giao diện thống nhất.</p>
+        <div class="hero-actions"><a class="button button-primary" href="TRrang chính/petcare_management.html">Mở bảng điều hành</a><a class="button button-glass" href="TRrang chính/index.html">Khám phá website chính</a></div>
+      </div>
+    </section>
+    <section class="quick-grid" aria-label="Lối tắt">
+      <a class="quick-card" href="TRrang chính/petcare_management.html"><span class="quick-icon">▦</span><span><strong>Bảng điều hành</strong><small>Pet, chăm sóc, sức khỏe, cảnh báo</small></span></a>
+      <a class="quick-card" href="Trang hỗ trợ/Module/index.html"><span class="quick-icon">◈</span><span><strong>17 phân hệ</strong><small>Điều hướng quy trình nghiệp vụ</small></span></a>
+      <a class="quick-card" href="Trang hỗ trợ/data_explorer.html"><span class="quick-icon">▤</span><span><strong>Trung tâm dữ liệu</strong><small>Tra cứu, tìm kiếm và xuất JSON đã chuẩn bị</small></span></a>
+      <a class="quick-card" href="menu.html"><span class="quick-icon">☷</span><span><strong>Menu danh sách trang</strong><small>Danh mục link trực tiếp tới từng trang</small></span></a>
+      <a class="quick-card" href="Trang hỗ trợ/admin_store_management.html"><span class="quick-icon">⌘</span><span><strong>Quản trị cửa hàng</strong><small>Giao diện web và kết nối cục bộ</small></span></a>
+      <a class="quick-card" href="Trang hỗ trợ/project_master_summary.html"><span class="quick-icon">◫</span><span><strong>Hồ sơ dự án</strong><small>Đề xuất, báo cáo, báo giá và demo</small></span></a>
+    </section>
+
+    <section class="section" id="main-site">
+      <div class="section-head"><div><span class="section-kicker">01 / Website chính</span><h2>Trải nghiệm Bông Bông Pet Care</h2></div><p>Website thương hiệu và các trang phục vụ khách hàng.</p></div>
+      <div class="card-grid">
+        <a class="page-card" href="TRrang chính/index.html" data-search="trang chủ website thương hiệu homepage"><div class="card-top"><span class="card-icon">⌂</span><span class="tag">Website</span></div><h3>Trang chủ thương hiệu</h3><p>Landing page, giới thiệu dịch vụ, giá và nội dung thương hiệu.</p><span class="card-link">Mở trang chủ →</span></a>
+        <a class="page-card" href="TRrang chính/petcare_system.html" data-search="petcare system hệ thống portal"><div class="card-top"><span class="card-icon">✦</span><span class="tag">Giới thiệu</span></div><h3>PetCare System</h3><p>Landing page giới thiệu nền tảng và các năng lực cốt lõi.</p><span class="card-link">Khám phá hệ thống →</span></a>
+        <a class="page-card" href="TRrang chính/user_portal.html" data-search="khách hàng customer portal đăng nhập hồ sơ"><div class="card-top"><span class="card-icon">♡</span><span class="tag">Cổng khách hàng</span></div><h3>Portal khách hàng</h3><p>Đăng nhập cục bộ, gửi đăng ký chờ duyệt và xem hồ sơ đã liên kết.</p><span class="card-link">Mở portal →</span></a>
+        <a class="page-card" href="TRrang chính/index_customer.html" data-search="customer landing demo giới thiệu"><div class="card-top"><span class="card-icon">◎</span><span class="tag">Landing demo</span></div><h3>Trang giới thiệu khách hàng</h3><p>Landing page minh họa, không chứa tài khoản hay dữ liệu cá nhân.</p><span class="card-link">Mở trang demo →</span></a>
+        <a class="page-card" href="TRrang chính/product_showcase.html" data-search="sản phẩm product showcase"><div class="card-top"><span class="card-icon">◇</span><span class="tag">Sản phẩm</span></div><h3>Product showcase</h3><p>Trưng bày sản phẩm, danh mục và nội dung giới thiệu.</p><span class="card-link">Xem sản phẩm →</span></a>
+        <a class="page-card" href="Trang thông số của các sản phẩm/index.html" data-search="thông số sản phẩm thức ăn chó mèo dinh dưỡng nhãn nguồn chính thức"><div class="card-top"><span class="card-icon">✿</span><span class="tag">Thông số sản phẩm</span></div><h3>Catalog chó mèo · 70 trường</h3><p>Tra cứu công dụng, độ tuổi/giống theo nguồn, thành phần và 70 thông số; dữ liệu thiếu ghi rõ, không ước đoán.</p><span class="card-link">Mở hồ sơ sản phẩm →</span></a>
+        <a class="page-card" href="Trang thông số của các sản phẩm/thuong-hieu.html" data-search="thương hiệu hãng thức ăn chó mèo quốc gia toàn cầu Purina Royal Canin Brit"><div class="card-top"><span class="card-icon">◎</span><span class="tag">Danh mục tham khảo</span></div><h3>Thương hiệu thức ăn toàn cầu</h3><p>Duyệt thương hiệu và dòng sản phẩm chó mèo theo quốc gia; ghi rõ phần thông tin đang chờ xác minh.</p><span class="card-link">Mở danh mục thương hiệu →</span></a>
+        <a class="page-card" href="TRrang chính/nutrition_products.html" data-search="dinh dưỡng sản phẩm nutrition dữ liệu demo"><div class="card-top"><span class="card-icon">✿</span><span class="tag">Tham khảo cũ</span></div><h3>Danh mục dinh dưỡng tổng hợp</h3><p>Catalog được tạo tự động, chưa xác minh thương mại; chỉ tham khảo cấu trúc, không dùng tư vấn/chọn mua.</p><span class="card-link">Mở catalog cũ →</span></a>
+        <a class="page-card" href="TRrang chính/nutrition_products_dog.html" data-search="dinh dưỡng chó dog"><div class="card-top"><span class="card-icon">🐕</span><span class="tag">Chó</span></div><h3>Dinh dưỡng cho chó</h3><p>Tra cứu sản phẩm và gợi ý theo hồ sơ chó.</p><span class="card-link">Xem danh mục chó →</span></a>
+        <a class="page-card" href="TRrang chính/nutrition_products_cat.html" data-search="dinh dưỡng mèo cat"><div class="card-top"><span class="card-icon">🐈</span><span class="tag">Mèo</span></div><h3>Dinh dưỡng cho mèo</h3><p>Tra cứu sản phẩm và gợi ý theo hồ sơ mèo.</p><span class="card-link">Xem danh mục mèo →</span></a>
+        <a class="page-card" href="TRrang chính/workflow.html" data-search="quy trình workflow"><div class="card-top"><span class="card-icon">↗</span><span class="tag">Quy trình</span></div><h3>Hành trình chăm sóc</h3><p>Khám phá quy trình trải nghiệm và vận hành dịch vụ.</p><span class="card-link">Theo dõi quy trình →</span></a>
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Core capability</span>
-          <h2>Business value at a glance</h2>
-        </div>
-        <p>Designed for strategic review and product demonstration.</p>
-      </div>
-
-      <div class="hero-slider" aria-label="PetCare highlights slider">
-        <div class="slider-track" id="sliderTrack">
-          <div class="slide">
-            <div class="slide-copy">
-              <span class="slide-kicker">Growth engine</span>
-              <h3>Pet nutrition marketplace</h3>
-              <p>Transform your catalog into a premium pet-commerce and wellness experience with recommendations, filters and trust-driven product discovery.</p>
-            </div>
-            <div class="slide-visual">Catalog</div>
-          </div>
-          <div class="slide">
-            <div class="slide-copy">
-              <span class="slide-kicker">Operations</span>
-              <h3>Clinical efficiency</h3>
-              <p>Monitor pet health, disease support routes and care delivery in a single operational command center built for clinic teams.</p>
-            </div>
-            <div class="slide-visual">Care</div>
-          </div>
-          <div class="slide">
-            <div class="slide-copy">
-              <span class="slide-kicker">Strategy</span>
-              <h3>Board-ready reporting</h3>
-              <p>Turn business metrics and portfolio performance into crisp, executive-friendly insights for expansion and investment conversations.</p>
-            </div>
-            <div class="slide-visual">Reports</div>
-          </div>
-        </div>
-        <div class="slider-controls">
-          <div class="slider-dots">
-            <span class="dot active" data-index="0"></span>
-            <span class="dot" data-index="1"></span>
-            <span class="dot" data-index="2"></span>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <button class="arrow-btn" type="button" id="prevSlide">←</button>
-            <button class="arrow-btn" type="button" id="nextSlide">→</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="feature-grid">
-        <article class="feature-card">
-          <span class="chip">Catalog</span>
-          <h3>Nutrition marketplace</h3>
-          <p>Large SKU catalog with filters by species, age, allergy, gluten-free status and clear nutrition goals for each product.</p>
-          <div class="card-link">
-            <a href="nutrition_products.html">Catalog</a>
-            <a href="nutrition_products_dog.html">Dog</a>
-          </div>
-        </article>
-        <article class="feature-card">
-          <span class="chip">Operations</span>
-          <h3>Care operations</h3>
-          <p>Customer records, appointment scheduling, service tracking and personalized health guidance within a single workflow.</p>
-          <div class="card-link">
-            <a href="workflow.html">Workflow</a>
-            <a href="app_interface_preview.html">Dashboard</a>
-          </div>
-        </article>
-        <article class="feature-card">
-          <span class="chip">Reporting</span>
-          <h3>Board reporting</h3>
-          <p>Executive-ready business review, KPI dashboard, market positioning and security context for stakeholder trust.</p>
-          <div class="card-link">
-            <a href="report_final.html">Report</a>
-            <a href="business_case.html">Business case</a>
-          </div>
-        </article>
+    <section class="section" id="operations">
+      <div class="section-head"><div><span class="section-kicker">02 / Vận hành</span><h2>Điều hành cửa hàng & chăm sóc</h2></div><p>Dashboard và các luồng nghiệp vụ theo từng phân hệ.</p></div>
+      <div class="card-grid">
+        <a class="page-card" href="TRrang chính/petcare_management.html" data-search="dashboard bảng điều hành quản lý thú cưng pet management"><div class="card-top"><span class="card-icon">▦</span><span class="tag">Mới · Workspace</span></div><h3>PetCare Enterprise Console</h3><p>Giao diện điều hành tổng hợp, tìm nhanh phân hệ, hồ sơ và báo cáo.</p><span class="card-link">Vào bảng điều hành →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/Module/index.html" data-search="17 modules phân hệ chức năng"><div class="card-top"><span class="card-icon">◈</span><span class="tag">17 phân hệ</span></div><h3>Thư viện phân hệ</h3><p>Hồ sơ thú cưng, chuồng trại, sức khỏe, chăm sóc, khách hàng, kho và báo cáo.</p><span class="card-link">Duyệt toàn bộ phân hệ →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/data_explorer.html" data-search="dữ liệu json data explorer catalog bệnh lý dinh dưỡng"><div class="card-top"><span class="card-icon">▤</span><span class="tag">Nguồn JSON</span></div><h3>Trung tâm dữ liệu</h3><p>Khám phá JSON 17 phân hệ, catalog bệnh lý và dinh dưỡng; tìm kiếm, phân trang, tải JSON hoặc xuất CSV.</p><span class="card-link">Mở trung tâm dữ liệu →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/admin_store_management.html" data-search="admin quản trị cửa hàng sqlite"><div class="card-top"><span class="card-icon">⌘</span><span class="tag">Admin</span></div><h3>Quản trị cửa hàng</h3><p>Trang admin có xác thực và các khu vực vận hành tích hợp.</p><span class="card-link">Mở trang quản trị →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/pet_health_report.html" data-search="sức khỏe bệnh thú cưng health report"><div class="card-top"><span class="card-icon">＋</span><span class="tag">Sức khỏe</span></div><h3>Báo cáo sức khỏe thú cưng</h3><p>Theo dõi chỉ số, hồ sơ, xu hướng và các cảnh báo sức khỏe.</p><span class="card-link">Mở báo cáo sức khỏe →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/disease_support.html" data-search="bệnh hỗ trợ disease"><div class="card-top"><span class="card-icon">✚</span><span class="tag">Hỗ trợ</span></div><h3>Tra cứu hỗ trợ bệnh lý</h3><p>Trang hỗ trợ thông tin và theo dõi sức khỏe thú cưng.</p><span class="card-link">Mở trang hỗ trợ →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/operations_snapshot.html" data-search="snapshot vận hành operations"><div class="card-top"><span class="card-icon">◷</span><span class="tag">Vận hành</span></div><h3>Operations snapshot</h3><p>Tóm tắt vận hành và các tín hiệu cần lưu ý.</p><span class="card-link">Xem snapshot →</span></a>
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Routes</span>
-          <h2>Project access points</h2>
-        </div>
-        <p>All critical views in one entry point.</p>
+    <section class="section" id="project">
+      <div class="section-head"><div><span class="section-kicker">03 / Hồ sơ dự án</span><h2>Đề xuất, tài chính & báo cáo</h2></div><p>Tài liệu trình bày và hồ sơ phục vụ đánh giá dự án.</p></div>
+      <div class="search-row"><input class="search" id="pageSearch" type="search" placeholder="Tìm trang, phân hệ hoặc tài liệu…" aria-label="Tìm kiếm trang trong hệ thống"><span class="count" id="pageCount" aria-live="polite"></span></div>
+      <div class="card-grid" id="projectCards">
+        <a class="page-card" href="Trang hỗ trợ/project_master_summary.html" data-search="master summary tổng hợp hồ sơ dự án"><div class="card-top"><span class="card-icon">◫</span><span class="tag">Tổng hợp</span></div><h3>Project master summary</h3><p>Điểm vào tổng quan, phạm vi, thành phần và các liên kết dự án.</p><span class="card-link">Mở hồ sơ tổng hợp →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/project_overview.html" data-search="tổng quan kiến trúc overview"><div class="card-top"><span class="card-icon">◧</span><span class="tag">Tổng quan</span></div><h3>Tổng quan dự án</h3><p>Mục tiêu, người dùng, phạm vi và lộ trình triển khai.</p><span class="card-link">Xem tổng quan →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/project_quote.html" data-search="báo giá quote chi phí pricing"><div class="card-top"><span class="card-icon">₫</span><span class="tag">Thương mại</span></div><h3>Báo giá dự án</h3><p>Cấu trúc hạng mục, chi phí và điều khoản đề xuất.</p><span class="card-link">Mở báo giá →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/project_invoice.html" data-search="invoice hóa đơn thanh toán vat"><div class="card-top"><span class="card-icon">▤</span><span class="tag">Thanh toán</span></div><h3>Invoice & payment</h3><p>Trang hóa đơn mẫu và lịch thanh toán theo giai đoạn.</p><span class="card-link">Mở invoice →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/business_case.html" data-search="business case hiệu quả kinh doanh roi"><div class="card-top"><span class="card-icon">↗</span><span class="tag">Kinh doanh</span></div><h3>Business case</h3><p>Giá trị, hiệu quả dự kiến và cơ sở triển khai.</p><span class="card-link">Xem business case →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/executive_summary.html" data-search="executive summary tóm tắt điều hành"><div class="card-top"><span class="card-icon">▣</span><span class="tag">Điều hành</span></div><h3>Tóm tắt điều hành</h3><p>Thông tin chính phục vụ rà soát và ra quyết định.</p><span class="card-link">Mở executive summary →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/report_kpi_board.html" data-search="kpi board chỉ số"><div class="card-top"><span class="card-icon">▥</span><span class="tag">Báo cáo</span></div><h3>KPI board</h3><p>Các chỉ số vận hành và mục tiêu theo dõi.</p><span class="card-link">Mở bảng KPI →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/report_business_review.html" data-search="business review báo cáo kinh doanh"><div class="card-top"><span class="card-icon">▤</span><span class="tag">Báo cáo</span></div><h3>Business review</h3><p>Đánh giá kết quả vận hành và hoạt động kinh doanh.</p><span class="card-link">Mở business review →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/report_final.html" data-search="final report báo cáo cuối"><div class="card-top"><span class="card-icon">▧</span><span class="tag">Báo cáo</span></div><h3>Báo cáo tổng kết</h3><p>Trang báo cáo tổng hợp để xem và trình bày dự án.</p><span class="card-link">Mở báo cáo →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/project_security.html" data-search="security bảo mật dữ liệu"><div class="card-top"><span class="card-icon">⬡</span><span class="tag">Bảo mật</span></div><h3>Bảo mật & dữ liệu</h3><p>Phân quyền, lưu trữ, kiểm toán và thực hành bảo vệ dữ liệu.</p><span class="card-link">Xem trang bảo mật →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/slides_pitch.html" data-search="pitch investor thuyết trình"><div class="card-top"><span class="card-icon">▷</span><span class="tag">Pitch deck</span></div><h3>Pitch deck</h3><p>Bản trình bày ngắn gọn dành cho phiên giới thiệu dự án.</p><span class="card-link">Mở pitch deck →</span></a>
+        <a class="page-card" href="Trang hỗ trợ/Module/index.html" data-search="module library thư viện modules 17"><div class="card-top"><span class="card-icon">◈</span><span class="tag">Thư viện</span></div><h3>Thư viện HTML & 17 phân hệ</h3><p>Mở thư viện trang và các màn hình theo nghiệp vụ.</p><span class="card-link">Mở thư viện →</span></a>
       </div>
-      <div class="list-grid">
-        <div class="link-panel">
-          <h3>Strategic overview</h3>
-          <ul class="link-list">
-            <li><a href="project_master_summary.html"><span>Project master summary</span><small>Hub</small></a></li>
-            <li><a href="project_overview.html"><span>Project overview</span><small>Overview</small></a></li>
-            <li><a href="business_case.html"><span>Business case</span><small>Case</small></a></li>
-            <li><a href="executive_summary.html"><span>Executive summary</span><small>Executive</small></a></li>
-            <li><a href="project_security.html"><span>Project security</span><small>Security</small></a></li>
-          </ul>
-        </div>
-        <div class="link-panel">
-          <h3>Proposal & commercial</h3>
-          <ul class="link-list">
-            <li><a href="project_quote.html"><span>Official quote</span><small>Proposal</small></a></li>
-            <li><a href="project_invoice.html"><span>Invoice / Payment</span><small>Billing</small></a></li>
-            <li><a href="slides_pitch.html"><span>Pitch deck</span><small>Pitch</small></a></li>
-            <li><a href="project_slides_final.html"><span>Final deck</span><small>Final</small></a></li>
-          </ul>
-        </div>
-        <div class="link-panel">
-          <h3>Demo delivery</h3>
-          <ul class="link-list">
-            <li><a href="index_customer.html"><span>Customer demo</span><small>Demo</small></a></li>
-            <li><a href="index_presentation.html"><span>Presentation view</span><small>Presentation</small></a></li>
-            <li><a href="workflow.html"><span>Workspace flow</span><small>Flow</small></a></li>
-            <li><a href="workflow_story.html"><span>Workflow story</span><small>Story</small></a></li>
-          </ul>
-        </div>
-        <div class="link-panel">
-          <h3>Care, reports & modules</h3>
-          <ul class="link-list">
-            <li><a href="pet_health_report.html"><span>Pet health report</span><small>Health</small></a></li>
-            <li><a href="disease_support.html"><span>Disease support</span><small>Care</small></a></li>
-            <li><a href="report_final.html"><span>Final report</span><small>Report</small></a></li>
-            <li><a href="Module/index.html"><span>Module hub</span><small>Modules</small></a></li>
-          </ul>
-        </div>
-      </div>
+      <p class="empty" id="emptyState">Không tìm thấy trang phù hợp. Hãy thử từ khóa khác.</p>
     </section>
-
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Testimonials</span>
-          <h2>What stakeholders say</h2>
-        </div>
-        <p>Validation from product, operations and management stakeholders.</p>
-      </div>
-      <div class="testimonial-grid">
-        <article class="testimonial">
-          <div class="stars">★★★★★</div>
-          <p>“The platform gives our team a premium, business-ready experience. It makes pet care operations feel more structured and trustworthy.”</p>
-          <div class="person">
-            <div class="avatar">L</div>
-            <div><strong>Lan Anh</strong><span>Operations Director</span></div>
-          </div>
-        </article>
-        <article class="testimonial">
-          <div class="stars">★★★★★</div>
-          <p>“The reporting and dashboard experience is clean, useful and executive-friendly. This helps us communicate the business story clearly.”</p>
-          <div class="person">
-            <div class="avatar">M</div>
-            <div><strong>Minh Hoàng</strong><span>Business Manager</span></div>
-          </div>
-        </article>
-        <article class="testimonial">
-          <div class="stars">★★★★★</div>
-          <p>“The product architecture is practical and scalable, covering nutrition, clinic care, and service management in one connected system.”</p>
-          <div class="person">
-            <div class="avatar">N</div>
-            <div><strong>Nam Anh</strong><span>Product Lead</span></div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">KPI</span>
-          <h2>Enterprise performance overview</h2>
-        </div>
-        <p>Operational pulse across growth, care quality and customer value.</p>
-      </div>
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <span class="kicker">Active pets</span>
-          <strong>18.4K</strong>
-          <span>Across care, nutrition and service plans</span>
-        </div>
-        <div class="metric-card">
-          <span class="kicker">Retention</span>
-          <strong>92%</strong>
-          <span>Repeat customer rate in 12 months</span>
-        </div>
-        <div class="metric-card">
-          <span class="kicker">Avg. order</span>
-          <strong>₫1.6M</strong>
-          <span>Average services + nutrition value</span>
-        </div>
-        <div class="metric-card">
-          <span class="kicker">Service SLAs</span>
-          <strong>99.2%</strong>
-          <span>Operational uptime and care responsiveness</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Pricing</span>
-          <h2>Commercial model</h2>
-        </div>
-        <p>Transparent package options for scaling operations.</p>
-      </div>
-      <div class="pricing-grid">
-        <div class="pricing-plan">
-          <h3>Starter</h3>
-          <div class="price">₫189M<small>/project</small></div>
-          <ul>
-            <li>Core pet management flows</li>
-            <li>Nutrition catalog overview</li>
-            <li>Basic dashboard reporting</li>
-            <li>Mobile-first UX</li>
-          </ul>
-        </div>
-        <div class="pricing-plan featured">
-          <h3>Premium</h3>
-          <div class="price">₫275.6M<small>/project</small></div>
-          <ul>
-            <li>Full admin + customer portal</li>
-            <li>Health analytics and PDF export</li>
-            <li>Premium design system</li>
-            <li>Implementation + staff training</li>
-          </ul>
-        </div>
-        <div class="pricing-plan">
-          <h3>Enterprise</h3>
-          <div class="price">₫420M<small>+</small></div>
-          <ul>
-            <li>Multi-branch configuration</li>
-            <li>Tailored compliance workflows</li>
-            <li>Priority support and SLA</li>
-            <li>Custom integrations</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Modules</span>
-          <h2>Platform architecture</h2>
-        </div>
-        <p>Business functionality mapped across the PetCare platform.</p>
-      </div>
-      <div class="module-strip">
-        <span class="module-pill">Platform</span>
-        <span class="module-pill">Accounts</span>
-        <span class="module-pill">Dashboard</span>
-        <span class="module-pill">Pets</span>
-        <span class="module-pill">Health</span>
-        <span class="module-pill">Orders</span>
-        <span class="module-pill">Services</span>
-        <span class="module-pill">Inventory</span>
-        <span class="module-pill">Reports</span>
-        <span class="module-pill">Alerts</span>
-        <span class="module-pill">Customers</span>
-        <span class="module-pill">Resv.</span>
-      </div>
-    </section>
+    <p class="note">Lưu ý: các chỉ số và màn hình demo trong website dùng dữ liệu minh họa. Vận hành dữ liệu SQLite thực tế cần mở ứng dụng Python PetCare và đăng nhập.</p>
   </main>
-
+  <footer class="shell"><span>© Bông Bông Pet Care · PetCare System Hub</span><span>Local-first · Python + SQLite · HTML workspace</span></footer>
   <script>
-    const track = document.getElementById('sliderTrack');
-    const slides = Array.from(document.querySelectorAll('.slide'));
-    const dots = Array.from(document.querySelectorAll('.dot'));
-    const nextBtn = document.getElementById('nextSlide');
-    const prevBtn = document.getElementById('prevSlide');
-    let current = 0;
-
-    function renderSlider(index) {
-      current = (index + slides.length) % slides.length;
-      track.style.transform = `translateX(-${current * 100}%)`;
-      dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
+    const search = document.querySelector("#pageSearch");
+    const cards = [...document.querySelectorAll("#projectCards .page-card")];
+    const count = document.querySelector("#pageCount");
+    const empty = document.querySelector("#emptyState");
+    function filterPages() {
+      const query = search.value.trim().toLocaleLowerCase("vi");
+      let visible = 0;
+      for (const card of cards) {
+        const haystack = `${card.textContent} ${card.dataset.search || ""}`.toLocaleLowerCase("vi");
+        const match = haystack.includes(query);
+        card.hidden = !match;
+        if (match) visible += 1;
+      }
+      count.textContent = `${visible} / ${cards.length} trang`;
+      empty.style.display = visible ? "none" : "block";
     }
-
-    nextBtn.addEventListener('click', () => renderSlider(current + 1));
-    prevBtn.addEventListener('click', () => renderSlider(current - 1));
-    dots.forEach((dot) => {
-      dot.addEventListener('click', () => renderSlider(Number(dot.dataset.index)));
-    });
-
-    setInterval(() => renderSlider(current + 1), 5000);
+    search.addEventListener("input", filterPages);
+    filterPages();
   </script>
+  <script src="scripts/site_navigation.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "manifestId": "petcare-html-data",
+  "purpose": "Shared index for browsing prepared JSON in the HTML site and staging the same source files in the Python desktop application.",
+  "operationalData": false,
+  "groups": [
+    {
+      "id": "modules",
+      "label": "17 phân hệ · dữ liệu tổng hợp",
+      "classification": "synthetic_demo",
+      "entries": [
+        {"file": "module_01_platform.json", "label": "01 · Nền tảng & dữ liệu", "arrayPath": "demoData"},
+        {"file": "module_02_accounts.json", "label": "02 · Tài khoản", "arrayPath": "demoData"},
+        {"file": "module_03_dashboard.json", "label": "03 · Dashboard", "arrayPath": "demoData"},
+        {"file": "module_04_pets.json", "label": "04 · Hồ sơ thú cưng", "arrayPath": "demoData"},
+        {"file": "module_05_housing.json", "label": "05 · Chuồng trại", "arrayPath": "demoData"},
+        {"file": "module_06_suppliers.json", "label": "06 · Nhà cung cấp", "arrayPath": "demoData"},
+        {"file": "module_07_imports.json", "label": "07 · Nhập hàng", "arrayPath": "demoData"},
+        {"file": "module_08_health.json", "label": "08 · Sức khỏe", "arrayPath": "demoData"},
+        {"file": "module_09_care.json", "label": "09 · Chăm sóc", "arrayPath": "demoData"},
+        {"file": "module_10_customers.json", "label": "10 · Khách hàng", "arrayPath": "demoData"},
+        {"file": "module_11_reservations.json", "label": "11 · Đặt trước", "arrayPath": "demoData"},
+        {"file": "module_12_orders.json", "label": "12 · Đơn hàng", "arrayPath": "demoData"},
+        {"file": "module_13_memberships.json", "label": "13 · Hội viên", "arrayPath": "demoData"},
+        {"file": "module_14_services.json", "label": "14 · Dịch vụ", "arrayPath": "demoData"},
+        {"file": "module_15_inventory.json", "label": "15 · Kho", "arrayPath": "demoData"},
+        {"file": "module_16_reports.json", "label": "16 · Báo cáo", "arrayPath": "demoData"},
+        {"file": "module_17_alerts.json", "label": "17 · Cảnh báo", "arrayPath": "demoData"}
+      ]
+    },
+    {
+      "id": "diseases",
+      "label": "Danh mục bệnh · nội dung tổng hợp, không chẩn đoán",
+      "classification": "synthetic_demo",
+      "entries": [
+        {"file": "disease_catalog_dog_6000.json", "label": "Bệnh lý · Chó · 6.000 mục", "arrayPath": "items"},
+        {"file": "disease_catalog_cat_6000.json", "label": "Bệnh lý · Mèo · 6.000 mục", "arrayPath": "items"},
+        {"file": "disease_catalog_combined_12000.json", "label": "Bệnh lý · Tổng hợp · 12.000 mục", "arrayPath": "items", "derived": true}
+      ]
+    },
+    {
+      "id": "nutrition",
+      "label": "Danh mục dinh dưỡng · dữ liệu tạo tự động, chưa xác minh thương mại",
+      "classification": "generated_catalog",
+      "entries": [
+        {"file": "nutrition_catalog_dog_4000.json", "label": "Dinh dưỡng · Chó", "arrayPath": "products"},
+        {"file": "nutrition_catalog_cat_4000.json", "label": "Dinh dưỡng · Mèo", "arrayPath": "products"},
+        {"file": "nutrition_catalog_4000.json", "label": "Dinh dưỡng · Tổng hợp", "arrayPath": "products", "derived": true}
+      ]
+    },
+    {
+      "id": "product_reference",
+      "label": "Hồ sơ sản phẩm và thương hiệu · nguồn sản phẩm một phần, danh sách thương hiệu chưa xác minh",
+      "classification": "unverified",
+      "entries": [
+        {"file": "product_spec_fields.json", "label": "Chuẩn 70 trường thông số sản phẩm", "arrayPath": "groups"},
+        {"file": "pet_product_specs.json", "label": "Hồ sơ sản phẩm tham khảo chó mèo", "arrayPath": "products"},
+        {"file": "pet_food_brands_global.json", "label": "Danh mục thương hiệu thức ăn toàn cầu · đầu vào người dùng, chưa xác minh", "arrayPath": "sections"}
+      ]
+    }
+  ]
+}

@@ -126,6 +126,63 @@ On the first launch, the application creates a default admin account:
 
 The user is required to change the password immediately after the first successful login. Passwords are stored using PBKDF2-HMAC-SHA256 hashing with a unique salt.
 
+## HTML Website Integration
+
+The desktop application serves the complete `HTML` folder through its local web bridge. After signing in, use **Mở website** in the top bar to open the central project hub, or **Quản trị web** to open the HTML admin workspace. The project hub links to the branded website, the new PetCare Enterprise Console, supporting project materials, and the full module library. The pages are organized into two folders:
+
+- `HTML/TRrang chính/` contains the public-facing homepage, customer portal, product and nutrition pages, workflow, and `petcare_management.html` operations console.
+- `HTML/Trang hỗ trợ/` contains project proposals, reports, admin and demo screens, and the 17-module library under `Module/`.
+- `HTML/Trang hỗ trợ/data_explorer.html` provides on-demand browsing, search, pagination, JSON downloads, and CSV export for the prepared module, disease, and nutrition catalogs in `HTML/data/`. Catalogs are not fetched until selected.
+- `HTML/TRrang chính/petcare_management.html` reads the prepared `module_*.json` demo datasets for its dashboard metrics, pet list, care chart, and alerts. These JSON records are synthetic demo data; real operational records remain in the local SQLite database.
+
+`HTML/index.html` is the central project hub. Relative CSS, JavaScript, image, data, preview, and page links are served from the same local site.
+`HTML/menu.html` is a standalone, searchable list menu containing direct links to the hub, every main-site and support page, and all 17 module pages. Each entry shows its actual relative URL within the served `HTML` site.
+Every HTML page loads `HTML/scripts/site_navigation.js`, which supplies the same responsive PetCare header, grouped searchable directory with direct links to the HTML pages, a collapsible page guide with usage steps and checks, and the back/home shortcuts.
+
+The Python sidebar's **Bản đồ trang HTML & Python** scans the HTML tree, labels navigation, reference, demo and interactive module pages, and opens eligible HTML or Python pages directly. All 17 module reference pages have corresponding Python operational screens; the HTML module pages describe workflows and are not CRUD replacements. The HTML data explorer has a Python catalog counterpart. Nutrition pages remain product/reference guides rather than full replacements for inventory operations. The HTML admin workspace is a partial browser alternative; use the typed Python screens for complete operational workflows.
+
+`HTML/TRrang chính/user_portal.html` is the customer portal entry point. Customer accounts are separate from staff accounts: self-registration remains pending until staff links it to an existing customer profile, or staff can issue a one-time invite valid for 24 hours. Customers can view only records attached to their linked customer profile. The Python sidebar provides **Tài khoản portal khách hàng** for staff with `sales.manage` to review registrations, create invitations, and expire active invitations. Invitation codes are shown only once and must be sent to the intended customer securely.
+
+Customer portal routes are enabled only when the bridge binds to a loopback address. The customer session uses a separate HttpOnly, SameSite cookie from staff login. This is a local workflow, not a public hosting backend; public Internet access requires a separately deployed and security-reviewed service.
+
+### Shared HTML/Python JSON catalog and SQLite transfer
+
+`HTML/data/` currently contains 26 dataset JSON files and the shared `catalog_manifest.json`: 17 module reference/demo datasets, generated disease catalogs, generated nutrition catalogs, a 70-field product specification, four partial source-backed product references, and a global brand-directory reference. The module `demoData` and disease records identify themselves as synthetic; nutrition entries are generated catalog combinations. These files are not verified store inventory, medical records, customers, pets, prices, or operational transactions. The combined disease and all-species nutrition files overlap their per-species source catalogs and are marked as derived. For backwards compatibility, `nutrition_catalog_4000.json` keeps its existing name even though it contains 8,000 generated product rows plus breed and feeding-profile rows.
+
+`HTML/Trang thông số của các sản phẩm/index.html` provides a 70-field product reference schema and currently four Royal Canin Vietnam product-page references. These are partial source-backed records, not a complete market catalog: label values not found on the cited source remain unfilled, product packaging must be checked, and one Medium Adult page has a URL slug mismatch noted in its record. The schema covers identity, suitability, directions and safety, nutrition analysis, active ingredients, and source verification. No nutrition values are estimated; veterinary medicines must be used only according to their current label and veterinary advice. The older generated nutrition catalogs are explicitly illustrative and must not be used for purchase or health decisions.
+
+`HTML/Trang thông số của các sản phẩm/thuong-hieu.html` is a searchable global brand and product-line directory organized by the countries/market sections in the user-provided list. Every entry is marked unverified: section placement is not proof of origin, manufacturing location, ownership, current distribution, market share, product quality, or nutrition suitability. Corporate ownership and promotional/market-share claims from the supplied list are intentionally not presented as confirmed facts. The directory is not a SKU inventory; use the separate 70-field catalog for product-level records, where source-backed values are available.
+
+`HTML/data/catalog_manifest.json` is the shared source index used by the HTML Data Explorer and the Python desktop data-catalog screen. It lists the JSON file, display label, record array, provenance class, and whether a catalog is derived/overlapping. Unknown JSON files remain discoverable in Python but are marked unverified; the manifest is not treated as an importable record dataset.
+
+The Python desktop sidebar adds **Danh mục JSON & nhập SQLite**. Users with `reports.view` can inspect sources; importing requires `settings.manage`. Use `scripts/import_html_data_to_sqlite.py` to validate and transfer the same JSON documents into separate `html_data_sources` and `html_data_records` SQLite staging tables. By default it performs validation and a count/hash preview only:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\import_html_data_to_sqlite.py --database HTML\data\petcare_reference.sqlite
+```
+
+To apply the import:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\import_html_data_to_sqlite.py --database HTML\data\petcare_reference.sqlite --apply
+```
+
+The desktop screen and CLI default to the local `HTML/data/petcare_reference.sqlite` file (ignored by Git to avoid publishing large generated catalogs). Re-importing a source replaces only that source's staged records, while preserving other datasets and unrelated application tables. Original JSON documents, SHA-256 hashes, classification, overlap flags, and searchable object-array rows are retained. This is a data-preserving transfer layer, not a loader into operational customer, pet, inventory, health, booking, or order tables. Replace generated/demo content with verified business and veterinary sources before making it available as live customer-facing data.
+
+### Operational dataset workspace
+
+The 17 module detail pages and the Enterprise Console include a permission-checked data workspace when served by the local Python bridge. Sign in with an application account; module permissions control view and edit access. The workspace provides:
+
+- **SQLite nghiệp vụ · chỉ xem** for the live operational records already managed by the desktop application. Selecting this source explicitly refreshes actual database records; it is not a write path.
+- **JSON đã chuẩn bị · CRUD có backup** for the `demoData` records in the selected `HTML/data/module_*.json` file. Add/edit operations write atomically and keep a backup beside the application database; archive marks a record instead of deleting it.
+- **SQLite workspace · JSON đã nhập** for a separate, persistent snapshot of prepared JSON records. Import skips keys already imported; the copied workspace supports add, edit, and archive without silently changing live operational tables.
+
+Use the **Mở website** button in the desktop application or the displayed local-bridge link; `file://` pages cannot authenticate or perform writes. Informational pages, aggregate modules, audit history, and system reports remain read-only. Dataset JSON is synthetic/demo content, not real customer or animal records.
+
+This workspace provides generic prepared-dataset record management, not domain-specific CRUD for live animals, customers, health records, care tasks, or inventory. Live application SQLite data is read-only here; real operational changes must use the desktop application until typed web operations are provided.
+
+The bridge listens only on `127.0.0.1`; its SQLite APIs require web authentication and enforce the same role permissions as the desktop application. If the bridge cannot start, the desktop modules remain available, while the web buttons are disabled.
+
 ## Resetting the Default Admin Account
 
 If you need to restore the default admin login on a machine that already contains data, run:

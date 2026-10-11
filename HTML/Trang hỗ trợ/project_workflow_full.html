@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PetCare | Full Workflow</title>
+  <style>
+    :root {
+      --bg:#081b26; --bg-2:#0d2b38; --panel:#0f2431; --card:#102d39; --line:rgba(165,197,210,0.18); --text:#edf8ff; --muted:#c7dde5; --gold:#efc86d; --gold-soft:#f7dd9f; --sky:#8ad8ff; --green:#7fe8b4; --red:#ff8f7d; --shadow:0 22px 55px rgba(0,0,0,0.24);
+      --radius-xl:30px; --radius-lg:22px; --radius-md:18px;
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; color:var(--text);
+      background: radial-gradient(circle at top left, rgba(239,200,109,0.12), transparent 18%), linear-gradient(135deg, var(--bg), var(--bg-2), #123a4d 100%);
+      line-height:1.6;
+    }
+    a { color:inherit; text-decoration:none; }
+    .page { max-width:1380px; margin:0 auto; padding:22px 20px 50px; }
+    .topbar { position:sticky; top:0; z-index:20; background:rgba(8,27,38,0.76); border-bottom:1px solid var(--line); backdrop-filter:blur(10px); }
+    .topbar-inner { max-width:1380px; margin:0 auto; padding:14px 22px; display:flex; justify-content:space-between; align-items:center; gap:14px; }
+    .brand { display:inline-flex; align-items:center; gap:12px; color:var(--gold-soft); font-size:11px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; }
+    .brand-mark { width:32px; height:32px; display:grid; place-items:center; border-radius:10px; background:linear-gradient(135deg,var(--gold),var(--gold-soft)); color:#081b26; font-weight:900; }
+    .nav { display:flex; flex-wrap:wrap; gap:10px; }
+    .nav a { padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid var(--line); color:var(--muted); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; }
+    .hero { margin-top:24px; background:linear-gradient(135deg, rgba(136,215,255,0.05), rgba(239,200,109,0.04), rgba(15,34,48,0.96)); border:1px solid var(--line); border-radius:var(--radius-xl); box-shadow:var(--shadow); }
+    .hero-inner { padding:30px 24px; }
+    .eyebrow { display:inline-flex; padding:8px 12px; border-radius:999px; background:rgba(239,200,109,0.08); border:1px solid rgba(239,200,109,0.30); color:var(--gold-soft); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; font-weight:800; }
+    h1 { margin:18px 0 12px; font-size:clamp(2.8rem,5vw,4.8rem); line-height:0.94; letter-spacing:-0.08em; }
+    .lead { margin:0; color:var(--muted); font-size:1.04rem; line-height:1.8; max-width:900px; }
+    .tag-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+    .tag { display:inline-flex; align-items:center; justify-content:center; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid var(--line); color:var(--text); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; }
+    .section { margin-top:34px; }
+    .section-head { display:flex; justify-content:space-between; align-items:center; gap:14px; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--line); }
+    .section-head h2 { margin:0; font-size:clamp(1.4rem,2vw,2.2rem); letter-spacing:-0.04em; }
+    .flow-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; }
+    .step { padding:18px; border-radius:18px; background:rgba(255,255,255,0.02); border:1px solid var(--line); }
+    .step .n { display:block; color:var(--gold-soft); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; font-weight:800; }
+    .step h3 { margin:12px 0 8px; font-size:1.16rem; }
+    .step p { margin:0; color:var(--muted); line-height:1.8; }
+    .branch-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+    .branch { padding:18px; border-radius:18px; background:rgba(255,255,255,0.02); border:1px solid var(--line); }
+    .branch h3 { margin:10px 0 12px; font-size:1.2rem; }
+    .branch ul { margin:0; padding-left:20px; color:var(--muted); line-height:1.9; }
+    .footer { margin-top:30px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+    @media (max-width:1024px) { .flow-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .branch-grid { grid-template-columns:1fr; } }
+    @media (max-width:700px) { .page { padding:18px 14px 40px; } .topbar-inner { flex-direction:column; align-items:flex-start; } .nav { justify-content:flex-start; } .flow-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="brand-mark">P</span> PetCare</div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="../TRrang chính/index.html">Home</a>
+        <a href="project_overview.html">Overview</a>
+        <a href="project_security.html">Security</a>
+        <a href="../TRrang chính/workflow.html">Workflow</a>
+        <a href="report_final.html">Report</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-inner">
+        <span class="eyebrow">Full workflow</span>
+        <h1>PetCare operational workflow</h1>
+        <p class="lead">The platform is organized as a local-first stack of operational modules. Users start in an authenticated environment, move through role-based navigation, and then work across intake, care, inventory, service, and reporting flows.</p>
+        <div class="tag-row">
+          <span class="tag">Authentication</span>
+          <span class="tag">Role access</span>
+          <span class="tag">Service ops</span>
+          <span class="tag">Reporting</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Core workflow stages</h2></div>
+      <div class="flow-grid">
+        <article class="step"><span class="n">01</span><h3>Launch</h3><p>The application starts and loads the local data store, preparing the operational environment for user tasks.</p></article>
+        <article class="step"><span class="n">02</span><h3>Authenticate</h3><p>Users sign in with internal credentials. Permissions are assigned to guide the data access and actions available in the app.</p></article>
+        <article class="step"><span class="n">03</span><h3>Choose module</h3><p>Navigation branches into customer management, pet records, care workflows, services, inventory, shipping, and reporting.</p></article>
+        <article class="step"><span class="n">04</span><h3>Execute and review</h3><p>Records are updated, scheduled, and followed through with an explicit operational state to support accountability.</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Operational branches</h2></div>
+      <div class="branch-grid">
+        <article class="branch">
+          <h3>Customer & intake</h3>
+          <ul>
+            <li>New customer and pet onboarding</li>
+            <li>Initial health and care profile creation</li>
+            <li>Appointment and service scheduling</li>
+          </ul>
+        </article>
+        <article class="branch">
+          <h3>Care & service</h3>
+          <ul>
+            <li>Veterinary check-ins and treatment follow-up</li>
+            <li>Nutrition guidance and care plans</li>
+            <li>Service status updates and review</li>
+          </ul>
+        </article>
+        <article class="branch">
+          <h3>Sales & inventory</h3>
+          <ul>
+            <li>Orders, trims, and stock updates</li>
+            <li>Memberships and product tracking</li>
+            <li>Inventory visibility and replenishment management</li>
+          </ul>
+        </article>
+        <article class="branch">
+          <h3>Analytics & review</h3>
+          <ul>
+            <li>Operational dashboards and summaries</li>
+            <li>Leadership reporting and trend review</li>
+            <li>Exception handling and continuous improvement</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <div class="footer"><span>PetCare full workflow</span><span>Prepared for business and operational review</span></div>
+  </main>
+  <script src="../scripts/site_navigation.js" defer></script>
+</body>
+</html>

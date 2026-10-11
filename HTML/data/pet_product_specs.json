@@ -1,0 +1,171 @@
+{
+  "catalogVersion": 1,
+  "market": "VN",
+  "sourcePolicy": "official_sources_only",
+  "verifiedAt": "2026-10-12",
+  "notice": "Partial source-backed reference entries only. Missing label values remain undisclosed; this is not a complete market inventory or veterinary advice.",
+  "products": [
+    {
+      "id": "royal-canin-mini-adult-vn",
+      "name": "ROYAL CANIN Mini Adult",
+      "brand": "ROYAL CANIN",
+      "productLine": "Mini",
+      "category": "complete_food",
+      "categoryLabel": "Thức ăn hoàn chỉnh",
+      "species": "DOG",
+      "speciesLabel": "Chó",
+      "lifeStages": ["adult"],
+      "lifeStageLabel": "Trưởng thành · theo tên sản phẩm",
+      "intendedUse": "Thức ăn chó trưởng thành thuộc dòng Mini; đối chiếu đúng quy cách và hướng dẫn độ tuổi trên bao bì hiện hành.",
+      "breeds": [],
+      "verificationStatus": "source_verified_partial",
+      "verificationStatusLabel": "Nguồn chính thức · thông số còn thiếu",
+      "sources": [
+        {
+          "label": "ROYAL CANIN Việt Nam · Mini Adult",
+          "url": "https://www.royalcanin.com/vn/dogs/products/retail-products/mini-adult-3000",
+          "type": "manufacturer_product_page",
+          "accessedAt": "2026-10-12"
+        }
+      ],
+      "specs": {
+        "brand": "ROYAL CANIN",
+        "product_name": "ROYAL CANIN Mini Adult",
+        "product_line": "Mini",
+        "category": "Thức ăn hoàn chỉnh",
+        "species": "Chó",
+        "intended_use": "Sản phẩm thức ăn chó trưởng thành theo tên dòng Mini Adult; kiểm tra chỉ định trên bao bì.",
+        "life_stage": "Trưởng thành · theo tên sản phẩm",
+        "ingredient_list": "Protein gia cầm khử nước, gạo, mỡ động vật, gluten lúa mì, ngô, bột củ cải đường, bột ngô, protein động vật thủy phân, gluten ngô, khoáng chất, dầu đậu nành, dầu cá, fructo-oligo-sacarit, men thủy phân, dầu tảo Schizochytrium sp. (nguồn DHA), chiết xuất Yucca schidigera, bột cúc vạn thọ.",
+        "official_source_url": "Xem liên kết nguồn chính thức bên dưới.",
+        "source_type": "Trang sản phẩm của nhà sản xuất tại Việt Nam",
+        "verified_at": "2026-10-12",
+        "verification_status": "Nguồn nhà sản xuất đã đối chiếu một phần; 70 trường được hiển thị và phần nhãn chưa tìm thấy để trống."
+      }
+    },
+    {
+      "id": "royal-canin-medium-adult-vn",
+      "name": "ROYAL CANIN Medium Adult",
+      "brand": "ROYAL CANIN",
+      "productLine": "Medium",
+      "category": "complete_food",
+      "categoryLabel": "Thức ăn hoàn chỉnh",
+      "species": "DOG",
+      "speciesLabel": "Chó",
+      "lifeStages": ["adult"],
+      "lifeStageLabel": "1–7 tuổi · 11–25 kg (theo nhà sản xuất)",
+      "intendedUse": "Nhà sản xuất nêu công thức cho chó kích cỡ trung bình, cân nặng 11–25 kg, từ 1 đến 7 tuổi; trang cũng nêu các hỗ trợ miễn dịch, tiêu hóa, da và lông.",
+      "breeds": [],
+      "verificationStatus": "source_verified_partial",
+      "verificationStatusLabel": "Nguồn chính thức · thông số còn thiếu",
+      "sources": [
+        {
+          "label": "ROYAL CANIN Việt Nam · Medium Adult",
+          "url": "https://www.royalcanin.com/vn/dogs/products/retail-products/medium-puppy-3004",
+          "type": "manufacturer_product_page",
+          "accessedAt": "2026-10-12",
+          "note": "Nội dung trang trả về mô tả Medium Adult nhưng slug URL có chữ puppy; cần xác nhận trang/nhãn hiện hành trước khi giao dịch."
+        }
+      ],
+      "specs": {
+        "brand": "ROYAL CANIN",
+        "product_name": "ROYAL CANIN Medium Adult",
+        "product_line": "Medium",
+        "category": "Thức ăn hoàn chỉnh",
+        "species": "Chó",
+        "intended_use": "Thức ăn hoàn chỉnh cho chó kích cỡ trung bình theo mô tả nhà sản xuất.",
+        "label_claims": "Nhà sản xuất nêu hỗ trợ hệ miễn dịch, khả năng tiêu hóa, da và lông.",
+        "life_stage": "Trưởng thành",
+        "minimum_age": {"value": 1, "unit": "năm"},
+        "maximum_age": {"value": 7, "unit": "năm"},
+        "size_class": "Trung bình",
+        "minimum_weight": {"value": 11, "unit": "kg"},
+        "maximum_weight": {"value": 25, "unit": "kg"},
+        "dietary_profile": "Nhà sản xuất mô tả protein chất lượng cao, chất xơ cân bằng và Omega-3 (EPA-DHA); không công bố định lượng trong nội dung đã đối chiếu.",
+        "ingredient_list": "Không tìm thấy đầy đủ bảng thành phần trong nội dung đã đối chiếu.",
+        "official_source_url": "Xem liên kết nguồn chính thức bên dưới.",
+        "source_type": "Trang sản phẩm của nhà sản xuất tại Việt Nam",
+        "verified_at": "2026-10-12",
+        "verification_status": "Nguồn nhà sản xuất đã đối chiếu một phần; URL có slug chưa nhất quán cần xác minh lại."
+      }
+    },
+    {
+      "id": "royal-canin-kitten-vn",
+      "name": "ROYAL CANIN Kitten",
+      "brand": "ROYAL CANIN",
+      "productLine": "Kitten",
+      "category": "complete_food",
+      "categoryLabel": "Thức ăn hoàn chỉnh",
+      "species": "CAT",
+      "speciesLabel": "Mèo",
+      "lifeStages": ["kitten"],
+      "lifeStageLabel": "Mèo con · khoảng tuổi cụ thể chưa đối chiếu",
+      "intendedUse": "Sản phẩm thức ăn cho mèo con theo tên sản phẩm; cần đối chiếu khoảng tuổi cụ thể trên bao bì hiện hành.",
+      "breeds": [],
+      "verificationStatus": "source_verified_partial",
+      "verificationStatusLabel": "Nguồn chính thức · thông số còn thiếu",
+      "sources": [
+        {
+          "label": "ROYAL CANIN Việt Nam · Kitten",
+          "url": "https://www.royalcanin.com/vn/cats/products/retail-products/kitten-2522",
+          "type": "manufacturer_product_page",
+          "accessedAt": "2026-10-12"
+        }
+      ],
+      "specs": {
+        "brand": "ROYAL CANIN",
+        "product_name": "ROYAL CANIN Kitten",
+        "product_line": "Kitten",
+        "category": "Thức ăn hoàn chỉnh",
+        "species": "Mèo",
+        "intended_use": "Sản phẩm cho mèo con theo tên sản phẩm; đối chiếu độ tuổi và khẩu phần trên bao bì.",
+        "life_stage": "Mèo con · độ tuổi cụ thể chưa xác minh",
+        "ingredient_list": "Protein gia cầm sấy khô, gạo, gluten lúa mì, chất béo động vật, bột ngô, protein động vật thủy phân, bột mì, gluten ngô, sản phẩm men, bột củ cải đường, xơ thực vật, khoáng chất, dầu đậu nành, dầu cá, vỏ và hạt mã đề, fructo-oligo-saccharides, men thủy phân, dầu tảo Schizochytrium sp. (nguồn DHA), chiết xuất cúc vạn thọ.",
+        "official_source_url": "Xem liên kết nguồn chính thức bên dưới.",
+        "source_type": "Trang sản phẩm của nhà sản xuất tại Việt Nam",
+        "verified_at": "2026-10-12",
+        "verification_status": "Nguồn nhà sản xuất đã đối chiếu một phần; tuổi chính xác và bảng phân tích chưa tìm thấy."
+      }
+    },
+    {
+      "id": "royal-canin-indoor-vn",
+      "name": "ROYAL CANIN Indoor",
+      "brand": "ROYAL CANIN",
+      "productLine": "Indoor",
+      "category": "complete_food",
+      "categoryLabel": "Thức ăn hoàn chỉnh",
+      "species": "CAT",
+      "speciesLabel": "Mèo",
+      "lifeStages": ["adult"],
+      "lifeStageLabel": "Mèo nuôi trong nhà · tuổi cụ thể tùy biến thể",
+      "intendedUse": "Nhà sản xuất mô tả dành cho mèo nuôi trong nhà ít vận động; nêu protein dễ tiêu, mức béo vừa phải và chất xơ psyllium. Dòng có các biến thể theo độ tuổi/lối sống.",
+      "breeds": [],
+      "verificationStatus": "source_verified_partial",
+      "verificationStatusLabel": "Nguồn chính thức · thông số còn thiếu",
+      "sources": [
+        {
+          "label": "ROYAL CANIN Việt Nam · Indoor",
+          "url": "https://www.royalcanin.com/vn/cats/products/retail-products/indoor-27-2529",
+          "type": "manufacturer_product_page",
+          "accessedAt": "2026-10-12"
+        }
+      ],
+      "specs": {
+        "brand": "ROYAL CANIN",
+        "product_name": "ROYAL CANIN Indoor",
+        "product_line": "Indoor",
+        "category": "Thức ăn hoàn chỉnh",
+        "species": "Mèo",
+        "intended_use": "Dành cho mèo nuôi trong nhà theo mô tả nhà sản xuất.",
+        "label_claims": "Nhà sản xuất nêu protein chọn lọc, dễ tiêu, lượng chất béo vừa phải để phù hợp mức vận động và chất xơ psyllium hỗ trợ hạn chế búi lông; đây là tuyên bố của hãng, không phải kết quả lâm sàng độc lập.",
+        "life_stage": "Biến thể và độ tuổi cần kiểm tra theo đúng bao bì.",
+        "dietary_profile": "Mèo nuôi trong nhà, mức hoạt động thấp theo mô tả nhà sản xuất.",
+        "ingredient_list": "Không tìm thấy đầy đủ bảng thành phần trong nội dung đã đối chiếu.",
+        "official_source_url": "Xem liên kết nguồn chính thức bên dưới.",
+        "source_type": "Trang sản phẩm của nhà sản xuất tại Việt Nam",
+        "verified_at": "2026-10-12",
+        "verification_status": "Nguồn nhà sản xuất đã đối chiếu một phần; số liệu phân tích và biến thể cần kiểm tra trên bao bì."
+      }
+    }
+  ]
+}

@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Trung tâm dữ liệu PetCare: xem, tìm kiếm và xuất dữ liệu JSON đã chuẩn bị cho 17 phân hệ, sức khỏe và dinh dưỡng.">
+  <meta name="theme-color" content="#12372b">
+  <title>PetCare | Trung tâm dữ liệu</title>
+  <style>
+    :root{--ink:#20382e;--muted:#75847b;--green:#1c684a;--dark:#12372b;--line:#e2e9e1;--paper:#f4f7f2;--white:#fff;--gold:#866322;--shadow:0 14px 38px rgba(20,54,36,.07)}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.55 "Segoe UI",Arial,sans-serif}a{color:inherit;text-decoration:none}button,input,select{font:inherit}.shell{width:min(1240px,calc(100% - 32px));margin:auto}.header{position:sticky;top:0;z-index:4;border-bottom:1px solid var(--line);background:rgba(255,255,255,.92);backdrop-filter:blur(12px)}.header-inner{min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:14px}.brand{font-weight:850}.brand span{color:var(--green)}.back{padding:8px 12px;border:1px solid var(--line);border-radius:9px;font-size:11px;font-weight:800}.hero{margin:22px 0 17px;padding:26px;border-radius:20px;color:#f4faf5;background:radial-gradient(circle at 90% 0,rgba(217,237,154,.18),transparent 30%),linear-gradient(120deg,#12372b,#1c684a);box-shadow:var(--shadow)}.eyebrow{color:#d9ed9a;font-size:9px;font-weight:850;letter-spacing:.15em;text-transform:uppercase}.hero h1{margin:7px 0;font-size:clamp(27px,4vw,42px);letter-spacing:-.05em}.hero p{max-width:770px;margin:0;color:#d4e4d7;font-size:12px}.status{margin-top:14px;color:#d9ed9a;font-size:10px;font-weight:750}
+    .toolbar{display:grid;grid-template-columns:minmax(200px,1fr) minmax(190px,2fr) auto auto;gap:9px;padding:13px;border:1px solid var(--line);border-radius:14px;background:#fff}.field{min-height:39px;width:100%;padding:0 11px;border:1px solid var(--line);border-radius:9px;background:#fcfdfb;color:var(--ink)}.button{min-height:39px;padding:0 13px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);font-size:11px;font-weight:800;cursor:pointer}.button:hover{border-color:#91b99e;color:var(--green)}.button.primary{border-color:var(--green);background:var(--green);color:#fff}.button:disabled{cursor:not-allowed;opacity:.5}
+    .source-info{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0}.info{min-width:0;padding:12px;border:1px solid var(--line);border-radius:11px;background:#fff}.info small{display:block;color:var(--muted);font-size:9px}.info strong{display:block;margin-top:3px;overflow:hidden;font-size:11px;text-overflow:ellipsis;white-space:nowrap}
+    .data-panel{overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 6px 20px rgba(20,54,36,.025)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 15px;border-bottom:1px solid var(--line)}.panel-head strong{font-size:12px}.panel-head span{color:var(--muted);font-size:10px}.table-wrap{max-height:60vh;overflow:auto}table{width:100%;border-collapse:collapse;text-align:left}thead{position:sticky;top:0;z-index:1;background:#f5f8f3}th{padding:10px 12px;color:#687970;font-size:9px;font-weight:850;white-space:nowrap}td{max-width:400px;padding:9px 12px;border-top:1px solid #edf0eb;font-size:10px;vertical-align:top}td code{color:#466554;font:10px/1.5 Consolas,monospace;overflow-wrap:anywhere}.empty{padding:32px 16px;color:var(--muted);text-align:center;font-size:12px}.pager{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;border-top:1px solid var(--line);font-size:10px}.pager-controls{display:flex;gap:6px}.pager button{min-height:30px;padding:0 10px;border:1px solid var(--line);border-radius:7px;background:#fff;font-size:10px;font-weight:750;cursor:pointer}.pager button:disabled{opacity:.45;cursor:not-allowed}.callout{margin:14px 0 30px;padding:11px 13px;border:1px solid #ebdfbb;border-radius:10px;background:#fff9e9;color:#735e2d;font-size:10px}.error{margin:12px 0;padding:11px 13px;border:1px solid #edc9c1;border-radius:10px;background:#fff2ef;color:#8e4134;font-size:11px}
+    @media(max-width:760px){.toolbar{grid-template-columns:1fr 1fr}.toolbar select,.toolbar input{grid-column:span 2}.source-info{grid-template-columns:repeat(2,minmax(0,1fr))}.table-wrap{max-height:55vh}.header-inner{min-height:56px}}@media(max-width:460px){.shell{width:calc(100% - 20px)}.hero{padding:19px}.toolbar{padding:9px;gap:7px}.source-info{gap:7px}.info{padding:9px}.pager{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+  <header class="header"><div class="shell header-inner"><a class="brand" href="../index.html"><span>PetCare</span> / Trung tâm dữ liệu</a><a class="back" href="../index.html">← Cổng hệ thống</a></div></header>
+  <main class="shell">
+    <section class="hero"><span class="eyebrow">Prepared data workspace</span><h1>Trung tâm dữ liệu PetCare</h1><p>Tra cứu trực tiếp các JSON đã chuẩn bị trong HTML/data: dữ liệu mẫu 17 phân hệ, hồ sơ bệnh lý chó/mèo và danh mục dinh dưỡng. Tải từng bộ dữ liệu theo nhu cầu, tìm kiếm, phân trang và xuất CSV.</p><div id="loadStatus" class="status" role="status">Chọn một nguồn dữ liệu để bắt đầu.</div></section>
+    <section class="toolbar" aria-label="Công cụ dữ liệu">
+      <select class="field" id="sourceSelect" aria-label="Chọn nguồn dữ liệu">
+        <option value="">Đang tải danh mục nguồn dữ liệu…</option>
+      </select>
+      <input class="field" id="searchInput" type="search" placeholder="Tìm trong nguồn dữ liệu…" aria-label="Tìm trong dữ liệu" disabled>
+      <button class="button" id="downloadJson" type="button" disabled>Tải JSON</button>
+      <button class="button primary" id="exportCsv" type="button" disabled>Xuất CSV</button>
+    </section>
+    <div id="error" class="error" role="alert" hidden></div>
+    <section class="source-info" aria-label="Thông tin nguồn"><div class="info"><small>Nguồn</small><strong id="sourceName">Chưa chọn</strong></div><div class="info"><small>Số bản ghi</small><strong id="recordCount">—</strong></div><div class="info"><small>Phân loại</small><strong id="sourceType">—</strong></div><div class="info"><small>Trường dữ liệu</small><strong id="fieldCount">—</strong></div></section>
+    <section class="data-panel" aria-label="Bảng kết quả">
+      <div class="panel-head"><strong id="tableTitle">Chưa tải dữ liệu</strong><span id="pageSummary">Chọn nguồn phía trên</span></div>
+      <div class="table-wrap"><table><thead id="tableHead"></thead><tbody id="tableBody"><tr><td class="empty">Chọn bộ dữ liệu đã chuẩn bị để xem nội dung.</td></tr></tbody></table></div>
+      <div class="pager"><span id="resultSummary">Dữ liệu chỉ được tải khi bạn chọn nguồn.</span><div class="pager-controls"><button id="previousPage" type="button" disabled>← Trước</button><button id="nextPage" type="button" disabled>Tiếp →</button></div></div>
+    </section>
+    <p class="callout">Các tệp module, bệnh lý và dinh dưỡng hiện có là dữ liệu tổng hợp/mô phỏng phục vụ phát triển và trình diễn. Không dùng dữ liệu bệnh lý thay cho chẩn đoán của bác sĩ thú y. Dữ liệu vận hành thật lưu trong SQLite của ứng dụng Python, không được xuất bản ở đây.</p>
+  </main>
+  <script>
+    const sourceSelect = document.querySelector("#sourceSelect");
+    const searchInput = document.querySelector("#searchInput");
+    const pageSize = 25;
+    let sourcePayload = null;
+    let records = [];
+    let filteredRecords = [];
+    let fields = [];
+    let manifestEntries = new Map();
+    let page = 0;
+    let requestSequence = 0;
+    const status = document.querySelector("#loadStatus");
+    const errorBox = document.querySelector("#error");
+    const header = document.querySelector("#tableHead");
+    const body = document.querySelector("#tableBody");
+    const previousButton = document.querySelector("#previousPage");
+    const nextButton = document.querySelector("#nextPage");
+    const displayValue = (value) => {
+      if (value === null || value === undefined) return "—";
+      if (typeof value === "object") return JSON.stringify(value);
+      return String(value);
+    };
+    async function loadManifest() {
+      sourceSelect.disabled = true;
+      try {
+        const response = await fetch("../data/catalog_manifest.json", { cache: "no-store" });
+        if (!response.ok) throw new Error(`Không tải được danh mục nguồn (HTTP ${response.status}).`);
+        const manifest = await response.json();
+        if (!Array.isArray(manifest.groups)) throw new Error("Danh mục nguồn không đúng định dạng.");
+        sourceSelect.replaceChildren(new Option("Chọn nguồn dữ liệu…", ""));
+        for (const group of manifest.groups) {
+          if (!Array.isArray(group.entries)) throw new Error("Nhóm dữ liệu không đúng định dạng.");
+          const optionGroup = document.createElement("optgroup");
+          optionGroup.label = group.label;
+          for (const entry of group.entries) {
+            if (typeof entry.file !== "string" || !entry.file.endsWith(".json")) {
+              throw new Error("Danh mục chứa đường dẫn nguồn không hợp lệ.");
+            }
+            const option = new Option(
+              `${entry.label}${entry.derived ? " · Tổng hợp" : ""}`,
+              entry.file
+            );
+            optionGroup.append(option);
+            manifestEntries.set(entry.file, {
+              ...entry,
+              classification: group.classification || "unverified",
+              groupLabel: group.label
+            });
+          }
+          sourceSelect.append(optionGroup);
+        }
+        sourceSelect.disabled = false;
+        status.textContent = `Đã nạp danh mục dùng chung · ${manifestEntries.size} nguồn JSON.`;
+      } catch (error) {
+        sourceSelect.replaceChildren(new Option("Không tải được danh mục nguồn", ""));
+        errorBox.textContent = error.message;
+        errorBox.hidden = false;
+        status.textContent = "Không tải được danh mục nguồn dữ liệu.";
+      }
+    }
+    function unwrap(payload) {
+      if (Array.isArray(payload)) return { rows: payload, type: "Danh sách JSON", name: "records" };
+      for (const key of ["items", "demoData", "products", "breeds", "feeding_profiles"]) {
+        if (Array.isArray(payload[key])) {
+          return {
+            rows: payload[key],
+            type: payload.meta?.synthetic || payload.demoData ? "Dữ liệu mẫu · synthetic" : "Danh mục đã chuẩn bị",
+            name: key
+          };
+        }
+      }
+      return { rows: [payload], type: payload.dataProfile?.classification || "Metadata JSON", name: "metadata" };
+    }
+    async function loadSource() {
+      const filename = sourceSelect.value;
+      requestSequence += 1;
+      const thisRequest = requestSequence;
+      sourcePayload = null;
+      records = [];
+      filteredRecords = [];
+      fields = [];
+      page = 0;
+      errorBox.hidden = true;
+      searchInput.disabled = true;
+      document.querySelector("#downloadJson").disabled = true;
+      document.querySelector("#exportCsv").disabled = true;
+      if (!filename) {
+        status.textContent = "Chọn một nguồn dữ liệu để bắt đầu.";
+        render();
+        return;
+      }
+      status.textContent = `Đang tải ${filename}…`;
+      document.querySelector("#sourceName").textContent = filename;
+      document.querySelector("#tableTitle").textContent = "Đang tải dữ liệu…";
+      try {
+        if (!manifestEntries.has(filename)) throw new Error("Nguồn không nằm trong danh mục dữ liệu đã công bố.");
+        const response = await fetch(`../data/${encodeURIComponent(filename)}`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Không tải được ${filename} (HTTP ${response.status}).`);
+        const payload = await response.json();
+        if (thisRequest !== requestSequence) return;
+        sourcePayload = payload;
+        const result = unwrap(payload);
+        const manifestEntry = manifestEntries.get(filename);
+        records = result.rows.filter((row) => row && typeof row === "object");
+        fields = [...new Set(records.flatMap((row) => Object.keys(row)))];
+        const classificationLabels = {
+          synthetic_demo: "Dữ liệu demo · tổng hợp",
+          generated_catalog: "Catalog tạo tự động · chưa xác minh",
+          unverified: "Chưa xác minh nguồn"
+        };
+        document.querySelector("#sourceType").textContent =
+          `${classificationLabels[manifestEntry.classification] || classificationLabels.unverified}` +
+          (manifestEntry.derived ? " · nguồn tổng hợp bị chồng lặp" : "");
+        document.querySelector("#recordCount").textContent = records.length.toLocaleString("vi-VN");
+        document.querySelector("#fieldCount").textContent = `${fields.length} trường · ${result.name}`;
+        status.textContent = `Đã tải ${records.length.toLocaleString("vi-VN")} bản ghi từ HTML/data/${filename}.`;
+        searchInput.disabled = false;
+        document.querySelector("#downloadJson").disabled = false;
+        document.querySelector("#exportCsv").disabled = records.length === 0;
+        filterRecords();
+      } catch (error) {
+        if (thisRequest !== requestSequence) return;
+        status.textContent = "Không tải được nguồn dữ liệu.";
+        errorBox.textContent = error.message;
+        errorBox.hidden = false;
+        document.querySelector("#sourceType").textContent = "Lỗi tải";
+        document.querySelector("#tableTitle").textContent = "Nguồn dữ liệu không sẵn sàng";
+        render();
+      }
+    }
+    function filterRecords() {
+      const query = searchInput.value.trim().toLocaleLowerCase("vi");
+      filteredRecords = records.filter((record) =>
+        !query || JSON.stringify(record).toLocaleLowerCase("vi").includes(query)
+      );
+      page = 0;
+      render();
+    }
+    function render() {
+      const headRow = document.createElement("tr");
+      for (const field of fields.slice(0, 12)) {
+        const cell = document.createElement("th");
+        cell.textContent = field;
+        headRow.append(cell);
+      }
+      header.replaceChildren(headRow);
+      const start = page * pageSize;
+      const visible = filteredRecords.slice(start, start + pageSize);
+      body.replaceChildren();
+      if (!visible.length) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.className = "empty";
+        cell.colSpan = Math.max(1, Math.min(fields.length, 12));
+        cell.textContent = records.length ? "Không tìm thấy bản ghi phù hợp." : "Chưa có bản ghi để hiển thị.";
+        row.append(cell);
+        body.append(row);
+      } else {
+        for (const record of visible) {
+          const row = document.createElement("tr");
+          for (const field of fields.slice(0, 12)) {
+            const cell = document.createElement("td");
+            const code = document.createElement("code");
+            code.textContent = displayValue(record[field]);
+            cell.append(code);
+            row.append(cell);
+          }
+          body.append(row);
+        }
+      }
+      const pageCount = Math.ceil(filteredRecords.length / pageSize);
+      document.querySelector("#tableTitle").textContent = sourcePayload ? `Bản ghi · ${sourceSelect.value}` : "Chưa tải dữ liệu";
+      document.querySelector("#pageSummary").textContent = `${filteredRecords.length.toLocaleString("vi-VN")} kết quả`;
+      document.querySelector("#resultSummary").textContent = filteredRecords.length
+        ? `Hiển thị ${start + 1}–${Math.min(start + pageSize, filteredRecords.length)} / ${filteredRecords.length.toLocaleString("vi-VN")}; tối đa 12 trường trên bảng.`
+        : "Không có kết quả để hiển thị.";
+      previousButton.disabled = page <= 0;
+      nextButton.disabled = pageCount === 0 || page >= pageCount - 1;
+    }
+    function saveBlob(filename, content, mime) {
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(new Blob([content], { type: mime }));
+      link.href = url;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+    sourceSelect.addEventListener("change", loadSource);
+    searchInput.addEventListener("input", filterRecords);
+    previousButton.addEventListener("click", () => { if (page > 0) { page -= 1; render(); } });
+    nextButton.addEventListener("click", () => {
+      if ((page + 1) * pageSize < filteredRecords.length) { page += 1; render(); }
+    });
+    document.querySelector("#downloadJson").addEventListener("click", () => {
+      if (sourcePayload) saveBlob(sourceSelect.value, JSON.stringify(sourcePayload, null, 2), "application/json;charset=utf-8");
+    });
+    document.querySelector("#exportCsv").addEventListener("click", () => {
+      if (!fields.length || !filteredRecords.length) return;
+      const csvValue = (value) => `"${displayValue(value).replaceAll('"', '""')}"`;
+      const csv = [fields.map(csvValue).join(","), ...filteredRecords.map((row) => fields.map((field) => csvValue(row[field])).join(","))].join("\r\n");
+      saveBlob(`${sourceSelect.value.replace(/\.json$/i, "")}.csv`, `\uFEFF${csv}`, "text/csv;charset=utf-8");
+    });
+    loadManifest();
+  </script>
+  <script src="../scripts/site_navigation.js" defer></script>
+</body>
+</html>

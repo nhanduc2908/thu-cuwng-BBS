@@ -193,7 +193,10 @@ def main(arguments: Sequence[str] | None = None) -> int:
         web_bridge = LocalAdminBridge(path, Path(__file__).resolve().parent / "HTML")
         try:
             bridge_url = web_bridge.start()
-            LOGGER.info("Admin HTML + SQLite read-only bridge: %s/admin_store_management.html", bridge_url)
+            LOGGER.info(
+                "Admin HTML + SQLite read-only bridge: %s/Trang hỗ trợ/admin_store_management.html",
+                bridge_url,
+            )
         except (OSError, TimeoutError) as error:
             LOGGER.warning("Không khởi động được cầu nối admin HTML: %s", error)
             QMessageBox.warning(
@@ -204,7 +207,11 @@ def main(arguments: Sequence[str] | None = None) -> int:
             )
             web_bridge = None
 
-        window = MainWindow(database, current_user)
+        window = MainWindow(
+            database,
+            current_user,
+            web_base_url=web_bridge.base_url if web_bridge is not None else None,
+        )
         window.show()
     except Exception as error:
         if database is not None:

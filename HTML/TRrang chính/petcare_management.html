@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#12372b">
+  <meta name="description" content="PetCare Enterprise Console — bảng điều hành tổng hợp cho quản lý thú cưng, chăm sóc, sức khỏe, khách hàng và cửa hàng.">
+  <title>PetCare | Enterprise Console</title>
+  <style>
+    :root{--ink:#20382e;--muted:#75847b;--green:#1c684a;--green-dark:#12372b;--green-soft:#eaf4eb;--lime:#d9ed9a;--line:#e4e9e2;--paper:#f5f7f2;--white:#fff;--orange:#bd7650;--blue:#587e98;--red:#ba6256;--shadow:0 14px 34px rgba(25,55,38,.07)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.55 "Segoe UI",Arial,sans-serif}a{color:inherit;text-decoration:none}button,input{font:inherit}
+    .layout{min-height:100vh;display:grid;grid-template-columns:244px minmax(0,1fr)}.sidebar{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:20px 14px 15px;background:var(--green-dark);color:#edf5ed}.brand{display:flex;align-items:center;gap:11px;padding:5px 8px 21px;border-bottom:1px solid rgba(255,255,255,.12)}.brand-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:13px 13px 13px 5px;background:var(--lime);color:var(--green-dark);font-size:19px;font-weight:900}.brand strong{display:block;font-size:14px;letter-spacing:.01em}.brand small{display:block;margin-top:2px;color:#a9c4b3;font-size:9px;letter-spacing:.11em;text-transform:uppercase}.nav-label{margin:22px 10px 7px;color:#91b09e;font-size:9px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}.nav{display:grid;gap:3px}.nav a{display:flex;align-items:center;gap:11px;min-height:39px;padding:8px 10px;border-radius:9px;color:#d6e4da;font-size:12px;font-weight:650;transition:background .18s,color .18s}.nav a:hover,.nav a.active{background:rgba(255,255,255,.11);color:#fff}.nav-symbol{width:19px;text-align:center;color:#b9d3c1;font-size:15px}.sidebar-foot{margin-top:auto;padding:13px 10px 0;border-top:1px solid rgba(255,255,255,.12);color:#a9c4b3;font-size:10px;line-height:1.6}
+    .main{min-width:0}.topbar{position:sticky;top:0;z-index:5;min-height:65px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px clamp(16px,3vw,36px);border-bottom:1px solid var(--line);background:rgba(255,255,255,.91);backdrop-filter:blur(14px)}.crumb{color:var(--muted);font-size:11px}.crumb strong{color:var(--ink)}.top-actions{display:flex;align-items:center;gap:8px}.search{width:min(260px,27vw);height:36px;padding:0 11px;border:1px solid var(--line);border-radius:9px;background:#fbfcfa;outline:none}.search:focus{border-color:#83ae94;box-shadow:0 0 0 3px rgba(28,104,74,.1)}.icon-button,.top-button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 12px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);font-size:11px;font-weight:750;cursor:pointer}.top-button.primary{border-color:var(--green);background:var(--green);color:#fff}.top-button:hover,.icon-button:hover{border-color:#8db59b}
+    .content{width:min(1500px,100%);margin:0 auto;padding:25px clamp(16px,3vw,36px) 45px}.hero{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:22px;padding:27px 29px;border-radius:21px;color:#f6fbf7;background:radial-gradient(circle at 87% 5%,rgba(217,237,154,.21),transparent 25%),linear-gradient(115deg,#153d30,#1d6347);box-shadow:var(--shadow)}.hero:after{position:absolute;right:13%;bottom:-140px;width:240px;height:240px;border:1px solid rgba(255,255,255,.12);border-radius:50%;content:"";box-shadow:0 0 0 28px rgba(255,255,255,.025),0 0 0 58px rgba(255,255,255,.02)}.hero-copy,.hero-side{position:relative;z-index:1}.eyebrow{color:#d5eb9a;font-size:9px;font-weight:850;letter-spacing:.16em;text-transform:uppercase}.hero h1{margin:8px 0 7px;font-size:clamp(26px,3vw,37px);line-height:1.1;letter-spacing:-.045em}.hero p{max-width:620px;margin:0;color:#d0e2d5;font-size:12px}.hero-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:17px}.hero-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 12px;border:1px solid rgba(255,255,255,.23);border-radius:8px;color:#fff;font-size:11px;font-weight:750}.hero-actions a:first-child{border-color:var(--lime);background:var(--lime);color:#18382a}.hero-side{min-width:150px;padding:14px 16px;border:1px solid rgba(255,255,255,.16);border-radius:13px;background:rgba(255,255,255,.075)}.hero-side span{display:block;color:#c4d9ca;font-size:9px}.hero-side strong{display:block;margin:4px 0;font-size:23px}.hero-side small{color:#c4d9ca;font-size:9px}
+    .section{margin-top:23px}.section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:11px}.section-heading h2{margin:2px 0 0;font-size:17px;letter-spacing:-.025em}.section-heading p{margin:0;color:var(--muted);font-size:10px}.section-tag{color:var(--green);font-size:9px;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+    .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}.metric{position:relative;min-width:0;padding:15px;border:1px solid var(--line);border-radius:13px;background:#fff;box-shadow:0 6px 16px rgba(25,55,38,.025)}.metric-top{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:10px}.metric-icon{display:grid;place-items:center;width:29px;height:29px;border-radius:9px;background:var(--green-soft);color:var(--green);font-size:14px}.metric strong{display:block;margin:8px 0 1px;font-size:25px;line-height:1.1;letter-spacing:-.05em}.metric small{color:var(--muted);font-size:9px}.trend{color:var(--green);font-weight:800}
+    .dashboard-grid{display:grid;grid-template-columns:minmax(0,1.42fr) minmax(270px,.8fr);gap:12px}.panel{min-width:0;padding:16px;border:1px solid var(--line);border-radius:14px;background:#fff}.panel-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}.panel-title h3{margin:0;font-size:13px}.panel-title p{margin:3px 0 0;color:var(--muted);font-size:9px}.badge{padding:4px 7px;border-radius:99px;background:#eff6ed;color:#446d4f;font-size:9px;font-weight:800;white-space:nowrap}.chart{width:100%;height:170px}.chart text{fill:#8b9990;font:9px "Segoe UI",Arial,sans-serif}.chart .gridline{stroke:#e9eee8;stroke-width:1}.chart .area{fill:url(#areaFill)}.chart .line{fill:none;stroke:#2c8a63;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.chart .dot{fill:#fff;stroke:#2c8a63;stroke-width:2}
+    .attention-list{display:grid;gap:8px}.attention{display:grid;grid-template-columns:9px minmax(0,1fr) auto;align-items:center;gap:9px;padding:9px;border:1px solid #edf0eb;border-radius:10px}.attention-dot{width:8px;height:8px;border-radius:50%;background:#d8a24d}.attention.red .attention-dot{background:#ca6b5c}.attention.blue .attention-dot{background:#6e9ab1}.attention strong{display:block;font-size:10px}.attention small{display:block;margin-top:2px;color:var(--muted);font-size:9px}.attention a{color:var(--green);font-size:9px;font-weight:800}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:11px}table{width:100%;border-collapse:collapse;white-space:nowrap;text-align:left}th{padding:9px 11px;background:#f7f9f6;color:#708077;font-size:9px;font-weight:800}td{padding:10px 11px;border-top:1px solid #edf0eb;font-size:10px}.pet-name{display:flex;align-items:center;gap:8px;font-weight:750}.pet-avatar{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:#f5eddf;font-size:15px}.status{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:99px;background:#edf6ef;color:#39744e;font-size:9px;font-weight:800}.status:before{width:5px;height:5px;border-radius:50%;background:currentColor;content:""}.status.warn{background:#fff4e4;color:#9c6a20}.status.info{background:#edf4f8;color:#4d7893}
+    .module-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px}.module{display:flex;min-height:86px;flex-direction:column;justify-content:space-between;padding:11px;border:1px solid var(--line);border-radius:11px;background:#fff;transition:transform .18s,border-color .18s,box-shadow .18s}.module:hover{transform:translateY(-2px);border-color:#9dc5a8;box-shadow:var(--shadow)}.module-icon{color:var(--green);font-size:16px}.module strong{font-size:10px;line-height:1.35}.module small{color:var(--muted);font-size:8px}
+    .notice{margin-top:15px;padding:10px 12px;border:1px solid #eddfb6;border-radius:10px;background:#fff9e9;color:#755f2b;font-size:9px}.footer{display:flex;justify-content:space-between;gap:12px;margin-top:23px;padding-top:13px;border-top:1px solid var(--line);color:var(--muted);font-size:9px}
+    @media(max-width:1100px){.layout{grid-template-columns:205px minmax(0,1fr)}.module-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:760px){.layout{display:block}.sidebar{position:relative;z-index:7;height:auto;padding:9px 12px}.brand{padding:1px 5px 9px;border:0}.nav-label,.sidebar-foot{display:none}.nav{display:flex;overflow:auto;gap:4px;padding-top:7px}.nav a{flex:0 0 auto;min-height:32px;padding:6px 9px;font-size:10px}.nav-symbol{width:auto}.topbar{position:sticky;top:0;min-height:53px}.crumb{font-size:9px}.search{width:min(185px,35vw);height:33px}.top-button{min-height:33px;padding:0 9px;font-size:9px}.content{padding-top:16px}.hero{grid-template-columns:1fr;padding:21px}.hero-side{display:none}.dashboard-grid{grid-template-columns:1fr}.module-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.section-heading p{display:none}}
+    @media(max-width:440px){.top-actions .search{width:120px}.top-button.back{display:none}.metrics{gap:7px}.metric{padding:11px}.metric strong{font-size:22px}.module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.module{min-height:77px}.footer{flex-direction:column}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="../index.html"><span class="brand-mark">P</span><span><strong>PetCare Console</strong><small>Bông Bông · Enterprise</small></span></a>
+      <div class="nav-label">Workspace</div>
+      <nav class="nav" aria-label="Điều hướng bảng điều hành">
+        <a class="active" href="#overview"><span class="nav-symbol">▦</span>Tổng quan</a>
+        <a href="#pets"><span class="nav-symbol">♡</span>Thú cưng</a>
+        <a href="../Trang hỗ trợ/Module/module_08_health.html"><span class="nav-symbol">＋</span>Sức khỏe</a>
+        <a href="../Trang hỗ trợ/Module/module_09_care.html"><span class="nav-symbol">✿</span>Chăm sóc</a>
+        <a href="../Trang hỗ trợ/Module/module_10_customers.html"><span class="nav-symbol">◎</span>Khách hàng</a>
+      </nav>
+      <div class="nav-label">Quản lý</div>
+      <nav class="nav" aria-label="Phân hệ quản lý">
+        <a href="#modules"><span class="nav-symbol">◈</span>Phân hệ</a>
+        <a href="../Trang hỗ trợ/Module/module_05_housing.html"><span class="nav-symbol">⌂</span>Chuồng trại</a>
+        <a href="../Trang hỗ trợ/Module/module_15_inventory.html"><span class="nav-symbol">▤</span>Kho & sản phẩm</a>
+        <a href="../Trang hỗ trợ/Module/module_14_services.html"><span class="nav-symbol">◷</span>Dịch vụ & lịch hẹn</a>
+        <a href="../Trang hỗ trợ/Module/module_16_reports.html"><span class="nav-symbol">▥</span>Báo cáo</a>
+        <a href="../Trang hỗ trợ/data_explorer.html"><span class="nav-symbol">◫</span>Trung tâm dữ liệu</a>
+      </nav>
+      <div class="nav-label">Tài nguyên dự án</div>
+      <nav class="nav" aria-label="Tài nguyên dự án">
+        <a href="../index.html"><span class="nav-symbol">⌘</span>System Hub</a>
+        <a href="../Trang hỗ trợ/Module/index.html"><span class="nav-symbol">◫</span>Thư viện 17 phân hệ</a>
+        <a href="../Trang hỗ trợ/project_overview.html"><span class="nav-symbol">↗</span>Tổng quan dự án</a>
+      </nav>
+      <div class="sidebar-foot">Giao diện trình diễn · Dữ liệu minh họa<br>Hồ sơ thật được quản lý trong ứng dụng Python.</div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div class="crumb">PetCare / <strong>Trung tâm điều hành</strong></div>
+        <div class="top-actions">
+          <input class="search" id="moduleSearch" type="search" placeholder="Tìm phân hệ…" aria-label="Tìm phân hệ">
+          <a class="top-button back" href="../index.html">System Hub</a>
+          <a class="top-button primary" href="../Trang hỗ trợ/admin_store_management.html">Quản trị web ↗</a>
+        </div>
+      </header>
+      <div class="content" id="overview">
+        <section class="hero">
+          <div class="hero-copy">
+            <span class="eyebrow">Enterprise pet-care operations</span>
+            <h1>Chăm sóc tốt hơn.<br>Vận hành rõ ràng hơn.</h1>
+            <p>Một góc nhìn tổng hợp cho hồ sơ thú cưng, sức khỏe, lịch chăm sóc, dịch vụ và hoạt động cửa hàng.</p>
+            <div class="hero-actions"><a href="#modules">Đi đến phân hệ</a><a href="../Trang hỗ trợ/pet_health_report.html">Mở báo cáo sức khỏe</a><a href="../Trang hỗ trợ/project_quote.html">Hồ sơ dự án</a></div>
+          </div>
+          <div class="hero-side"><span>Ngày làm việc</span><strong id="today">--</strong><small>Trạng thái hệ thống · Local-first</small></div>
+        </section>
+
+        <section class="section" aria-labelledby="metrics-title">
+          <div class="section-heading"><div><span class="section-tag">Tổng quan dữ liệu</span><h2 id="metrics-title">Chỉ số vận hành</h2></div><p id="metricsCaption">Đang kết nối các nguồn JSON đã chuẩn bị</p></div>
+          <div class="metrics">
+            <article class="metric"><div class="metric-top"><span>Hồ sơ thú cưng</span><span class="metric-icon">♡</span></div><strong id="petTotal">—</strong><small id="petMetricNote">Đang tải dữ liệu…</small></article>
+            <article class="metric"><div class="metric-top"><span>Chăm sóc đang mở</span><span class="metric-icon">✿</span></div><strong id="careOpen">—</strong><small id="careMetricNote">Đang tải dữ liệu…</small></article>
+            <article class="metric"><div class="metric-top"><span>Lịch dịch vụ</span><span class="metric-icon">◷</span></div><strong id="serviceTotal">—</strong><small id="serviceMetricNote">Đang tải dữ liệu…</small></article>
+            <article class="metric"><div class="metric-top"><span>Cảnh báo chưa đóng</span><span class="metric-icon">!</span></div><strong id="alertTotal">—</strong><small id="alertMetricNote">Đang tải dữ liệu…</small></article>
+          </div>
+        </section>
+
+        <section class="section dashboard-grid" aria-label="Phân tích và cảnh báo">
+          <article class="panel">
+            <div class="panel-title"><div><h3>Hoạt động chăm sóc</h3><p id="careChartNote">Khối lượng công việc theo ngày · Đang tải dữ liệu</p></div><span class="badge">7 mốc gần nhất</span></div>
+            <svg class="chart" id="careChart" viewBox="0 0 640 190" role="img" aria-label="Biểu đồ hoạt động chăm sóc từ dữ liệu đã chuẩn bị">
+              <defs><linearGradient id="areaFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#54a77b" stop-opacity=".24"/><stop offset="1" stop-color="#54a77b" stop-opacity="0"/></linearGradient></defs>
+              <line class="gridline" x1="38" y1="25" x2="625" y2="25"/><line class="gridline" x1="38" y1="68" x2="625" y2="68"/><line class="gridline" x1="38" y1="111" x2="625" y2="111"/><line class="gridline" x1="38" y1="154" x2="625" y2="154"/>
+              <text x="4" y="28">30</text><text x="4" y="71">20</text><text x="10" y="114">10</text><text x="15" y="157">0</text>
+              <g id="careChartData"></g>
+            </svg>
+          </article>
+          <article class="panel">
+            <div class="panel-title"><div><h3>Hộp cần chú ý</h3><p>Mở phân hệ để rà soát chi tiết</p></div><span class="badge" id="alertBadge">Đang tải</span></div>
+            <div class="attention-list" id="attentionList" aria-live="polite"><p>Đang tải dữ liệu cảnh báo…</p></div>
+          </article>
+        </section>
+
+        <section class="section" id="pets">
+          <div class="section-heading"><div><span class="section-tag">Hồ sơ & chăm sóc</span><h2>Thú cưng cần theo dõi</h2></div><a class="top-button" href="../Trang hỗ trợ/Module/module_04_pets.html">Mở hồ sơ thú cưng →</a></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>THÚ CƯNG</th><th>LOÀI / GIỐNG</th><th>CHỦ NUÔI</th><th>THEO DÕI</th><th>TRẠNG THÁI</th><th>HỒ SƠ</th></tr></thead>
+            <tbody id="petRecords"><tr><td colspan="6">Đang tải hồ sơ thú cưng…</td></tr></tbody>
+          </table></div>
+        </section>
+
+        <section class="section" id="modules">
+          <div class="section-heading"><div><span class="section-tag">Workspace map</span><h2>17 phân hệ PetCare</h2></div><p id="moduleCount">17 phân hệ · Chọn để mở trang nghiệp vụ</p></div>
+          <div class="module-grid" id="moduleGrid">
+            <a class="module" href="../Trang hỗ trợ/Module/module_01_platform.html" data-search="nền tảng dữ liệu"><span class="module-icon">◉</span><strong>Nền tảng & dữ liệu</strong><small>01 · Hệ thống</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_02_accounts.html" data-search="tài khoản phân quyền"><span class="module-icon">♙</span><strong>Tài khoản & vai trò</strong><small>02 · Quyền truy cập</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_03_dashboard.html" data-search="tổng quan dashboard"><span class="module-icon">▦</span><strong>Tổng quan</strong><small>03 · Dashboard</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_04_pets.html" data-search="thú cưng hồ sơ pet animal"><span class="module-icon">♡</span><strong>Hồ sơ thú cưng</strong><small>04 · Pet profiles</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_05_housing.html" data-search="chuồng trại lưu trú"><span class="module-icon">⌂</span><strong>Chuồng trại</strong><small>05 · Housing</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_06_suppliers.html" data-search="nhà cung cấp supplier"><span class="module-icon">♧</span><strong>Nhà cung cấp</strong><small>06 · Suppliers</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_07_imports.html" data-search="nhập hàng imports"><span class="module-icon">⇩</span><strong>Nhập hàng</strong><small>07 · Imports</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_08_health.html" data-search="sức khỏe khám tiêm health"><span class="module-icon">＋</span><strong>Sức khỏe</strong><small>08 · Health</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_09_care.html" data-search="chăm sóc lịch care"><span class="module-icon">✿</span><strong>Chăm sóc</strong><small>09 · Care</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_10_customers.html" data-search="khách hàng customer"><span class="module-icon">◎</span><strong>Khách hàng</strong><small>10 · Customers</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_11_reservations.html" data-search="đặt trước reservation"><span class="module-icon">▣</span><strong>Đặt trước</strong><small>11 · Reservations</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_12_orders.html" data-search="đơn hàng bán hàng orders sales"><span class="module-icon">▤</span><strong>Đơn hàng</strong><small>12 · Orders</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_13_memberships.html" data-search="hội viên memberships"><span class="module-icon">♢</span><strong>Hội viên</strong><small>13 · Memberships</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_14_services.html" data-search="dịch vụ lịch hẹn services"><span class="module-icon">◷</span><strong>Dịch vụ & lịch hẹn</strong><small>14 · Services</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_15_inventory.html" data-search="kho tồn kho inventory"><span class="module-icon">▥</span><strong>Kho & sản phẩm</strong><small>15 · Inventory</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_16_reports.html" data-search="báo cáo phân tích report"><span class="module-icon">▧</span><strong>Báo cáo</strong><small>16 · Reports</small></a>
+            <a class="module" href="../Trang hỗ trợ/Module/module_17_alerts.html" data-search="cảnh báo sao lưu alerts backup"><span class="module-icon">⚑</span><strong>Cảnh báo & sao lưu</strong><small>17 · Alerts</small></a>
+          </div>
+        </section>
+        <p class="notice" id="dataNotice">Đang kết nối các JSON demo đã chuẩn bị trong HTML/data…</p>
+        <footer class="footer"><span>PetCare Enterprise Console · Bông Bông Pet Care</span><span><a href="../index.html">System Hub</a> · <a href="../Trang hỗ trợ/project_security.html">Bảo mật & dữ liệu</a> · <a href="../Trang hỗ trợ/project_overview.html">Tổng quan dự án</a></span></footer>
+      </div>
+    </main>
+  </div>
+  <script>
+    const today = new Intl.DateTimeFormat("vi-VN", { weekday: "short", day: "2-digit", month: "2-digit" }).format(new Date());
+    document.querySelector("#today").textContent = today;
+    const moduleData = {};
+    const moduleTitles = {
+      module_04_pets: "Hồ sơ thú cưng",
+      module_08_health: "Hồ sơ sức khỏe",
+      module_09_care: "Lịch chăm sóc",
+      module_10_customers: "Khách hàng",
+      module_14_services: "Lịch dịch vụ",
+      module_15_inventory: "Tồn kho",
+      module_17_alerts: "Cảnh báo"
+    };
+    const moduleLinks = {
+      module_04_pets: "../Trang hỗ trợ/Module/module_04_pets.html",
+      module_08_health: "../Trang hỗ trợ/Module/module_08_health.html",
+      module_09_care: "../Trang hỗ trợ/Module/module_09_care.html",
+      module_14_services: "../Trang hỗ trợ/Module/module_14_services.html",
+      module_15_inventory: "../Trang hỗ trợ/Module/module_15_inventory.html",
+      module_17_alerts: "../Trang hỗ trợ/Module/module_17_alerts.html"
+    };
+    const readDemoData = async (moduleId) => {
+      const response = await fetch(`../data/${moduleId}.json`, { cache: "no-store" });
+      if (!response.ok) throw new Error(`${moduleId}: HTTP ${response.status}`);
+      const payload = await response.json();
+      if (!Array.isArray(payload.demoData)) throw new Error(`${moduleId}: thiếu demoData`);
+      return payload.demoData;
+    };
+    const formatStatus = (status) => String(status || "UNKNOWN")
+      .toLowerCase().replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+    const appendCell = (row, value) => {
+      const cell = document.createElement("td");
+      cell.textContent = value || "—";
+      row.append(cell);
+      return cell;
+    };
+    function renderPets() {
+      const records = moduleData.module_04_pets || [];
+      const customers = new Map((moduleData.module_10_customers || []).map((item) => [item.customerId, item.displayName]));
+      const health = new Map((moduleData.module_08_health || []).map((item) => [item.animalId, item]));
+      const care = new Map((moduleData.module_09_care || []).map((item) => [item.animalId, item]));
+      const body = document.querySelector("#petRecords");
+      body.replaceChildren();
+      if (!records.length) {
+        const row = document.createElement("tr");
+        const cell = appendCell(row, "Nguồn dữ liệu không có hồ sơ thú cưng.");
+        cell.colSpan = 6;
+        body.append(row);
+        return;
+      }
+      for (const pet of records.slice(0, 6)) {
+        const row = document.createElement("tr");
+        const petCell = document.createElement("td");
+        const name = document.createElement("span");
+        name.className = "pet-name";
+        const avatar = document.createElement("span");
+        avatar.className = "pet-avatar";
+        avatar.textContent = pet.species === "CAT" ? "🐈" : "🐕";
+        const label = document.createElement("span");
+        label.textContent = pet.displayName || pet.animalId || "Thú cưng";
+        name.append(avatar, label);
+        petCell.append(name);
+        row.append(petCell);
+        appendCell(row, `${formatStatus(pet.species)} · ${pet.breedLabel || "Chưa rõ giống"}`);
+        appendCell(row, customers.get(pet.customerId) || pet.customerId || "Chưa liên kết");
+        const healthRecord = health.get(pet.animalId);
+        const careTask = care.get(pet.animalId);
+        appendCell(row, healthRecord?.summary || careTask?.task || "Chưa có ghi chú");
+        const statusCell = document.createElement("td");
+        const status = document.createElement("span");
+        const petStatus = String(pet.status || "").toUpperCase();
+        status.className = `status${/PENDING|HOLD|REVIEW/.test(petStatus) ? " warn" : petStatus === "SOLD" ? " info" : ""}`;
+        status.textContent = formatStatus(pet.status);
+        statusCell.append(status);
+        row.append(statusCell);
+        const linkCell = document.createElement("td");
+        const link = document.createElement("a");
+        link.className = "card-link";
+        link.href = "../Trang hỗ trợ/Module/module_04_pets.html";
+        link.textContent = "Chi tiết ↗";
+        linkCell.append(link);
+        row.append(linkCell);
+        body.append(row);
+      }
+    }
+    function renderAlerts() {
+      const alerts = (moduleData.module_17_alerts || []).filter((item) =>
+        !["CLOSED", "RESOLVED"].includes(String(item.status).toUpperCase())
+      ).slice(0, 5);
+      const list = document.querySelector("#attentionList");
+      list.replaceChildren();
+      document.querySelector("#alertBadge").textContent = `${alerts.length} mục`;
+      for (const item of alerts) {
+        const row = document.createElement("div");
+        const severity = String(item.severity || "").toUpperCase();
+        row.className = `attention${severity === "CRITICAL" ? " red" : severity === "REVIEW" ? "" : " blue"}`;
+        const dot = document.createElement("span");
+        dot.className = "attention-dot";
+        const copy = document.createElement("span");
+        const title = document.createElement("strong");
+        title.textContent = formatStatus(item.alertType || "Cảnh báo");
+        const detail = document.createElement("small");
+        detail.textContent = `${formatStatus(item.severity)} · ${formatStatus(item.status)} · ${item.sourceId || item.alertId}`;
+        copy.append(title, detail);
+        const link = document.createElement("a");
+        link.href = moduleLinks.module_17_alerts;
+        link.textContent = "Mở →";
+        row.append(dot, copy, link);
+        list.append(row);
+      }
+      if (!alerts.length) {
+        const empty = document.createElement("p");
+        empty.textContent = "Nguồn dữ liệu không có cảnh báo chưa đóng.";
+        list.append(empty);
+      }
+    }
+    function renderCareChart() {
+      const tasks = moduleData.module_09_care || [];
+      const counts = new Map();
+      for (const task of tasks) {
+        if (task.dueOn) counts.set(task.dueOn, (counts.get(task.dueOn) || 0) + 1);
+      }
+      const points = [...counts.entries()].sort(([a], [b]) => a.localeCompare(b)).slice(-7);
+      const group = document.querySelector("#careChartData");
+      group.replaceChildren();
+      if (!points.length) {
+        document.querySelector("#careChartNote").textContent = "Không có ngày chăm sóc trong nguồn dữ liệu.";
+        return;
+      }
+      const namespace = "http://www.w3.org/2000/svg";
+      const max = Math.max(1, ...points.map(([, value]) => value));
+      const coords = points.map(([, value], index) => ({
+        x: points.length === 1 ? 330 : 48 + index * (572 / (points.length - 1)),
+        y: 154 - (value / max) * 120
+      }));
+      const make = (tag, attributes, text) => {
+        const element = document.createElementNS(namespace, tag);
+        for (const [key, value] of Object.entries(attributes)) element.setAttribute(key, String(value));
+        if (text) element.textContent = text;
+        group.append(element);
+        return element;
+      };
+      for (const y of [25, 68, 111, 154]) make("line", { class: "gridline", x1: 38, y1: y, x2: 625, y2: y });
+      const linePath = coords.map((point, index) => `${index ? "L" : "M"} ${point.x} ${point.y}`).join(" ");
+      make("path", { class: "area", d: `${linePath} L ${coords.at(-1).x} 154 L ${coords[0].x} 154 Z` });
+      make("path", { class: "line", d: linePath });
+      coords.forEach((point, index) => {
+        make("circle", { class: "dot", cx: point.x, cy: point.y, r: 4 });
+        const dateLabel = points[index][0].slice(5).replace("-", "/");
+        make("text", { x: point.x - 12, y: 176 }, dateLabel);
+      });
+      document.querySelector("#careChartNote").textContent = `Công việc theo dueOn từ dữ liệu mẫu · ${tasks.length.toLocaleString("vi-VN")} bản ghi`;
+    }
+    async function loadDashboardData() {
+      const sources = [
+        "module_04_pets",
+        "module_08_health",
+        "module_09_care",
+        "module_10_customers",
+        "module_14_services",
+        "module_15_inventory",
+        "module_17_alerts"
+      ];
+      const results = await Promise.allSettled(sources.map(async (moduleId) => {
+        moduleData[moduleId] = await readDemoData(moduleId);
+      }));
+      const failures = results.flatMap((result, index) =>
+        result.status === "rejected" ? [`${sources[index]}: ${result.reason.message}`] : []
+      );
+      const count = (moduleId) => moduleData[moduleId]?.length;
+      const setMetric = (selector, moduleId, note, value) => {
+        document.querySelector(selector).textContent = value === undefined ? "—" : value.toLocaleString("vi-VN");
+        document.querySelector(selector.replace(/Total$|Open$/, "MetricNote")).textContent =
+          moduleData[moduleId] === undefined ? `Không tải được ${moduleId}.json` : note;
+      };
+      setMetric("#petTotal", "module_04_pets", "hồ sơ trong module_04_pets.json · demo", count("module_04_pets"));
+      const care = moduleData.module_09_care || [];
+      const openCare = care.filter((item) => !["DONE", "COMPLETED", "CLOSED"].includes(String(item.status).toUpperCase())).length;
+      setMetric("#careOpen", "module_09_care", `${care.length.toLocaleString("vi-VN")} bản ghi · module_09_care.json`, moduleData.module_09_care === undefined ? undefined : openCare);
+      setMetric("#serviceTotal", "module_14_services", "lịch từ module_14_services.json · demo", count("module_14_services"));
+      const openAlerts = (moduleData.module_17_alerts || []).filter((item) =>
+        !["CLOSED", "RESOLVED"].includes(String(item.status).toUpperCase())
+      ).length;
+      setMetric("#alertTotal", "module_17_alerts", "chưa đóng · module_17_alerts.json", moduleData.module_17_alerts === undefined ? undefined : openAlerts);
+      renderPets();
+      renderAlerts();
+      renderCareChart();
+      const notice = document.querySelector("#dataNotice");
+      if (failures.length) {
+        notice.textContent = `Không tải được một số nguồn JSON: ${failures.join("; ")}. Mở Trung tâm dữ liệu để kiểm tra.`;
+        document.querySelector("#metricsCaption").textContent = "Một số nguồn dữ liệu không khả dụng; số liệu tương ứng được đánh dấu.";
+        notice.setAttribute("role", "alert");
+      } else {
+        notice.textContent = "Dashboard đọc dữ liệu demo từ HTML/data/*.json. Dữ liệu này là synthetic, không phải hồ sơ khách hàng thật. Xem nguồn và tải dữ liệu tại Trung tâm dữ liệu; dữ liệu vận hành thực tế được quản lý bởi ứng dụng Python + SQLite.";
+        document.querySelector("#metricsCaption").textContent = "Số liệu tổng hợp trực tiếp từ các JSON trong HTML/data · synthetic";
+        notice.setAttribute("role", "status");
+      }
+    }
+    const moduleSearch = document.querySelector("#moduleSearch");
+    const modules = [...document.querySelectorAll("#moduleGrid .module")];
+    const moduleCount = document.querySelector("#moduleCount");
+    moduleSearch.addEventListener("input", () => {
+      const query = moduleSearch.value.trim().toLocaleLowerCase("vi");
+      let visible = 0;
+      for (const module of modules) {
+        const haystack = `${module.textContent} ${module.dataset.search || ""}`.toLocaleLowerCase("vi");
+        const matches = haystack.includes(query);
+        module.hidden = !matches;
+        if (matches) visible += 1;
+      }
+      moduleCount.textContent = `${visible} / ${modules.length} phân hệ`;
+    });
+    loadDashboardData().catch((error) => {
+      const notice = document.querySelector("#dataNotice");
+      notice.textContent = `Không thể khởi tạo dashboard từ nguồn dữ liệu: ${error.message}`;
+      notice.setAttribute("role", "alert");
+    });
+  </script>
+  <script src="../scripts/site_navigation.js" defer></script>
+</body>
+</html>

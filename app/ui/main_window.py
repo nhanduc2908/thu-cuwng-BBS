@@ -1,6 +1,8 @@
 from typing import Any
+from urllib.parse import quote
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QUrl
+from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
@@ -38,14 +40,21 @@ from app.ui.suppliers.page import SuppliersPage
 from app.ui.platform.page import PlatformPage
 from app.ui.memberships.page import MembershipPage
 from app.ui.services.page import ServicesPage
+from app.ui.data_catalog.page import DataCatalogPage
+from app.ui.web_catalog.page import WebCatalogPage
+from app.ui.customer_portal.page import CustomerPortalPage
 
 
 class MainWindow(QMainWindow):
     def __init__(
-        self, database: Database, current_user: dict[str, Any] | None = None
+        self,
+        database: Database,
+        current_user: dict[str, Any] | None = None,
+        web_base_url: str | None = None,
     ) -> None:
         super().__init__()
         self.database = database
+        self.web_base_url = web_base_url.rstrip("/") if web_base_url else None
         self.current_user = current_user or {
             "id": None,
             "username": "local",
@@ -109,6 +118,47 @@ class MainWindow(QMainWindow):
             self._has_permission("services.manage"),
             self._has_permission("services.catalog.manage"),
         )
+        self.data_catalog = DataCatalogPage(
+            database, self._has_permission("settings.manage")
+        )
+        self.customer_portal = CustomerPortalPage(
+            database,
+            self.current_user.get("id") is not None
+            and self._has_permission("sales.manage"),
+        )
+        available_routes = {
+            "platform": "dashboard.view",
+            "access": "access.view",
+            "dashboard": "dashboard.view",
+            "animals": "animals.view",
+            "store": "store.view",
+            "suppliers": "imports.view",
+            "imports": "imports.view",
+            "health": "health.view",
+            "care": "care.view",
+            "customers": "sales.view",
+            "reservations": "sales.view",
+            "sales": "sales.view",
+            "memberships": "membership.view",
+            "services": "services.view",
+            "inventory": "inventory.view",
+            "reports": "reports.view",
+            "operations": "notifications.view",
+            "data_catalog": "reports.view",
+            "customer_portal": "sales.manage",
+        }
+        available_python_routes = {
+            route
+            for route, permission in available_routes.items()
+            if route != "access" and self._has_permission(permission)
+        }
+        if self._has_permission("users.manage") or self._has_permission("audit.view"):
+            available_python_routes.add("access")
+        self.web_catalog = WebCatalogPage(
+            self.open_web_page,
+            self.navigate_route,
+            available_python_routes,
+        )
         for page in (
             self.platform,
             self.access,
@@ -129,12 +179,18 @@ class MainWindow(QMainWindow):
             self.operations,
             self.memberships,
             self.services,
+            self.data_catalog,
+            self.web_catalog,
+            self.customer_portal,
         ):
             self.pages.addWidget(page)
 
         navigation = (
             ("HỆ THỐNG", "platform", "Nền tảng & dữ liệu", 0, "dashboard.view"),
             ("HỆ THỐNG", "access", "Tài khoản & nhật ký", 1, "access.view"),
+            ("HỆ THỐNG", "data_catalog", "Danh mục JSON & nhập SQLite", 19, "reports.view"),
+            ("HỆ THỐNG", "web_catalog", "Bản đồ trang HTML & Python", 20, "dashboard.view"),
+            ("HỆ THỐNG", "customer_portal", "Tài khoản portal khách hàng", 21, "sales.manage"),
             ("TỔNG QUAN", "dashboard", "Tổng quan", 2, "dashboard.view"),
             ("HỒ SƠ & CHĂM SÓC", "animals", "Pet management", 3, "animals.view"),
             ("HỒ SƠ & CHĂM SÓC", "pet_detail", "Pet detail", 4, "animals.view"),
@@ -220,6 +276,22 @@ class MainWindow(QMainWindow):
             QLabel("PETCARE  /  QUẢN LÝ CỬA HÀNG", objectName="topbarBrand")
         )
         topbar_layout.addStretch()
+        self.website_button = QPushButton("Mở website")
+        self.website_button.setObjectName("websiteButton")
+        self.website_button.setToolTip("Mở trang giới thiệu và thư viện dự án HTML")
+        self.website_button.setEnabled(self.web_base_url is not None)
+        self.website_button.clicked.connect(
+            lambda: self.open_web_page("/index.html")
+        )
+        topbar_layout.addWidget(self.website_button)
+        self.admin_web_button = QPushButton("Quản trị web")
+        self.admin_web_button.setObjectName("adminWebButton")
+        self.admin_web_button.setToolTip("Mở giao diện quản trị HTML kết nối SQLite")
+        self.admin_web_button.setEnabled(self.web_base_url is not None)
+        self.admin_web_button.clicked.connect(
+            lambda: self.open_web_page("/Trang hỗ trợ/admin_store_management.html")
+        )
+        topbar_layout.addWidget(self.admin_web_button)
         topbar_layout.addWidget(
             QLabel(
                 f"Xin chào, {self.current_user['display_name']}\n"
@@ -322,6 +394,11 @@ class MainWindow(QMainWindow):
         self.suppliers.set_manage_enabled(self._has_permission("imports.manage"))
         self.customers.set_manage_enabled(self._has_permission("sales.manage"))
         self.reservations.set_manage_enabled(self._has_permission("sales.manage"))
+        self.data_catalog.set_import_enabled(self._has_permission("settings.manage"))
+        self.customer_portal.set_manage_enabled(
+            self.current_user.get("id") is not None
+            and self._has_permission("sales.manage")
+        )
         self.access.users_button.setEnabled(self._has_permission("users.manage"))
         self.access.audit_button.setEnabled(self._has_permission("audit.view"))
 
@@ -376,6 +453,22 @@ class MainWindow(QMainWindow):
 
     def refresh_dashboard(self) -> None:
         self.dashboard.refresh()
+
+    def open_web_page(self, path: str) -> None:
+        if self.web_base_url is None:
+            QMessageBox.warning(
+                self,
+                "Website chưa sẵn sàng",
+                "Không thể mở website vì cầu nối web cục bộ chưa được khởi động.",
+            )
+            return
+        encoded_path = quote(path, safe="/")
+        if not QDesktopServices.openUrl(QUrl(f"{self.web_base_url}{encoded_path}")):
+            QMessageBox.warning(
+                self,
+                "Không thể mở website",
+                "Không tìm thấy trình duyệt mặc định để mở trang PetCare.",
+            )
 
     def closeEvent(self, event: Any) -> None:
         self.database.close()

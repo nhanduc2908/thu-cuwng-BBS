@@ -1,0 +1,169 @@
+{
+  "catalogVersion": 1,
+  "market": "global_reference",
+  "sourcePolicy": "user_supplied_unverified",
+  "notice": "Brand and product-line names and their country/market grouping are transcribed from user-provided material and have not been independently verified. Country grouping does not confirm place of manufacture, current ownership, product availability, market share, or suitability. Verify the exact product label and official manufacturer sources before relying on product specifications.",
+  "sections": [
+    {
+      "id": "united-states",
+      "name": "Hoa Kỳ",
+      "flag": "🇺🇸",
+      "type": "country",
+      "entries": [
+        {"name":"Purina","lines":["Pro Plan","Purina ONE","Friskies","Fancy Feast","Felix"]},
+        {"name":"Hill's","lines":["Science Diet","Prescription Diet"]},
+        {"name":"Blue Buffalo","lines":[]},
+        {"name":"Instinct","lines":[]},
+        {"name":"Wellness","lines":["CORE","Complete Health"]},
+        {"name":"Taste of the Wild","lines":[]},
+        {"name":"Diamond Naturals","lines":[]},
+        {"name":"Nutro","lines":[]},
+        {"name":"Iams","lines":[]},
+        {"name":"Eukanuba","lines":[]},
+        {"name":"Milk-Bone","lines":[]},
+        {"name":"Meow Mix","lines":[]},
+        {"name":"Kibbles 'n Bits","lines":[]},
+        {"name":"Natural Balance","lines":[]},
+        {"name":"Freshpet","lines":[]},
+        {"name":"Ollie","lines":[]},
+        {"name":"JustFoodForDogs","lines":[]},
+        {"name":"The Honest Kitchen","lines":[]},
+        {"name":"Nature's Recipe","lines":[]},
+        {"name":"9Lives","lines":[]},
+        {"name":"Nutrish","lines":[]}
+      ]
+    },
+    {
+      "id": "france",
+      "name": "Pháp",
+      "flag": "🇫🇷",
+      "type": "country",
+      "entries": [
+        {"name":"Royal Canin","lines":[]}
+      ]
+    },
+    {
+      "id": "canada",
+      "name": "Canada",
+      "flag": "🇨🇦",
+      "type": "country",
+      "entries": [
+        {"name":"Orijen","lines":[]},
+        {"name":"Acana","lines":[]}
+      ]
+    },
+    {
+      "id": "new-zealand",
+      "name": "New Zealand",
+      "flag": "🇳🇿",
+      "type": "country",
+      "entries": [
+        {"name":"Ziwi Peak","lines":[]}
+      ]
+    },
+    {
+      "id": "germany",
+      "name": "Đức",
+      "flag": "🇩🇪",
+      "type": "country",
+      "entries": [
+        {"name":"Josera","lines":[]},
+        {"name":"Terra Canis","lines":[]},
+        {"name":"Happy Land","lines":[]},
+        {"name":"Animonda","lines":[]},
+        {"name":"Integra","lines":[]},
+        {"name":"Deuerer","lines":[],"note":"Tên doanh nghiệp/nhà sản xuất được nêu trong danh sách; cần xác minh đây có phải nhãn sản phẩm hay không."}
+      ]
+    },
+    {
+      "id": "italy",
+      "name": "Ý",
+      "flag": "🇮🇹",
+      "type": "country",
+      "entries": [
+        {"name":"Farmina","lines":[]},
+        {"name":"Schesir","lines":[]}
+      ]
+    },
+    {
+      "id": "united-kingdom",
+      "name": "Vương quốc Anh",
+      "flag": "🇬🇧",
+      "type": "country",
+      "entries": [
+        {"name":"Lily's Kitchen","lines":[]},
+        {"name":"Applaws","lines":[]}
+      ]
+    },
+    {
+      "id": "spain",
+      "name": "Tây Ban Nha",
+      "flag": "🇪🇸",
+      "type": "country",
+      "entries": [
+        {"name":"Affinity Petcare","lines":["Brekka","Advance"],"note":"Cách viết và mối liên hệ nhãn hiệu cần xác minh theo nguồn chính thức."}
+      ]
+    },
+    {
+      "id": "czechia",
+      "name": "Séc",
+      "flag": "🇨🇿",
+      "type": "country",
+      "entries": [
+        {"name":"VAFO Group","lines":["Brit","Carnilove"]}
+      ]
+    },
+    {
+      "id": "australia",
+      "name": "Úc",
+      "flag": "🇦🇺",
+      "type": "country",
+      "entries": [
+        {"name":"Black Hawk","lines":[]},
+        {"name":"Meals for Mutts","lines":[]}
+      ]
+    },
+    {
+      "id": "japan",
+      "name": "Nhật Bản",
+      "flag": "🇯🇵",
+      "type": "country",
+      "entries": [
+        {"name":"Unicharm","lines":[],"note":"Tên doanh nghiệp được nêu trong danh sách; cần xác minh nhãn/dòng sản phẩm cụ thể."},
+        {"name":"Carman","lines":[],"note":"Tên theo danh sách đầu vào; cần xác minh nhận diện thương hiệu."}
+      ]
+    },
+    {
+      "id": "thailand",
+      "name": "Thái Lan",
+      "flag": "🇹🇭",
+      "type": "country",
+      "entries": [
+        {"name":"SmartHeart","lines":[]},
+        {"name":"i-Tail","lines":[]}
+      ]
+    },
+    {
+      "id": "brazil",
+      "name": "Brazil",
+      "flag": "🇧🇷",
+      "type": "country",
+      "entries": [
+        {"name":"Farmina Brasil","lines":[],"note":"Thực thể/biến thể theo thị trường được nêu trong danh sách; cần xác minh."},
+        {"name":"Total","lines":[],"note":"Tên nhãn chung; cần xác định thương hiệu và nhà sản xuất cụ thể."}
+      ]
+    },
+    {
+      "id": "vietnam-market",
+      "name": "Các nhãn được nêu tại thị trường Việt Nam",
+      "flag": "🇻🇳",
+      "type": "market",
+      "entries": [
+        {"name":"The Best","lines":[],"note":"Nguồn gốc, chủ sở hữu và nhận định thị phần chưa được xác minh."},
+        {"name":"SmartHeart","lines":[]},
+        {"name":"Royal Canin","lines":[]},
+        {"name":"Purina","lines":[]}
+      ]
+    }
+  ]
+}
