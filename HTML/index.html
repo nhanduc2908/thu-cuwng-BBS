@@ -116,6 +116,33 @@
     .section {
       background: rgba(255,255,255,0.9); border: 1px solid var(--line); border-radius: 24px; padding: 22px 20px 18px; box-shadow: 0 12px 22px rgba(18,48,36,0.02);
     }
+    .hero-slider {
+      position: relative; margin-top: 26px; border-radius: 26px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); background: linear-gradient(135deg, rgba(13,61,75,0.96), rgba(12,33,42,0.96));
+    }
+    .slider-track { display: flex; transition: transform 0.5s ease; }
+    .slide {
+      min-width: 100%; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 18px; padding: 28px; min-height: 330px;
+    }
+    .slide-copy { display: flex; flex-direction: column; justify-content: center; }
+    .slide-kicker {
+      display: inline-flex; align-items: center; width: fit-content; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800;
+    }
+    .slide h3 { margin: 14px 0 8px; font-size: clamp(2rem, 3vw, 3rem); letter-spacing: -0.06em; color: #fff; }
+    .slide p { margin: 0; color: rgba(255,255,255,0.82); font-size: 1rem; line-height: 1.8; }
+    .slide-visual {
+      display: grid; place-items: center; min-height: 220px; border-radius: 20px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 1.3rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .slider-controls {
+      display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 18px 18px;
+    }
+    .slider-dots { display: flex; gap: 8px; }
+    .dot {
+      width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.38); background: rgba(255,255,255,0.18); cursor: pointer;
+    }
+    .dot.active { background: var(--gold); border-color: rgba(239,200,109,0.8); box-shadow: 0 0 16px rgba(239,200,109,0.4); }
+    .arrow-btn {
+      border: 1px solid var(--line); background: rgba(255,255,255,0.05); color: var(--ink); width: 42px; height: 42px; border-radius: 12px; cursor: pointer; font-weight: 800;
+    }
     .section-head {
       display: flex; align-items: end; justify-content: space-between; gap: 14px; margin-bottom: 18px;
     }
@@ -130,6 +157,20 @@
     .feature-card {
       display: flex; flex-direction: column; min-height: 220px; padding: 18px 18px 16px; border-radius: 20px; border: 1px solid var(--line); background: linear-gradient(180deg, #fff 0%, #f7faf8 100%);
     }
+    .testimonial-grid {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px;
+    }
+    .testimonial {
+      padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(180deg, #fff 0%, #f8faf9 100%);
+    }
+    .stars { color: #f4c95b; letter-spacing: 0.08em; font-size: 1rem; }
+    .testimonial p { margin: 12px 0 14px; color: var(--muted); font-size: 0.96rem; line-height: 1.8; }
+    .person { display: flex; align-items: center; gap: 10px; }
+    .avatar {
+      width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, var(--green-500), var(--green-700)); color: white; font-weight: 900;
+    }
+    .person strong { display: block; font-size: 0.94rem; }
+    .person span { color: var(--muted); font-size: 0.76rem; }
     .feature-card .chip {
       display: inline-flex; width: fit-content; align-items: center; padding: 5px 9px; border-radius: 999px; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(23,108,76,0.08); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800;
     }
@@ -232,6 +273,47 @@
         </div>
         <p>Designed for strategic review and product demonstration.</p>
       </div>
+
+      <div class="hero-slider" aria-label="PetCare highlights slider">
+        <div class="slider-track" id="sliderTrack">
+          <div class="slide">
+            <div class="slide-copy">
+              <span class="slide-kicker">Growth engine</span>
+              <h3>Pet nutrition marketplace</h3>
+              <p>Transform your catalog into a premium pet-commerce and wellness experience with recommendations, filters and trust-driven product discovery.</p>
+            </div>
+            <div class="slide-visual">Catalog</div>
+          </div>
+          <div class="slide">
+            <div class="slide-copy">
+              <span class="slide-kicker">Operations</span>
+              <h3>Clinical efficiency</h3>
+              <p>Monitor pet health, disease support routes and care delivery in a single operational command center built for clinic teams.</p>
+            </div>
+            <div class="slide-visual">Care</div>
+          </div>
+          <div class="slide">
+            <div class="slide-copy">
+              <span class="slide-kicker">Strategy</span>
+              <h3>Board-ready reporting</h3>
+              <p>Turn business metrics and portfolio performance into crisp, executive-friendly insights for expansion and investment conversations.</p>
+            </div>
+            <div class="slide-visual">Reports</div>
+          </div>
+        </div>
+        <div class="slider-controls">
+          <div class="slider-dots">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="arrow-btn" type="button" id="prevSlide">←</button>
+            <button class="arrow-btn" type="button" id="nextSlide">→</button>
+          </div>
+        </div>
+      </div>
+
       <div class="feature-grid">
         <article class="feature-card">
           <span class="chip">Catalog</span>
@@ -315,6 +397,42 @@
     <section class="section">
       <div class="section-head">
         <div>
+          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Testimonials</span>
+          <h2>What stakeholders say</h2>
+        </div>
+        <p>Validation from product, operations and management stakeholders.</p>
+      </div>
+      <div class="testimonial-grid">
+        <article class="testimonial">
+          <div class="stars">★★★★★</div>
+          <p>“The platform gives our team a premium, business-ready experience. It makes pet care operations feel more structured and trustworthy.”</p>
+          <div class="person">
+            <div class="avatar">L</div>
+            <div><strong>Lan Anh</strong><span>Operations Director</span></div>
+          </div>
+        </article>
+        <article class="testimonial">
+          <div class="stars">★★★★★</div>
+          <p>“The reporting and dashboard experience is clean, useful and executive-friendly. This helps us communicate the business story clearly.”</p>
+          <div class="person">
+            <div class="avatar">M</div>
+            <div><strong>Minh Hoàng</strong><span>Business Manager</span></div>
+          </div>
+        </article>
+        <article class="testimonial">
+          <div class="stars">★★★★★</div>
+          <p>“The product architecture is practical and scalable, covering nutrition, clinic care, and service management in one connected system.”</p>
+          <div class="person">
+            <div class="avatar">N</div>
+            <div><strong>Nam Anh</strong><span>Product Lead</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
           <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Modules</span>
           <h2>Platform architecture</h2>
         </div>
@@ -336,5 +454,28 @@
       </div>
     </section>
   </main>
+
+  <script>
+    const track = document.getElementById('sliderTrack');
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const dots = Array.from(document.querySelectorAll('.dot'));
+    const nextBtn = document.getElementById('nextSlide');
+    const prevBtn = document.getElementById('prevSlide');
+    let current = 0;
+
+    function renderSlider(index) {
+      current = (index + slides.length) % slides.length;
+      track.style.transform = `translateX(-${current * 100}%)`;
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
+    }
+
+    nextBtn.addEventListener('click', () => renderSlider(current + 1));
+    prevBtn.addEventListener('click', () => renderSlider(current - 1));
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => renderSlider(Number(dot.dataset.index)));
+    });
+
+    setInterval(() => renderSlider(current + 1), 5000);
+  </script>
 </body>
 </html>
