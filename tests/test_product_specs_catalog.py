@@ -91,3 +91,30 @@ def test_global_brand_directory_preserves_user_supplied_names_as_unverified():
     ).read_text(encoding="utf-8")
     assert "Thông tin đang chờ xác minh độc lập" in page
     assert "index.html" in page
+
+
+def test_brand_directory_links_into_filtered_system_products_and_verified_sources():
+    brand_script = (
+        PROJECT_ROOT / "HTML" / "scripts" / "global_food_brands.js"
+    ).read_text(encoding="utf-8")
+    product_script = (
+        PROJECT_ROOT / "HTML" / "scripts" / "product_specs.js"
+    ).read_text(encoding="utf-8")
+    brand_page = (
+        PROJECT_ROOT
+        / "HTML"
+        / "Trang thông số của các sản phẩm"
+        / "thuong-hieu.html"
+    ).read_text(encoding="utf-8")
+
+    assert 'href="index.html?brand=${encodeURIComponent' in brand_script
+    assert "PRODUCT_DATA_URL" in brand_script
+    assert "brand-product-link" in brand_script
+    assert "target=\"_blank\" rel=\"noopener noreferrer\"" in brand_script
+    assert 'get("brand")' in product_script
+    assert "split(\"|\")" in product_script
+    assert "Sản phẩm trong hệ thống" in brand_script
+    assert "official_sources_only" in (
+        DATA_DIR / "pet_product_specs.json"
+    ).read_text(encoding="utf-8")
+    assert "index.html?brand=" in brand_page or "PRODUCT_DATA_URL" in brand_script

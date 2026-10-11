@@ -25,6 +25,7 @@ except ModuleNotFoundError as error:
     raise SystemExit(1) from error
 
 from app.database import Database
+from app.project_share import ProjectShareServer
 from app.web_bridge import LocalAdminBridge
 from app.ui.auth.dialogs import ChangePasswordDialog, LoginDialog
 from app.ui.main_window import MainWindow
@@ -171,12 +172,27 @@ def main(arguments: Sequence[str] | None = None) -> int:
     application = create_application(arguments)
     database: Database | None = None
     web_bridge: LocalAdminBridge | None = None
+    project_share_server: ProjectShareServer | None = None
 
     try:
         path = database_path()
         LOGGER.info("Khởi động %s; SQLite: %s", APP_NAME, path)
         database = Database(path)
-        database.ensure_default_admin_credentials()
+        created_accounts, account_conflicts = database.seed_default_role_accounts()
+        if created_accounts:
+            LOGGER.warning(
+                "Provisioned %d default role accounts. Change shared/default "
+                "passwords before allowing access from other devices.",
+                len(created_accounts),
+            )
+        if account_conflicts:
+            QMessageBox.warning(
+                None,
+                "Tài khoản mặc định bị trùng vai trò",
+                "Không ghi đè các tài khoản hiện có. Kiểm tra tên đăng nhập sau "
+                "để cấp đúng vai trò: "
+                + ", ".join(account_conflicts),
+            )
         if not setup_first_admin(database):
             database.close()
             return 0
@@ -211,19 +227,27 @@ def main(arguments: Sequence[str] | None = None) -> int:
             database,
             current_user,
             web_base_url=web_bridge.base_url if web_bridge is not None else None,
+            project_share_server=ProjectShareServer(
+                path, Path(__file__).resolve().parent
+            ),
         )
+        project_share_server = window.project_share_server
         window.show()
     except Exception as error:
         if database is not None:
             database.close()
         if web_bridge is not None:
             web_bridge.stop()
+        if project_share_server is not None:
+            project_share_server.stop()
         show_startup_error(error)
         return 1
 
     exit_code = application.exec()
     if web_bridge is not None:
         web_bridge.stop()
+    if project_share_server is not None:
+        project_share_server.stop()
     return exit_code
 
 

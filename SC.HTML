@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#12372b">
+  <meta name="description" content="Báo cáo tổng quan các chức năng, dữ liệu, giới hạn và cách sử dụng hệ thống quản lý thú cưng PetCare.">
+  <title>Báo cáo hệ thống PetCare | Năng lực & hiện trạng</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #19352b;
+      --muted: #667a70;
+      --green: #1c684a;
+      --deep: #12372b;
+      --lime: #d9ed9a;
+      --line: #dce8df;
+      --paper: #f2f7f2;
+      --white: #fff;
+      --gold: #866322;
+      --red: #8e4939;
+      --shadow: 0 16px 42px rgba(20, 54, 36, .08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at 90% 0, #e4f0e4, transparent 32%), var(--paper);
+      color: var(--ink);
+      font: 15px/1.65 "Segoe UI", Arial, sans-serif;
+    }
+    a { color: var(--green); text-underline-offset: 3px; }
+    button { font: inherit; cursor: pointer; }
+    .shell { width: min(1180px, calc(100% - 36px)); margin: 0 auto; }
+    .topbar {
+      position: sticky; top: 0; z-index: 5;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.94);
+      backdrop-filter: blur(12px);
+    }
+    .top-inner { display:flex; align-items:center; justify-content:space-between; gap:14px; min-height:62px; }
+    .brand { display:flex; align-items:center; gap:10px; color:var(--ink); font-weight:850; text-decoration:none; }
+    .mark { display:grid; place-items:center; width:36px; height:36px; border-radius:12px 12px 12px 4px; color:var(--lime); background:var(--deep); }
+    .top-actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .top-actions a,.print-button {
+      display:inline-flex; align-items:center; justify-content:center; min-height:37px;
+      padding:7px 11px; border:1px solid var(--line); border-radius:10px;
+      color:var(--green); background:var(--white); font-size:.78rem; font-weight:800; text-decoration:none;
+    }
+    .top-actions a:hover,.print-button:hover { border-color:#a4c8ad; background:#f7fbf6; }
+    .hero {
+      position:relative; overflow:hidden; margin:23px 0 18px; padding:clamp(25px,5vw,54px);
+      border-radius:25px; color:#f3faf5;
+      background:radial-gradient(circle at 84% 6%,rgba(217,237,154,.2),transparent 24%),linear-gradient(120deg,#12372b,#1c684a);
+      box-shadow:var(--shadow);
+    }
+    .eyebrow { color:var(--lime); font-size:.72rem; font-weight:850; letter-spacing:.15em; text-transform:uppercase; }
+    h1 { max-width:900px; margin:10px 0; font-size:clamp(2.05rem,5.4vw,3.8rem); line-height:1.03; letter-spacing:-.055em; }
+    .hero p { max-width:820px; margin:0; color:#dcebe0; }
+    .hero-meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+    .hero-meta span { padding:6px 10px; border:1px solid #ffffff35; border-radius:99px; color:#f4faf5; background:#ffffff10; font-size:.73rem; font-weight:750; }
+    .toc { display:flex; flex-wrap:wrap; gap:8px; margin:15px 0 22px; }
+    .toc a { padding:7px 10px; border:1px solid var(--line); border-radius:99px; color:var(--green); background:#fff; font-size:.75rem; font-weight:750; text-decoration:none; }
+    .section { scroll-margin-top:82px; margin:25px 0; }
+    .section-head { display:flex; align-items:flex-end; justify-content:space-between; gap:14px; margin:0 2px 12px; }
+    .section-head h2 { margin:0; font-size:clamp(1.25rem,3vw,1.75rem); letter-spacing:-.035em; }
+    .section-head p { max-width:610px; margin:3px 0 0; color:var(--muted); font-size:.86rem; }
+    .eyebrow-dark { color:var(--green); font-size:.68rem; font-weight:850; letter-spacing:.13em; text-transform:uppercase; }
+    .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:11px; }
+    .stat,.panel,.feature,.status-card { border:1px solid var(--line); border-radius:15px; background:var(--white); box-shadow:0 7px 22px rgba(20,54,36,.035); }
+    .stat { padding:15px; }
+    .stat strong { display:block; color:var(--green); font-size:1.65rem; line-height:1.15; letter-spacing:-.04em; }
+    .stat span { display:block; margin-top:5px; color:var(--muted); font-size:.76rem; }
+    .grid-3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:11px; }
+    .feature { padding:16px; }
+    .feature-icon { display:grid; place-items:center; width:37px; height:37px; margin-bottom:10px; border-radius:12px; color:var(--green); background:#edf6ed; font-size:1.15rem; }
+    .feature h3 { margin:0 0 6px; font-size:.97rem; }
+    .feature p { margin:0; color:var(--muted); font-size:.82rem; }
+    .panel { overflow:hidden; }
+    .table-scroll { overflow:auto; }
+    table { width:100%; border-collapse:collapse; }
+    th,td { padding:11px 13px; border-bottom:1px solid #eaf0eb; text-align:left; vertical-align:top; }
+    th { color:#456153; background:#f4f8f3; font-size:.74rem; }
+    td { font-size:.8rem; }
+    tr:last-child td { border-bottom:0; }
+    .module-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; padding:14px; }
+    .module { padding:10px 11px; border:1px solid #e7eee8; border-radius:10px; background:#fbfdfb; font-size:.78rem; }
+    .module b { display:inline-grid; place-items:center; width:24px; height:24px; margin-right:6px; border-radius:8px; color:var(--green); background:#eaf4e9; font-size:.67rem; }
+    .detail-table td:first-child { min-width:150px; font-weight:800; color:#315b45; }
+    .detail-table td:nth-child(2) { min-width:270px; }
+    .detail-table td:nth-child(3) { min-width:280px; }
+    .muted { color:var(--muted); }
+    .pill { display:inline-block; margin:2px 3px 2px 0; padding:3px 7px; border-radius:99px; color:#315b45; background:#edf6ed; font-size:.66rem; font-weight:800; }
+    .architecture { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+    .architecture article { padding:14px; border:1px solid var(--line); border-radius:13px; background:#fff; }
+    .architecture h3 { margin:0 0 5px; font-size:.9rem; }
+    .architecture p { margin:0; color:var(--muted); font-size:.77rem; }
+    .flow { display:grid; gap:8px; }
+    .flow-row { display:grid; grid-template-columns:155px 1fr; gap:12px; padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:#fff; }
+    .flow-row strong { color:var(--green); font-size:.82rem; }
+    .flow-row span { color:var(--muted); font-size:.8rem; }
+    .role-name { min-width:155px; font-weight:800; color:#315b45; }
+    .caveat-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+    .caveat { padding:13px; border:1px solid var(--line); border-radius:12px; background:#fff; }
+    .caveat strong { display:block; margin-bottom:4px; font-size:.83rem; }
+    .caveat p { margin:0; color:var(--muted); font-size:.77rem; }
+    .split { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .status-card { padding:16px; }
+    .status-card h3 { margin:0 0 8px; font-size:1rem; }
+    .status-card ul { margin:0; padding-left:19px; color:var(--muted); font-size:.83rem; }
+    .status-card li+li { margin-top:5px; }
+    .badge { display:inline-flex; margin:0 0 9px; padding:4px 8px; border-radius:99px; font-size:.65rem; font-weight:850; letter-spacing:.04em; text-transform:uppercase; }
+    .badge-ready { color:#226442; background:#e5f4e8; }
+    .badge-limited { color:#745b20; background:#fff3d5; }
+    .badge-demo { color:#725127; background:#f6eddf; }
+    .badge-not { color:#813f32; background:#fbe9e5; }
+    .callout { padding:14px 16px; border:1px solid #e7d9ae; border-left:4px solid #b78b35; border-radius:12px; color:#62542e; background:#fff9e9; font-size:.84rem; }
+    .callout strong { display:block; margin-bottom:4px; }
+    .steps { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; counter-reset:step; }
+    .step { position:relative; padding:15px; border:1px solid var(--line); border-radius:14px; background:#fff; counter-increment:step; }
+    .step:before { content:counter(step,decimal-leading-zero); display:block; margin-bottom:8px; color:var(--green); font-size:.73rem; font-weight:900; letter-spacing:.1em; }
+    .step h3 { margin:0 0 5px; font-size:.9rem; }
+    .step p { margin:0; color:var(--muted); font-size:.78rem; }
+    code { padding:2px 5px; border-radius:5px; background:#f0f4f0; font-size:.78em; overflow-wrap:anywhere; }
+    .footer { display:flex; justify-content:space-between; gap:14px; margin-top:34px; padding:17px 0 28px; border-top:1px solid var(--line); color:var(--muted); font-size:.75rem; }
+    :focus-visible { outline:3px solid #8fbe87; outline-offset:2px; }
+    @media(max-width:850px) {     .stats { grid-template-columns:repeat(2,minmax(0,1fr)); } .grid-3 { grid-template-columns:repeat(2,minmax(0,1fr)); } .module-list { grid-template-columns:repeat(2,minmax(0,1fr)); } .steps { grid-template-columns:repeat(2,minmax(0,1fr)); } .architecture { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media(max-width:600px) {
+      .shell { width:calc(100% - 20px); }
+      .top-inner { align-items:flex-start; flex-direction:column; padding:10px 0; }
+      .hero { margin-top:13px; padding:22px 17px; border-radius:18px; }
+      .section-head { align-items:flex-start; flex-direction:column; }
+      .grid-3,.split,.module-list,.steps,.architecture,.caveat-list { grid-template-columns:1fr; }
+      .flow-row { grid-template-columns:1fr; gap:3px; }
+      .stat { padding:12px; }
+      .stat strong { font-size:1.4rem; }
+      th,td { padding:9px 10px; }
+      .footer { flex-direction:column; }
+    }
+    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+    @media print {
+      :root { --paper:#fff; }
+      body { background:#fff; font-size:10pt; }
+      .topbar { position:static; border:0; }
+      .top-actions,.toc { display:none; }
+      .shell { width:100%; }
+      .hero { margin:10px 0; padding:22px; box-shadow:none; print-color-adjust:exact; }
+      .section { break-inside:avoid; margin:16px 0; }
+      .stat,.panel,.feature,.status-card,.step { box-shadow:none; break-inside:avoid; }
+      a { color:inherit; }
+      .footer { padding-bottom:0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell top-inner">
+      <a class="brand" href="HTML/index.html"><span class="mark">P</span><span>PetCare <small style="display:block;color:#718078;font-size:.68rem;font-weight:650">Báo cáo năng lực hệ thống</small></span></a>
+      <nav class="top-actions" aria-label="Liên kết nhanh">
+        <a href="HTML/index.html">Mở cổng hệ thống</a>
+        <a href="HTML/menu.html">Menu trang</a>
+        <button class="print-button" type="button" onclick="window.print()">In / lưu PDF</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <span class="eyebrow">PetCare · System capability report</span>
+      <h1>Hệ thống đang có gì và làm được những gì?</h1>
+      <p>Báo cáo tổng quan hệ thống quản lý cửa hàng và chăm sóc thú cưng: ứng dụng desktop Python, cơ sở dữ liệu SQLite, website HTML hỗ trợ, dữ liệu tham khảo và các giới hạn cần biết trước khi vận hành.</p>
+      <div class="hero-meta">
+        <span>Báo cáo lập ngày 12/10/2026</span>
+        <span>Ứng dụng cục bộ · Python + PySide6 + SQLite</span>
+        <span>Website hỗ trợ · HTML/CSS/JavaScript</span>
+      </div>
+    </section>
+
+    <nav class="toc" aria-label="Mục lục báo cáo">
+      <a href="#summary">Tóm tắt</a>
+      <a href="#capabilities">Khả năng</a>
+      <a href="#modules">17 phân hệ</a>
+      <a href="#workflows">Quy trình chi tiết</a>
+      <a href="#permissions">Vai trò & quyền</a>
+      <a href="#architecture">Kiến trúc & dữ liệu</a>
+      <a href="#website">Website & dữ liệu</a>
+      <a href="#data">Phân loại dữ liệu</a>
+      <a href="#boundaries">Giới hạn</a>
+      <a href="#operation">Cách sử dụng</a>
+      <a href="#validation">Kiểm thử & kiểm soát</a>
+      <a href="#links">Liên kết hệ thống</a>
+    </nav>
+
+    <section class="section" id="summary">
+      <div class="section-head">
+        <div><span class="eyebrow-dark">01 · Tóm tắt</span><h2>Quy mô hiện trạng</h2></div>
+        <p>Đây là báo cáo về các thành phần hiện có trong mã nguồn; không khẳng định đã triển khai cho cửa hàng hay đã nhập dữ liệu kinh doanh thật.</p>
+      </div>
+      <div class="stats">
+        <article class="stat"><strong>17</strong><span>phân hệ nghiệp vụ được tổ chức trong ứng dụng</span></article>
+        <article class="stat"><strong>57</strong><span>trang HTML trong thư mục website hiện tại</span></article>
+        <article class="stat"><strong>26</strong><span>tệp JSON dữ liệu được liệt kê trong manifest</span></article>
+        <article class="stat"><strong>70</strong><span>trường trong chuẩn hồ sơ tham khảo sản phẩm</span></article>
+      </div>
+    </section>
+
+    <section class="section" id="capabilities">
+      <div class="section-head">
+        <div><span class="eyebrow-dark">02 · Năng lực chính</span><h2>Các công việc hệ thống hỗ trợ</h2></div>
+        <p>Ứng dụng desktop là nơi thực hiện nghiệp vụ chính. Tài khoản và quyền hạn quyết định các trang, thao tác người dùng có thể truy cập.</p>
+      </div>
+      <div class="grid-3">
+        <article class="feature"><span class="feature-icon">🐾</span><h3>Hồ sơ thú cưng</h3><p>Lưu hồ sơ cá thể, thông tin nhận nuôi/nhập vào, giống, trạng thái, lịch sử chuồng và thông tin chi tiết thú cưng.</p></article>
+        <article class="feature"><span class="feature-icon">✚</span><h3>Sức khỏe & chăm sóc</h3><p>Ghi nhận quan sát sức khỏe, lịch sử chăm sóc, checklist công việc, lịch tiêm tham khảo và cảnh báo vận hành.</p></article>
+        <article class="feature"><span class="feature-icon">▦</span><h3>Chuồng trại & sức chứa</h3><p>Quản lý khu vực/chuồng, sức chứa, mức phù hợp loài và phân công thú cưng theo lịch sử.</p></article>
+        <article class="feature"><span class="feature-icon">📦</span><h3>Nhà cung cấp & nhập hàng</h3><p>Quản lý nhà cung cấp, lô nhập, kiểm tra tiếp nhận, ảnh bàn giao và ghi nhận hàng vào kho.</p></article>
+        <article class="feature"><span class="feature-icon">🧾</span><h3>Kho, bán hàng & đặt trước</h3><p>Quản lý danh mục, tồn kho theo lô/hạn dùng, giao dịch bán, thanh toán từng phần, tiền cọc và hoàn tiền đặt chỗ.</p></article>
+        <article class="feature"><span class="feature-icon">◷</span><h3>Dịch vụ & hội viên</h3><p>Đặt lịch dịch vụ cho khách và thú cưng, phân nhân viên, quản lý gói dịch vụ, thẻ hội viên, quyền lợi và thanh toán nội bộ.</p></article>
+        <article class="feature"><span class="feature-icon">▤</span><h3>Báo cáo & dashboard</h3><p>Xem tổng quan vận hành, báo cáo và các cảnh báo. Hỗ trợ xuất CSV theo các luồng báo cáo được triển khai.</p></article>
+        <article class="feature"><span class="feature-icon">✦</span><h3>Gợi ý sản phẩm offline</h3><p>Bộ máy quy tắc cục bộ có thể lọc theo hồ sơ thú cưng, hàng tồn, ngân sách và phản hồi; có nhãn giải thích và đánh giá xếp hạng.</p></article>
+        <article class="feature"><span class="feature-icon">🔒</span><h3>Người dùng, quyền & nhật ký</h3><p>Đăng nhập nội bộ, phân quyền theo vai trò, băm mật khẩu PBKDF2-HMAC-SHA256 và ghi nhật ký các thao tác quan trọng.</p></article>
+      </div>
+    </section>
+
+    <section class="section" id="modules">
+      <div class="section-head">
+        <div><span class="eyebrow-dark">03 · Các phân hệ</span><h2>17 khu vực nghiệp vụ</h2></div>
+        <p>Các trang hướng dẫn HTML tương ứng giúp tra cứu quy trình; thao tác dữ liệu nghiệp vụ đầy đủ thuộc ứng dụng desktop.</p>
+      </div>
+      <div class="panel">
+        <div class="module-list">
+          <div class="module"><b>01</b>Nền tảng & dữ liệu</div>
+          <div class="module"><b>02</b>Tài khoản, vai trò & nhật ký</div>
+          <div class="module"><b>03</b>Bảng điều khiển</div>
+          <div class="module"><b>04</b>Hồ sơ thú cưng</div>
+          <div class="module"><b>05</b>Chuồng trại & lưu trú</div>
+          <div class="module"><b>06</b>Nhà cung cấp</div>
+          <div class="module"><b>07</b>Nhập hàng & kiểm tra</div>
+          <div class="module"><b>08</b>Sức khỏe</div>
+          <div class="module"><b>09</b>Chăm sóc & checklist</div>
+          <div class="module"><b>10</b>Khách hàng</div>
+          <div class="module"><b>11</b>Đặt trước, cọc & hoàn tiền</div>
+          <div class="module"><b>12</b>Đơn hàng & thanh toán</div>
+          <div class="module"><b>13</b>Hội viên, thẻ & hóa đơn nội bộ</div>
+          <div class="module"><b>14</b>Dịch vụ & lịch hẹn</div>
+          <div class="module"><b>15</b>Kho & sản phẩm</div>
+          <div class="module"><b>16</b>Báo cáo</div>
+          <div class="module"><b>17</b>Cảnh báo & sao lưu</div>
+        </div>
+      </div>
+      <div class="panel table-scroll" style="margin-top:12px">
+        <table class="detail-table">
+          <thead><tr><th># / phân hệ</th><th>Thao tác và thông tin chính</th><th>Ràng buộc / đầu ra đáng chú ý</th></tr></thead>
+          <tbody>
+            <tr><td>01 · Nền tảng & dữ liệu</td><td>Cấu hình hệ thống, xem bản đồ HTML/Python, kiểm tra nguồn JSON và chạy nhập JSON sang SQLite staging.</td><td>Import có bước preview; cần quyền cấu hình để ghi staging; staging tách khỏi các bảng nghiệp vụ.</td></tr>
+            <tr><td>02 · Tài khoản & nhật ký</td><td>Tạo/cập nhật tài khoản, bật/tắt hoặc đặt lại truy cập, đổi mật khẩu và tra cứu audit log.</td><td>Không được hạ cấp/vô hiệu hóa quản trị viên hoạt động cuối cùng; hành động ghi bị chặn nếu thiếu quyền.</td></tr>
+            <tr><td>03 · Bảng điều khiển</td><td>Tổng hợp chỉ số vận hành, tình trạng hồ sơ và lối tắt tới các khu vực.</td><td>Số liệu phụ thuộc vào dữ liệu đã nhập trong SQLite; chưa có dữ liệu thì không phản ánh quy mô thật.</td></tr>
+            <tr><td>04 · Hồ sơ thú cưng</td><td>Tạo/tìm/sửa hồ sơ với 25 thuộc tính lưu trữ; xem chi tiết, ảnh nhận bé và lịch sử liên quan.</td><td>Mã cá thể trùng bị từ chối; bản ghi có lịch sử/task có biện pháp bảo vệ tránh xóa nhầm.</td></tr>
+            <tr><td>05 · Chuồng trại</td><td>Tạo/sửa/đóng chuồng; gán, chuyển, tháo thú cưng; xem cư dân và lịch sử chuồng.</td><td>Kiểm tra sức chứa, loài phù hợp và lịch sử thay đổi vị trí.</td></tr>
+            <tr><td>06 · Nhà cung cấp</td><td>Quản lý hồ sơ nhà cung cấp và trạng thái hoạt động.</td><td>Nhà cung cấp không hoạt động không tạo được lô nhập mới.</td></tr>
+            <tr><td>07 · Nhập hàng & kiểm tra</td><td>Tạo batch, gắn hồ sơ cá thể/động vật, lưu chứng từ/ảnh, lập và tra lịch sử kiểm tra đầu vào.</td><td>Giữ chuỗi dữ liệu theo lô; nhập mẫu vật/thú sống yêu cầu thông tin và xác nhận theo quy trình.</td></tr>
+            <tr><td>08 · Sức khỏe</td><td>Ghi nhận khám, chẩn đoán do nhân viên chuyên môn nhập, quản lý catalog bệnh và lịch vaccine.</td><td>Catalog seed không phải tư vấn; nhắc tiêm chỉ là lịch cấu hình/tham khảo.</td></tr>
+            <tr><td>09 · Chăm sóc</td><td>Tạo công việc, lịch, trạng thái và checklist chăm sóc 25 mục; đánh dấu hoàn tất.</td><td>Trạng thái công việc hỗ trợ sinh cảnh báo việc đến hạn/quá hạn.</td></tr>
+            <tr><td>10 · Khách hàng</td><td>Tạo/sửa khách hàng, xem liên hệ, đơn hàng và tổng đã thanh toán; xem các thú cưng liên kết cùng phần overview/nutrition/health/grooming.</td><td>Dữ liệu khách hàng là thông tin cá nhân; cần giới hạn quyền và bảo vệ máy/database.</td></tr>
+            <tr><td>11 · Đặt trước & giữ chỗ</td><td>Tạo booking, ghi nhận đặt cọc, theo dõi trạng thái, chuyển booking sang bán hàng hoặc hủy/hoàn cọc.</td><td>Trạng thái giữ chỗ ảnh hưởng việc giữ tài nguyên/tồn và số tiền còn lại.</td></tr>
+            <tr><td>12 · Đơn hàng & thanh toán</td><td>Tạo đơn bán hàng, gắn khách/mặt hàng, ghi nhận phương thức và nhiều đợt thanh toán.</td><td>Đơn chưa trả có thể hủy; tạo đơn lỗi rollback; thanh toán được ghi nội bộ, không gọi cổng bên ngoài.</td></tr>
+            <tr><td>13 · Hội viên & bill</td><td>Quản lý plan, cấp membership/card, lập bill, ghi thanh toán, lịch sử và gia hạn.</td><td>Gói có phí chỉ active khi đủ tiền; điều kiện miễn phí và gia hạn có kiểm thử.</td></tr>
+            <tr><td>14 · Dịch vụ & lịch hẹn</td><td>Quản lý gói dịch vụ, báo giá, đặt/đổi lịch, chọn khách/pet/nhân viên, dùng gói trả trước và cập nhật trạng thái.</td><td>Ngăn lịch trùng pet/nhân viên; giá có thể gồm phụ phí/giảm giá cấu hình.</td></tr>
+            <tr><td>15 · Kho & sản phẩm</td><td>Danh mục vật tư; nhập/xuất theo batch; combo; quy tắc tuổi ăn; gợi ý theo hồ sơ; cấu hình sản phẩm gợi ý và đánh giá kết quả.</td><td>FEFO, chặn lô hết hạn và xuất vượt tồn; catalog 600 SKU là seed demo, tồn phải nhập thật.</td></tr>
+            <tr><td>16 · Báo cáo</td><td>Lọc loại báo cáo và khoảng thời gian; xem số liệu; xuất CSV/PDF.</td><td>Chất lượng báo cáo theo chất lượng/đầy đủ của bản ghi đầu vào.</td></tr>
+            <tr><td>17 · Cảnh báo & sao lưu</td><td>Làm mới cảnh báo, chọn thư mục backup, chạy sao lưu database thủ công.</td><td>Backup tạo bản SQLite nhất quán và từ chối ghi đè một đích đã tồn tại; người vận hành vẫn phải kiểm tra khả năng phục hồi.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="workflows">
+      <div class="section-head">
+        <div><span class="eyebrow-dark">04 · Quy trình nghiệp vụ</span><h2>Chi tiết luồng xử lý chính</h2></div>
+        <p>Các luồng dưới đây mô tả thao tác đã có trong repository và được kiểm tra bằng test nghiệp vụ tương ứng; dữ liệu thực tế vẫn do nhân viên nhập và xác nhận.</p>
+      </div>
+      <div class="panel table-scroll">
+        <table class="detail-table">
+          <thead><tr><th>Quy trình</th><th>Các bước / dữ liệu</th><th>Quy tắc và kết quả</th></tr></thead>
+          <tbody>
+            <tr><td>Tiếp nhận thú cưng</td><td>Chọn nhà cung cấp → tạo lô nhập → lập hồ sơ cá thể → ghi nhận giấy tờ/ảnh tiếp nhận → kiểm tra đầu vào → quyết định trạng thái tiếp theo.</td><td>Không cho tiếp nhận thiếu xác nhận ảnh và nhân viên phụ trách. Nhà cung cấp ngừng hoạt động không thể tạo lô mới; có lịch sử kiểm tra, và lô rỗng có thể bị hủy.</td></tr>
+            <tr><td>Chuồng trại & di chuyển</td><td>Tạo/sửa chuồng → đặt loài phù hợp/sức chứa → gán, chuyển hoặc tháo thú cưng → xem danh sách cư trú và lịch sử.</td><td>Kiểm tra sức chứa và tính phù hợp loài khi gán/chuyển; cập nhật số lượng đang ở chuồng, giữ lịch sử phân công thay vì ghi đè quá trình di chuyển.</td></tr>
+            <tr><td>Hồ sơ sức khỏe</td><td>Chọn thú cưng → ghi nhận khám/quan sát → cập nhật tình trạng sức khỏe → quản lý lịch tiêm và xem nhắc tiêm đến hạn.</td><td>Bản ghi sức khỏe gắn với cá thể; lịch bệnh/tiêm khởi tạo chỉ là nội dung tham khảo. Dữ liệu không tự xác nhận chẩn đoán y khoa.</td></tr>
+            <tr><td>Công việc chăm sóc</td><td>Tạo công việc có lịch → gán đối tượng/người phụ trách → đánh dấu hoàn tất; dùng checklist vận hành 25 mục.</td><td>Checklist lưu đánh giá và trạng thái; hoàn thành công việc và lịch sử có thể sinh cảnh báo quá hạn/đến hạn cho màn hình vận hành.</td></tr>
+            <tr><td>Nhập kho theo lô</td><td>Chọn vật tư → nhập số lượng, giá nhập/đơn vị, hạn dùng và mã lô → xác nhận → theo dõi bảng tồn từng lô và sổ nhập/xuất.</td><td>Xuất/tiêu hao ưu tiên FEFO (lô hết hạn gần hơn trước); không sử dụng lô hết hạn. Giao dịch thiếu tồn bị từ chối nguyên tử, không trừ một phần; có ledger movement.</td></tr>
+            <tr><td>Đặt trước & tiền cọc</td><td>Tạo đặt chỗ → nhận tiền cọc → chuyển đặt trước thành đơn/thu tiền hoặc hủy → ghi nhận hoàn cọc nếu phù hợp.</td><td>Mã giao dịch trùng/rỗng và mặt hàng không hợp lệ bị từ chối; hủy giải phóng hàng giữ chỗ; hỗ trợ tính phần tiền cọc và refund trong luồng nghiệp vụ.</td></tr>
+            <tr><td>Đơn hàng & thanh toán</td><td>Lập đơn từ sản phẩm → giữ/trừ tồn theo trạng thái → ghi một hay nhiều lần thanh toán → theo dõi số tiền còn lại và trạng thái.</td><td>Đơn chưa thanh toán có thể hủy; thanh toán một phần được hỗ trợ; lỗi mặt hàng làm rollback toàn bộ tạo đơn. Không kết nối cổng thanh toán tự động.</td></tr>
+            <tr><td>Hội viên & thẻ</td><td>Tạo gói → cấp hội viên → lập bill → ghi nhận các khoản thanh toán → theo dõi lịch sử và thẻ → lập bill gia hạn.</td><td>Gói tính phí chỉ kích hoạt sau khi thanh toán đủ; gia hạn thành công giữ thời hạn còn lại và kéo dài thẻ. Gói miễn phí được kích hoạt không tạo khoản thu giả.</td></tr>
+            <tr><td>Dịch vụ & lịch hẹn</td><td>Cấu hình gói → báo giá theo gói/loài/cân nặng/loại lông → chọn khách, thú cưng, giờ, nhân viên và quyền lợi hội viên → cập nhật trạng thái.</td><td>Phụ phí cân nặng/lông dài và giảm giá hội viên được tính theo cấu hình; ngăn trùng lịch thú cưng hoặc nhân viên; dời lịch kiểm tra xung đột; lượt prepaid được giữ, trả lại khi hủy và sử dụng khi hoàn thành.</td></tr>
+            <tr><td>Gợi ý sản phẩm</td><td>Đọc hồ sơ thú cưng, tuổi/loài/giống/nhu cầu, tồn kho, cấu hình sản phẩm và tín hiệu hành vi → lọc ứng viên → xếp hạng → hiển thị lý do.</td><td>Có lọc loài, tuổi, ngân sách, tồn, xung đột dị ứng và dấu hiệu bác sĩ thú y; có cấu hình/feedback/đánh giá. Kết quả là gợi ý quy tắc, không phải chẩn đoán hay AI hội thoại.</td></tr>
+            <tr><td>Báo cáo & cảnh báo</td><td>Chọn loại báo cáo/khoảng ngày → tạo bảng → xuất CSV hoặc PDF; làm mới bảng cảnh báo; cấu hình vị trí và chạy sao lưu.</td><td>Báo cáo có bộ lọc ngày, tồn hiện tại; cảnh báo kiểm tra công việc chăm sóc đến hạn và tồn thấp. Sao lưu SQLite nhất quán, chặn ghi đè đích có sẵn theo test.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="permissions">
+      <div class="section-head">
+        <div><span class="eyebrow-dark">05 · Tài khoản & quyền</span><h2>Vai trò được cấu hình trong mã nguồn</h2></div>
+        <p>Vai trò là tập quyền xem/quản lý theo nghiệp vụ. Quyền cụ thể mới quyết định thao tác; tên vai trò không tự cấp quyền ngoài danh sách.</p>
+      </div>
+      <div class="panel table-scroll">
+        <table>
+          <thead><tr><th>Vai trò</th><th>Quyền sử dụng chính theo cấu hình</th><th>Giới hạn đáng chú ý</th></tr></thead>
+          <tbody>
+            <tr><td class="role-name">ADMIN · Quản trị viên</td><td>Tất cả phân hệ; quản lý người dùng, cài đặt, audit, catalog dịch vụ.</td><td>Quyền cao nhất; cần bảo vệ và không dùng chung tài khoản.</td></tr>
+            <tr><td class="role-name">MANAGER · Quản lý</td><td>Quản lý gần như toàn bộ nghiệp vụ, báo cáo, cài đặt và audit.</td><td>Không có quyền quản lý người dùng trong cấu hình hiện tại.</td></tr>
+            <tr><td class="role-name">VETERINARIAN · Bác sĩ thú y</td><td>Xem hồ sơ; quản lý sức khỏe; xem/chỉnh một phần chăm sóc, kho, báo cáo và cảnh báo.</td><td>Không mặc định có quyền bán hàng, khách hàng, user administration.</td></tr>
+            <tr><td class="role-name">CAREGIVER · Nhân viên chăm sóc</td><td>Xem pet/sức khỏe; quản lý chăm sóc và dịch vụ được cấp; xem kho, báo cáo, cảnh báo.</td><td>Không quản lý catalog dịch vụ nếu thiếu <code>services.catalog.manage</code>.</td></tr>
+            <tr><td class="role-name">SALES · Nhân viên bán hàng</td><td>Khách hàng, đơn, reservation, hội viên, dịch vụ; một phần hồ sơ/chuồng và nhập liên quan.</td><td>Quyền ghi theo sales/membership; không quản lý cấu hình hệ thống.</td></tr>
+            <tr><td class="role-name">INVENTORY_MANAGER · Quản lý kho</td><td>Nhập hàng, tồn kho, dashboard, báo cáo và cảnh báo.</td><td>Tập trung kho; không mặc định quản lý khách hàng và bán hàng.</td></tr>
+            <tr><td class="role-name">SERVICE_COORDINATOR · Điều phối dịch vụ</td><td>Quản lý lịch dịch vụ và xem membership/dashboard/báo cáo.</td><td>Không có quyền sửa catalog gói dịch vụ trong cấu hình nếu thiếu quyền riêng.</td></tr>
+            <tr><td class="role-name">CUSTOMER_SUPPORT · Chăm sóc khách hàng</td><td>Xem hồ sơ, sales, hội viên, dịch vụ, dashboard và báo cáo.</td><td>Các quyền chủ yếu là xem; không quản lý thu/chi theo cấu hình.</td></tr>
+            <tr><td class="role-name">REPORT_ANALYST · Chuyên viên báo cáo</td><td>Xem dashboard và báo cáo.</td><td>Chỉ đọc, không có quyền ghi nghiệp vụ.</td></tr>
+            <tr><td class="role-name">AUDITOR · Kiểm toán viên</td><td>Xem dashboard, báo cáo và audit log.</td><td>Chỉ đọc, không có quyền ghi nghiệp vụ.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">Các quyền được kiểm tra ở database/service layer ngoài việc ẩn/hiện nút UI; test có xác nhận một user không ghi được ngoài quyền của mình. Tài khoản nhân viên và tài khoản portal khách hàng là hai loại danh tính riêng.</p>
+    </section>
+
+    <section class="section" id="architecture">
+      <div class="section-head">
+        <div><span class="eyebrow-dark">06 · Kiến trúc & dữ liệu</span><h2>Hệ thống được ghép từ những phần nào?</h2></div>
+        <p>Mô hình local-first: desktop làm điểm vận hành, SQLite lưu nghiệp vụ, website được ứng dụng phục vụ nội bộ; JSON catalog là nguồn tham khảo/import riêng.</p>
+      </div>
+      <div class="architecture">
+        <article><h3>Giao diện desktop</h3><p>Python 3.10+ và PySide6; sidebar định tuyến đến trang nghiệp vụ dựa trên quyền user.</p></article>
+        <article><h3>Lớp nghiệp vụ</h3><p><code>app/modules/</code> chứa constants, quy tắc nghiệp vụ và repository theo phân hệ.</p></article>
+        <article><h3>Cơ sở dữ liệu</h3><p>SQLite, khóa ngoại bật; file mặc định trong LocalAppData. Schema được khởi tạo/migrate khi chạy.</p></article>
+        <article><h3>Cầu nối website</h3><p>HTTP local mặc định trên <code>127.0.0.1</code>; có login session riêng, phân quyền và route cho workspace/portal.</p></article>
+      </div>
+      <div class="panel table-scroll" style="margin-top:12px">
+        <table>
+          <thead><tr><th>Miền dữ liệu trong SQLite</th><th>Nhóm bảng/thực thể đã thấy trong schema</th><th>Liên kết nghiệp vụ</th></tr></thead>
+          <tbody>
+            <tr><td>Nhận diện & tiếp nhận</td><td><code>animals</code>, <code>breed_profiles</code>, <code>animal_intake_receipts</code>, <code>suppliers</code>, <code>import_batches</code>, <code>import_batch_animals</code>, <code>inspections</code></td><td>Pet/giống → nguồn nhập → lô → kiểm tra → trạng thái vận hành.</td></tr>
+            <tr><td>Sức khỏe & chăm sóc</td><td><code>health_records</code>, <code>disease_catalog</code>, <code>vaccination_schedules</code>, <code>vaccination_records</code>, <code>care_tasks</code>, <code>care_checklists</code></td><td>Bệnh sử, lịch tiêm, công việc và checklist gắn với pet.</td></tr>
+            <tr><td>Chuồng & vị trí</td><td><code>cages</code>, <code>animal_cage_assignments</code></td><td>Sức chứa, loài phù hợp, cư trú hiện tại và lịch sử điều chuyển.</td></tr>
+            <tr><td>Khách hàng & portal</td><td><code>customers</code>, <code>pet_profiles</code>, <code>customer_portal_accounts</code>, <code>customer_portal_invites</code></td><td>Thông tin khách/pet; tài khoản portal được liên kết và giới hạn phạm vi theo hồ sơ.</td></tr>
+            <tr><td>Đơn hàng & tiền</td><td><code>reservations</code>, <code>reservation_deposits</code>, <code>reservation_refunds</code>, <code>sales_orders</code>, <code>order_items</code>, <code>payments</code>, <code>bills</code>, <code>bill_items</code>, <code>bill_payments</code></td><td>Đặt trước, cọc/hoàn, bán hàng, khoản thanh toán và hóa đơn nội bộ.</td></tr>
+            <tr><td>Hội viên & dịch vụ</td><td><code>membership_plans</code>, <code>memberships</code>, <code>membership_cards</code>, <code>membership_card_history</code>, <code>service_packages</code>, <code>service_appointments</code>, <code>membership_service_uses</code></td><td>Quyền lợi/term thẻ, đặt lịch và số lượt dịch vụ trả trước.</td></tr>
+            <tr><td>Kho & combo</td><td><code>inventory_items</code>, <code>inventory_batches</code>, <code>inventory_movements</code>, <code>product_combos</code>, <code>product_combo_items</code>, <code>feeding_age_rules</code></td><td>Số lượng theo lô, hạn, nhập/xuất, combo và luật tuổi thức ăn.</td></tr>
+            <tr><td>Gợi ý & đánh giá</td><td><code>food_catalog</code>, <code>food_nutrition</code>, <code>food_ingredients</code>, <code>food_allergens</code>, <code>food_life_stage_rules</code>, <code>food_species_rules</code>, <code>food_health_rules</code>, <code>recommendation_requests</code>, <code>recommendation_results</code>, <code>recommendation_interactions</code></td><td>Thông tin phân loại sản phẩm, ứng viên gợi ý, lý do và tín hiệu phản hồi.</td></tr>
+            <tr><td>Quản trị & thiết lập</td><td><code>users</code>, <code>audit_logs</code>, <code>app_settings</code>, <code>web_dataset_records</code>, bảng model registry/governance</td><td>Quyền, audit, cấu hình, bản sao dataset web và kiểm soát model/rule registry.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout" style="margin-top:12px">
+        <strong>Phân biệt hai nơi nhập JSON</strong>
+        Importer tạo staging <code>html_data_sources</code>/<code>html_data_records</code> trong database đích độc lập; workspace SQLite JSON có bảng riêng và thao tác CRUD/archive cho bản copy. Cả hai không tự biến JSON tổng hợp thành dữ liệu nghiệp vụ vận hành.
+      </div>
+    </section>
+
+    <section class="section" id="website">
+      <div class="section-head">
+        <div><span class="eyebrow-dark">07 · Website & dữ liệu</span><h2>Các thành phần web và catalog hiện có</h2></div>
+        <p>Website HTML được phục vụ từ ứng dụng qua cầu nối cục bộ. Một số trang chỉ cung cấp nội dung tra cứu/tham khảo chứ không thay thế nghiệp vụ desktop.</p>
+      </div>
+      <div class="panel table-scroll">
+        <table>
+          <thead><tr><th>Thành phần</th><th>Đã có</th><th>Trạng thái / lưu ý</th></tr></thead>
+          <tbody>
+            <tr><td>Cổng hệ thống & website chính</td><td>Hub, website thương hiệu, menu URL trực tiếp, header điều hướng dùng chung</td><td><span class="badge badge-ready">Điều hướng</span> Các trang nội dung không đồng nghĩa với trang nghiệp vụ CRUD.</td></tr>
+            <tr><td>17 trang tham chiếu phân hệ</td><td>Trang mô tả quy trình nghiệp vụ; có màn hình Python tương ứng trong desktop</td><td><span class="badge badge-limited">Tham chiếu</span> HTML không thay thế các màn hình CRUD Python.</td></tr>
+            <tr><td>Portal khách hàng</td><td>Khách đăng ký tài khoản riêng với tài khoản nhân viên → đăng ký chờ staff duyệt/liên kết vào hồ sơ khách có sẵn; hoặc staff phát hành invite dùng một lần, hiệu lực 24 giờ → khách đặt mật khẩu và liên kết đúng customer ID → chỉ xem bản ghi gắn hồ sơ đó.</td><td><span class="badge badge-limited">Cục bộ</span> Route portal chỉ bật trên loopback; cookie customer riêng HttpOnly/SameSite, không dùng chung session nhân viên. Không phải backend hosting công khai hoặc cổng bán hàng.</td></tr>
+            <tr><td>Data Explorer & bản đồ web/Python</td><td>Tìm, phân trang, tải JSON/CSV và duyệt nguồn dữ liệu chuẩn bị</td><td><span class="badge badge-demo">Dữ liệu hỗn hợp</span> Cần xem phân loại từng nguồn; nhiều bộ là demo/tổng hợp.</td></tr>
+            <tr><td>Nhập JSON vào SQLite tham chiếu</td><td>Kiểm tra và chép dữ liệu vào bảng staging riêng, lưu hash/phân loại, nhập lặp có kiểm soát</td><td><span class="badge badge-limited">Không phải dữ liệu vận hành</span> Không ghi JSON thành khách hàng, pet, kho hay đơn hàng thật.</td></tr>
+            <tr><td>Catalog dinh dưỡng cũ</td><td>Các trang chó, mèo và tổng hợp có tìm kiếm/bộ lọc/bảng chỉ số minh họa</td><td><span class="badge badge-demo">Không dùng tư vấn</span> Dữ liệu sinh tự động, không phải sản phẩm/giá trị nhãn đã xác minh.</td></tr>
+            <tr><td>Hồ sơ sản phẩm 70 trường</td><td>Chuẩn chia 5 nhóm: nhận diện (12), phù hợp/công dụng (14), hướng dẫn/an toàn (12), dinh dưỡng (24), hoạt chất/nguồn (8). Có 4 hồ sơ Royal Canin nguồn chính thức một phần; lọc, xem chi tiết 70 trường và so sánh tối đa 3 SKU.</td><td><span class="badge badge-limited">Phủ SKU còn ít</span> Thông số thiếu được để trống/chưa xác minh; một URL Medium Adult cần kiểm tra lại.</td></tr>
+            <tr><td>Danh mục thương hiệu toàn cầu</td><td>49 tên thương hiệu/dòng trong 14 nhóm quốc gia/thị trường, có tìm kiếm và liên kết vào bộ lọc sản phẩm</td><td><span class="badge badge-demo">Nguồn đầu vào người dùng</span> Chưa xác minh nơi sản xuất, sở hữu, phân phối, thị phần hay đầy đủ SKU.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="data">
+      <div class="section-head">
+        <div><span class="eyebrow-dark">08 · Dữ liệu & an toàn</span><h2>Dữ liệu nào là thật, dữ liệu nào là mẫu?</h2></div>
+        <p>Cơ sở dữ liệu nghiệp vụ cục bộ và các tệp JSON tham khảo là hai lớp khác nhau, không tự động đồng bộ thành cùng một nguồn dữ liệu.</p>
+      </div>
+      <div class="split">
+        <article class="status-card">
+          <span class="badge badge-ready">Cơ sở dữ liệu ứng dụng</span>
+          <h3>SQLite nghiệp vụ lưu cục bộ</h3>
+          <ul>
+            <li>Mặc định tại thư mục dữ liệu người dùng Windows: <code>%LOCALAPPDATA%\PetStoreManagement\pet_store.db</code>.</li>
+            <li>Lưu hồ sơ vận hành do nhân viên nhập qua ứng dụng; hỗ trợ khóa ngoại và lớp repository theo phân hệ.</li>
+            <li>Có nhật ký kiểm toán, phân quyền, thiết lập sao lưu và cơ chế sao lưu JSON CRUD cho workspace web.</li>
+            <li>Không có payment gateway, QR payment hoặc đồng bộ cloud mặc định.</li>
+          </ul>
+        </article>
+        <article class="status-card">
+          <span class="badge badge-demo">JSON / catalog tham khảo</span>
+          <h3>Dữ liệu chuẩn bị cho tra cứu và thử nghiệm</h3>
+          <ul>
+            <li>26 tệp dataset được kê khai trong manifest; có dữ liệu demo 17 phân hệ, catalog bệnh/dinh dưỡng sinh tự động và tài liệu sản phẩm.</li>
+            <li>Catalog cửa hàng khởi tạo khoảng 20 nhóm và 600 SKU demo cùng 8 combo; phải rà soát lại tên, mã, thành phần, giá và tồn kho trước khi dùng thật.</li>
+            <li>Catalog thương hiệu chỉ là danh sách ban đầu; không chứng minh thương hiệu bán tại Việt Nam hoặc toàn bộ sản phẩm đã có trong hệ thống.</li>
+            <li>Dữ liệu mẫu/catalog không phải dữ liệu khách hàng, hồ sơ thú y hay giao dịch thật.</li>
+          </ul>
+        </article>
+      </div>
+      <div class="callout" style="margin-top:12px">
+        <strong>Lưu ý sức khỏe và sản phẩm</strong>
+        Nội dung disease/vaccine trong catalog là tài liệu tham khảo, không thay thế bác sĩ thú y. Hồ sơ dinh dưỡng chỉ nên điền từ nhãn/tài liệu chính thức; không suy đoán liều dùng hoặc chỉ số dinh dưỡng. Luôn kiểm tra bao bì, lô hàng, thị trường và hướng dẫn mới nhất.
+      </div>
+    </section>
+
+    <section class="section" id="boundaries">
+      <div class="section-head">
+        <div><span class="eyebrow-dark">09 · Giới hạn & mức độ hoàn thiện</span><h2>Điều hệ thống chưa tự làm</h2></div>
+        <p>Các điểm dưới đây cần được tính vào quy trình triển khai thực tế; có màn hình hoặc schema không đồng nghĩa với có dữ liệu hiện hành/đã xác minh.</p>
+      </div>
+      <div class="panel table-scroll">
+        <table>
+          <thead><tr><th>Hạng mục</th><th>Hiện trạng</th><th>Việc cần làm trước vận hành thực tế</th></tr></thead>
+          <tbody>
+            <tr><td>Dữ liệu kho ban đầu</td><td>Tồn kho không tự lấy từ nhà cung cấp; catalog seed là dữ liệu tham khảo/demo.</td><td>Nhập và đối chiếu SKU, mã vạch, giá vốn/bán, lô, hạn dùng và tồn thực.</td></tr>
+            <tr><td>Thương hiệu & SKU</td><td>Danh sách thương hiệu chưa xác minh; hồ sơ 70 trường hiện chỉ có 4 mục tham khảo một phần.</td><td>Xác nhận thương hiệu phân phối tại Việt Nam; nhập từng SKU/biến thể có trang hoặc nhãn chính thức và nguồn truy xuất.</td></tr>
+            <tr><td>Web public / thương mại</td><td>Bridge chỉ bind loopback; portal là luồng cục bộ. Không phải dịch vụ backend public được triển khai.</td><td>Cần kiến trúc hosting riêng, bảo mật/kiểm thử bổ sung và vận hành dịch vụ trước khi công khai Internet.</td></tr>
+            <tr><td>Quản trị trực tiếp qua web</td><td>Workspace web cho JSON đã chuẩn bị có CRUD/backup; SQLite nghiệp vụ qua workspace web là chỉ đọc.</td><td>Thay đổi nghiệp vụ live thực hiện trong các màn hình desktop; web CRUD có kiểu cho dữ liệu thật chưa thay thế đầy đủ.</td></tr>
+            <tr><td>Thanh toán & hóa đơn</td><td>Nhân viên xác nhận thanh toán trong ứng dụng; hóa đơn hội viên là hồ sơ nội bộ.</td><td>Không có cổng thanh toán/tự gia hạn; không dùng hóa đơn nội bộ thay hóa đơn thuế.</td></tr>
+            <tr><td>Gợi ý sản phẩm</td><td>Hệ thống quy tắc offline có cấu hình và đánh giá; không phải AI sinh nội dung hoặc chẩn đoán y khoa.</td><td>Rà soát dữ liệu, quy tắc và kết quả trước khi nhân viên áp dụng; quyết định sức khỏe thuộc bác sĩ thú y.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="operation">
+      <div class="section-head">
+        <div><span class="eyebrow-dark">10 · Bắt đầu sử dụng</span><h2>Luồng vận hành đề xuất</h2></div>
+        <p>Khởi chạy ứng dụng desktop từ thư mục dự án. Dữ liệu lưu trên máy, nên phân quyền máy tính và sao lưu thường xuyên.</p>
+      </div>
+      <div class="steps">
+        <article class="step"><h3>Khởi chạy & đăng nhập</h3><p>Chạy <code>.\.venv\Scripts\python.exe main.py</code>. Lần đầu dùng tài khoản mặc định hiển thị trong README và đổi mật khẩu ngay.</p></article>
+        <article class="step"><h3>Thiết lập người dùng</h3><p>Tạo tài khoản nhân viên, gán quyền theo nhiệm vụ; chỉ cấp quyền quản trị cho người cần thiết.</p></article>
+        <article class="step"><h3>Rà soát dữ liệu mẫu</h3><p>Hiệu chỉnh danh mục, sản phẩm, giá và cấu hình dịch vụ; không coi seed catalog là tồn kho thật.</p></article>
+        <article class="step"><h3>Nhập vận hành & sao lưu</h3><p>Nhập hồ sơ/nhập kho thực tế, kiểm tra báo cáo và thiết lập sao lưu trước khi dùng hằng ngày.</p></article>
+      </div>
+      <div class="callout" style="margin-top:12px">
+        <strong>Bảo mật tài khoản mặc định</strong>
+        README hiện ghi tài khoản khởi tạo <code>admin</code> với mật khẩu tạm <code>admin</code>; hệ thống yêu cầu đổi mật khẩu sau lần đăng nhập đầu tiên. Không để thông tin mặc định tồn tại trên máy triển khai.
+      </div>
+    </section>
+
+    <section class="section" id="validation">
+      <div class="section-head">
+        <div><span class="eyebrow-dark">11 · Kiểm thử & kiểm soát</span><h2>Các hành vi có test trong repository</h2></div>
+        <p>Danh sách này mô tả nhóm test hiện diện, không phải chứng nhận chất lượng hay kết quả chạy toàn bộ suite tại thời điểm triển khai.</p>
+      </div>
+      <div class="panel table-scroll">
+        <table>
+          <thead><tr><th>Nhóm test</th><th>Các tình huống được bao phủ trong test</th><th>Ý nghĩa đối với người vận hành</th></tr></thead>
+          <tbody>
+            <tr><td>SQLite & hồ sơ</td><td>Tạo/tìm/sửa pet; mã trùng; lưu 25 thuộc tính; cập nhật trạng thái sức khỏe; lịch sử ngăn xóa nhầm; migration database cũ.</td><td>Kiểm tra các thao tác dữ liệu trọng yếu và duy trì khả năng nâng schema trong trường hợp đã có database.</td></tr>
+            <tr><td>Phân quyền & tài khoản</td><td>Đăng nhập, mật khẩu đầu tiên, permission gate, vai trò chuyên biệt, migration role cũ, bảo vệ quản trị viên cuối cùng.</td><td>Kiểm tra cả trường hợp từ chối thao tác không được cấp quyền, không chỉ ẩn nút trên UI.</td></tr>
+            <tr><td>Nhập hàng & chuồng</td><td>Tiếp nhận nhà cung cấp, inspection, ảnh/nhân viên bắt buộc, lô rỗng, sức chứa, loài và lịch sử chuyển chuồng.</td><td>Hạn chế nhập thiếu bước kiểm soát và chuyển vị trí không hợp lệ.</td></tr>
+            <tr><td>Kho & tồn lô</td><td>FEFO, lô hết hạn, tồn không đủ không được trừ một phần, lô trùng/giá trị sai, migration loại vật tư.</td><td>Bảo vệ tính nhất quán của tồn kho; không thay thế kiểm kê vật lý tại cửa hàng.</td></tr>
+            <tr><td>Bán hàng & đặt chỗ</td><td>Cọc/hoàn, chuyển cọc thành thanh toán, hủy đơn unpaid, mã trùng/rỗng, mặt hàng sai rollback.</td><td>Kiểm thử các nhánh chính có ảnh hưởng tiền và trạng thái đơn.</td></tr>
+            <tr><td>Membership & dịch vụ</td><td>Kích hoạt sau khi đủ tiền, renewal giữ term, báo giá phụ phí/discount, trùng lịch, chuyển lịch và credit trả trước.</td><td>Kiểm tra quy tắc quyền lợi và tài nguyên nhân viên/pet.</td></tr>
+            <tr><td>Gợi ý & báo cáo</td><td>Lọc tuổi/loài/ngân sách/tồn/dị ứng; tín hiệu lịch sử; đường tri thức cấu hình tường minh; báo cáo ngày, cảnh báo tồn/care, backup.</td><td>Cho thấy rule và safety filters được kiểm tra theo ví dụ cụ thể; dữ liệu cấu hình vẫn quyết định kết quả.</td></tr>
+            <tr><td>Web bridge & portal</td><td>Serve HTML/assets, xác thực local, CRUD/archival JSON có backup, quyền API, đăng ký/duyệt/mời portal và giới hạn non-loopback.</td><td>Kiểm tra luồng web cục bộ; không chứng minh khả năng chịu tải hay an toàn cho public hosting.</td></tr>
+            <tr><td>Catalog sản phẩm & JSON</td><td>Đủ 70 ID duy nhất, nguồn tham khảo, trang demo cảnh báo, manifest coverage và import idempotent/rollback protection.</td><td>Giảm nguy cơ gán dữ liệu mẫu thành thông số thương mại đã xác minh.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout" style="margin-top:12px">
+        <strong>Phạm vi kiểm chứng</strong>
+        Test tự động xác nhận logic theo các fixture và SQLite test; trước khi dùng thực tế vẫn cần chạy toàn bộ suite trong môi trường triển khai, tạo bản sao lưu, phục hồi thử, kiểm tra dữ liệu mẫu và nghiệm thu quy trình với nhân viên.
+      </div>
+    </section>
+
+    <section class="section" id="links">
+      <div class="section-head">
+        <div><span class="eyebrow-dark">12 · Điểm truy cập</span><h2>Mở các khu vực chính</h2></div>
+      </div>
+      <div class="grid-3">
+        <article class="feature"><span class="badge badge-ready">Cổng website</span><h3><a href="HTML/index.html">PetCare System Hub</a></h3><p>Điểm vào website, trang chính và thư viện.</p></article>
+        <article class="feature"><span class="badge badge-ready">Menu trực tiếp</span><h3><a href="HTML/menu.html">Menu danh sách trang</a></h3><p>Tìm nhanh URL các trang HTML trong dự án.</p></article>
+        <article class="feature"><span class="badge badge-limited">Sản phẩm</span><h3><a href="HTML/Trang thông số của các sản phẩm/index.html">Hồ sơ 70 trường</a></h3><p>Tra cứu các hồ sơ có nguồn sản phẩm đã nhập.</p></article>
+        <article class="feature"><span class="badge badge-demo">Thương hiệu</span><h3><a href="HTML/Trang thông số của các sản phẩm/thuong-hieu.html">Danh mục thương hiệu</a></h3><p>Danh sách tham khảo, đang chờ xác minh độc lập.</p></article>
+        <article class="feature"><span class="badge badge-limited">Portal cục bộ</span><h3><a href="HTML/TRrang chính/user_portal.html">Portal khách hàng</a></h3><p>Chỉ dùng qua bridge cục bộ có xác thực.</p></article>
+        <article class="feature"><span class="badge badge-demo">Tham khảo</span><h3><a href="HTML/Trang hỗ trợ/data_explorer.html">Trung tâm dữ liệu</a></h3><p>Duyệt JSON tham khảo, xem phân loại và xuất dữ liệu.</p></article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>PetCare · Báo cáo hiện trạng hệ thống</span>
+      <span>Nội dung tổng hợp từ README, cấu trúc mã nguồn và tài liệu website trong workspace · 12/10/2026</span>
+    </footer>
+  </main>
+</body>
+</html>

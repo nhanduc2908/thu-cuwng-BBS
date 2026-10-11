@@ -19,6 +19,7 @@
     verifiedCount: document.querySelector("#verifiedCount"),
     fieldCount: document.querySelector("#fieldCount")
   };
+  const requestedBrand = new URLSearchParams(window.location.search).get("brand");
 
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -35,14 +36,16 @@
   };
   const categoryLabel = (product) => product.categoryLabel || product.category || "Khác";
   const productMatches = (product) => {
-    const query = elements.search.value.trim().toLocaleLowerCase("vi");
+    const queryTerms = elements.search.value.trim().split("|")
+      .map((term) => term.trim().toLocaleLowerCase("vi"))
+      .filter(Boolean);
     const text = [
       product.brand, product.name, product.productLine, product.categoryLabel,
       product.speciesLabel, product.lifeStageLabel,
       product.intendedUse, product.specs?.intended_use, product.specs?.label_claims,
       ...(product.breeds || [])
     ].join(" ").toLocaleLowerCase("vi");
-    return (!query || text.includes(query))
+    return (!queryTerms.length || queryTerms.some((term) => text.includes(term)))
       && (!elements.species.value || product.species === elements.species.value)
       && (!elements.category.value || product.category === elements.category.value)
       && (!elements.lifeStage.value || (product.lifeStages || []).includes(elements.lifeStage.value));
@@ -52,7 +55,11 @@
     const products = state.products.filter(productMatches);
     elements.count.textContent = `${products.length} / ${state.products.length} sản phẩm`;
     if (!products.length) {
-      elements.results.innerHTML = '<div class="spec-empty">Chưa có sản phẩm phù hợp với bộ lọc. Chỉ sản phẩm có nguồn nhãn/tài liệu chính thức mới được đưa vào danh mục.</div>';
+      const brandQuery = elements.search.value.trim();
+      const message = brandQuery
+        ? `Chưa có SKU có nguồn chính thức trong hệ thống khớp với: ${escapeHtml(brandQuery)}.`
+        : "Chưa có sản phẩm phù hợp với bộ lọc.";
+      elements.results.innerHTML = `<div class="spec-empty">${message} Chỉ sản phẩm có nguồn nhãn/tài liệu chính thức mới được đưa vào danh mục. <a class="source-link" href="thuong-hieu.html">Quay lại danh mục thương hiệu</a></div>`;
       return;
     }
     elements.results.innerHTML = products.map((product) => {
@@ -138,6 +145,7 @@
 
   async function initialize() {
     try {
+      if (requestedBrand) elements.search.value = requestedBrand;
       const [catalogResponse, schemaResponse] = await Promise.all([
         fetch(DATA_URL, { cache: "no-store" }),
         fetch(SCHEMA_URL, { cache: "no-store" })

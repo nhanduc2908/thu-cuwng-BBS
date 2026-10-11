@@ -2,6 +2,7 @@
   "use strict";
 
   const DATA_URL = "../data/pet_food_brands_global.json";
+  const PRODUCT_DATA_URL = "../data/pet_product_specs.json";
   const elements = {
     search: document.querySelector("#brandSearch"),
     country: document.querySelector("#countryFilter"),
@@ -12,6 +13,7 @@
     sectionCount: document.querySelector("#sectionCount")
   };
   let sections = [];
+  let productReferences = [];
 
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -37,6 +39,22 @@
         ${entry.lines?.length ? `<p class="brand-lines">Dòng được nêu: ${entry.lines.map(escapeHtml).join(" · ")}</p>` : ""}
         ${entry.note ? `<p class="brand-entry-note">${escapeHtml(entry.note)}</p>` : ""}
         <span class="brand-card-label">Chưa xác minh độc lập</span>
+        <div class="brand-card-links">
+          <a class="spec-button primary" href="index.html?brand=${encodeURIComponent([entry.name, ...(entry.lines || [])].join("|"))}">Sản phẩm trong hệ thống</a>
+          ${productReferences.flatMap((product) => {
+            const terms = [entry.name, ...(entry.lines || [])]
+              .map((term) => term.toLocaleLowerCase("vi"));
+            const productTerms = [product.brand, product.productLine, product.name]
+              .filter(Boolean).map((term) => term.toLocaleLowerCase("vi"));
+            const matches = terms.some((term) =>
+              productTerms.some((productTerm) => productTerm.includes(term) || term.includes(productTerm))
+            );
+            if (!matches) return [];
+            return (product.sources || []).map((source) =>
+              `<a class="brand-product-link" href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(product.name)} · nguồn hãng ↗</a>`
+            );
+          }).join("")}
+        </div>
       </article>`).join("");
       const kind = section.type === "market"
         ? "Thị trường được nêu · không khẳng định xuất xứ"
@@ -55,13 +73,22 @@
 
   async function initialize() {
     try {
-      const response = await fetch(DATA_URL, { cache: "no-store" });
-      if (!response.ok) throw new Error(`Không tải được danh mục thương hiệu (HTTP ${response.status}).`);
-      const catalog = await response.json();
-      if (!Array.isArray(catalog.sections) || catalog.sourcePolicy !== "user_supplied_unverified") {
+      const [response, productsResponse] = await Promise.all([
+        fetch(DATA_URL, { cache: "no-store" }),
+        fetch(PRODUCT_DATA_URL, { cache: "no-store" })
+      ]);
+      if (!response.ok || !productsResponse.ok) {
+        throw new Error(`Không tải được danh mục thương hiệu/sản phẩm (HTTP ${response.status}/${productsResponse.status}).`);
+      }
+      const [catalog, productCatalog] = await Promise.all([
+        response.json(), productsResponse.json()
+      ]);
+      if (!Array.isArray(catalog.sections) || catalog.sourcePolicy !== "user_supplied_unverified"
+        || !Array.isArray(productCatalog.products)) {
         throw new Error("Cấu trúc danh mục thương hiệu không hợp lệ.");
       }
       sections = catalog.sections;
+      productReferences = productCatalog.products;
       const total = sections.reduce((sum, section) => sum + section.entries.length, 0);
       elements.country.replaceChildren(new Option("Tất cả quốc gia/thị trường", ""));
       for (const section of sections) elements.country.add(new Option(section.name, section.id));

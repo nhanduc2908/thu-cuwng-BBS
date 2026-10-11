@@ -1185,6 +1185,24 @@ class LocalAdminBridge:
                         database.record_audit(None, "LOGIN_FAILED", "user", details=f"web username={username[:64]}")
                         self._json(HTTPStatus.UNAUTHORIZED, {"error": "Tên đăng nhập hoặc mật khẩu không đúng, hoặc tài khoản đã khóa."})
                         return
+                    if user["must_change_password"]:
+                        database.record_audit(
+                            int(user["id"]),
+                            "WEB_LOGIN_BLOCKED_PASSWORD_CHANGE",
+                            "user",
+                            int(user["id"]),
+                        )
+                        self._json(
+                            HTTPStatus.FORBIDDEN,
+                            {
+                                "error": (
+                                    "Tài khoản đang dùng mật khẩu tạm. "
+                                    "Đăng nhập ứng dụng desktop và đổi mật khẩu "
+                                    "trước khi sử dụng HTML."
+                                )
+                            },
+                        )
+                        return
                     token = secrets.token_urlsafe(32)
                     self.sessions[token] = {
                         "user_id": int(user["id"]),

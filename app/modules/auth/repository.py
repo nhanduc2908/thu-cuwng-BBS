@@ -5,6 +5,22 @@ from app.modules.auth.constants import ROLE_PERMISSIONS
 from app.modules.auth.security import hash_password, verify_password
 
 
+DEFAULT_ROLE_ACCOUNTS = (
+    ("admin", "Quản trị viên", "admin", "ADMIN"),
+    ("manager", "Quản lý cửa hàng", "ManagerPass!2026", "MANAGER"),
+    ("veterinarian", "Bác sĩ thú y", "VetPass!2026", "VETERINARIAN"),
+    ("caregiver", "Nhân viên chăm sóc", "CaregiverPass!2026", "CAREGIVER"),
+    ("sales", "Nhân viên bán hàng", "SalesPass!2026", "SALES"),
+    ("inventory_manager", "Quản lý kho", "InventoryPass!2026", "INVENTORY_MANAGER"),
+    ("service_coordinator", "Điều phối dịch vụ", "ServicePass!2026", "SERVICE_COORDINATOR"),
+    ("customer_support", "Chăm sóc khách hàng", "SupportPass!2026", "CUSTOMER_SUPPORT"),
+    ("report_analyst", "Chuyên viên báo cáo", "ReportPass!2026", "REPORT_ANALYST"),
+    ("auditor", "Kiểm toán viên", "AuditorPass!2026", "AUDITOR"),
+)
+
+DEFAULT_ROLE_ACCOUNTS_SETTING = "default_role_accounts_v1"
+
+
 class AuthRepository:
     def __init__(self, connection: sqlite3.Connection) -> None:
         self.connection = connection
@@ -114,27 +130,62 @@ class AuthRepository:
             )
         return int(user["id"])
 
-    def ensure_default_admin_credentials(self, username: str = "admin") -> bool:
-        normalized_username = username.strip().casefold()
-        if not normalized_username:
-            raise ValueError("Tên đăng nhập quản trị không được để trống.")
+    def seed_default_role_accounts(self) -> tuple[list[str], list[str]]:
+        if self.connection.execute(
+            "SELECT 1 FROM app_settings WHERE setting_key = ?",
+            (DEFAULT_ROLE_ACCOUNTS_SETTING,),
+        ).fetchone():
+            return [], []
 
-        user = self.connection.execute(
-            """
-            SELECT id, password_salt, password_hash, role, is_active
-            FROM users
-            WHERE username = ?
-            """,
-            (normalized_username,),
-        ).fetchone()
-        if user is None:
-            return False
-        if user["role"] != "ADMIN":
-            return False
-        if verify_password("admin", user["password_salt"], user["password_hash"]):
-            return False
-        self.reset_admin_password(normalized_username)
-        return True
+        created: list[str] = []
+        conflicts: list[str] = []
+        with self.connection:
+            for username, display_name, password, role in DEFAULT_ROLE_ACCOUNTS:
+                existing = self.connection.execute(
+                    "SELECT role FROM users WHERE username = ?", (username,)
+                ).fetchone()
+                if existing:
+                    if existing["role"] != role:
+                        conflicts.append(username)
+                    continue
+
+                salt, password_hash = hash_password(
+                    password, allow_short=(username == "admin")
+                )
+                cursor = self.connection.execute(
+                    """
+                    INSERT INTO users
+                        (username, display_name, password_salt, password_hash,
+                         role, must_change_password)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        username,
+                        display_name,
+                        salt,
+                        password_hash,
+                        role,
+                        int(username == "admin"),
+                    ),
+                )
+                self.connection.execute(
+                    """
+                    INSERT INTO audit_logs
+                        (actor_id, action, entity_type, entity_id, details)
+                    VALUES (NULL, 'BOOTSTRAP', 'user', ?, ?)
+                    """,
+                    (cursor.lastrowid, f"username={username}; role={role}"),
+                )
+                created.append(username)
+
+            self.connection.execute(
+                """
+                INSERT INTO app_settings (setting_key, setting_value)
+                VALUES (?, 'complete')
+                """,
+                (DEFAULT_ROLE_ACCOUNTS_SETTING,),
+            )
+        return created, conflicts
 
     def authenticate(self, username: str, password: str) -> dict[str, Any] | None:
         normalized_username = username.strip().casefold()

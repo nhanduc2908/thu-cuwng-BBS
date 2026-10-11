@@ -18,6 +18,7 @@ from PySide6.QtWidgets import (
 )
 
 from app.database import Database
+from app.project_share import ProjectShareServer
 from app.ui.animals.page import AnimalsPage
 from app.ui.care.page import CarePage
 from app.ui.dashboard.page import DashboardPage
@@ -43,6 +44,7 @@ from app.ui.services.page import ServicesPage
 from app.ui.data_catalog.page import DataCatalogPage
 from app.ui.web_catalog.page import WebCatalogPage
 from app.ui.customer_portal.page import CustomerPortalPage
+from app.ui.project_share_dialog import ProjectShareDialog
 
 
 class MainWindow(QMainWindow):
@@ -51,10 +53,12 @@ class MainWindow(QMainWindow):
         database: Database,
         current_user: dict[str, Any] | None = None,
         web_base_url: str | None = None,
+        project_share_server: ProjectShareServer | None = None,
     ) -> None:
         super().__init__()
         self.database = database
         self.web_base_url = web_base_url.rstrip("/") if web_base_url else None
+        self.project_share_server = project_share_server
         self.current_user = current_user or {
             "id": None,
             "username": "local",
@@ -292,6 +296,14 @@ class MainWindow(QMainWindow):
             lambda: self.open_web_page("/Trang hỗ trợ/admin_store_management.html")
         )
         topbar_layout.addWidget(self.admin_web_button)
+        self.project_share_button = QPushButton("Chia sẻ quan sát")
+        self.project_share_button.setObjectName("projectShareButton")
+        self.project_share_button.setVisible(
+            self.project_share_server is not None
+            and self._has_permission("settings.manage")
+        )
+        self.project_share_button.clicked.connect(self.open_project_share)
+        topbar_layout.addWidget(self.project_share_button)
         topbar_layout.addWidget(
             QLabel(
                 f"Xin chào, {self.current_user['display_name']}\n"
@@ -470,6 +482,23 @@ class MainWindow(QMainWindow):
                 "Không tìm thấy trình duyệt mặc định để mở trang PetCare.",
             )
 
+    def open_project_share(self) -> None:
+        if not self._has_permission("settings.manage"):
+            QMessageBox.warning(
+                self, "Không đủ quyền", "Bạn không có quyền quản lý chia sẻ dự án."
+            )
+            return
+        if self.project_share_server is None:
+            QMessageBox.warning(
+                self, "Chia sẻ chưa sẵn sàng", "Máy chủ chia sẻ chưa được khởi tạo."
+            )
+            return
+        ProjectShareDialog(
+            self, self.project_share_server, self.manage_users
+        ).exec()
+
     def closeEvent(self, event: Any) -> None:
+        if self.project_share_server is not None:
+            self.project_share_server.stop()
         self.database.close()
         event.accept()
