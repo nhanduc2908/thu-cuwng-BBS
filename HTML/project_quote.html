@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bông Bông Pet Care | Bảng Báo Giá Dự Án</title>
+  <style>
+    :root {
+      --bg-1: #071d22;
+      --bg-2: #10373f;
+      --bg-3: #163f52;
+      --panel: rgba(13, 27, 32, 0.92);
+      --panel-soft: rgba(18, 41, 48, 0.8);
+      --card: rgba(255,255,255,0.03);
+      --line: rgba(197, 222, 232, 0.15);
+      --text: #edf9ff;
+      --muted: #d1e6ee;
+      --gold: #efc86d;
+      --gold-soft: #f7e8b8;
+      --sky: #8bd5ff;
+      --green: #79e6b0;
+      --red: #ff9a8d;
+      --pink: #f6a7c8;
+      --shadow: 0 26px 60px rgba(1, 10, 15, 0.28);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(239, 200, 109, 0.12), transparent 18%),
+        radial-gradient(circle at bottom right, rgba(139, 213, 255, 0.12), transparent 18%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2), var(--bg-3));
+      line-height: 1.7;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; }
+
+    .page {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 22px 18px 70px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(7, 29, 34, 0.7);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold-soft);
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px 12px 12px 5px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+      color: #071d28;
+      font-weight: 900;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      color: var(--muted);
+      font-size: 0.64rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 800;
+      transition: all 0.2s ease;
+    }
+
+    .nav a:hover {
+      transform: translateY(-1px);
+      color: var(--gold-soft);
+      border-color: rgba(239, 200, 109, 0.34);
+    }
+
+    .hero {
+      margin-top: 24px;
+      background: linear-gradient(135deg, rgba(139, 213, 255, 0.08), rgba(239, 200, 109, 0.05), rgba(15, 34, 42, 0.96));
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero-inner {
+      padding: 30px 28px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(239, 200, 109, 0.34);
+      background: rgba(239, 200, 109, 0.08);
+      color: var(--gold-soft);
+      font-size: 0.64rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 18px 0 12px;
+      font-size: clamp(2.6rem, 5vw, 5rem);
+      line-height: 0.94;
+      letter-spacing: -0.08em;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.8;
+      max-width: 980px;
+    }
+
+    .tag-row, .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .tag-row { margin-top: 22px; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      font-size: 0.64rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .actions { margin-top: 24px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, rgba(239,200,109,0.12), rgba(138,215,255,0.08));
+      border-color: rgba(239,200,109,0.32);
+      color: #f9ecbb;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .stat-card {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(239, 200, 109, 0.32);
+    }
+
+    .stat-card .label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.64rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .stat-card strong {
+      display: block;
+      margin-top: 10px;
+      font-size: clamp(1.8rem, 2.2vw, 2.7rem);
+      letter-spacing: -0.06em;
+      font-weight: 900;
+    }
+
+    section {
+      margin-top: 28px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 14px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.4rem, 2.2vw, 2rem);
+      letter-spacing: -0.05em;
+    }
+
+    .muted-tag {
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .panel {
+      background: linear-gradient(150deg, rgba(138, 215, 255, 0.04), rgba(239, 200, 109, 0.04), rgba(15, 34, 42, 0.96));
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-inner { padding: 24px; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
+    }
+
+    .company-box {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 16px;
+    }
+
+    .info-card {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+    }
+
+    .info-card label {
+      display: block;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .info-card strong {
+      font-size: 1.08rem;
+      line-height: 1.6;
+    }
+
+    .price-card {
+      padding: 24px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(239,200,109,0.12), rgba(255,255,255,0.02));
+      border: 1px solid rgba(239,200,109,0.28);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100%;
+    }
+
+    .price-card .small {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-soft);
+      font-weight: 800;
+    }
+
+    .price-card .amount {
+      margin-top: 10px;
+      font-size: clamp(2.4rem, 4vw, 4rem);
+      font-weight: 900;
+      letter-spacing: -0.08em;
+      color: var(--gold-soft);
+    }
+
+    .price-card .note {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      background: rgba(255,255,255,0.015);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 14px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--gold-soft);
+      font-size: 0.74rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.02);
+    }
+
+    tbody tr:hover {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .pill.good { border-color: rgba(121,230,176,0.4); color: var(--green); }
+    .pill.warn { border-color: rgba(239,200,109,0.4); color: var(--gold-soft); }
+    .pill.soft { border-color: rgba(139,213,255,0.38); color: var(--sky); }
+
+    .cost-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .package-card {
+      padding: 20px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .package-card.featured {
+      border-color: rgba(239,200,109,0.34);
+      background: linear-gradient(180deg, rgba(239,200,109,0.10), rgba(255,255,255,0.02));
+    }
+
+    .package-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(139,213,255,0.38);
+    }
+
+    .package-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.4rem;
+    }
+
+    .package-price {
+      margin: 10px 0 14px;
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: -0.08em;
+      color: var(--gold-soft);
+    }
+
+    .package-card ul {
+      padding-left: 18px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .roadmap {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .phase {
+      display: grid;
+      grid-template-columns: 110px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+    }
+
+    .phase .week {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(239,200,109,0.08);
+      color: var(--gold-soft);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .phase strong { display: block; }
+    .phase span { color: var(--muted); }
+    .phase .cost { font-weight: 800; color: var(--sky); }
+
+    .terms {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .terms-card {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+    }
+
+    .terms-card h4 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      color: var(--gold-soft);
+    }
+
+    .terms-card ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .footer-note {
+      margin-top: 28px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    @media (max-width: 980px) {
+      .summary-grid, .cost-grid, .terms, .two-col {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .summary-grid, .cost-grid, .terms, .two-col, .company-box {
+        grid-template-columns: 1fr;
+      }
+
+      .phase {
+        grid-template-columns: 1fr;
+        align-items: flex-start;
+      }
+
+      .topbar-inner {
+        justify-content: center;
+      }
+
+      .brand {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+        color: #08232b;
+      }
+
+      .topbar, .btn, .nav {
+        display: none !important;
+      }
+
+      .hero, .panel, .stat-card, .package-card, .info-card, .terms-card, .phase {
+        box-shadow: none !important;
+        background: #fff !important;
+        color: #08232b !important;
+        border-color: #d9e5ea !important;
+      }
+
+      .muted-tag, .lead, .stat-card .label, .info-card label, .terms-card ul, .note, .price-card .note, .phase span {
+        color: #2a4b54 !important;
+      }
+
+      .price-card .amount, .package-price, .amount, .phase .cost {
+        color: #0e3b48 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">P</div>
+        <span>PetCare Proposal</span>
+      </div>
+      <nav class="nav">
+        <a href="project_overview.html">Overview</a>
+        <a href="project_master_summary.html">Summary</a>
+        <a href="project_slides_final.html">Deck</a>
+        <a href="pet_health_report.html">Health Report</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-inner">
+        <span class="eyebrow">Bảng báo giá dự án</span>
+        <h1>Bông Bông Pet Care</h1>
+        <p class="lead">
+          Dự án xây dựng nền tảng chăm sóc thú cưng theo mô hình quản lý bệnh viện thú y, dashboard chăm sóc sức khỏe, báo cáo điều trị và trải nghiệm khách hàng. Bảng báo giá dưới đây được thiết kế để khách hàng dễ hiểu rõ các hạng mục, chi phí và tiến độ triển khai theo từng giai đoạn.
+        </p>
+
+        <div class="tag-row">
+          <span class="tag">Pet Health Platform</span>
+          <span class="tag">Premium UI/UX</span>
+          <span class="tag">Admin + Customer Portal</span>
+          <span class="tag">Responsive Mobile</span>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary" onclick="window.print()">In / Xuất báo giá</button>
+          <a class="btn" href="project_overview.html">Xem overview</a>
+        </div>
+
+        <div class="summary-grid">
+          <div class="stat-card">
+            <span class="label">Thời gian</span>
+            <strong>12 tuần</strong>
+          </div>
+          <div class="stat-card">
+            <span class="label">Phân đoạn</span>
+            <strong>5 giai đoạn</strong>
+          </div>
+          <div class="stat-card">
+            <span class="label">Đối tượng</span>
+            <strong>2 portal</strong>
+          </div>
+          <div class="stat-card">
+            <span class="label">Tổng đầu tư</span>
+            <strong>₫275.6M</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Official Quote / Hợp đồng doanh nghiệp</h2>
+        <span class="muted-tag">Mã báo giá: BB-PET-2026-01 | Hiệu lực: 30 ngày</span>
+      </div>
+
+      <div class="panel">
+        <div class="panel-inner two-col">
+          <div class="company-box">
+            <div class="info-card">
+              <label>Khách hàng</label>
+              <strong>Bông Bông Pet Care</strong>
+            </div>
+            <div class="info-card">
+              <label>Loại hợp đồng</label>
+              <strong>Project Proposal / Official Quote</strong>
+            </div>
+            <div class="info-card">
+              <label>Người phụ trách</label>
+              <strong>CEO / Quản lý vận hành</strong>
+            </div>
+            <div class="info-card">
+              <label>Hình thức thanh toán</label>
+              <strong>3 đợt theo tiến độ</strong>
+            </div>
+            <div class="info-card">
+              <label>Phạm vi</label>
+              <strong>Website + Dashboard + Customer Portal</strong>
+            </div>
+            <div class="info-card">
+              <label>Thời hạn</label>
+              <strong>12 tuần triển khai</strong>
+            </div>
+          </div>
+
+          <div class="price-card">
+            <div class="small">Tổng giá trị hợp đồng</div>
+            <div class="amount">₫275.550.000</div>
+            <div class="note">Dự án được xây dựng theo hợp đồng gói Premium Enterprise, bao gồm design system, dashboard vận hành, portal khách hàng và báo cáo dữ liệu.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Invoice / Bảng chốt chi phí</h2>
+        <span class="muted-tag">Invoice summary + VAT</span>
+      </div>
+
+      <div class="panel">
+        <div class="panel-inner">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 46%;">Mô tả</th>
+                <th style="width: 14%;">Đơn vị</th>
+                <th style="width: 12%;">Số lượng</th>
+                <th style="width: 14%;">Đơn giá</th>
+                <th style="width: 14%;">Tổng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Khảo sát yêu cầu và mô hình nghiệp vụ</td>
+                <td>gói</td>
+                <td>1</td>
+                <td>₫22.500.000</td>
+                <td>₫22.500.000</td>
+              </tr>
+              <tr>
+                <td>Thiết kế giao diện Premium UI/UX</td>
+                <td>gói</td>
+                <td>1</td>
+                <td>₫36.000.000</td>
+                <td>₫36.000.000</td>
+              </tr>
+              <tr>
+                <td>Phát triển dashboard admin và module nghiệp vụ</td>
+                <td>gói</td>
+                <td>1</td>
+                <td>₫49.000.000</td>
+                <td>₫49.000.000</td>
+              </tr>
+              <tr>
+                <td>Portal khách hàng & tối ưu mobile</td>
+                <td>gói</td>
+                <td>1</td>
+                <td>₫24.000.000</td>
+                <td>₫24.000.000</td>
+              </tr>
+              <tr>
+                <td>Báo cáo sức khỏe thú cưng & export PDF</td>
+                <td>gói</td>
+                <td>1</td>
+                <td>₫46.500.000</td>
+                <td>₫46.500.000</td>
+              </tr>
+              <tr>
+                <td>Kiểm thử, hỗ trợ, triển khai demo và đào tạo</td>
+                <td>gói</td>
+                <td>1</td>
+                <td>₫41.000.000</td>
+                <td>₫41.000.000</td>
+              </tr>
+              <tr style="background: rgba(239,200,109,0.05);">
+                <td><strong>Subtotal (Trước VAT)</strong></td>
+                <td colspan="3"></td>
+                <td><strong>₫219.000.000</strong></td>
+              </tr>
+              <tr style="background: rgba(139,213,255,0.05);">
+                <td><strong>VAT 10%</strong></td>
+                <td colspan="3"></td>
+                <td><strong>₫21.900.000</strong></td>
+              </tr>
+              <tr style="background: rgba(121,230,176,0.06);">
+                <td><strong>Tổng tiền thanh toán</strong></td>
+                <td colspan="3"></td>
+                <td><strong>₫240.900.000</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Chi tiết phân rã chi phí</h2>
+        <span class="muted-tag">Scope & Pricing</span>
+      </div>
+
+      <div class="panel">
+        <div class="panel-inner">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 46%;">Hạng mục</th>
+                <th style="width: 14%;">ĐVT</th>
+                <th style="width: 12%;">SL</th>
+                <th style="width: 14%;">Đơn giá</th>
+                <th style="width: 14%;">Thành tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Khảo sát yêu cầu & tư vấn nghiệp vụ</td>
+                <td>gói</td>
+                <td>1</td>
+                <td>₫22.500.000</td>
+                <td>₫22.500.000</td>
+              </tr>
+              <tr>
+                <td>Thiết kế giao diện UI/UX premium</td>
+                <td>gói</td>
+                <td>1</td>
+                <td>₫36.000.000</td>
+                <td>₫36.000.000</td>
+              </tr>
+              <tr>
+                <td>Phát triển dashboard admin & công cụ quản lý</td>
+                <td>gói</td>
+                <td>1</td>
+                <td>₫49.000.000</td>
+                <td>₫49.000.000</td>
+              </tr>
+              <tr>
+                <td>Portal khách hàng / mobile responsive</td>
+                <td>gói</td>
+                <td>1</td>
+                <td>₫24.000.000</td>
+                <td>₫24.000.000</td>
+              </tr>
+              <tr>
+                <td>Quản lý thú cưng & lịch chăm sóc</td>
+                <td>gói</td>
+                <td>1</td>
+                <td>₫31.500.000</td>
+                <td>₫31.500.000</td>
+              </tr>
+              <tr>
+                <td>Analytics sức khỏe thú cưng & báo cáo</td>
+                <td>gói</td>
+                <td>1</td>
+                <td>₫28.500.000</td>
+                <td>₫28.500.000</td>
+              </tr>
+              <tr>
+                <td>Xuất báo cáo PDF / print / export</td>
+                <td>gói</td>
+                <td>1</td>
+                <td>₫18.000.000</td>
+                <td>₫18.000.000</td>
+              </tr>
+              <tr>
+                <td>Kiểm thử, xử lý lỗi, triển khai và hỗ trợ ban đầu</td>
+                <td>gói</td>
+                <td>1</td>
+                <td>₫19.500.000</td>
+                <td>₫19.500.000</td>
+              </tr>
+              <tr>
+                <td>Project management & đào tạo người dùng</td>
+                <td>gói</td>
+                <td>1</td>
+                <td>₫21.500.000</td>
+                <td>₫21.500.000</td>
+              </tr>
+              <tr style="background: rgba(239, 200, 109, 0.05);">
+                <td><strong>Tổng tiền trước VAT</strong></td>
+                <td colspan="3"></td>
+                <td><strong>₫250.500.000</strong></td>
+              </tr>
+              <tr style="background: rgba(139, 213, 255, 0.04);">
+                <td><strong>VAT 10%</strong></td>
+                <td colspan="3"></td>
+                <td><strong>₫25.050.000</strong></td>
+              </tr>
+              <tr style="background: rgba(121, 230, 176, 0.06);">
+                <td><strong>Tổng giá trị đề xuất</strong></td>
+                <td colspan="3"></td>
+                <td><strong>₫275.550.000</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Gói dịch vụ</h2>
+        <span class="muted-tag">Options</span>
+      </div>
+
+      <div class="cost-grid">
+        <div class="package-card">
+          <h3>Starter</h3>
+          <div class="pill soft">Mẫu khởi đầu</div>
+          <div class="package-price">₫189M</div>
+          <ul>
+            <li>Landing page thương hiệu</li>
+            <li>Dashboard cơ bản</li>
+            <li>Quản lý pet profile</li>
+            <li>3 report mẫu</li>
+          </ul>
+        </div>
+
+        <div class="package-card featured">
+          <h3>Premium</h3>
+          <div class="pill good">Nhiều lựa chọn nhất</div>
+          <div class="package-price">₫275.6M</div>
+          <ul>
+            <li>Portal admin + khách hàng</li>
+            <li>Analytics sức khỏe</li>
+            <li>Template bệnh/thuốc/phụ kiện</li>
+            <li>Export PDF / Print / dark mode</li>
+          </ul>
+        </div>
+
+        <div class="package-card">
+          <h3>Enterprise</h3>
+          <div class="pill warn">Tùy chỉnh sâu</div>
+          <div class="package-price">₫420M+</div>
+          <ul>
+            <li>Quản lý chi nhánh</li>
+            <li>Phân quyền doanh nghiệp</li>
+            <li>Hệ thống thông báo nâng cao</li>
+            <li>Hỗ trợ triển khai toàn bộ</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Lộ trình thanh toán</h2>
+        <span class="muted-tag">Payment Schedule</span>
+      </div>
+
+      <div class="roadmap">
+        <div class="phase">
+          <div class="week">Đợt 1</div>
+          <div>
+            <strong>Khởi tạo & khảo sát</strong>
+            <span>Đánh giá yêu cầu, wireframe, xác nhận scope và thời gian triển khai.</span>
+          </div>
+          <div class="cost">₫82.7M</div>
+        </div>
+
+        <div class="phase">
+          <div class="week">Đợt 2</div>
+          <div>
+            <strong>Thiết kế & phát triển</strong>
+            <span>Thiết kế giao diện, dashboard, module quản lý và tích hợp dữ liệu demo.</span>
+          </div>
+          <div class="cost">₫137.8M</div>
+        </div>
+
+        <div class="phase">
+          <div class="week">Đợt 3</div>
+          <div>
+            <strong>Kiểm thử & bàn giao</strong>
+            <span>Hoàn thiện bug, tối ưu mobile, đào tạo người dùng, chuyển giao sản phẩm.</span>
+          </div>
+          <div class="cost">₫55.1M</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Phân đoạn triển khai</h2>
+        <span class="muted-tag">Project Roadmap</span>
+      </div>
+
+      <div class="panel">
+        <div class="panel-inner">
+          <div class="roadmap">
+            <div class="phase">
+              <div class="week">Tuần 1-2</div>
+              <div>
+                <strong>Discovery & research</strong>
+                <span>Thu thập yêu cầu, xác định mô hình nội dung, dữ liệu mẫu và cấu trúc module.</span>
+              </div>
+              <div class="cost">Phase 01</div>
+            </div>
+            <div class="phase">
+              <div class="week">Tuần 3-6</div>
+              <div>
+                <strong>UX/UI & prototype</strong>
+                <span>Thiết kế hệ thống trang, giao diện khi xem trên desktop, tablet, mobile.</span>
+              </div>
+              <div class="cost">Phase 02</div>
+            </div>
+            <div class="phase">
+              <div class="week">Tuần 7-9</div>
+              <div>
+                <strong>Build dashboard</strong>
+                <span>Phát triển report, pet profile, filter, biểu đồ và modal chi tiết từng đối tượng.</span>
+              </div>
+              <div class="cost">Phase 03</div>
+            </div>
+            <div class="phase">
+              <div class="week">Tuần 10-12</div>
+              <div>
+                <strong>QA & launch</strong>
+                <span>Kiểm thử tính ổn định, chỉnh sửa visual, đào tạo vận hành và bàn giao demo.</span>
+              </div>
+              <div class="cost">Phase 04</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Điều khoản</h2>
+        <span class="muted-tag">Terms</span>
+      </div>
+
+      <div class="terms">
+        <div class="terms-card">
+          <h4>Cam kết của bên cung cấp</h4>
+          <ul>
+            <li>Trình bày đúng scope, timeline và định hướng UX/UI.</li>
+            <li>Thực hiện demo theo tiến độ đã xác nhận.</li>
+            <li>Hỗ trợ sửa lỗi và tối ưu trong giai đoạn bàn giao.</li>
+            <li>Chuyển giao file nguồn và hướng dẫn vận hành.</li>
+          </ul>
+        </div>
+
+        <div class="terms-card">
+          <h4>Điều kiện thanh toán</h4>
+          <ul>
+            <li>Đợt 1: 30% ngay sau khi ký hợp đồng.</li>
+            <li>Đợt 2: 50% khi hoàn thiện phát triển chính.</li>
+            <li>Đợt 3: 20% khi bàn giao cuối cùng.</li>
+            <li>Hợp đồng có hiệu lực trong 30 ngày sau khi xác nhận.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Thanh toán theo tiến độ</h2>
+        <span class="muted-tag">Payment Schedule</span>
+      </div>
+
+      <div class="panel">
+        <div class="panel-inner">
+          <div class="roadmap">
+            <div class="phase">
+              <div class="week">Đợt 1</div>
+              <div>
+                <strong>Khởi tạo & khảo sát</strong>
+                <span>Thanh toán 30% sau khi ký hợp đồng và chốt scope.</span>
+              </div>
+              <div class="cost">₫72.270.000</div>
+            </div>
+            <div class="phase">
+              <div class="week">Đợt 2</div>
+              <div>
+                <strong>Thiết kế & phát triển chính</strong>
+                <span>Thanh toán 50% sau khi hoàn thiện giao diện chính và dashboard chức năng.</span>
+              </div>
+              <div class="cost">₫120.450.000</div>
+            </div>
+            <div class="phase">
+              <div class="week">Đợt 3</div>
+              <div>
+                <strong>Rà soát, QA & bàn giao</strong>
+                <span>Thanh toán 20% khi hoàn tất kiểm thử, đào tạo và bàn giao.</span>
+              </div>
+              <div class="cost">₫48.180.000</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Chữ ký phê duyệt</h2>
+        <span class="muted-tag">Approval</span>
+      </div>
+
+      <div class="terms">
+        <div class="terms-card">
+          <h4>Khách hàng</h4>
+          <ul>
+            <li>Tên doanh nghiệp: Bông Bông Pet Care</li>
+            <li>Người ký: __________________________</li>
+            <li>Chức vụ: __________________________</li>
+            <li>Ngày ký: __________________________</li>
+          </ul>
+        </div>
+
+        <div class="terms-card">
+          <h4>Bên cung cấp</h4>
+          <ul>
+            <li>Tên doanh nghiệp: PetCare Project Team</li>
+            <li>Người ký: __________________________</li>
+            <li>Chức vụ: Solution Architect</li>
+            <li>Ngày ký: __________________________</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      Lưu ý: Bảng báo giá này là bản đề xuất chính thức dành cho khách hàng Bông Bông Pet Care. Mọi thay đổi về phạm vi, mục tiêu hoặc yêu cầu bổ sung sau khi ký kết sẽ được cập nhật bằng phụ lục hợp đồng riêng và đồng thời chia sẻ cho khách hàng trước khi triển khai.
+    </div>
+  </main>
+
+  <script>
+    const currentYear = new Date().getFullYear();
+    const brand = document.querySelector('.brand span');
+    if (brand) brand.textContent = 'PetCare Proposal ' + currentYear;
+  </script>
+</body>
+</html>
