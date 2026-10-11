@@ -1,124 +1,969 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#102c24">
-  <meta name="description" content="Cổng điều hướng hệ thống PetCare: bảng điều hành, website chính, 17 phân hệ, báo cáo và hồ sơ dự án.">
-  <title>PetCare | Cổng hệ thống</title>
-  <style>
-    :root{color-scheme:light;--ink:#18342b;--muted:#6c7d74;--green:#176547;--green-dark:#102c24;--lime:#d9f18c;--line:#dfe9e2;--paper:#f1f6f1;--white:#fff;--gold:#e9bd64;--shadow:0 18px 55px rgba(18,55,39,.09)}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 "Segoe UI",Arial,sans-serif}a{color:inherit;text-decoration:none}button,input{font:inherit}.shell{width:min(1240px,calc(100% - 36px));margin:auto}
-    .topbar{position:sticky;top:0;z-index:10;border-bottom:1px solid rgba(223,233,226,.9);background:rgba(255,255,255,.9);backdrop-filter:blur(16px)}.top-inner{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:11px;font-weight:850;letter-spacing:-.03em}.brand-mark{display:grid;place-items:center;width:39px;height:39px;border-radius:14px 14px 14px 5px;background:var(--green-dark);color:var(--lime);font-size:20px}.top-links{display:flex;align-items:center;gap:9px}.top-links a,.button{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:#fff;font-weight:750;font-size:13px}.top-links a:hover,.button:hover{border-color:#9fc9ae;color:var(--green)}
-    .hero{position:relative;overflow:hidden;margin:28px 0 20px;padding:clamp(27px,5vw,58px);border-radius:30px;color:#f3faf5;background:radial-gradient(circle at 83% 5%,rgba(217,241,140,.20),transparent 25%),linear-gradient(125deg,#102c24,#174d3a 58%,#1b5942);box-shadow:var(--shadow)}.hero:after{position:absolute;content:"";width:360px;height:360px;right:-80px;bottom:-230px;border:1px solid rgba(255,255,255,.13);border-radius:50%;box-shadow:0 0 0 36px rgba(255,255,255,.025),0 0 0 72px rgba(255,255,255,.02)}.hero-content{position:relative;z-index:1;max-width:790px}.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--lime);font-size:11px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}.hero h1{max-width:760px;margin:14px 0 12px;font-size:clamp(37px,6vw,66px);line-height:.99;letter-spacing:-.065em}.hero p{max-width:680px;margin:0;color:#d3e5d9;font-size:16px}.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:23px}.hero .button{min-height:46px;padding:0 19px;border:0}.button-primary{background:var(--lime);color:#18342b}.button-glass{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2)!important}
-    .quick-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 36px}.quick-card{display:flex;align-items:center;gap:13px;min-height:91px;padding:15px;border:1px solid var(--line);border-radius:17px;background:#fff;transition:transform .2s,border-color .2s,box-shadow .2s}.quick-card:hover{transform:translateY(-3px);border-color:#a8cbb4;box-shadow:var(--shadow)}.quick-icon{display:grid;place-items:center;flex:0 0 43px;height:43px;border-radius:14px;background:#edf6ed;font-size:20px}.quick-card strong{display:block;font-size:14px}.quick-card small{display:block;margin-top:2px;color:var(--muted);font-size:11px}
-    .section{margin:34px 0}.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:15px}.section-head h2{margin:3px 0 0;font-size:clamp(23px,3vw,30px);letter-spacing:-.045em}.section-head p{margin:0;color:var(--muted);font-size:13px}.section-kicker{color:var(--green);font-size:10px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
-    .search-row{display:flex;gap:9px;align-items:center;margin:18px 0}.search{width:min(470px,100%);height:45px;padding:0 15px;border:1px solid var(--line);border-radius:13px;background:#fff;outline:none}.search:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(23,101,71,.1)}.count{color:var(--muted);font-size:12px}.card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.page-card{display:flex;flex-direction:column;min-height:161px;padding:18px;border:1px solid var(--line);border-radius:17px;background:#fff;transition:transform .2s,border-color .2s,box-shadow .2s}.page-card:hover{transform:translateY(-3px);border-color:#a8cbb4;box-shadow:var(--shadow)}.card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.card-icon{font-size:20px}.tag{padding:4px 8px;border-radius:999px;background:#eff6ee;color:#426b50;font-size:10px;font-weight:800}.page-card h3{margin:12px 0 5px;font-size:16px;letter-spacing:-.02em}.page-card p{margin:0 0 13px;color:var(--muted);font-size:12px;line-height:1.55}.card-link{margin-top:auto;color:var(--green);font-size:12px;font-weight:850}.empty{display:none;padding:28px;border:1px dashed #b7cbbd;border-radius:15px;text-align:center;color:var(--muted)}.note{padding:13px 15px;border:1px solid #eadcad;border-radius:13px;background:#fff9e9;color:#705c28;font-size:12px}
-    footer{margin-top:48px;padding:22px 0 30px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:11px}
-    @media(max-width:900px){.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media(max-width:580px){.shell{width:min(100% - 24px,1240px)}.top-inner{min-height:60px}.top-links a:first-child{display:none}.top-links a{min-height:36px;padding:0 11px;font-size:11px}.hero{margin-top:15px;border-radius:22px}.quick-grid{gap:8px}.quick-card{min-height:80px;padding:10px;gap:9px}.quick-icon{flex-basis:36px;height:36px;font-size:17px}.quick-card strong{font-size:12px}.quick-card small{font-size:10px}.card-grid{grid-template-columns:1fr}.page-card{min-height:138px}.section-head{align-items:flex-start;flex-direction:column}.search-row{align-items:flex-start;flex-direction:column}footer{flex-direction:column}}
-    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a1f19">
+<meta name="description" content="Cổng điều hướng hệ thống PetCare: bảng điều hành, website chính, 17 phân hệ, báo cáo và hồ sơ dự án.">
+<title>PetCare | Cổng hệ thống</title>
+<style>
+  /* ============================================================
+     DESIGN TOKENS
+     ============================================================ */
+  :root{
+    color-scheme: light;
+
+    /* Brand */
+    --brand-900:#0a1f19;
+    --brand-800:#0f2c23;
+    --brand-700:#133a2d;
+    --brand-600:#176547;
+    --brand-500:#1c7a56;
+    --brand-400:#2f9c73;
+    --brand-300:#5fd39a;
+    --lime:#d9f18c;
+    --lime-soft:#eaf7b8;
+    --gold:#e9bd64;
+
+    /* Surface */
+    --paper:#f4f8f4;
+    --paper-2:#eef4ee;
+    --white:#ffffff;
+    --ink:#132a22;
+    --ink-2:#2a3d34;
+    --muted:#6c7d74;
+    --muted-2:#8a9a91;
+    --line:#e0e9e2;
+    --line-2:#d3dfd6;
+
+    /* Effects */
+    --radius-sm:10px;
+    --radius:16px;
+    --radius-lg:22px;
+    --radius-xl:30px;
+    --shadow-sm:0 1px 2px rgba(10,31,25,.05);
+    --shadow:0 4px 14px rgba(10,31,25,.06),0 1px 2px rgba(10,31,25,.04);
+    --shadow-lg:0 18px 55px rgba(10,31,25,.10),0 2px 6px rgba(10,31,25,.05);
+    --shadow-glow:0 0 0 1px rgba(23,101,71,.08),0 12px 32px rgba(23,101,71,.14);
+
+    --ease:cubic-bezier(.2,.8,.2,1);
+    --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  }
+
+  html[data-theme="dark"]{
+    color-scheme: dark;
+    --paper:#0b1613;
+    --paper-2:#0f1d18;
+    --white:#13241d;
+    --ink:#e8f1eb;
+    --ink-2:#c8d8cf;
+    --muted:#8ba197;
+    --muted-2:#6b8078;
+    --line:#22362d;
+    --line-2:#2c453a;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+    --shadow:0 4px 14px rgba(0,0,0,.35),0 1px 2px rgba(0,0,0,.3);
+    --shadow-lg:0 18px 55px rgba(0,0,0,.5),0 2px 6px rgba(0,0,0,.35);
+    --shadow-glow:0 0 0 1px rgba(95,211,154,.15),0 12px 32px rgba(95,211,154,.10);
+    --lime:#d9f18c;
+    --lime-soft:#3a4520;
+  }
+
+  /* ============================================================
+     BASE
+     ============================================================ */
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font:15px/1.6 "Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    font-feature-settings:"cv02","cv03","cv04","cv11";
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    transition:background .3s var(--ease),color .3s var(--ease);
+    min-height:100vh;
+  }
+  body::before{
+    content:"";
+    position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(circle at 12% 8%,rgba(217,241,140,.06),transparent 40%),
+      radial-gradient(circle at 88% 92%,rgba(23,101,71,.05),transparent 45%);
+  }
+  html[data-theme="dark"] body::before{
+    background:
+      radial-gradient(circle at 12% 8%,rgba(217,241,140,.04),transparent 40%),
+      radial-gradient(circle at 88% 92%,rgba(95,211,154,.05),transparent 45%);
+  }
+  a{color:inherit;text-decoration:none}
+  button,input,select{font:inherit;color:inherit}
+  button{cursor:pointer;border:0;background:none}
+  img,svg{display:block;max-width:100%}
+  ::selection{background:var(--lime);color:var(--brand-900)}
+  .shell{width:min(1240px,calc(100% - 36px));margin:auto}
+
+  /* ============================================================
+     TOPBAR
+     ============================================================ */
+  .topbar{
+    position:sticky;top:0;z-index:50;
+    border-bottom:1px solid color-mix(in srgb,var(--line) 90%,transparent);
+    background:color-mix(in srgb,var(--white) 82%,transparent);
+    backdrop-filter:blur(18px) saturate(1.4);
+    -webkit-backdrop-filter:blur(18px) saturate(1.4);
+    transition:background .3s var(--ease),border-color .3s var(--ease);
+  }
+  .top-inner{
+    min-height:70px;display:flex;align-items:center;
+    justify-content:space-between;gap:20px;
+  }
+  .brand{
+    display:flex;align-items:center;gap:12px;
+    font-weight:850;letter-spacing:-.035em;font-size:15px;
+  }
+  .brand-mark{
+    display:grid;place-items:center;
+    width:40px;height:40px;
+    border-radius:13px 13px 13px 5px;
+    background:linear-gradient(135deg,var(--brand-800),var(--brand-600));
+    color:var(--lime);
+    font-size:19px;font-weight:900;
+    box-shadow:0 4px 12px rgba(10,31,25,.25),inset 0 1px 0 rgba(255,255,255,.15);
+    transition:transform .3s var(--ease-spring);
+  }
+  .brand:hover .brand-mark{transform:rotate(-6deg) scale(1.05)}
+  .brand-sub{color:var(--muted);font-weight:600}
+
+  .top-links{display:flex;align-items:center;gap:9px}
+  .top-links a,.btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    min-height:40px;padding:0 15px;
+    border:1px solid var(--line);border-radius:999px;
+    background:var(--white);
+    font-weight:750;font-size:13px;
+    transition:all .2s var(--ease);
+    white-space:nowrap;
+  }
+  .top-links a:hover,.btn:hover{
+    border-color:var(--brand-400);
+    color:var(--brand-600);
+    transform:translateY(-1px);
+    box-shadow:var(--shadow);
+  }
+  html[data-theme="dark"] .top-links a:hover,
+  html[data-theme="dark"] .btn:hover{color:var(--brand-300)}
+
+  .icon-btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:40px;height:40px;
+    border:1px solid var(--line);border-radius:999px;
+    background:var(--white);
+    transition:all .2s var(--ease);
+  }
+  .icon-btn:hover{
+    border-color:var(--brand-400);
+    color:var(--brand-600);
+    transform:rotate(15deg);
+  }
+  html[data-theme="dark"] .icon-btn:hover{color:var(--brand-300)}
+  .icon-btn svg{width:16px;height:16px}
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero{
+    position:relative;overflow:hidden;
+    margin:28px 0 20px;
+    padding:clamp(28px,5vw,60px);
+    border-radius:var(--radius-xl);
+    color:#f3faf5;
+    background:
+      radial-gradient(circle at 82% 4%,rgba(217,241,140,.22),transparent 28%),
+      radial-gradient(circle at 8% 96%,rgba(95,211,154,.14),transparent 32%),
+      linear-gradient(125deg,#0a1f19 0%,#133a2d 48%,#176547 100%);
+    box-shadow:var(--shadow-lg);
+    isolation:isolate;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;z-index:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+    background-size:52px 52px;
+    mask-image:radial-gradient(circle at 30% 30%,black,transparent 78%);
+    -webkit-mask-image:radial-gradient(circle at 30% 30%,black,transparent 78%);
+  }
+  .hero::after{
+    content:"";position:absolute;
+    width:420px;height:420px;right:-100px;bottom:-260px;
+    border:1px solid rgba(255,255,255,.12);border-radius:50%;
+    box-shadow:
+      0 0 0 40px rgba(255,255,255,.022),
+      0 0 0 80px rgba(255,255,255,.018),
+      0 0 0 120px rgba(255,255,255,.012);
+    animation:float 18s ease-in-out infinite;
+  }
+  @keyframes float{
+    0%,100%{transform:translate(0,0)}
+    50%{transform:translate(-18px,-14px)}
+  }
+  .hero-content{position:relative;z-index:1;max-width:800px}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 12px;
+    border:1px solid rgba(217,241,140,.28);
+    border-radius:999px;
+    background:rgba(217,241,140,.08);
+    color:var(--lime);
+    font-size:11px;font-weight:850;
+    letter-spacing:.14em;text-transform:uppercase;
+    backdrop-filter:blur(6px);
+  }
+  .hero h1{
+    max-width:780px;
+    margin:18px 0 14px;
+    font-size:clamp(37px,6vw,68px);
+    line-height:.98;
+    letter-spacing:-.065em;
+    font-weight:850;
+  }
+  .hero h1 .grad{
+    background:linear-gradient(120deg,var(--lime),#b8e88a);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .hero p{
+    max-width:680px;margin:0;
+    color:#d3e5d9;font-size:16px;line-height:1.65;
+  }
+  .hero-actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:26px}
+  .hero .btn{min-height:48px;padding:0 22px;border:0;font-size:14px}
+  .btn-primary{
+    background:linear-gradient(135deg,var(--lime),#c4e878);
+    color:#0a1f19;
+    font-weight:850;
+    box-shadow:0 8px 22px rgba(217,241,140,.28);
+  }
+  .btn-primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 14px 32px rgba(217,241,140,.42);
+    color:#0a1f19;
+  }
+  .btn-glass{
+    background:rgba(255,255,255,.10);
+    color:#fff;
+    border:1px solid rgba(255,255,255,.22)!important;
+    backdrop-filter:blur(8px);
+  }
+  .btn-glass:hover{
+    background:rgba(255,255,255,.18);
+    border-color:rgba(255,255,255,.4)!important;
+    color:#fff;
+  }
+
+  /* ============================================================
+     QUICK GRID
+     ============================================================ */
+  .quick-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:12px;margin:0 0 40px;
+  }
+  .quick-card{
+    position:relative;overflow:hidden;
+    display:flex;align-items:center;gap:13px;
+    min-height:94px;padding:16px;
+    border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--white);
+    transition:transform .25s var(--ease),border-color .25s var(--ease),box-shadow .25s var(--ease);
+  }
+  .quick-card::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:2px;
+    background:linear-gradient(90deg,var(--brand-400),var(--lime));
+    transform:scaleX(0);transform-origin:left;
+    transition:transform .35s var(--ease);
+  }
+  .quick-card:hover{
+    transform:translateY(-4px);
+    border-color:color-mix(in srgb,var(--brand-400) 60%,var(--line));
+    box-shadow:var(--shadow-lg);
+  }
+  .quick-card:hover::after{transform:scaleX(1)}
+  .quick-icon{
+    display:grid;place-items:center;
+    flex:0 0 44px;height:44px;
+    border-radius:13px;
+    background:linear-gradient(135deg,color-mix(in srgb,var(--brand-400) 14%,transparent),color-mix(in srgb,var(--lime) 30%,transparent));
+    color:var(--brand-600);
+    font-size:19px;
+    transition:transform .3s var(--ease-spring);
+  }
+  html[data-theme="dark"] .quick-icon{color:var(--brand-300)}
+  .quick-card:hover .quick-icon{transform:scale(1.08) rotate(-4deg)}
+  .quick-card strong{display:block;font-size:14px;letter-spacing:-.01em}
+  .quick-card small{display:block;margin-top:2px;color:var(--muted);font-size:11px;line-height:1.45}
+
+  /* ============================================================
+     SEARCH ROW
+     ============================================================ */
+  .search-row{
+    display:flex;gap:12px;align-items:center;
+    margin:0 0 22px;
+    padding:10px 12px;
+    border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--white);
+    box-shadow:var(--shadow-sm);
+    transition:box-shadow .25s var(--ease),border-color .25s var(--ease);
+  }
+  .search-row:focus-within{
+    border-color:var(--brand-400);
+    box-shadow:var(--shadow-glow);
+  }
+  .search-wrap{position:relative;flex:1;min-width:0}
+  .search-wrap svg{
+    position:absolute;left:14px;top:50%;transform:translateY(-50%);
+    width:16px;height:16px;color:var(--muted);pointer-events:none;
+    transition:color .2s var(--ease);
+  }
+  .search-row:focus-within .search-wrap svg{color:var(--brand-600)}
+  html[data-theme="dark"] .search-row:focus-within .search-wrap svg{color:var(--brand-300)}
+  .search{
+    width:100%;height:46px;
+    padding:0 78px 0 42px;
+    border:0;border-radius:10px;
+    background:transparent;
+    outline:none;
+    font-size:14px;
+  }
+  .kbd-hint{
+    position:absolute;right:10px;top:50%;transform:translateY(-50%);
+    display:flex;gap:4px;pointer-events:none;
+  }
+  .kbd{
+    min-width:22px;padding:3px 7px;
+    border:1px solid var(--line);border-bottom-width:2px;
+    border-radius:6px;
+    background:var(--paper);
+    color:var(--muted);
+    font:10px/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+    font-weight:700;text-align:center;
+  }
+  .count{
+    flex:none;padding:0 12px;
+    color:var(--muted);font-size:12px;font-weight:700;
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+  }
+
+  /* ============================================================
+     FILTER CHIPS
+     ============================================================ */
+  .filter-bar{
+    display:flex;gap:7px;flex-wrap:wrap;
+    margin:0 0 26px;
+  }
+  .chip{
+    padding:7px 14px;
+    border:1px solid var(--line);border-radius:999px;
+    background:var(--white);
+    color:var(--muted);
+    font-size:12px;font-weight:750;
+    transition:all .2s var(--ease);
+  }
+  .chip:hover{
+    border-color:var(--brand-400);
+    color:var(--brand-600);
+    transform:translateY(-1px);
+  }
+  html[data-theme="dark"] .chip:hover{color:var(--brand-300)}
+  .chip[aria-pressed="true"]{
+    background:linear-gradient(135deg,var(--brand-700),var(--brand-600));
+    border-color:var(--brand-600);
+    color:#fff;
+    box-shadow:0 4px 12px rgba(23,101,71,.25);
+  }
+
+  /* ============================================================
+     SECTIONS
+     ============================================================ */
+  .section{margin:38px 0}
+  .section[hidden]{display:none}
+  .section-head{
+    display:flex;align-items:flex-end;justify-content:space-between;
+    gap:18px;margin-bottom:16px;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--line);
+  }
+  .section-head h2{
+    margin:4px 0 0;
+    font-size:clamp(23px,3vw,31px);
+    letter-spacing:-.045em;
+    font-weight:850;
+  }
+  .section-head p{margin:0;color:var(--muted);font-size:13px;max-width:420px}
+  .section-kicker{
+    display:inline-flex;align-items:center;gap:6px;
+    color:var(--brand-600);
+    font-size:10px;font-weight:850;
+    letter-spacing:.16em;text-transform:uppercase;
+  }
+  html[data-theme="dark"] .section-kicker{color:var(--brand-300)}
+
+  /* ============================================================
+     CARD GRID
+     ============================================================ */
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:14px;
+  }
+  .page-card{
+    position:relative;overflow:hidden;
+    display:flex;flex-direction:column;
+    min-height:168px;padding:20px;
+    border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--white);
+    transition:transform .3s var(--ease),border-color .3s var(--ease),box-shadow .3s var(--ease);
+    isolation:isolate;
+  }
+  .page-card::before{
+    content:"";position:absolute;inset:0;z-index:0;
+    background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),color-mix(in srgb,var(--brand-400) 10%,transparent),transparent 42%);
+    opacity:0;transition:opacity .35s var(--ease);
+    pointer-events:none;
+  }
+  .page-card:hover::before{opacity:1}
+  .page-card::after{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+    background:linear-gradient(180deg,var(--brand-400),var(--lime));
+    transform:scaleY(0);transform-origin:top;
+    transition:transform .35s var(--ease);
+  }
+  .page-card:hover{
+    transform:translateY(-5px);
+    border-color:color-mix(in srgb,var(--brand-400) 55%,var(--line));
+    box-shadow:var(--shadow-lg);
+  }
+  .page-card:hover::after{transform:scaleY(1)}
+  .page-card > *{position:relative;z-index:1}
+
+  .card-top{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:8px;
+  }
+  .card-icon{
+    display:grid;place-items:center;
+    width:38px;height:38px;
+    border-radius:11px;
+    background:linear-gradient(135deg,color-mix(in srgb,var(--brand-400) 12%,transparent),color-mix(in srgb,var(--lime) 26%,transparent));
+    color:var(--brand-600);
+    font-size:16px;font-weight:850;
+    transition:transform .3s var(--ease-spring);
+  }
+  html[data-theme="dark"] .card-icon{color:var(--brand-300)}
+  .page-card:hover .card-icon{transform:scale(1.1) rotate(-5deg)}
+
+  .tag{
+    padding:4px 10px;
+    border-radius:999px;
+    background:color-mix(in srgb,var(--brand-400) 10%,transparent);
+    color:var(--brand-600);
+    font-size:10px;font-weight:850;
+    letter-spacing:.02em;
+    white-space:nowrap;
+  }
+  html[data-theme="dark"] .tag{
+    background:color-mix(in srgb,var(--brand-300) 14%,transparent);
+    color:var(--brand-300);
+  }
+
+  .page-card h3{
+    margin:14px 0 6px;
+    font-size:16px;font-weight:850;
+    letter-spacing:-.02em;line-height:1.3;
+  }
+  .page-card p{
+    margin:0 0 14px;
+    color:var(--muted);font-size:12.5px;line-height:1.55;
+  }
+  .card-link{
+    margin-top:auto;
+    display:inline-flex;align-items:center;gap:5px;
+    color:var(--brand-600);
+    font-size:12px;font-weight:850;
+    transition:gap .25s var(--ease);
+  }
+  html[data-theme="dark"] .card-link{color:var(--brand-300)}
+  .page-card:hover .card-link{gap:9px}
+  .card-link::after{content:"→";transition:transform .25s var(--ease)}
+  .page-card:hover .card-link::after{transform:translateX(2px)}
+
+  mark{
+    background:linear-gradient(180deg,transparent 55%,color-mix(in srgb,var(--lime) 75%,transparent) 55%);
+    color:inherit;border-radius:3px;padding:0 2px;
+  }
+  html[data-theme="dark"] mark{
+    background:linear-gradient(180deg,transparent 55%,color-mix(in srgb,var(--lime) 40%,transparent) 55%);
+  }
+
+  /* ============================================================
+     EMPTY / NOTE
+     ============================================================ */
+  .empty{
+    display:none;margin:24px 0;padding:44px 24px;
+    border:1px dashed var(--line-2);border-radius:var(--radius);
+    background:var(--white);
+    text-align:center;color:var(--muted);
+  }
+  .empty.visible{display:block}
+  .empty strong{display:block;color:var(--ink);font-size:15px;margin-bottom:6px}
+  .empty-icon{
+    display:grid;place-items:center;
+    width:54px;height:54px;margin:0 auto 14px;
+    border-radius:16px;
+    background:color-mix(in srgb,var(--brand-400) 10%,transparent);
+    color:var(--brand-600);font-size:22px;
+  }
+  html[data-theme="dark"] .empty-icon{color:var(--brand-300)}
+
+  .note{
+    margin:28px 0 0;
+    padding:14px 18px;
+    border:1px solid color-mix(in srgb,var(--gold) 40%,var(--line));
+    border-left:3px solid var(--gold);
+    border-radius:var(--radius-sm);
+    background:color-mix(in srgb,var(--gold) 8%,var(--white));
+    color:#705c28;font-size:12.5px;line-height:1.6;
+  }
+  html[data-theme="dark"] .note{
+    color:#e6d29a;
+    background:color-mix(in srgb,var(--gold) 10%,var(--white));
+  }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  footer{
+    margin-top:56px;
+    padding:24px 0 34px;
+    border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;gap:12px;
+    color:var(--muted);font-size:11.5px;
+  }
+
+  /* ============================================================
+     BACK TO TOP
+     ============================================================ */
+  .to-top{
+    position:fixed;right:22px;bottom:22px;z-index:40;
+    width:44px;height:44px;
+    border:1px solid var(--line);border-radius:50%;
+    background:var(--white);
+    color:var(--brand-600);
+    box-shadow:var(--shadow-lg);
+    display:flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;
+    transform:translateY(12px) scale(.9);
+    transition:all .3s var(--ease-spring);
+  }
+  html[data-theme="dark"] .to-top{color:var(--brand-300)}
+  .to-top.visible{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
+  .to-top:hover{
+    background:var(--brand-600);color:#fff;border-color:var(--brand-600);
+    transform:translateY(-3px) scale(1.06);
+  }
+  .to-top svg{width:17px;height:17px}
+
+  /* ============================================================
+     ENTRANCE ANIMATION
+     ============================================================ */
+  @keyframes rise{
+    from{opacity:0;transform:translateY(14px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  .hero, .quick-card, .section{
+    animation:rise .55s var(--ease) both;
+  }
+  .quick-card:nth-child(1){animation-delay:.04s}
+  .quick-card:nth-child(2){animation-delay:.08s}
+  .quick-card:nth-child(3){animation-delay:.12s}
+  .quick-card:nth-child(4){animation-delay:.16s}
+  .quick-card:nth-child(5){animation-delay:.20s}
+  .quick-card:nth-child(6){animation-delay:.24s}
+  .quick-card:nth-child(7){animation-delay:.28s}
+  .quick-card:nth-child(8){animation-delay:.32s}
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media(max-width:1024px){
+    .quick-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  }
+  @media(max-width:900px){
+    .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(max-width:580px){
+    .shell{width:calc(100% - 24px)}
+    .top-inner{min-height:60px;gap:10px}
+    .top-links a:first-child{display:none}
+    .top-links a{min-height:36px;padding:0 11px;font-size:11.5px}
+    .brand-sub{display:none}
+    .hero{margin-top:15px;border-radius:22px}
+    .hero h1{letter-spacing:-.055em}
+    .quick-grid{gap:8px}
+    .quick-card{min-height:80px;padding:12px 10px;gap:10px}
+    .quick-icon{flex-basis:36px;height:36px;font-size:17px;border-radius:10px}
+    .quick-card strong{font-size:12.5px}
+    .quick-card small{font-size:10px}
+    .card-grid{grid-template-columns:1fr;gap:10px}
+    .page-card{min-height:auto;padding:16px}
+    .section-head{align-items:flex-start;flex-direction:column;gap:8px}
+    .section-head p{max-width:none}
+    .search-row{align-items:stretch;flex-direction:column;gap:6px;padding:8px}
+    .kbd-hint{display:none}
+    .search{padding-right:14px;height:42px}
+    .count{text-align:center;padding:4px 0 2px}
+    footer{flex-direction:column;text-align:center}
+    .to-top{right:14px;bottom:14px}
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+      animation-duration:.001ms!important;
+      animation-iteration-count:1!important;
+      transition-duration:.001ms!important;
+      scroll-behavior:auto!important;
+    }
+    .hero::after{animation:none}
+  }
+</style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="shell top-inner">
-      <a class="brand" href="index.html" aria-label="PetCare home"><span class="brand-mark">P</span><span>PetCare <span style="color:#71857a;font-weight:650">/ System Hub</span></span></a>
-      <nav class="top-links" aria-label="Điều hướng chính"><a href="menu.html">Danh sách trang</a><a href="TRrang chính/index.html">Website thương hiệu</a><a href="TRrang chính/petcare_management.html">Mở bảng điều hành&nbsp; ↗</a></nav>
+
+<header class="topbar">
+  <div class="shell top-inner">
+    <a class="brand" href="index.html" aria-label="PetCare home">
+      <span class="brand-mark">P</span>
+      <span>PetCare <span class="brand-sub">/ System Hub</span></span>
+    </a>
+    <nav class="top-links" aria-label="Điều hướng chính">
+      <a href="menu.html">Danh sách trang</a>
+      <a href="TRrang chính/index.html">Website thương hiệu</a>
+      <a href="TRrang chính/petcare_management.html">Bảng điều hành ↗</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Đổi giao diện sáng/tối" title="Đổi giao diện (Ctrl+J)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="shell">
+
+  <section class="hero">
+    <div class="hero-content">
+      <span class="eyebrow">✦ Bông Bông Pet Care · Enterprise Workspace</span>
+      <h1>Một cổng vào.<br><span class="grad">Mọi hoạt động chăm sóc.</span></h1>
+      <p>Điều hướng website chính, bảng vận hành, hồ sơ dự án và 17 phân hệ quản lý thú cưng trong một giao diện thống nhất.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="TRrang chính/petcare_management.html">Mở bảng điều hành</a>
+        <a class="btn btn-glass" href="TRrang chính/index.html">Khám phá website chính</a>
+      </div>
     </div>
-  </header>
-  <main class="shell">
-    <section class="hero">
-      <div class="hero-content">
-        <span class="eyebrow">✦ Bông Bông Pet Care · Enterprise workspace</span>
-        <h1>Một cổng vào.<br>Mọi hoạt động chăm sóc.</h1>
-        <p>Điều hướng website chính, bảng vận hành, hồ sơ dự án và 17 phân hệ quản lý thú cưng trong một giao diện thống nhất.</p>
-        <div class="hero-actions"><a class="button button-primary" href="TRrang chính/petcare_management.html">Mở bảng điều hành</a><a class="button button-glass" href="TRrang chính/index.html">Khám phá website chính</a></div>
-      </div>
-    </section>
-    <section class="quick-grid" aria-label="Lối tắt">
-      <a class="quick-card" href="TRrang chính/petcare_management.html"><span class="quick-icon">▦</span><span><strong>Bảng điều hành</strong><small>Pet, chăm sóc, sức khỏe, cảnh báo</small></span></a>
-      <a class="quick-card" href="Trang hỗ trợ/Module/index.html"><span class="quick-icon">◈</span><span><strong>17 phân hệ</strong><small>Điều hướng quy trình nghiệp vụ</small></span></a>
-      <a class="quick-card" href="Trang hỗ trợ/data_explorer.html"><span class="quick-icon">▤</span><span><strong>Trung tâm dữ liệu</strong><small>Tra cứu, tìm kiếm và xuất JSON đã chuẩn bị</small></span></a>
-      <a class="quick-card" href="TRrang chính/user_portal.html"><span class="quick-icon">♡</span><span><strong>Cổng khách hàng</strong><small>Đăng nhập và xem hồ sơ đã liên kết</small></span></a>
-      <a class="quick-card" href="Trang hỗ trợ/chuan-dinh-duong-thu-cung-hoa-ky.html"><span class="quick-icon">🌎</span><span><strong>Chuẩn dinh dưỡng đa thị trường</strong><small>Hoa Kỳ · EU · Trung Quốc · Việt Nam</small></span></a>
-      <a class="quick-card" href="menu.html"><span class="quick-icon">☷</span><span><strong>Menu danh sách trang</strong><small>Danh mục link trực tiếp tới toàn bộ 59 trang</small></span></a>
-      <a class="quick-card" href="Trang hỗ trợ/admin_store_management.html"><span class="quick-icon">⌘</span><span><strong>Quản trị cửa hàng</strong><small>Giao diện web và kết nối cục bộ</small></span></a>
-      <a class="quick-card" href="Trang hỗ trợ/project_master_summary.html"><span class="quick-icon">◫</span><span><strong>Hồ sơ dự án</strong><small>Đề xuất, báo cáo, báo giá và demo</small></span></a>
-    </section>
+  </section>
 
-    <section class="section" id="main-site">
-      <div class="section-head"><div><span class="section-kicker">01 / Website chính</span><h2>Trải nghiệm Bông Bông Pet Care</h2></div><p>Website thương hiệu và các trang phục vụ khách hàng.</p></div>
-      <div class="card-grid">
-        <a class="page-card" href="TRrang chính/index.html" data-search="trang chủ website thương hiệu homepage"><div class="card-top"><span class="card-icon">⌂</span><span class="tag">Website</span></div><h3>Trang chủ thương hiệu</h3><p>Landing page, giới thiệu dịch vụ, giá và nội dung thương hiệu.</p><span class="card-link">Mở trang chủ →</span></a>
-        <a class="page-card" href="TRrang chính/petcare_system.html" data-search="petcare system hệ thống portal"><div class="card-top"><span class="card-icon">✦</span><span class="tag">Giới thiệu</span></div><h3>PetCare System</h3><p>Landing page giới thiệu nền tảng và các năng lực cốt lõi.</p><span class="card-link">Khám phá hệ thống →</span></a>
-        <a class="page-card" href="TRrang chính/user_portal.html" data-search="khách hàng customer portal đăng nhập hồ sơ"><div class="card-top"><span class="card-icon">♡</span><span class="tag">Cổng khách hàng</span></div><h3>Portal khách hàng</h3><p>Đăng nhập cục bộ, gửi đăng ký chờ duyệt và xem hồ sơ đã liên kết.</p><span class="card-link">Mở portal →</span></a>
-        <a class="page-card" href="TRrang chính/index_customer.html" data-search="customer landing demo giới thiệu"><div class="card-top"><span class="card-icon">◎</span><span class="tag">Landing demo</span></div><h3>Trang giới thiệu khách hàng</h3><p>Landing page minh họa, không chứa tài khoản hay dữ liệu cá nhân.</p><span class="card-link">Mở trang demo →</span></a>
-        <a class="page-card" href="TRrang chính/product_showcase.html" data-search="sản phẩm product showcase"><div class="card-top"><span class="card-icon">◇</span><span class="tag">Sản phẩm</span></div><h3>Product showcase</h3><p>Trưng bày sản phẩm, danh mục và nội dung giới thiệu.</p><span class="card-link">Xem sản phẩm →</span></a>
-        <a class="page-card" href="Trang thông số của các sản phẩm/index.html" data-search="thông số sản phẩm thức ăn chó mèo dinh dưỡng nhãn nguồn chính thức"><div class="card-top"><span class="card-icon">✿</span><span class="tag">Thông số sản phẩm</span></div><h3>Catalog chó mèo · 70 trường</h3><p>Tra cứu công dụng, độ tuổi/giống theo nguồn, thành phần và 70 thông số; dữ liệu thiếu ghi rõ, không ước đoán.</p><span class="card-link">Mở hồ sơ sản phẩm →</span></a>
-        <a class="page-card" href="Trang thông số của các sản phẩm/thuong-hieu.html" data-search="thương hiệu hãng thức ăn chó mèo quốc gia toàn cầu Purina Royal Canin Brit"><div class="card-top"><span class="card-icon">◎</span><span class="tag">Danh mục tham khảo</span></div><h3>Thương hiệu thức ăn toàn cầu</h3><p>Duyệt thương hiệu và dòng sản phẩm chó mèo theo quốc gia; ghi rõ phần thông tin đang chờ xác minh.</p><span class="card-link">Mở danh mục thương hiệu →</span></a>
-        <a class="page-card" href="TRrang chính/nutrition_products.html" data-search="dinh dưỡng sản phẩm nutrition dữ liệu demo"><div class="card-top"><span class="card-icon">✿</span><span class="tag">Tham khảo cũ</span></div><h3>Danh mục dinh dưỡng tổng hợp</h3><p>Catalog được tạo tự động, chưa xác minh thương mại; chỉ tham khảo cấu trúc, không dùng tư vấn/chọn mua.</p><span class="card-link">Mở catalog cũ →</span></a>
-        <a class="page-card" href="TRrang chính/nutrition_products_dog.html" data-search="dinh dưỡng chó dog"><div class="card-top"><span class="card-icon">🐕</span><span class="tag">Chó</span></div><h3>Dinh dưỡng cho chó</h3><p>Tra cứu sản phẩm và gợi ý theo hồ sơ chó.</p><span class="card-link">Xem danh mục chó →</span></a>
-        <a class="page-card" href="TRrang chính/nutrition_products_cat.html" data-search="dinh dưỡng mèo cat"><div class="card-top"><span class="card-icon">🐈</span><span class="tag">Mèo</span></div><h3>Dinh dưỡng cho mèo</h3><p>Tra cứu sản phẩm và gợi ý theo hồ sơ mèo.</p><span class="card-link">Xem danh mục mèo →</span></a>
-        <a class="page-card" href="TRrang chính/workflow.html" data-search="quy trình workflow"><div class="card-top"><span class="card-icon">↗</span><span class="tag">Quy trình</span></div><h3>Hành trình chăm sóc</h3><p>Khám phá quy trình trải nghiệm và vận hành dịch vụ.</p><span class="card-link">Theo dõi quy trình →</span></a>
-      </div>
-    </section>
+  <section class="quick-grid" aria-label="Lối tắt">
+    <a class="quick-card" href="TRrang chính/petcare_management.html"><span class="quick-icon">▦</span><span><strong>Bảng điều hành</strong><small>Pet, chăm sóc, sức khỏe, cảnh báo</small></span></a>
+    <a class="quick-card" href="Trang hỗ trợ/Module/index.html"><span class="quick-icon">◈</span><span><strong>17 phân hệ</strong><small>Điều hướng quy trình nghiệp vụ</small></span></a>
+    <a class="quick-card" href="Trang hỗ trợ/data_explorer.html"><span class="quick-icon">▤</span><span><strong>Trung tâm dữ liệu</strong><small>Tra cứu, tìm kiếm và xuất JSON</small></span></a>
+    <a class="quick-card" href="TRrang chính/user_portal.html"><span class="quick-icon">♡</span><span><strong>Cổng khách hàng</strong><small>Đăng nhập và xem hồ sơ đã liên kết</small></span></a>
+    <a class="quick-card" href="Trang hỗ trợ/chuan-dinh-duong-thu-cung-hoa-ky.html"><span class="quick-icon">🌎</span><span><strong>Chuẩn dinh dưỡng</strong><small>Hoa Kỳ · EU · Trung Quốc · Việt Nam</small></span></a>
+    <a class="quick-card" href="menu.html"><span class="quick-icon">☷</span><span><strong>Menu danh sách trang</strong><small>Danh mục link trực tiếp toàn bộ trang</small></span></a>
+    <a class="quick-card" href="Trang hỗ trợ/admin_store_management.html"><span class="quick-icon">⌘</span><span><strong>Quản trị cửa hàng</strong><small>Giao diện web và kết nối cục bộ</small></span></a>
+    <a class="quick-card" href="Trang hỗ trợ/project_master_summary.html"><span class="quick-icon">◫</span><span><strong>Hồ sơ dự án</strong><small>Đề xuất, báo cáo, báo giá và demo</small></span></a>
+  </section>
 
-    <section class="section" id="operations">
-      <div class="section-head"><div><span class="section-kicker">02 / Vận hành</span><h2>Điều hành cửa hàng & chăm sóc</h2></div><p>Dashboard và các luồng nghiệp vụ theo từng phân hệ.</p></div>
-      <div class="card-grid">
-        <a class="page-card" href="TRrang chính/petcare_management.html" data-search="dashboard bảng điều hành quản lý thú cưng pet management"><div class="card-top"><span class="card-icon">▦</span><span class="tag">Mới · Workspace</span></div><h3>PetCare Enterprise Console</h3><p>Giao diện điều hành tổng hợp, tìm nhanh phân hệ, hồ sơ và báo cáo.</p><span class="card-link">Vào bảng điều hành →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/Module/index.html" data-search="17 modules phân hệ chức năng"><div class="card-top"><span class="card-icon">◈</span><span class="tag">17 phân hệ</span></div><h3>Thư viện phân hệ</h3><p>Hồ sơ thú cưng, chuồng trại, sức khỏe, chăm sóc, khách hàng, kho và báo cáo.</p><span class="card-link">Duyệt toàn bộ phân hệ →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/data_explorer.html" data-search="dữ liệu json data explorer catalog bệnh lý dinh dưỡng"><div class="card-top"><span class="card-icon">▤</span><span class="tag">Nguồn JSON</span></div><h3>Trung tâm dữ liệu</h3><p>Khám phá JSON 17 phân hệ, catalog bệnh lý và dinh dưỡng; tìm kiếm, phân trang, tải JSON hoặc xuất CSV.</p><span class="card-link">Mở trung tâm dữ liệu →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/admin_store_management.html" data-search="admin quản trị cửa hàng sqlite"><div class="card-top"><span class="card-icon">⌘</span><span class="tag">Admin</span></div><h3>Quản trị cửa hàng</h3><p>Trang admin có xác thực và các khu vực vận hành tích hợp.</p><span class="card-link">Mở trang quản trị →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/pet_health_report.html" data-search="sức khỏe bệnh thú cưng health report"><div class="card-top"><span class="card-icon">＋</span><span class="tag">Sức khỏe</span></div><h3>Báo cáo sức khỏe thú cưng</h3><p>Theo dõi chỉ số, hồ sơ, xu hướng và các cảnh báo sức khỏe.</p><span class="card-link">Mở báo cáo sức khỏe →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/disease_support.html" data-search="bệnh hỗ trợ disease"><div class="card-top"><span class="card-icon">✚</span><span class="tag">Hỗ trợ</span></div><h3>Tra cứu hỗ trợ bệnh lý</h3><p>Trang hỗ trợ thông tin và theo dõi sức khỏe thú cưng.</p><span class="card-link">Mở trang hỗ trợ →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/operations_snapshot.html" data-search="snapshot vận hành operations"><div class="card-top"><span class="card-icon">◷</span><span class="tag">Vận hành</span></div><h3>Operations snapshot</h3><p>Tóm tắt vận hành và các tín hiệu cần lưu ý.</p><span class="card-link">Xem snapshot →</span></a>
-      </div>
-    </section>
+  <div class="search-row">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+      </svg>
+      <input class="search" id="pageSearch" type="search" placeholder="Tìm trong danh mục trang, phân hệ hoặc tài liệu…" aria-label="Tìm kiếm danh mục trang trong hệ thống" autocomplete="off">
+      <span class="kbd-hint"><span class="kbd">/</span><span class="kbd">Esc</span></span>
+    </div>
+    <span class="count" id="pageCount" aria-live="polite"></span>
+  </div>
 
-    <section class="section" id="project">
-      <div class="section-head"><div><span class="section-kicker">03 / Hồ sơ dự án</span><h2>Đề xuất, tài chính & báo cáo</h2></div><p>Tài liệu trình bày và hồ sơ phục vụ đánh giá dự án.</p></div>
-      <div class="search-row"><input class="search" id="pageSearch" type="search" placeholder="Tìm trang, phân hệ hoặc tài liệu…" aria-label="Tìm kiếm trang trong hệ thống"><span class="count" id="pageCount" aria-live="polite"></span></div>
-      <div class="card-grid" id="projectCards">
-        <a class="page-card" href="Trang hỗ trợ/project_master_summary.html" data-search="master summary tổng hợp hồ sơ dự án"><div class="card-top"><span class="card-icon">◫</span><span class="tag">Tổng hợp</span></div><h3>Project master summary</h3><p>Điểm vào tổng quan, phạm vi, thành phần và các liên kết dự án.</p><span class="card-link">Mở hồ sơ tổng hợp →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/project_overview.html" data-search="tổng quan kiến trúc overview"><div class="card-top"><span class="card-icon">◧</span><span class="tag">Tổng quan</span></div><h3>Tổng quan dự án</h3><p>Mục tiêu, người dùng, phạm vi và lộ trình triển khai.</p><span class="card-link">Xem tổng quan →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/project_quote.html" data-search="báo giá quote chi phí pricing"><div class="card-top"><span class="card-icon">₫</span><span class="tag">Thương mại</span></div><h3>Báo giá dự án</h3><p>Cấu trúc hạng mục, chi phí và điều khoản đề xuất.</p><span class="card-link">Mở báo giá →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/project_invoice.html" data-search="invoice hóa đơn thanh toán vat"><div class="card-top"><span class="card-icon">▤</span><span class="tag">Thanh toán</span></div><h3>Invoice & payment</h3><p>Trang hóa đơn mẫu và lịch thanh toán theo giai đoạn.</p><span class="card-link">Mở invoice →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/business_case.html" data-search="business case hiệu quả kinh doanh roi"><div class="card-top"><span class="card-icon">↗</span><span class="tag">Kinh doanh</span></div><h3>Business case</h3><p>Giá trị, hiệu quả dự kiến và cơ sở triển khai.</p><span class="card-link">Xem business case →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/executive_summary.html" data-search="executive summary tóm tắt điều hành"><div class="card-top"><span class="card-icon">▣</span><span class="tag">Điều hành</span></div><h3>Tóm tắt điều hành</h3><p>Thông tin chính phục vụ rà soát và ra quyết định.</p><span class="card-link">Mở executive summary →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/report_kpi_board.html" data-search="kpi board chỉ số"><div class="card-top"><span class="card-icon">▥</span><span class="tag">Báo cáo</span></div><h3>KPI board</h3><p>Các chỉ số vận hành và mục tiêu theo dõi.</p><span class="card-link">Mở bảng KPI →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/report_business_review.html" data-search="business review báo cáo kinh doanh"><div class="card-top"><span class="card-icon">▤</span><span class="tag">Báo cáo</span></div><h3>Business review</h3><p>Đánh giá kết quả vận hành và hoạt động kinh doanh.</p><span class="card-link">Mở business review →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/report_final.html" data-search="final report báo cáo cuối"><div class="card-top"><span class="card-icon">▧</span><span class="tag">Báo cáo</span></div><h3>Báo cáo tổng kết</h3><p>Trang báo cáo tổng hợp để xem và trình bày dự án.</p><span class="card-link">Mở báo cáo →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/project_security.html" data-search="security bảo mật dữ liệu"><div class="card-top"><span class="card-icon">⬡</span><span class="tag">Bảo mật</span></div><h3>Bảo mật & dữ liệu</h3><p>Phân quyền, lưu trữ, kiểm toán và thực hành bảo vệ dữ liệu.</p><span class="card-link">Xem trang bảo mật →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/slides_pitch.html" data-search="pitch investor thuyết trình"><div class="card-top"><span class="card-icon">▷</span><span class="tag">Pitch deck</span></div><h3>Pitch deck</h3><p>Bản trình bày ngắn gọn dành cho phiên giới thiệu dự án.</p><span class="card-link">Mở pitch deck →</span></a>
-        <a class="page-card" href="Trang hỗ trợ/Module/index.html" data-search="module library thư viện modules 17"><div class="card-top"><span class="card-icon">◈</span><span class="tag">Thư viện</span></div><h3>Thư viện HTML & 17 phân hệ</h3><p>Mở thư viện trang và các màn hình theo nghiệp vụ.</p><span class="card-link">Mở thư viện →</span></a>
-      </div>
-      <p class="empty" id="emptyState">Không tìm thấy trang phù hợp. Hãy thử từ khóa khác.</p>
-    </section>
-    <p class="note">Lưu ý: các chỉ số và màn hình demo trong website dùng dữ liệu minh họa. Vận hành dữ liệu SQLite thực tế cần mở ứng dụng Python PetCare và đăng nhập.</p>
-  </main>
-  <footer class="shell"><span>© Bông Bông Pet Care · PetCare System Hub</span><span>Local-first · Python + SQLite · HTML workspace</span></footer>
-  <script>
-    const search = document.querySelector("#pageSearch");
-    const cards = [...document.querySelectorAll("#projectCards .page-card")];
-    const count = document.querySelector("#pageCount");
-    const empty = document.querySelector("#emptyState");
-    function filterPages() {
-      const query = search.value.trim().toLocaleLowerCase("vi");
-      let visible = 0;
-      for (const card of cards) {
-        const haystack = `${card.textContent} ${card.dataset.search || ""}`.toLocaleLowerCase("vi");
-        const match = haystack.includes(query);
-        card.hidden = !match;
-        if (match) visible += 1;
+  <div class="filter-bar" id="filterBar" role="group" aria-label="Lọc theo nhóm">
+    <button class="chip" type="button" data-filter="all" aria-pressed="true">Tất cả</button>
+    <button class="chip" type="button" data-filter="main-site">Website chính</button>
+    <button class="chip" type="button" data-filter="operations">Vận hành</button>
+    <button class="chip" type="button" data-filter="project">Hồ sơ dự án</button>
+    <button class="chip" type="button" data-filter="additional-pages">Mở rộng</button>
+  </div>
+
+  <section class="section" id="main-site">
+    <div class="section-head"><div><span class="section-kicker">01 / Website chính</span><h2>Trải nghiệm Bông Bông Pet Care</h2></div><p>Website thương hiệu và các trang phục vụ khách hàng.</p></div>
+    <div class="card-grid">
+      <a class="page-card" href="TRrang chính/index.html" data-search="trang chủ website thương hiệu homepage"><div class="card-top"><span class="card-icon">⌂</span><span class="tag">Website</span></div><h3>Trang chủ thương hiệu</h3><p>Landing page, giới thiệu dịch vụ, giá và nội dung thương hiệu.</p><span class="card-link">Mở trang chủ</span></a>
+      <a class="page-card" href="TRrang chính/petcare_system.html" data-search="petcare system hệ thống portal"><div class="card-top"><span class="card-icon">✦</span><span class="tag">Giới thiệu</span></div><h3>PetCare System</h3><p>Landing page giới thiệu nền tảng và các năng lực cốt lõi.</p><span class="card-link">Khám phá hệ thống</span></a>
+      <a class="page-card" href="TRrang chính/user_portal.html" data-search="khách hàng customer portal đăng nhập hồ sơ"><div class="card-top"><span class="card-icon">♡</span><span class="tag">Cổng khách hàng</span></div><h3>Portal khách hàng</h3><p>Đăng nhập cục bộ, gửi đăng ký chờ duyệt và xem hồ sơ đã liên kết.</p><span class="card-link">Mở portal</span></a>
+      <a class="page-card" href="TRrang chính/index_customer.html" data-search="customer landing demo giới thiệu"><div class="card-top"><span class="card-icon">◎</span><span class="tag">Landing demo</span></div><h3>Trang giới thiệu khách hàng</h3><p>Landing page minh họa, không chứa tài khoản hay dữ liệu cá nhân.</p><span class="card-link">Mở trang demo</span></a>
+      <a class="page-card" href="TRrang chính/product_showcase.html" data-search="sản phẩm product showcase"><div class="card-top"><span class="card-icon">◇</span><span class="tag">Sản phẩm</span></div><h3>Product showcase</h3><p>Trưng bày sản phẩm, danh mục và nội dung giới thiệu.</p><span class="card-link">Xem sản phẩm</span></a>
+      <a class="page-card" href="Trang thông số của các sản phẩm/index.html" data-search="thông số sản phẩm thức ăn chó mèo dinh dưỡng nhãn nguồn chính thức"><div class="card-top"><span class="card-icon">✿</span><span class="tag">Thông số</span></div><h3>Catalog chó mèo · 70 trường</h3><p>Tra cứu công dụng, độ tuổi/giống theo nguồn, thành phần và 70 thông số; dữ liệu thiếu ghi rõ, không ước đoán.</p><span class="card-link">Mở hồ sơ sản phẩm</span></a>
+      <a class="page-card" href="Trang thông số của các sản phẩm/thuong-hieu.html" data-search="thương hiệu hãng thức ăn chó mèo quốc gia toàn cầu Purina Royal Canin Brit"><div class="card-top"><span class="card-icon">◎</span><span class="tag">Tham khảo</span></div><h3>Thương hiệu thức ăn toàn cầu</h3><p>Duyệt thương hiệu và dòng sản phẩm chó mèo theo quốc gia; ghi rõ phần thông tin đang chờ xác minh.</p><span class="card-link">Mở danh mục thương hiệu</span></a>
+      <a class="page-card" href="TRrang chính/nutrition_products.html" data-search="dinh dưỡng sản phẩm nutrition dữ liệu demo"><div class="card-top"><span class="card-icon">✿</span><span class="tag">Tham khảo cũ</span></div><h3>Danh mục dinh dưỡng tổng hợp</h3><p>Catalog được tạo tự động, chưa xác minh thương mại; chỉ tham khảo cấu trúc, không dùng tư vấn/chọn mua.</p><span class="card-link">Mở catalog cũ</span></a>
+      <a class="page-card" href="TRrang chính/nutrition_products_dog.html" data-search="dinh dưỡng chó dog"><div class="card-top"><span class="card-icon">🐕</span><span class="tag">Chó</span></div><h3>Dinh dưỡng cho chó</h3><p>Tra cứu sản phẩm và gợi ý theo hồ sơ chó.</p><span class="card-link">Xem danh mục chó</span></a>
+      <a class="page-card" href="TRrang chính/nutrition_products_cat.html" data-search="dinh dưỡng mèo cat"><div class="card-top"><span class="card-icon">🐈</span><span class="tag">Mèo</span></div><h3>Dinh dưỡng cho mèo</h3><p>Tra cứu sản phẩm và gợi ý theo hồ sơ mèo.</p><span class="card-link">Xem danh mục mèo</span></a>
+      <a class="page-card" href="TRrang chính/workflow.html" data-search="quy trình workflow"><div class="card-top"><span class="card-icon">↗</span><span class="tag">Quy trình</span></div><h3>Hành trình chăm sóc</h3><p>Khám phá quy trình trải nghiệm và vận hành dịch vụ.</p><span class="card-link">Theo dõi quy trình</span></a>
+    </div>
+  </section>
+
+  <section class="section" id="operations">
+    <div class="section-head"><div><span class="section-kicker">02 / Vận hành</span><h2>Điều hành cửa hàng &amp; chăm sóc</h2></div><p>Dashboard và các luồng nghiệp vụ theo từng phân hệ.</p></div>
+    <div class="card-grid">
+      <a class="page-card" href="TRrang chính/petcare_management.html" data-search="dashboard bảng điều hành quản lý thú cưng pet management"><div class="card-top"><span class="card-icon">▦</span><span class="tag">Mới · Workspace</span></div><h3>PetCare Enterprise Console</h3><p>Giao diện điều hành tổng hợp, tìm nhanh phân hệ, hồ sơ và báo cáo.</p><span class="card-link">Vào bảng điều hành</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/index.html" data-search="17 modules phân hệ chức năng"><div class="card-top"><span class="card-icon">◈</span><span class="tag">17 phân hệ</span></div><h3>Thư viện phân hệ</h3><p>Hồ sơ thú cưng, chuồng trại, sức khỏe, chăm sóc, khách hàng, kho và báo cáo.</p><span class="card-link">Duyệt toàn bộ phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/data_explorer.html" data-search="dữ liệu json data explorer catalog bệnh lý dinh dưỡng"><div class="card-top"><span class="card-icon">▤</span><span class="tag">Nguồn JSON</span></div><h3>Trung tâm dữ liệu</h3><p>Khám phá JSON 17 phân hệ, catalog bệnh lý và dinh dưỡng; tìm kiếm, phân trang, tải JSON hoặc xuất CSV.</p><span class="card-link">Mở trung tâm dữ liệu</span></a>
+      <a class="page-card" href="Trang hỗ trợ/admin_store_management.html" data-search="admin quản trị cửa hàng sqlite"><div class="card-top"><span class="card-icon">⌘</span><span class="tag">Admin</span></div><h3>Quản trị cửa hàng</h3><p>Trang admin có xác thực và các khu vực vận hành tích hợp.</p><span class="card-link">Mở trang quản trị</span></a>
+      <a class="page-card" href="Trang hỗ trợ/pet_health_report.html" data-search="sức khỏe bệnh thú cưng health report"><div class="card-top"><span class="card-icon">＋</span><span class="tag">Sức khỏe</span></div><h3>Báo cáo sức khỏe thú cưng</h3><p>Theo dõi chỉ số, hồ sơ, xu hướng và các cảnh báo sức khỏe.</p><span class="card-link">Mở báo cáo sức khỏe</span></a>
+      <a class="page-card" href="Trang hỗ trợ/disease_support.html" data-search="bệnh hỗ trợ disease"><div class="card-top"><span class="card-icon">✚</span><span class="tag">Hỗ trợ</span></div><h3>Tra cứu hỗ trợ bệnh lý</h3><p>Trang hỗ trợ thông tin và theo dõi sức khỏe thú cưng.</p><span class="card-link">Mở trang hỗ trợ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/operations_snapshot.html" data-search="snapshot vận hành operations"><div class="card-top"><span class="card-icon">◷</span><span class="tag">Vận hành</span></div><h3>Operations snapshot</h3><p>Tóm tắt vận hành và các tín hiệu cần lưu ý.</p><span class="card-link">Xem snapshot</span></a>
+    </div>
+  </section>
+
+  <section class="section" id="project">
+    <div class="section-head"><div><span class="section-kicker">03 / Hồ sơ dự án</span><h2>Đề xuất, tài chính &amp; báo cáo</h2></div><p>Tài liệu trình bày và hồ sơ phục vụ đánh giá dự án.</p></div>
+    <div class="card-grid" id="projectCards">
+      <a class="page-card" href="Trang hỗ trợ/project_master_summary.html" data-search="master summary tổng hợp hồ sơ dự án"><div class="card-top"><span class="card-icon">◫</span><span class="tag">Tổng hợp</span></div><h3>Project master summary</h3><p>Điểm vào tổng quan, phạm vi, thành phần và các liên kết dự án.</p><span class="card-link">Mở hồ sơ tổng hợp</span></a>
+      <a class="page-card" href="Trang hỗ trợ/project_overview.html" data-search="tổng quan kiến trúc overview"><div class="card-top"><span class="card-icon">◧</span><span class="tag">Tổng quan</span></div><h3>Tổng quan dự án</h3><p>Mục tiêu, người dùng, phạm vi và lộ trình triển khai.</p><span class="card-link">Xem tổng quan</span></a>
+      <a class="page-card" href="Trang hỗ trợ/project_quote.html" data-search="báo giá quote chi phí pricing"><div class="card-top"><span class="card-icon">₫</span><span class="tag">Thương mại</span></div><h3>Báo giá dự án</h3><p>Cấu trúc hạng mục, chi phí và điều khoản đề xuất.</p><span class="card-link">Mở báo giá</span></a>
+      <a class="page-card" href="Trang hỗ trợ/project_invoice.html" data-search="invoice hóa đơn thanh toán vat"><div class="card-top"><span class="card-icon">▤</span><span class="tag">Thanh toán</span></div><h3>Invoice &amp; payment</h3><p>Trang hóa đơn mẫu và lịch thanh toán theo giai đoạn.</p><span class="card-link">Mở invoice</span></a>
+      <a class="page-card" href="Trang hỗ trợ/business_case.html" data-search="business case hiệu quả kinh doanh roi"><div class="card-top"><span class="card-icon">↗</span><span class="tag">Kinh doanh</span></div><h3>Business case</h3><p>Giá trị, hiệu quả dự kiến và cơ sở triển khai.</p><span class="card-link">Xem business case</span></a>
+      <a class="page-card" href="Trang hỗ trợ/executive_summary.html" data-search="executive summary tóm tắt điều hành"><div class="card-top"><span class="card-icon">▣</span><span class="tag">Điều hành</span></div><h3>Tóm tắt điều hành</h3><p>Thông tin chính phục vụ rà soát và ra quyết định.</p><span class="card-link">Mở executive summary</span></a>
+      <a class="page-card" href="Trang hỗ trợ/report_kpi_board.html" data-search="kpi board chỉ số"><div class="card-top"><span class="card-icon">▥</span><span class="tag">Báo cáo</span></div><h3>KPI board</h3><p>Các chỉ số vận hành và mục tiêu theo dõi.</p><span class="card-link">Mở bảng KPI</span></a>
+      <a class="page-card" href="Trang hỗ trợ/report_business_review.html" data-search="business review báo cáo kinh doanh"><div class="card-top"><span class="card-icon">▤</span><span class="tag">Báo cáo</span></div><h3>Business review</h3><p>Đánh giá kết quả vận hành và hoạt động kinh doanh.</p><span class="card-link">Mở business review</span></a>
+      <a class="page-card" href="Trang hỗ trợ/report_final.html" data-search="final report báo cáo cuối"><div class="card-top"><span class="card-icon">▧</span><span class="tag">Báo cáo</span></div><h3>Báo cáo tổng kết</h3><p>Trang báo cáo tổng hợp để xem và trình bày dự án.</p><span class="card-link">Mở báo cáo</span></a>
+      <a class="page-card" href="Trang hỗ trợ/project_security.html" data-search="security bảo mật dữ liệu"><div class="card-top"><span class="card-icon">⬡</span><span class="tag">Bảo mật</span></div><h3>Bảo mật &amp; dữ liệu</h3><p>Phân quyền, lưu trữ, kiểm toán và thực hành bảo vệ dữ liệu.</p><span class="card-link">Xem trang bảo mật</span></a>
+      <a class="page-card" href="Trang hỗ trợ/slides_pitch.html" data-search="pitch investor thuyết trình"><div class="card-top"><span class="card-icon">▷</span><span class="tag">Pitch deck</span></div><h3>Pitch deck</h3><p>Bản trình bày ngắn gọn dành cho phiên giới thiệu dự án.</p><span class="card-link">Mở pitch deck</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/index.html" data-search="module library thư viện modules 17"><div class="card-top"><span class="card-icon">◈</span><span class="tag">Thư viện</span></div><h3>Thư viện HTML &amp; 17 phân hệ</h3><p>Mở thư viện trang và các màn hình theo nghiệp vụ.</p><span class="card-link">Mở thư viện</span></a>
+    </div>
+  </section>
+
+  <section class="section" id="additional-pages">
+    <div class="section-head"><div><span class="section-kicker">04 / Thư viện mở rộng</span><h2>Trang bổ sung &amp; 17 phân hệ chi tiết</h2></div><p>Truy cập trực tiếp các trang trình bày, quy trình, demo và từng phân hệ.</p></div>
+    <div class="card-grid">
+      <a class="page-card" href="Trang hỗ trợ/app_interface_preview.html" data-search="xem trước giao diện ứng dụng app interface preview"><div class="card-top"><span class="card-icon">▣</span><span class="tag">Giao diện</span></div><h3>Xem trước giao diện ứng dụng</h3><p>Khám phá các màn hình và luồng giao diện mẫu của PetCare.</p><span class="card-link">Mở bản xem trước</span></a>
+      <a class="page-card" href="Trang hỗ trợ/bao-cao-khoa-hoc-trien-vong.html" data-search="nghiên cứu khoa học báo cáo tiềm năng chờ xác thực"><div class="card-top"><span class="card-icon">⌕</span><span class="tag">Nghiên cứu</span></div><h3>Nghiên cứu khoa học tiềm năng</h3><p>Tổng hợp tài liệu tham khảo; nội dung chưa được xác thực không thay thế tư vấn chuyên môn.</p><span class="card-link">Mở thư viện nghiên cứu</span></a>
+      <a class="page-card" href="Trang hỗ trợ/index_presentation.html" data-search="trình bày presentation tổng quan"><div class="card-top"><span class="card-icon">▤</span><span class="tag">Trình bày</span></div><h3>Trang trình bày tổng quan</h3><p>Giao diện trình bày tổng quan dự án và hệ thống.</p><span class="card-link">Mở trang trình bày</span></a>
+      <a class="page-card" href="Trang hỗ trợ/petcare_demo_full.html" data-search="demo đầy đủ petcare full"><div class="card-top"><span class="card-icon">▶</span><span class="tag">Demo</span></div><h3>Demo PetCare đầy đủ</h3><p>Khám phá bản demo tổng hợp các chức năng của hệ thống.</p><span class="card-link">Mở demo</span></a>
+      <a class="page-card" href="Trang hỗ trợ/project_slides.html" data-search="slide dự án project slides"><div class="card-top"><span class="card-icon">▧</span><span class="tag">Slide</span></div><h3>Slide dự án</h3><p>Bộ slide giới thiệu dự án PetCare.</p><span class="card-link">Mở slide</span></a>
+      <a class="page-card" href="Trang hỗ trợ/project_slides_final.html" data-search="proposal slide trình bày đầy đủ final"><div class="card-top"><span class="card-icon">▧</span><span class="tag">Proposal</span></div><h3>Proposal trình bày đầy đủ</h3><p>Bản trình bày hoàn chỉnh về đề xuất dự án.</p><span class="card-link">Mở proposal</span></a>
+      <a class="page-card" href="Trang hỗ trợ/project_workflow_full.html" data-search="quy trình dự án chi tiết workflow full"><div class="card-top"><span class="card-icon">↗</span><span class="tag">Quy trình</span></div><h3>Quy trình dự án chi tiết</h3><p>Xem các bước và luồng triển khai dự án.</p><span class="card-link">Mở quy trình</span></a>
+      <a class="page-card" href="Trang hỗ trợ/projext _Full.html" data-search="tài liệu dự án đầy đủ full project"><div class="card-top"><span class="card-icon">▤</span><span class="tag">Tài liệu</span></div><h3>Tài liệu dự án đầy đủ</h3><p>Mở bộ tài liệu tổng hợp của dự án.</p><span class="card-link">Mở tài liệu</span></a>
+      <a class="page-card" href="Trang hỗ trợ/slides_demo.html" data-search="slide trình diễn demo"><div class="card-top"><span class="card-icon">▷</span><span class="tag">Demo</span></div><h3>Slide trình diễn</h3><p>Bộ slide phục vụ trình diễn hệ thống.</p><span class="card-link">Mở slide trình diễn</span></a>
+      <a class="page-card" href="Trang hỗ trợ/workflow_story.html" data-search="câu chuyện quy trình workflow story"><div class="card-top"><span class="card-icon">↗</span><span class="tag">Quy trình</span></div><h3>Câu chuyện quy trình</h3><p>Trình bày hành trình và các bước trong quy trình PetCare.</p><span class="card-link">Mở câu chuyện quy trình</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_01_platform.html" data-search="01 nền tảng dữ liệu platform"><div class="card-top"><span class="card-icon">01</span><span class="tag">Phân hệ</span></div><h3>01 · Nền tảng &amp; dữ liệu</h3><p>Kiến trúc nền tảng và cấu trúc dữ liệu cốt lõi.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_02_accounts.html" data-search="02 tài khoản vai trò accounts"><div class="card-top"><span class="card-icon">02</span><span class="tag">Phân hệ</span></div><h3>02 · Tài khoản &amp; vai trò</h3><p>Quản lý tài khoản, vai trò và quyền truy cập.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_03_dashboard.html" data-search="03 bảng điều khiển dashboard"><div class="card-top"><span class="card-icon">03</span><span class="tag">Phân hệ</span></div><h3>03 · Bảng điều khiển</h3><p>Tổng quan chỉ số và thông tin vận hành.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_04_pets.html" data-search="04 hồ sơ thú cưng pets"><div class="card-top"><span class="card-icon">04</span><span class="tag">Phân hệ</span></div><h3>04 · Hồ sơ thú cưng</h3><p>Thông tin, nhận dạng và lịch sử của thú cưng.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_05_housing.html" data-search="05 chuồng trại housing"><div class="card-top"><span class="card-icon">05</span><span class="tag">Phân hệ</span></div><h3>05 · Chuồng trại</h3><p>Quản lý khu vực lưu trú và bố trí chăm sóc.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_06_suppliers.html" data-search="06 nhà cung cấp suppliers"><div class="card-top"><span class="card-icon">06</span><span class="tag">Phân hệ</span></div><h3>06 · Nhà cung cấp</h3><p>Hồ sơ đối tác cung ứng và thông tin liên hệ.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_07_imports.html" data-search="07 nhập hàng imports"><div class="card-top"><span class="card-icon">07</span><span class="tag">Phân hệ</span></div><h3>07 · Nhập hàng</h3><p>Theo dõi đơn nhập và tiếp nhận hàng hóa.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_08_health.html" data-search="08 sức khỏe health"><div class="card-top"><span class="card-icon">08</span><span class="tag">Phân hệ</span></div><h3>08 · Sức khỏe</h3><p>Hồ sơ sức khỏe, theo dõi và lịch sử y tế.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_09_care.html" data-search="09 chăm sóc care"><div class="card-top"><span class="card-icon">09</span><span class="tag">Phân hệ</span></div><h3>09 · Chăm sóc</h3><p>Lịch trình và hoạt động chăm sóc thú cưng.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_10_customers.html" data-search="10 khách hàng customers"><div class="card-top"><span class="card-icon">10</span><span class="tag">Phân hệ</span></div><h3>10 · Khách hàng</h3><p>Hồ sơ khách hàng và thông tin liên kết.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_11_reservations.html" data-search="11 đặt trước reservation"><div class="card-top"><span class="card-icon">11</span><span class="tag">Phân hệ</span></div><h3>11 · Đặt trước</h3><p>Quản lý đặt chỗ và yêu cầu dịch vụ trước.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_12_orders.html" data-search="12 đơn hàng orders"><div class="card-top"><span class="card-icon">12</span><span class="tag">Phân hệ</span></div><h3>12 · Đơn hàng</h3><p>Theo dõi đơn hàng và trạng thái xử lý.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_13_memberships.html" data-search="13 hội viên membership"><div class="card-top"><span class="card-icon">13</span><span class="tag">Phân hệ</span></div><h3>13 · Hội viên</h3><p>Thông tin hội viên, hạng và quyền lợi.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_14_services.html" data-search="14 dịch vụ lịch hẹn services"><div class="card-top"><span class="card-icon">14</span><span class="tag">Phân hệ</span></div><h3>14 · Dịch vụ &amp; lịch hẹn</h3><p>Danh mục dịch vụ và lịch hẹn chăm sóc.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_15_inventory.html" data-search="15 kho sản phẩm inventory"><div class="card-top"><span class="card-icon">15</span><span class="tag">Phân hệ</span></div><h3>15 · Kho &amp; sản phẩm</h3><p>Quản lý tồn kho, mặt hàng và luân chuyển.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_16_reports.html" data-search="16 báo cáo reports"><div class="card-top"><span class="card-icon">16</span><span class="tag">Phân hệ</span></div><h3>16 · Báo cáo</h3><p>Tổng hợp dữ liệu và chỉ số báo cáo nghiệp vụ.</p><span class="card-link">Mở phân hệ</span></a>
+      <a class="page-card" href="Trang hỗ trợ/Module/module_17_alerts.html" data-search="17 cảnh báo alerts"><div class="card-top"><span class="card-icon">17</span><span class="tag">Phân hệ</span></div><h3>17 · Cảnh báo</h3><p>Thông báo và nhắc việc cần theo dõi.</p><span class="card-link">Mở phân hệ</span></a>
+    </div>
+  </section>
+
+  <p class="empty" id="emptyState">
+    <span class="empty-icon">⌕</span>
+    <strong>Không tìm thấy trang phù hợp</strong>
+    Thử từ khóa khác hoặc xóa bộ lọc để xem toàn bộ danh mục.
+  </p>
+
+  <p class="note">Lưu ý: các chỉ số và màn hình demo trong website dùng dữ liệu minh họa. Vận hành dữ liệu SQLite thực tế cần mở ứng dụng Python PetCare và đăng nhập.</p>
+</main>
+
+<footer class="shell">
+  <span>© Bông Bông Pet Care · PetCare System Hub</span>
+  <span>Local-first · Python + SQLite · HTML workspace</span>
+</footer>
+
+<button class="to-top" id="toTop" type="button" aria-label="Về đầu trang" title="Về đầu trang">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+</button>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============================================================
+     THEME
+     ============================================================ */
+  const html = document.documentElement;
+  const THEME_KEY = "petcare_hub_theme";
+  function applyTheme(t){
+    html.setAttribute("data-theme", t);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", t === "dark" ? "#0b1613" : "#0a1f19");
+  }
+  const saved = localStorage.getItem(THEME_KEY);
+  const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  applyTheme(saved || (prefersDark ? "dark" : "light"));
+  document.getElementById("themeToggle").addEventListener("click", () => {
+    const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(next);
+    localStorage.setItem(THEME_KEY, next);
+  });
+
+  /* ============================================================
+     SEARCH / FILTER
+     ============================================================ */
+  const search = document.getElementById("pageSearch");
+  const cards = Array.from(document.querySelectorAll(".page-card"));
+  const sections = Array.from(document.querySelectorAll(".section"));
+  const count = document.getElementById("pageCount");
+  const empty = document.getElementById("emptyState");
+  const chips = Array.from(document.querySelectorAll(".chip"));
+
+  /* Cache nội dung gốc để highlight không phá DOM */
+  const cardData = cards.map(c => {
+    const h3 = c.querySelector("h3");
+    const p = c.querySelector("p");
+    const link = c.querySelector(".card-link");
+    return {
+      el: c,
+      h3, p, link,
+      h3Text: h3 ? h3.textContent : "",
+      pText: p ? p.textContent : "",
+      linkText: link ? link.textContent : "",
+      haystack: `${c.textContent} ${c.dataset.search || ""}`.toLocaleLowerCase("vi"),
+      section: c.closest(".section")?.id || ""
+    };
+  });
+
+  function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+  function highlight(el, text, q){
+    if (!el) return;
+    if (!q){ el.textContent = text; return; }
+    const re = new RegExp(`(${escapeRegExp(q)})`, "gi");
+    const parts = text.split(re);
+    el.textContent = "";
+    parts.forEach(part => {
+      if (part.toLocaleLowerCase("vi") === q.toLocaleLowerCase("vi")) {
+        const m = document.createElement("mark");
+        m.textContent = part;
+        el.appendChild(m);
+      } else {
+        el.appendChild(document.createTextNode(part));
       }
-      count.textContent = `${visible} / ${cards.length} trang`;
-      empty.style.display = visible ? "none" : "block";
+    });
+  }
+
+  let activeFilter = "all";
+
+  function filterPages(){
+    const q = search.value.trim().toLocaleLowerCase("vi");
+    let visible = 0;
+
+    cardData.forEach(d => {
+      const inFilter = activeFilter === "all" || d.section === activeFilter;
+      const match = inFilter && (!q || d.haystack.includes(q));
+      d.el.hidden = !match;
+      if (match) visible++;
+      highlight(d.h3, d.h3Text, q);
+      highlight(d.p, d.pText, q);
+      highlight(d.link, d.linkText, q);
+    });
+
+    sections.forEach(s => {
+      const has = !!s.querySelector(".page-card:not([hidden])");
+      s.hidden = !has;
+    });
+
+    const total = cardData.length;
+    count.textContent = visible === total ? `${total} mục` : `${visible} / ${total} mục`;
+    empty.classList.toggle("visible", visible === 0);
+  }
+
+  let t;
+  search.addEventListener("input", () => {
+    clearTimeout(t);
+    t = setTimeout(filterPages, 70);
+  });
+
+  chips.forEach(chip => {
+    chip.addEventListener("click", () => {
+      activeFilter = chip.dataset.filter;
+      chips.forEach(c => c.setAttribute("aria-pressed", String(c === chip)));
+      filterPages();
+    });
+  });
+
+  /* ============================================================
+     KEYBOARD SHORTCUTS
+     ============================================================ */
+  document.addEventListener("keydown", (e) => {
+    const tag = (e.target.tagName || "").toLowerCase();
+    const typing = tag === "input" || tag === "textarea" || e.target.isContentEditable;
+
+    if (e.key === "/" && !typing) {
+      e.preventDefault();
+      search.focus();
+      search.select();
+    } else if (e.key === "Escape" && document.activeElement === search) {
+      search.value = "";
+      filterPages();
+      search.blur();
+    } else if (e.key.toLowerCase() === "j" && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      document.getElementById("themeToggle").click();
     }
-    search.addEventListener("input", filterPages);
-    filterPages();
-  </script>
-  <script src="scripts/site_navigation.js" defer></script>
+  });
+
+  /* ============================================================
+     CARD SPOTLIGHT (theo chuột)
+     ============================================================ */
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    document.querySelectorAll(".page-card").forEach(card => {
+      card.addEventListener("pointermove", (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty("--mx", `${e.clientX - r.left}px`);
+        card.style.setProperty("--my", `${e.clientY - r.top}px`);
+      });
+    });
+  }
+
+  /* ============================================================
+     BACK TO TOP
+     ============================================================ */
+  const toTop = document.getElementById("toTop");
+  const onScroll = () => toTop.classList.toggle("visible", window.scrollY > 420);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+  /* ============================================================
+     INIT
+     ============================================================ */
+  filterPages();
+  onScroll();
+})();
+</script>
+
+<!-- Giữ nguyên script điều hướng gốc nếu có -->
+<script src="scripts/site_navigation.js" defer></script>
 </body>
 </html>

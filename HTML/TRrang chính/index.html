@@ -4,8 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="PetCare enterprise landing page for investor and executive presentation.">
+  <meta name="theme-color" content="#113b2d">
   <title>PetCare | Investor Landing</title>
   <style>
+    /* ============================================================
+       DESIGN TOKENS
+       ============================================================ */
     :root {
       --bg: #edf6f0;
       --panel: #ffffff;
@@ -25,45 +29,81 @@
       --radius-lg: 22px;
       --radius-md: 16px;
       --radius-sm: 10px;
+      --ease: cubic-bezier(.2,.8,.2,1);
     }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+
+    /* ============================================================
+       BASE
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
     body {
       margin: 0;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(180deg, #eff8f2 0%, #edf3ef 100%);
       color: var(--ink);
       line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      min-height: 100vh;
     }
     a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ============================================================
+       HEADER
+       ============================================================ */
     .site-header {
       position: sticky; top: 0; z-index: 20;
       background: rgba(255,255,255,0.82);
       border-bottom: 1px solid var(--line);
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
     .header-inner {
       width: min(1300px, calc(100% - 28px));
       min-height: 74px;
       margin: 0 auto;
       display: flex; align-items: center; justify-content: space-between; gap: 18px;
+      flex-wrap: wrap;
     }
     .brand {
       display: inline-flex; align-items: center; gap: 12px;
       color: var(--green-900); font-size: 1.08rem; font-weight: 800;
+      letter-spacing: -0.02em;
     }
     .brand-mark {
-      width: 35px; height: 35px; display: grid; place-items: center; border-radius: 12px 12px 12px 4px;
-      background: linear-gradient(135deg, #dfe97d, #b9df68); color: var(--green-900); font-weight: 900;
+      width: 35px; height: 35px; display: grid; place-items: center;
+      border-radius: 12px 12px 12px 4px;
+      background: linear-gradient(135deg, #dfe97d, #b9df68);
+      color: var(--green-900); font-weight: 900;
+      transition: transform .3s var(--ease);
     }
+    .brand:hover .brand-mark { transform: rotate(-6deg) scale(1.06); }
     .header-nav {
-      display: flex; align-items: center; gap: 18px; color: var(--muted); font-weight: 700; font-size: 0.82rem;
+      display: flex; align-items: center; gap: 16px;
+      color: var(--muted); font-weight: 700; font-size: 0.82rem;
+      flex-wrap: wrap;
     }
+    .header-nav a { transition: color .2s var(--ease); }
     .header-nav a:hover { color: var(--green-700); }
     .nav-cta {
-      display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 0 14px; border-radius: 999px; background: #fff; color: var(--green-900); border: 1px solid var(--line); font-weight: 800;
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 36px; padding: 0 14px; border-radius: 999px;
+      background: #fff; color: var(--green-900);
+      border: 1px solid var(--line); font-weight: 800;
+      font-size: 0.82rem;
+      transition: transform .25s var(--ease), box-shadow .25s var(--ease), border-color .25s var(--ease);
+    }
+    .nav-cta:hover {
+      border-color: var(--green-600);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(18,59,47,0.08);
     }
 
+    /* ============================================================
+       LAYOUT
+       ============================================================ */
     .page-shell {
       width: min(1300px, calc(100% - 28px));
       margin: 26px auto 40px;
@@ -71,6 +111,9 @@
       gap: 22px;
     }
 
+    /* ============================================================
+       HERO
+       ============================================================ */
     .hero {
       background: linear-gradient(135deg, rgba(18,79,64,0.96), rgba(17,59,48,0.96), rgba(17,55,82,0.92));
       border-radius: var(--radius-xl);
@@ -78,151 +121,394 @@
       color: #f3faf6;
       box-shadow: var(--shadow);
       overflow: hidden; position: relative;
+      isolation: isolate;
     }
     .hero::after {
-      content: ""; position: absolute; right: -50px; top: -30px; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(214,240,122,0.36), transparent 62%);
+      content: ""; position: absolute;
+      right: -50px; top: -30px; width: 260px; height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(214,240,122,0.36), transparent 62%);
+      animation: float 20s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-22px, 16px) scale(1.08); }
     }
     .hero-inner {
-      position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.7fr); gap: 18px; align-items: end;
+      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.7fr);
+      gap: 18px; align-items: end;
     }
     .eyebrow {
-      display: inline-flex; align-items: center; padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.08); color: rgba(244,250,247,0.9); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+      display: inline-flex; align-items: center;
+      padding: 8px 12px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      color: rgba(244,250,247,0.9);
+      font-size: 0.68rem; font-weight: 800;
+      letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .eyebrow-inline {
+      background: var(--green-100);
+      color: var(--green-700);
+      border-color: rgba(23,108,76,0.1);
     }
     h1 {
-      margin: 18px 0 12px; max-width: 720px; letter-spacing: -0.07em; font-size: clamp(2.8rem, 5vw, 4.8rem); line-height: 0.95; color: #fff;
+      margin: 18px 0 12px; max-width: 720px;
+      letter-spacing: -0.07em;
+      font-size: clamp(2.8rem, 5vw, 4.8rem);
+      line-height: 0.95; color: #fff;
     }
     .hero p {
-      margin: 0; max-width: 720px; color: rgba(244,250,247,0.92); font-size: 1.04rem;
+      margin: 0; max-width: 720px;
+      color: rgba(244,250,247,0.92);
+      font-size: 1.04rem;
     }
     .hero-tags {
       display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px;
     }
     .tag {
-      display: inline-flex; align-items: center; justify-content: center; min-height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.08); color: #eef8f2; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700;
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 34px; padding: 0 12px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      color: #eef8f2; font-size: 0.7rem;
+      letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700;
+      transition: background .25s var(--ease), border-color .25s var(--ease);
+    }
+    .tag:hover {
+      background: rgba(255,255,255,0.16);
+      border-color: rgba(255,255,255,0.24);
+    }
+    .hero-actions {
+      margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap;
     }
     .hero-side {
-      display: grid; gap: 12px; padding: 18px 18px 16px; border-radius: var(--radius-lg); background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+      display: grid; gap: 12px;
+      padding: 18px 18px 16px; border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
     }
     .stat-box {
-      padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+      padding: 12px 14px; border-radius: 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: transform .3s var(--ease), background .3s var(--ease);
+    }
+    .stat-box:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,0.1);
     }
     .stat-box strong {
-      display: block; color: #fff; font-size: 2rem; letter-spacing: -0.06em; line-height: 1.1;
+      display: block; color: #fff;
+      font-size: 2rem; letter-spacing: -0.06em; line-height: 1.1;
     }
     .stat-box span {
-      display: block; margin-top: 4px; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.72);
+      display: block; margin-top: 4px;
+      font-size: 0.68rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: rgba(255,255,255,0.72);
     }
 
+    /* ============================================================
+       SECTION
+       ============================================================ */
     .section {
-      background: rgba(255,255,255,0.9); border: 1px solid var(--line); border-radius: 24px; padding: 22px 20px 18px; box-shadow: 0 12px 22px rgba(18,48,36,0.02);
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px 20px 18px;
+      box-shadow: 0 12px 22px rgba(18,48,36,0.02);
+      transition: box-shadow .3s var(--ease);
     }
-    .hero-slider {
-      position: relative; margin-top: 26px; border-radius: 26px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); background: linear-gradient(135deg, rgba(13,61,75,0.96), rgba(12,33,42,0.96));
-    }
-    .slider-track { display: flex; transition: transform 0.5s ease; }
-    .slide {
-      min-width: 100%; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 18px; padding: 28px; min-height: 330px;
-    }
-    .slide-copy { display: flex; flex-direction: column; justify-content: center; }
-    .slide-kicker {
-      display: inline-flex; align-items: center; width: fit-content; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800;
-    }
-    .slide h3 { margin: 14px 0 8px; font-size: clamp(2rem, 3vw, 3rem); letter-spacing: -0.06em; color: #fff; }
-    .slide p { margin: 0; color: rgba(255,255,255,0.82); font-size: 1rem; line-height: 1.8; }
-    .slide-visual {
-      display: grid; place-items: center; min-height: 220px; border-radius: 20px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #fff; font-size: 1.3rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
-    }
-    .slider-controls {
-      display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 18px 18px;
-    }
-    .slider-dots { display: flex; gap: 8px; }
-    .dot {
-      width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.38); background: rgba(255,255,255,0.18); cursor: pointer;
-    }
-    .dot.active { background: var(--gold); border-color: rgba(239,200,109,0.8); box-shadow: 0 0 16px rgba(239,200,109,0.4); }
-    .arrow-btn {
-      border: 1px solid var(--line); background: rgba(255,255,255,0.05); color: var(--ink); width: 42px; height: 42px; border-radius: 12px; cursor: pointer; font-weight: 800;
-    }
+    .section:hover { box-shadow: 0 16px 30px rgba(18,48,36,0.05); }
     .section-head {
-      display: flex; align-items: end; justify-content: space-between; gap: 14px; margin-bottom: 18px;
+      display: flex; align-items: end; justify-content: space-between;
+      gap: 14px; margin-bottom: 18px;
     }
     .section-head h2 {
-      margin: 8px 0 0; font-size: clamp(1.6rem, 2vw, 2.4rem); letter-spacing: -0.04em; color: var(--green-900);
+      margin: 8px 0 0;
+      font-size: clamp(1.6rem, 2vw, 2.4rem);
+      letter-spacing: -0.04em; color: var(--green-900);
     }
     .section-head p { margin: 0; color: var(--muted); font-size: 0.92rem; }
 
+    /* ============================================================
+       SLIDER
+       ============================================================ */
+    .hero-slider {
+      position: relative; margin-top: 26px;
+      border-radius: 26px; overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      background: linear-gradient(135deg, rgba(13,61,75,0.96), rgba(12,33,42,0.96));
+    }
+    .slider-track {
+      display: flex;
+      transition: transform 0.5s var(--ease);
+    }
+    .slide {
+      min-width: 100%;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px; padding: 28px; min-height: 330px;
+    }
+    .slide-copy { display: flex; flex-direction: column; justify-content: center; }
+    .slide-kicker {
+      display: inline-flex; align-items: center; width: fit-content;
+      padding: 6px 10px; border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.85);
+      font-size: 0.64rem; letter-spacing: 0.12em;
+      text-transform: uppercase; font-weight: 800;
+    }
+    .slide h3 {
+      margin: 14px 0 8px;
+      font-size: clamp(2rem, 3vw, 3rem);
+      letter-spacing: -0.06em; color: #fff;
+    }
+    .slide p {
+      margin: 0; color: rgba(255,255,255,0.82);
+      font-size: 1rem; line-height: 1.8;
+    }
+    .slide-visual {
+      display: grid; place-items: center; min-height: 220px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #fff; font-size: 1.3rem; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .slider-controls {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; padding: 16px 18px 18px;
+    }
+    .slider-dots { display: flex; gap: 8px; }
+    .dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.38);
+      background: rgba(255,255,255,0.18);
+      cursor: pointer;
+      transition: background .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease);
+    }
+    .dot:hover { transform: scale(1.15); }
+    .dot.active {
+      background: var(--gold);
+      border-color: rgba(239,200,109,0.8);
+      box-shadow: 0 0 16px rgba(239,200,109,0.4);
+    }
+    .arrow-btn {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      width: 42px; height: 42px; border-radius: 12px;
+      cursor: pointer; font-weight: 800;
+      transition: background .25s var(--ease), transform .25s var(--ease), border-color .25s var(--ease);
+    }
+    .arrow-btn:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+    }
+
+    /* ============================================================
+       FEATURE GRID
+       ============================================================ */
     .feature-grid {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 22px;
     }
     .feature-card {
-      display: flex; flex-direction: column; min-height: 220px; padding: 18px 18px 16px; border-radius: 20px; border: 1px solid var(--line); background: linear-gradient(180deg, #fff 0%, #f7faf8 100%);
+      display: flex; flex-direction: column;
+      min-height: 220px; padding: 18px 18px 16px;
+      border-radius: 20px; border: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff 0%, #f7faf8 100%);
+      transition: transform .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
     }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(89,167,127,0.45);
+      box-shadow: 0 16px 32px rgba(16,57,45,0.08);
+    }
+    .feature-card .chip {
+      display: inline-flex; width: fit-content; align-items: center;
+      padding: 5px 9px; border-radius: 999px;
+      background: var(--green-100); color: var(--green-700);
+      border: 1px solid rgba(23,108,76,0.08);
+      font-size: 0.64rem; letter-spacing: 0.12em;
+      text-transform: uppercase; font-weight: 800;
+    }
+    .feature-card h3 {
+      margin: 14px 0 8px; font-size: 1.4rem;
+      letter-spacing: -0.04em;
+    }
+    .feature-card p {
+      margin: 0; color: var(--muted);
+      font-size: 0.92rem; line-height: 1.7;
+    }
+    .feature-card .card-link {
+      margin-top: auto; padding-top: 14px;
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .feature-card .card-link a {
+      display: inline-flex; align-items: center;
+      padding: 6px 10px; border-radius: 999px;
+      background: #fff; border: 1px solid var(--line);
+      color: var(--green-700); font-size: 0.7rem; font-weight: 700;
+      transition: border-color .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+    }
+    .feature-card .card-link a:hover {
+      border-color: var(--green-600);
+      color: var(--green-900);
+      transform: translateY(-1px);
+    }
+
+    /* ============================================================
+       TESTIMONIALS
+       ============================================================ */
     .testimonial-grid {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px; margin-top: 16px;
     }
     .testimonial {
-      padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(180deg, #fff 0%, #f8faf9 100%);
+      padding: 18px; border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fff 0%, #f8faf9 100%);
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease);
     }
-    .stars { color: #f4c95b; letter-spacing: 0.08em; font-size: 1rem; }
-    .testimonial p { margin: 12px 0 14px; color: var(--muted); font-size: 0.96rem; line-height: 1.8; }
+    .testimonial:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(16,57,45,0.06);
+    }
+    .stars {
+      color: #f4c95b;
+      letter-spacing: 0.08em; font-size: 1rem;
+    }
+    .testimonial p {
+      margin: 12px 0 14px; color: var(--muted);
+      font-size: 0.96rem; line-height: 1.8;
+    }
     .person { display: flex; align-items: center; gap: 10px; }
     .avatar {
-      width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, var(--green-500), var(--green-700)); color: white; font-weight: 900;
+      width: 38px; height: 38px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--green-500), var(--green-700));
+      color: white; font-weight: 900;
     }
     .person strong { display: block; font-size: 0.94rem; }
     .person span { color: var(--muted); font-size: 0.76rem; }
-    .feature-card .chip {
-      display: inline-flex; width: fit-content; align-items: center; padding: 5px 9px; border-radius: 999px; background: var(--green-100); color: var(--green-700); border: 1px solid rgba(23,108,76,0.08); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800;
-    }
-    .feature-card h3 { margin: 14px 0 8px; font-size: 1.4rem; letter-spacing: -0.04em; }
-    .feature-card p { margin: 0; color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
-    .feature-card .card-link {
-      margin-top: auto; padding-top: 14px; display: flex; flex-wrap: wrap; gap: 8px;
-    }
-    .feature-card .card-link a {
-      display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 999px; background: #fff; border: 1px solid var(--line); color: var(--green-700); font-size: 0.7rem; font-weight: 700;
-    }
 
+    /* ============================================================
+       LINK PANELS
+       ============================================================ */
     .list-grid {
-      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
     }
     .link-panel {
-      padding: 18px 18px 14px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(180deg, #fff 0%, #f7faf8 100%);
+      padding: 18px 18px 14px;
+      border: 1px solid var(--line); border-radius: 18px;
+      background: linear-gradient(180deg, #fff 0%, #f7faf8 100%);
     }
-    .link-panel h3 { margin: 0 0 12px; font-size: 1.14rem; color: var(--green-900); }
-    .link-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+    .link-panel h3 {
+      margin: 0 0 12px; font-size: 1.14rem;
+      color: var(--green-900);
+    }
+    .link-list {
+      list-style: none; margin: 0; padding: 0;
+      display: grid; gap: 8px;
+    }
     .link-list a {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font-weight: 600;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 9px 10px;
+      border: 1px solid var(--line); border-radius: 10px;
+      background: #fff; color: var(--ink); font-weight: 600;
+      transition: border-color .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
     }
-    .link-list a:hover { border-color: var(--green-600); color: var(--green-900); }
+    .link-list a:hover {
+      border-color: var(--green-600);
+      color: var(--green-900);
+      transform: translateX(3px);
+    }
     .link-list small { color: var(--muted); }
 
+    /* ============================================================
+       MODULE STRIP
+       ============================================================ */
     .module-strip {
-      display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
     }
     .module-pill {
-      display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); text-align: center; font-size: 0.72rem; font-weight: 700;
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 46px; padding: 8px 10px;
+      border: 1px solid var(--line); border-radius: 12px;
+      background: #fff; color: var(--ink);
+      text-align: center; font-size: 0.72rem; font-weight: 700;
+      transition: transform .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease);
     }
+    .module-pill:hover {
+      transform: translateY(-2px);
+      border-color: var(--green-600);
+      color: var(--green-900);
+    }
+
+    /* ============================================================
+       METRICS
+       ============================================================ */
     .metrics-grid {
-      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px; margin-top: 16px;
     }
     .metric-card {
-      padding: 18px; border-radius: 18px; border: 1px solid var(--line); background: linear-gradient(180deg, #fff 0%, #f6faf8 100%);
+      padding: 18px; border-radius: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff 0%, #f6faf8 100%);
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+    }
+    .metric-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(16,57,45,0.06);
     }
     .metric-card .kicker {
-      display: block; color: var(--muted); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800;
+      display: block; color: var(--muted);
+      font-size: 0.68rem; letter-spacing: 0.12em;
+      text-transform: uppercase; font-weight: 800;
     }
     .metric-card strong {
-      display: block; margin-top: 10px; font-size: clamp(2rem, 3vw, 3rem); letter-spacing: -0.07em; line-height: 1;
+      display: block; margin-top: 10px;
+      font-size: clamp(2rem, 3vw, 3rem);
+      letter-spacing: -0.07em; line-height: 1;
     }
     .metric-card span {
-      display: block; margin-top: 8px; color: var(--muted); font-size: 0.84rem;
+      display: block; margin-top: 8px;
+      color: var(--muted); font-size: 0.84rem;
     }
+
+    /* ============================================================
+       PRICING
+       ============================================================ */
     .pricing-grid {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px; margin-top: 16px;
     }
     .pricing-plan {
-      padding: 22px 20px; border-radius: 20px; border: 1px solid var(--line); background: linear-gradient(180deg, #fff 0%, #f9faf9 100%);
+      padding: 22px 20px; border-radius: 20px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff 0%, #f9faf9 100%);
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
+    }
+    .pricing-plan:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 36px rgba(16,57,45,0.08);
     }
     .pricing-plan.featured {
       background: linear-gradient(180deg, rgba(17, 59, 48, 0.96), rgba(18, 82, 66, 0.92));
@@ -232,11 +518,17 @@
     }
     .pricing-plan h3 { margin: 0 0 8px; font-size: 1.3rem; }
     .pricing-plan .price {
-      display: flex; align-items: end; gap: 6px; margin: 10px 0 12px; font-size: 2.4rem; font-weight: 900; letter-spacing: -0.08em;
+      display: flex; align-items: end; gap: 6px;
+      margin: 10px 0 12px;
+      font-size: 2.4rem; font-weight: 900;
+      letter-spacing: -0.08em;
     }
-    .pricing-plan .price small { font-size: 0.86rem; color: inherit; opacity: 0.8; }
+    .pricing-plan .price small {
+      font-size: 0.86rem; color: inherit; opacity: 0.8;
+    }
     .pricing-plan ul {
-      list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; color: var(--muted);
+      list-style: none; padding: 0; margin: 0;
+      display: grid; gap: 8px; color: var(--muted);
     }
     .pricing-plan.featured ul { color: rgba(255,255,255,0.85); }
     .pricing-plan li { position: relative; padding-left: 18px; }
@@ -245,19 +537,50 @@
     }
     .pricing-plan.featured li::before { color: #d6f1b2; }
 
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .site-footer {
+      width: min(1300px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 32px;
+      border-top: 1px solid var(--line);
+      display: flex; justify-content: space-between; gap: 14px;
+      color: var(--muted); font-size: 0.8rem;
+    }
+    .site-footer a { color: var(--green-700); font-weight: 700; }
+    .site-footer a:hover { text-decoration: underline; }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
     @media (max-width: 980px) {
       .hero-inner { grid-template-columns: 1fr; }
-      .feature-grid, .list-grid { grid-template-columns: 1fr; }
+      .feature-grid, .list-grid, .testimonial-grid, .pricing-grid { grid-template-columns: 1fr; }
       .module-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .slide { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
-      .header-inner { flex-wrap: wrap; justify-content: center; padding: 12px 0; }
+      .header-inner { flex-wrap: wrap; justify-content: center; padding: 12px 0; min-height: auto; }
       .header-nav { width: 100%; justify-content: center; }
       .page-shell { width: min(100% - 18px, 1300px); }
       .hero { padding: 22px 18px; }
       .section { padding: 16px; }
       .section-head { flex-direction: column; align-items: flex-start; }
       .module-strip { grid-template-columns: 1fr; }
+      .metrics-grid { grid-template-columns: 1fr; }
+      .site-footer { flex-direction: column; text-align: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+        scroll-behavior: auto !important;
+      }
+      .hero::after { animation: none; }
     }
   </style>
 </head>
@@ -294,7 +617,7 @@
             <span class="tag">17 modules</span>
             <span class="tag">Premium UX</span>
           </div>
-          <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+          <div class="hero-actions">
             <a class="nav-cta" href="petcare_system.html">Open landing page</a>
             <a class="nav-cta" href="../Trang hỗ trợ/project_quote.html">Official Quote</a>
             <a class="nav-cta" href="user_portal.html">Cổng khách hàng</a>
@@ -314,7 +637,7 @@
     <section class="section">
       <div class="section-head">
         <div>
-          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Core capability</span>
+          <span class="eyebrow eyebrow-inline">Core capability</span>
           <h2>Business value at a glance</h2>
         </div>
         <p>Designed for strategic review and product demonstration.</p>
@@ -354,8 +677,8 @@
             <span class="dot" data-index="2"></span>
           </div>
           <div style="display:flex; gap:8px;">
-            <button class="arrow-btn" type="button" id="prevSlide">←</button>
-            <button class="arrow-btn" type="button" id="nextSlide">→</button>
+            <button class="arrow-btn" type="button" id="prevSlide" aria-label="Previous slide">←</button>
+            <button class="arrow-btn" type="button" id="nextSlide" aria-label="Next slide">→</button>
           </div>
         </div>
       </div>
@@ -394,7 +717,7 @@
     <section class="section">
       <div class="section-head">
         <div>
-          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Routes</span>
+          <span class="eyebrow eyebrow-inline">Routes</span>
           <h2>Project access points</h2>
         </div>
         <p>All critical views in one entry point.</p>
@@ -411,7 +734,7 @@
           </ul>
         </div>
         <div class="link-panel">
-          <h3>Proposal & commercial</h3>
+          <h3>Proposal &amp; commercial</h3>
           <ul class="link-list">
             <li><a href="../Trang hỗ trợ/project_quote.html"><span>Official quote</span><small>Proposal</small></a></li>
             <li><a href="../Trang hỗ trợ/project_invoice.html"><span>Invoice / Payment</span><small>Billing</small></a></li>
@@ -429,7 +752,7 @@
           </ul>
         </div>
         <div class="link-panel">
-          <h3>Care, reports & modules</h3>
+          <h3>Care, reports &amp; modules</h3>
           <ul class="link-list">
             <li><a href="../Trang hỗ trợ/pet_health_report.html"><span>Pet health report</span><small>Health</small></a></li>
             <li><a href="../Trang hỗ trợ/disease_support.html"><span>Disease support</span><small>Care</small></a></li>
@@ -443,7 +766,7 @@
     <section class="section">
       <div class="section-head">
         <div>
-          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Testimonials</span>
+          <span class="eyebrow eyebrow-inline">Testimonials</span>
           <h2>What stakeholders say</h2>
         </div>
         <p>Validation from product, operations and management stakeholders.</p>
@@ -479,7 +802,7 @@
     <section class="section">
       <div class="section-head">
         <div>
-          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">KPI</span>
+          <span class="eyebrow eyebrow-inline">KPI</span>
           <h2>Enterprise performance overview</h2>
         </div>
         <p>Operational pulse across growth, care quality and customer value.</p>
@@ -511,7 +834,7 @@
     <section class="section">
       <div class="section-head">
         <div>
-          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Pricing</span>
+          <span class="eyebrow eyebrow-inline">Pricing</span>
           <h2>Commercial model</h2>
         </div>
         <p>Transparent package options for scaling operations.</p>
@@ -553,7 +876,7 @@
     <section class="section">
       <div class="section-head">
         <div>
-          <span class="eyebrow" style="background: var(--green-100); color: var(--green-700); border-color: rgba(23,108,76,0.1);">Modules</span>
+          <span class="eyebrow eyebrow-inline">Modules</span>
           <h2>Platform architecture</h2>
         </div>
         <p>Business functionality mapped across the PetCare platform.</p>
@@ -575,27 +898,65 @@
     </section>
   </main>
 
+  <footer class="site-footer">
+    <span>© Bông Bông Pet Care · Investor Landing</span>
+    <span>Local-first · Python + SQLite · <a href="../Trang hỗ trợ/project_overview.html">Project overview</a></span>
+  </footer>
+
   <script>
-    const track = document.getElementById('sliderTrack');
-    const slides = Array.from(document.querySelectorAll('.slide'));
-    const dots = Array.from(document.querySelectorAll('.dot'));
-    const nextBtn = document.getElementById('nextSlide');
-    const prevBtn = document.getElementById('prevSlide');
-    let current = 0;
+    (function () {
+      "use strict";
 
-    function renderSlider(index) {
-      current = (index + slides.length) % slides.length;
-      track.style.transform = `translateX(-${current * 100}%)`;
-      dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
-    }
+      const track = document.getElementById('sliderTrack');
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const dots = Array.from(document.querySelectorAll('.dot'));
+      const nextBtn = document.getElementById('nextSlide');
+      const prevBtn = document.getElementById('prevSlide');
 
-    nextBtn.addEventListener('click', () => renderSlider(current + 1));
-    prevBtn.addEventListener('click', () => renderSlider(current - 1));
-    dots.forEach((dot) => {
-      dot.addEventListener('click', () => renderSlider(Number(dot.dataset.index)));
-    });
+      if (!track || slides.length === 0) return;
 
-    setInterval(() => renderSlider(current + 1), 5000);
+      let current = 0;
+      let autoTimer = null;
+
+      function renderSlider(index) {
+        current = (index + slides.length) % slides.length;
+        track.style.transform = `translateX(-${current * 100}%)`;
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
+      }
+
+      function startAuto() {
+        stopAuto();
+        autoTimer = setInterval(() => renderSlider(current + 1), 5000);
+      }
+      function stopAuto() {
+        if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+      }
+
+      nextBtn && nextBtn.addEventListener('click', () => { renderSlider(current + 1); startAuto(); });
+      prevBtn && prevBtn.addEventListener('click', () => { renderSlider(current - 1); startAuto(); });
+      dots.forEach((dot) => {
+        dot.addEventListener('click', () => {
+          renderSlider(Number(dot.dataset.index));
+          startAuto();
+        });
+      });
+
+      // Pause auto khi hover
+      const sliderEl = document.querySelector('.hero-slider');
+      if (sliderEl) {
+        sliderEl.addEventListener('mouseenter', stopAuto);
+        sliderEl.addEventListener('mouseleave', startAuto);
+      }
+
+      // Hỗ trợ bàn phím
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') renderSlider(current - 1);
+        if (e.key === 'ArrowRight') renderSlider(current + 1);
+      });
+
+      renderSlider(0);
+      startAuto();
+    })();
   </script>
   <script src="../scripts/site_navigation.js" defer></script>
 </body>

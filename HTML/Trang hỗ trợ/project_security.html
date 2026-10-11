@@ -3,169 +3,1075 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PetCare | Security & Data Protection</title>
+  <meta name="theme-color" content="#081b26" />
+  <meta name="description" content="PetCare security review — security controls, data-risk boundaries, and operational safeguards for the local-first desktop application.">
+  <title>PetCare | Security &amp; Data Protection</title>
   <style>
+    /* ============================================================
+       DESIGN TOKENS
+       ============================================================ */
     :root {
-      --bg:#081b26;
-      --bg-2:#0d2b38;
-      --panel:#0f2431;
-      --card:#102d39;
-      --line:rgba(165,197,210,0.18);
-      --text:#edf8ff;
-      --muted:#c7dde5;
-      --gold:#efc86d;
-      --gold-soft:#f7dd9f;
-      --sky:#8ad8ff;
-      --green:#7fe8b4;
-      --red:#ff8f7d;
-      --shadow:0 22px 58px rgba(0,0,0,0.24);
-      --radius-xl:30px;
-      --radius-lg:22px;
-      --radius-md:16px;
+      color-scheme: dark;
+      --bg: #081b26;
+      --bg-2: #0d2b38;
+      --bg-3: #133b4d;
+      --panel: #0f2431;
+      --card: #102d39;
+      --card-2: rgba(255,255,255,0.02);
+      --line: rgba(165,197,210,0.18);
+      --line-strong: rgba(165,197,210,0.32);
+      --text: #edf8ff;
+      --muted: #c7dde5;
+      --muted-2: #93aebc;
+      --gold: #efc86d;
+      --gold-soft: #f7dd9f;
+      --sky: #8ad8ff;
+      --sky-soft: #c7ecff;
+      --green: #7fe8b4;
+      --red: #ff8f7d;
+      --amber: #f0b95e;
+      --shadow: 0 22px 58px rgba(0,0,0,0.24);
+      --shadow-lg: 0 28px 70px rgba(0,0,0,0.42);
+      --shadow-glow: 0 0 0 1px rgba(239,200,109,0.18), 0 22px 50px rgba(239,200,109,0.10);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --ease: cubic-bezier(.2,.8,.2,1);
+      --ease-spring: cubic-bezier(.34,1.56,.64,1);
     }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+
+    html[data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf6fa;
+      --bg-2: #e4f1f5;
+      --bg-3: #d6ebf0;
+      --panel: #ffffff;
+      --card: #f6fbfd;
+      --card-2: rgba(18,42,48,0.03);
+      --line: rgba(18,64,80,0.10);
+      --line-strong: rgba(18,64,80,0.20);
+      --text: #0c2c38;
+      --muted: #4d6874;
+      --muted-2: #7a929d;
+      --gold: #b8871e;
+      --gold-soft: #a06b0f;
+      --sky: #1f7ea6;
+      --sky-soft: #0d5e82;
+      --green: #1d8a5f;
+      --red: #cc4b3c;
+      --amber: #a86f1e;
+      --shadow: 0 18px 42px rgba(14,41,50,0.08);
+      --shadow-lg: 0 24px 56px rgba(14,41,50,0.12);
+      --shadow-glow: 0 0 0 1px rgba(184,135,30,0.14), 0 18px 40px rgba(184,135,30,0.08);
+    }
+
+    /* ============================================================
+       BASE
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-top: 96px; }
     body {
-      margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; color:var(--text);
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      min-height: 100vh;
+      transition: background .3s var(--ease), color .3s var(--ease);
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+    img { max-width: 100%; display: block; }
+    ::selection { background: var(--gold); color: var(--bg); }
+
+    /* ============================================================
+       AURORA BACKGROUND
+       ============================================================ */
+    .aurora {
+      position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden;
       background:
-        radial-gradient(circle at top left, rgba(239,200,109,0.12), transparent 20%),
-        radial-gradient(circle at bottom right, rgba(136,215,255,0.10), transparent 18%),
-        linear-gradient(135deg, var(--bg), var(--bg-2), #133b4d 100%);
-      line-height:1.6;
+        radial-gradient(circle at 12% 8%, rgba(239,200,109,0.14), transparent 32%),
+        radial-gradient(circle at 88% 92%, rgba(136,215,255,0.10), transparent 34%),
+        linear-gradient(135deg, var(--bg), var(--bg-2), var(--bg-3));
+      transition: background .3s var(--ease);
     }
-    a { color:inherit; text-decoration:none; }
-    .page { max-width: 1380px; margin:0 auto; padding:22px 20px 50px; }
-    .topbar { position:sticky; top:0; z-index:20; backdrop-filter:blur(10px); background:rgba(8,27,38,0.76); border-bottom:1px solid var(--line); }
-    .topbar-inner { max-width:1380px; margin:0 auto; padding:14px 22px; display:flex; justify-content:space-between; align-items:center; gap:14px; }
-    .brand { display:inline-flex; align-items:center; gap:12px; color:var(--gold-soft); font-size:11px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; }
-    .brand-mark { width:32px; height:32px; border-radius:10px; display:grid; place-items:center; background:linear-gradient(135deg,var(--gold),var(--gold-soft)); color:#081b26; font-weight:900; }
-    .nav { display:flex; flex-wrap:wrap; gap:10px; }
-    .nav a { padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid var(--line); color:var(--muted); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; }
-    .hero { margin-top:24px; }
+    .aurora::before, .aurora::after {
+      content: ""; position: absolute;
+      width: 55vmax; height: 55vmax; border-radius: 50%;
+      filter: blur(90px); opacity: 0.35;
+      will-change: transform;
+    }
+    .aurora::before {
+      top: -18vmax; left: -18vmax;
+      background: radial-gradient(circle, rgba(239,200,109,0.5), transparent 65%);
+      animation: aurora-1 26s ease-in-out infinite;
+    }
+    .aurora::after {
+      bottom: -18vmax; right: -18vmax;
+      background: radial-gradient(circle, rgba(136,215,255,0.5), transparent 65%);
+      animation: aurora-2 30s ease-in-out infinite;
+    }
+    @keyframes aurora-1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(8vmax, 6vmax) scale(1.12); }
+    }
+    @keyframes aurora-2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-8vmax, -6vmax) scale(1.15); }
+    }
+    .noise {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      opacity: 0.03; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ============================================================
+       TOAST
+       ============================================================ */
+    .toast-stack {
+      position: fixed; top: 88px; right: 22px; z-index: 100;
+      display: flex; flex-direction: column; gap: 10px;
+      max-width: 360px; pointer-events: none;
+    }
+    .toast {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      color: var(--text);
+      box-shadow: var(--shadow-lg);
+      font-size: .9rem;
+      pointer-events: auto;
+      animation: toast-in .35s var(--ease-spring) both;
+      position: relative; overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+    .toast::before {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; background: var(--green);
+    }
+    .toast.error::before { background: var(--red); }
+    .toast.info::before { background: var(--sky); }
+    .toast-icon {
+      flex: 0 0 20px; width: 20px; height: 20px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      background: rgba(127,232,180,0.14); color: var(--green);
+      font-size: 12px; font-weight: 900;
+    }
+    .toast.error .toast-icon { background: rgba(255,143,125,0.14); color: var(--red); }
+    .toast.info .toast-icon { background: rgba(138,216,255,0.14); color: var(--sky); }
+    .toast-content { flex: 1; min-width: 0; }
+    .toast-content strong { display: block; font-size: .88rem; }
+    .toast-content p { margin: 4px 0 0; color: var(--muted); font-size: .82rem; line-height: 1.5; }
+    .toast-close {
+      flex: 0 0 20px; width: 20px; height: 20px;
+      display: grid; place-items: center;
+      color: var(--muted); border-radius: 6px;
+      transition: background .2s var(--ease), color .2s var(--ease);
+    }
+    .toast-close:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateX(40px) scale(.95); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+    @keyframes toast-out {
+      to { opacity: 0; transform: translateX(40px) scale(.95); }
+    }
+    .toast.leaving { animation: toast-out .3s var(--ease) forwards; }
+
+    /* ============================================================
+       PAGE
+       ============================================================ */
+    .page { max-width: 1380px; margin: 0 auto; padding: 22px 20px 60px; position: relative; z-index: 1; }
+
+    /* ============================================================
+       TOPBAR
+       ============================================================ */
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: blur(14px) saturate(1.4);
+      -webkit-backdrop-filter: blur(14px) saturate(1.4);
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      border-bottom: 1px solid var(--line);
+      transition: background .3s var(--ease), border-color .3s var(--ease);
+    }
+    .topbar.scrolled {
+      background: color-mix(in srgb, var(--bg) 94%, transparent);
+      border-bottom-color: var(--line-strong);
+    }
+    .topbar-inner {
+      max-width: 1380px; margin: 0 auto;
+      padding: 14px 22px;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 14px;
+    }
+    .brand {
+      display: inline-flex; align-items: center; gap: 12px;
+      color: var(--gold-soft);
+      font-size: 11px; font-weight: 800;
+      letter-spacing: 0.16em; text-transform: uppercase;
+    }
+    .brand-mark {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+      color: #081b26;
+      font-weight: 900;
+      box-shadow: 0 8px 20px rgba(239,200,109,0.28);
+      transition: transform .35s var(--ease-spring);
+    }
+    .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.08); }
+
+    .top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .nav { display: flex; flex-wrap: wrap; gap: 8px; }
+    .nav a {
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      font-weight: 700;
+      position: relative; overflow: hidden;
+      transition: all .25s var(--ease);
+    }
+    .nav a::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(239,200,109,0.16), rgba(136,215,255,0.10));
+      opacity: 0;
+      transition: opacity .25s var(--ease);
+    }
+    .nav a span { position: relative; z-index: 1; }
+    .nav a:hover {
+      border-color: rgba(239,200,109,0.5);
+      color: var(--gold-soft);
+      transform: translateY(-1px);
+    }
+    .nav a:hover::before { opacity: 1; }
+
+    .icon-btn {
+      display: inline-grid; place-items: center;
+      width: 40px; height: 40px;
+      border: 1px solid var(--line); border-radius: 999px;
+      background: rgba(255,255,255,0.02); color: var(--muted);
+      transition: all .25s var(--ease);
+    }
+    .icon-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold-soft);
+      transform: rotate(15deg);
+    }
+    .icon-btn svg { width: 16px; height: 16px; }
+    html[data-theme="dark"] .icon-btn .icon-sun { display: none; }
+    html[data-theme="light"] .icon-btn .icon-moon { display: none; }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .hero { margin-top: 24px; }
     .panel {
-      background:linear-gradient(135deg, rgba(136,215,255,0.06), rgba(239,200,109,0.04), rgba(15,34,48,0.96));
-      border:1px solid var(--line); border-radius:var(--radius-xl); box-shadow:var(--shadow); overflow:hidden;
+      background: linear-gradient(135deg, rgba(136,215,255,0.06), rgba(239,200,109,0.04), var(--panel));
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
     }
-    .panel-inner { padding:30px 24px 24px; }
-    .eyebrow { display:inline-flex; padding:8px 12px; border-radius:999px; border:1px solid rgba(239,200,109,0.30); background:rgba(239,200,109,0.08); color:var(--gold-soft); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; font-weight:800; }
-    h1 { margin:18px 0 12px; font-size:clamp(2.7rem,5vw,4.7rem); line-height:0.94; letter-spacing:-0.08em; }
-    .lead { margin:0; color:var(--muted); font-size:1.03rem; line-height:1.8; max-width:920px; }
-    .tag-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
-    .tag { display:inline-flex; align-items:center; justify-content:center; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid var(--line); color:var(--text); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700; }
-    .section { margin-top:34px; }
-    .section-head { display:flex; justify-content:space-between; align-items:center; gap:14px; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--line); }
-    .section-head h2 { margin:0; font-size:clamp(1.4rem,2vw,2.2rem); letter-spacing:-0.04em; }
-    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
-    .card { padding:18px; border-radius:18px; background:rgba(255,255,255,0.02); border:1px solid var(--line); }
-    .card .kicker { display:block; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold-soft); font-weight:800; }
-    .card h3 { margin:10px 0 10px; font-size:1.12rem; }
-    .card p { margin:0; color:var(--muted); line-height:1.8; }
-    .card code { display:block; margin-top:12px; color:var(--sky); font-size:0.8rem; }
-    .footer { margin-top:30px; padding-top:18px; border-top:1px solid var(--line); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; color:var(--muted); }
-    @media (max-width: 1024px) { .grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
-    @media (max-width:700px) { .page { padding:18px 14px 40px; } .topbar-inner { flex-direction:column; align-items:flex-start; } .nav { justify-content:flex-start; } .grid { grid-template-columns:1fr; } }
+    .panel::after {
+      content: "";
+      position: absolute;
+      right: -100px; top: -80px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(239,200,109,0.18), transparent 62%);
+      animation: float 22s ease-in-out infinite;
+      z-index: 0;
+    }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-22px, 18px) scale(1.08); }
+    }
+    .panel-inner { padding: 34px 28px 28px; position: relative; z-index: 1; }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);
+      gap: 26px;
+      align-items: start;
+    }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(239,200,109,0.32);
+      background: rgba(239,200,109,0.08);
+      color: var(--gold-soft);
+      font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--gold-soft);
+      box-shadow: 0 0 0 3px rgba(239,200,109,0.22);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.25); opacity: 0.6; }
+    }
+
+    h1 {
+      margin: 20px 0 14px;
+      font-size: clamp(2.7rem, 5vw, 4.7rem);
+      line-height: 0.94;
+      letter-spacing: -0.08em;
+      background: linear-gradient(135deg, var(--text) 0%, var(--gold-soft) 60%, var(--sky-soft) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.03rem;
+      line-height: 1.8;
+      max-width: 920px;
+    }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .tag {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      color: var(--text);
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      font-weight: 700;
+      transition: all .25s var(--ease);
+    }
+    .tag::before {
+      content: "";
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 2px rgba(127,232,180,0.22);
+    }
+    .tag:hover {
+      border-color: rgba(239,200,109,0.5);
+      background: rgba(239,200,109,0.06);
+      transform: translateY(-1px);
+    }
+
+    /* ============================================================
+       SECURITY SCORE CARD
+       ============================================================ */
+    .score-card {
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(127,232,180,0.08), rgba(138,216,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid var(--line);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .score-card::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--green), var(--sky));
+    }
+    .score-ring {
+      position: relative;
+      width: 140px; height: 140px;
+      margin: 6px auto 16px;
+    }
+    .score-ring svg {
+      width: 100%; height: 100%;
+      transform: rotate(-90deg);
+    }
+    .score-ring .ring-bg {
+      fill: none;
+      stroke: var(--line);
+      stroke-width: 8;
+    }
+    .score-ring .ring-fill {
+      fill: none;
+      stroke: url(#scoreGradient);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 377;
+      stroke-dashoffset: 377;
+      transition: stroke-dashoffset 1.4s var(--ease);
+    }
+    .score-ring.animated .ring-fill {
+      stroke-dashoffset: 75;
+    }
+    .score-value {
+      position: absolute; inset: 0;
+      display: grid; place-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
+    .score-value strong {
+      display: block;
+      font-size: 2.4rem;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      background: linear-gradient(135deg, var(--green), var(--sky));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+    }
+    .score-value small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted-2);
+      font-size: .72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+    .score-label {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.6;
+    }
+    .score-label strong { color: var(--green); font-weight: 850; }
+
+    /* ============================================================
+       SECTION
+       ============================================================ */
+    .section { margin-top: 42px; }
+    .section-head {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+      position: relative;
+    }
+    .section-head::after {
+      content: "";
+      position: absolute;
+      bottom: -1px; left: 0;
+      width: 70px; height: 2px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.4rem, 2vw, 2.2rem);
+      letter-spacing: -0.04em;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .section-num {
+      display: inline-grid; place-items: center;
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      background: rgba(239,200,109,0.12);
+      border: 1px solid rgba(239,200,109,0.32);
+      color: var(--gold-soft);
+      font-size: 12px; font-weight: 900;
+      letter-spacing: 0;
+    }
+    .section-meta {
+      color: var(--muted-2);
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    /* ============================================================
+       FILTER TABS
+       ============================================================ */
+    .filter-tabs {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-bottom: 20px;
+    }
+    .filter-tab {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      color: var(--muted);
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      transition: all .25s var(--ease);
+    }
+    .filter-tab:hover {
+      border-color: rgba(239,200,109,0.5);
+      color: var(--gold-soft);
+      transform: translateY(-1px);
+    }
+    .filter-tab.active {
+      background: linear-gradient(135deg, rgba(239,200,109,0.16), rgba(136,215,255,0.08));
+      border-color: rgba(239,200,109,0.5);
+      color: var(--gold-soft);
+      box-shadow: 0 6px 16px rgba(239,200,109,0.14);
+    }
+
+    /* ============================================================
+       GRID + CARD
+       ============================================================ */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .card {
+      padding: 22px 20px;
+      border-radius: var(--radius-md);
+      background: var(--card-2);
+      border: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+      transition: transform .35s var(--ease), border-color .3s var(--ease), box-shadow .35s var(--ease), background .3s var(--ease);
+    }
+    .card::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--sky));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .4s var(--ease);
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(138,216,255,0.4);
+      background: rgba(255,255,255,0.035);
+      box-shadow: var(--shadow-glow);
+    }
+    .card:hover::before { transform: scaleX(1); }
+    .card[hidden] { display: none; }
+
+    .card-head {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .card .kicker {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(239,200,109,0.08);
+      border: 1px solid rgba(239,200,109,0.24);
+      color: var(--gold-soft);
+      font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+      font-weight: 800;
+    }
+    .status-badge {
+      flex: 0 0 auto;
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+    .status-badge::before {
+      content: "";
+      width: 6px; height: 6px; border-radius: 50%;
+      background: currentColor;
+    }
+    .status-badge.implemented {
+      background: rgba(127,232,180,0.12); color: var(--green);
+    }
+    .status-badge.recommended {
+      background: rgba(138,216,255,0.12); color: var(--sky);
+    }
+    .status-badge.review {
+      background: rgba(240,185,94,0.14); color: var(--amber);
+    }
+    .status-badge.implemented::before {
+      animation: dot-pulse-green 2s ease-in-out infinite;
+    }
+    @keyframes dot-pulse-green {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(127,232,180,0.6); }
+      50% { box-shadow: 0 0 0 5px rgba(127,232,180,0); }
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+      line-height: 1.35;
+    }
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: .94rem;
+    }
+    .card code {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: rgba(138,216,255,0.06);
+      border: 1px solid rgba(138,216,255,0.18);
+      color: var(--sky);
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      transition: all .25s var(--ease);
+    }
+    .card code::before {
+      content: "▸";
+      opacity: 0.6;
+    }
+    .card code:hover {
+      background: rgba(138,216,255,0.12);
+      border-color: rgba(138,216,255,0.32);
+    }
+
+    /* ============================================================
+       HIGHLIGHT CARDS
+       ============================================================ */
+    .card.highlight {
+      background: linear-gradient(135deg, rgba(127,232,180,0.06), rgba(239,200,109,0.04));
+      border-color: rgba(127,232,180,0.24);
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .footer {
+      margin-top: 46px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      display: flex; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+      color: var(--muted-2);
+      font-size: .86rem;
+    }
+    .footer a {
+      color: var(--gold-soft);
+      font-weight: 700;
+      transition: color .2s var(--ease);
+    }
+    .footer a:hover { color: var(--sky-soft); }
+
+    /* ============================================================
+       REVEAL
+       ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .8s var(--ease), transform .8s var(--ease);
+    }
+    .reveal.revealed { opacity: 1; transform: translateY(0); }
+
+    /* ============================================================
+       SPOTLIGHT
+       ============================================================ */
+    .spotlight { position: relative; isolation: isolate; }
+    .spotlight::after {
+      content: "";
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 50%), rgba(239,200,109,0.12), transparent 45%);
+      opacity: 0;
+      transition: opacity .35s var(--ease);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .spotlight:hover::after { opacity: 1; }
+    .spotlight > * { position: relative; z-index: 1; }
+
+    /* ============================================================
+       FOCUS
+       ============================================================ */
+    :focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 1024px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 700px) {
+      .page { padding: 18px 14px 40px; }
+      .topbar-inner { flex-direction: column; align-items: flex-start; padding: 12px 16px; }
+      .nav { width: 100%; justify-content: flex-start; }
+      .top-actions { width: 100%; justify-content: space-between; }
+      .grid { grid-template-columns: 1fr; }
+      .panel-inner { padding: 24px 20px 20px; }
+      .score-ring { width: 120px; height: 120px; }
+      .score-value strong { font-size: 2rem; }
+      .footer { flex-direction: column; }
+      .toast-stack { top: 12px; right: 12px; left: 12px; max-width: none; }
+      .section-head { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .aurora::before, .aurora::after, .panel::after { animation: none; }
+      .reveal { opacity: 1; transform: none; }
+      .score-ring .ring-fill { transition: none; }
+    }
   </style>
 </head>
 <body>
-  <header class="topbar">
+
+  <!-- Aurora background -->
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- Toast stack -->
+  <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="false"></div>
+
+  <header class="topbar" id="topbar">
     <div class="topbar-inner">
-      <div class="brand"><span class="brand-mark">P</span> PetCare</div>
+      <a class="brand" href="../TRrang chính/index.html">
+        <span class="brand-mark" aria-hidden="true">P</span>
+        <span>PetCare · Security</span>
+      </a>
       <nav class="nav" aria-label="Main navigation">
-        <a href="../TRrang chính/index.html">Home</a>
-        <a href="projext _Full.html">Master Hub</a>
-        <a href="project_overview.html">Overview</a>
-        <a href="report_kpi_board.html">KPI</a>
-        <a href="report_business_review.html">Reports</a>
-        <a href="project_overview.html">Roadmap</a>
-        <a href="slides_pitch.html">Pitch</a>
-        <a href="slides_demo.html">Demo</a>
+        <a href="../TRrang chính/index.html"><span>Home</span></a>
+        <a href="projext _Full.html"><span>Master Hub</span></a>
+        <a href="project_overview.html"><span>Overview</span></a>
+        <a href="report_kpi_board.html"><span>KPI</span></a>
+        <a href="report_business_review.html"><span>Reports</span></a>
+        <a href="project_overview.html"><span>Roadmap</span></a>
+        <a href="slides_pitch.html"><span>Pitch</span></a>
+        <a href="slides_demo.html"><span>Demo</span></a>
       </nav>
+      <div class="top-actions">
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Đổi giao diện sáng/tối" title="Đổi giao diện (Ctrl+J)">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </header>
 
   <main class="page">
+    <!-- ==================== HERO ==================== -->
     <section class="hero panel">
       <div class="panel-inner">
-        <span class="eyebrow">Security review</span>
-        <h1>Security & data protection</h1>
-        <p class="lead">This review summarizes the security controls currently implemented in the PetCare desktop application, the data-risk boundaries of a local-first deployment, and the operational safeguards still needed before real operational data is handled at scale.</p>
-        <div class="tag-row">
-          <span class="tag">Python + PySide6</span>
-          <span class="tag">SQLite local</span>
-          <span class="tag">Internal accounts</span>
-          <span class="tag">No cloud backend</span>
+        <div class="hero-grid">
+          <div>
+            <span class="eyebrow">Security review</span>
+            <h1>Security &amp; data protection</h1>
+            <p class="lead">This review summarizes the security controls currently implemented in the PetCare desktop application, the data-risk boundaries of a local-first deployment, and the operational safeguards still needed before real operational data is handled at scale.</p>
+            <div class="tag-row">
+              <span class="tag">Python + PySide6</span>
+              <span class="tag">SQLite local</span>
+              <span class="tag">Internal accounts</span>
+              <span class="tag">No cloud backend</span>
+            </div>
+          </div>
+          <aside class="score-card spotlight reveal" aria-label="Security maturity score">
+            <div class="score-ring" id="scoreRing">
+              <svg viewBox="0 0 140 140" aria-hidden="true">
+                <defs>
+                  <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#7fe8b4"/>
+                    <stop offset="100%" stop-color="#8ad8ff"/>
+                  </linearGradient>
+                </defs>
+                <circle class="ring-bg" cx="70" cy="70" r="60"/>
+                <circle class="ring-fill" cx="70" cy="70" r="60"/>
+              </svg>
+              <div class="score-value">
+                <strong>80</strong>
+                <small>Score</small>
+              </div>
+            </div>
+            <span class="score-label"><strong>Strong foundation</strong> · 3 controls implemented, 3 guardrails recommended.</span>
+          </aside>
         </div>
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-head"><h2>Scope & assumptions</h2></div>
+    <!-- ==================== SCOPE ==================== -->
+    <section class="section" id="scope">
+      <div class="section-head reveal">
+        <h2><span class="section-num">01</span>Scope &amp; assumptions</h2>
+        <span class="section-meta">3 pillars</span>
+      </div>
       <div class="grid">
-        <article class="card">
-          <span class="kicker">Deployment</span>
+        <article class="card spotlight reveal" data-category="scope">
+          <div class="card-head">
+            <span class="kicker">Deployment</span>
+            <span class="status-badge implemented">Boundary</span>
+          </div>
           <h3>Local application boundary</h3>
           <p>PetCare operates as a local Windows application with SQLite storage. The security boundary includes the workstation, the configured user account, the database path, and the backup process.</p>
         </article>
-        <article class="card">
-          <span class="kicker">Information</span>
+        <article class="card spotlight reveal" data-category="scope">
+          <div class="card-head">
+            <span class="kicker">Information</span>
+            <span class="status-badge review">Sensitive</span>
+          </div>
           <h3>Operational data sensitivity</h3>
           <p>Customer records, pet profiles, health notes, service history, transactions, and staff accounts may all be in scope. Data access should be proportional to task and role.</p>
         </article>
-        <article class="card">
-          <span class="kicker">Threat model</span>
+        <article class="card spotlight reveal" data-category="scope">
+          <div class="card-head">
+            <span class="kicker">Threat model</span>
+            <span class="status-badge implemented">Defined</span>
+          </div>
           <h3>Not a SaaS model</h3>
           <p>This is a local-first review: it focuses on unauthorized access, account compromise, database exposure, backup loss, and internal process misuse—rather than cloud infrastructure or external hosting controls.</p>
         </article>
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-head"><h2>Implemented controls</h2></div>
+    <!-- ==================== IMPLEMENTED ==================== -->
+    <section class="section" id="implemented">
+      <div class="section-head reveal">
+        <h2><span class="section-num">02</span>Implemented controls</h2>
+        <span class="section-meta">Live in production</span>
+      </div>
+      <div class="filter-tabs reveal" role="tablist" aria-label="Lọc theo loại kiểm soát">
+        <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true">Tất cả</button>
+        <button class="filter-tab" data-filter="implemented" role="tab" aria-selected="false">Đã triển khai</button>
+        <button class="filter-tab" data-filter="recommended" role="tab" aria-selected="false">Khuyến nghị</button>
+        <button class="filter-tab" data-filter="review" role="tab" aria-selected="false">Cần rà soát</button>
+      </div>
       <div class="grid">
-        <article class="card">
-          <span class="kicker">Authentication</span>
+        <article class="card spotlight reveal highlight" data-category="implemented">
+          <div class="card-head">
+            <span class="kicker">Authentication</span>
+            <span class="status-badge implemented">Đã triển khai</span>
+          </div>
           <h3>Password hashing</h3>
           <p>Passwords are hashed using a salted, iterated PBKDF2 approach. This significantly reduces the impact of credential theft and helps protect stored credentials from offline guessing attacks.</p>
           <code>auth/security.py</code>
         </article>
-        <article class="card">
-          <span class="kicker">Authorization</span>
+        <article class="card spotlight reveal highlight" data-category="implemented">
+          <div class="card-head">
+            <span class="kicker">Authorization</span>
+            <span class="status-badge implemented">Đã triển khai</span>
+          </div>
           <h3>Role-based permissions</h3>
           <p>Permissions are separated by role so that administration, care, sales, and management functions are not shared equally. UI hiding is helpful, but the actual enforcement must remain at the business logic layer.</p>
           <code>auth/constants.py</code>
         </article>
-        <article class="card">
-          <span class="kicker">Auditability</span>
+        <article class="card spotlight reveal highlight" data-category="implemented">
+          <div class="card-head">
+            <span class="kicker">Auditability</span>
+            <span class="status-badge implemented">Đã triển khai</span>
+          </div>
           <h3>Change event logging</h3>
           <p>Audit logs record actor, action, entity, and timestamp for selected operational changes. This supports accountability and allows later review of critical workflows.</p>
           <code>audit/repository.py</code>
         </article>
-      </div>
-    </section>
 
-    <section class="section">
-      <div class="section-head"><h2>Recommended operational guardrails</h2></div>
-      <div class="grid">
-        <article class="card">
-          <span class="kicker">Access</span>
+        <!-- ==================== GUARDRAILS ==================== -->
+        <article class="card spotlight reveal" data-category="recommended">
+          <div class="card-head">
+            <span class="kicker">Access</span>
+            <span class="status-badge recommended">Khuyến nghị</span>
+          </div>
           <h3>Least privilege</h3>
           <p>Grant only the minimum role permissions needed per user. Review access regularly and remove stale rights when staff change tasks or exit the organization.</p>
         </article>
-        <article class="card">
-          <span class="kicker">Recovery</span>
+        <article class="card spotlight reveal" data-category="recommended">
+          <div class="card-head">
+            <span class="kicker">Recovery</span>
+            <span class="status-badge recommended">Khuyến nghị</span>
+          </div>
           <h3>Backup discipline</h3>
           <p>Maintain encrypted, versioned backups stored outside the active working directory and test a restore procedure on a non-production copy before relying on it for real operations.</p>
         </article>
-        <article class="card">
-          <span class="kicker">Monitoring</span>
+        <article class="card spotlight reveal" data-category="recommended">
+          <div class="card-head">
+            <span class="kicker">Monitoring</span>
+            <span class="status-badge review">Cần rà soát</span>
+          </div>
           <h3>Operational review</h3>
           <p>Track suspicious pattern changes, failed sign-ins, database access anomalies, and unusual broad exports. This is especially important in shared local environments.</p>
         </article>
       </div>
     </section>
 
-    <div class="footer"><span>PetCare security review</span><span>Prepared for implementation and governance review</span></div>
+    <div class="footer reveal">
+      <span>PetCare security review · Prepared for implementation and governance review</span>
+      <span><a href="project_overview.html">Project overview</a> · <a href="projext _Full.html">Master hub</a></span>
+    </div>
   </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /* ============================================================
+         THEME
+         ============================================================ */
+      const html = document.documentElement;
+      const THEME_KEY = "petcare_security_theme";
+      const saved = localStorage.getItem(THEME_KEY);
+      const prefersDark = !window.matchMedia || window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const initial = saved || (prefersDark ? "dark" : "dark"); // default dark theo bản gốc
+      html.setAttribute("data-theme", initial);
+
+      document.getElementById("themeToggle")?.addEventListener("click", () => {
+        const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        html.setAttribute("data-theme", next);
+        localStorage.setItem(THEME_KEY, next);
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute("content", next === "dark" ? "#081b26" : "#edf6fa");
+        showToast(
+          next === "dark" ? "Chế độ tối" : "Chế độ sáng",
+          "Đã chuyển giao diện.",
+          "info",
+          2200
+        );
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key.toLowerCase() === "j" && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          document.getElementById("themeToggle")?.click();
+        }
+      });
+
+      /* ============================================================
+         TOAST
+         ============================================================ */
+      const toastStack = document.getElementById("toastStack");
+      const showToast = (title, message = "", type = "success", duration = 3600) => {
+        if (!toastStack) return;
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        const icon = document.createElement("span");
+        icon.className = "toast-icon";
+        icon.textContent = type === "error" ? "!" : type === "info" ? "i" : "✓";
+        const content = document.createElement("div");
+        content.className = "toast-content";
+        const strong = document.createElement("strong");
+        strong.textContent = title;
+        content.append(strong);
+        if (message) {
+          const p = document.createElement("p");
+          p.textContent = message;
+          content.append(p);
+        }
+        const close = document.createElement("button");
+        close.className = "toast-close";
+        close.setAttribute("aria-label", "Đóng thông báo");
+        close.textContent = "✕";
+        close.addEventListener("click", () => removeToast(toast));
+        toast.append(icon, content, close);
+        toastStack.append(toast);
+        if (duration > 0) setTimeout(() => removeToast(toast), duration);
+      };
+      const removeToast = (toast) => {
+        if (!toast || !toast.parentNode) return;
+        toast.classList.add("leaving");
+        setTimeout(() => toast.remove(), 300);
+      };
+
+      /* ============================================================
+         TOPBAR SCROLL STATE
+         ============================================================ */
+      const topbar = document.getElementById("topbar");
+      window.addEventListener("scroll", () => {
+        topbar?.classList.toggle("scrolled", window.scrollY > 20);
+      }, { passive: true });
+
+      /* ============================================================
+         REVEAL
+         ============================================================ */
+      const reveals = document.querySelectorAll(".reveal");
+      if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+              setTimeout(() => entry.target.classList.add("revealed"), i * 80);
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+        reveals.forEach((el) => io.observe(el));
+      } else {
+        reveals.forEach((el) => el.classList.add("revealed"));
+      }
+
+      /* ============================================================
+         SPOTLIGHT
+         ============================================================ */
+      document.querySelectorAll(".spotlight").forEach((el) => {
+        el.addEventListener("mousemove", (e) => {
+          const rect = el.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width) * 100;
+          const y = ((e.clientY - rect.top) / rect.height) * 100;
+          el.style.setProperty("--mx", x + "%");
+          el.style.setProperty("--my", y + "%");
+        });
+      });
+
+      /* ============================================================
+         SCORE RING
+         ============================================================ */
+      const scoreRing = document.getElementById("scoreRing");
+      if (scoreRing && "IntersectionObserver" in window) {
+        const ringObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              scoreRing.classList.add("animated");
+              ringObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.4 });
+        ringObserver.observe(scoreRing);
+      } else if (scoreRing) {
+        scoreRing.classList.add("animated");
+      }
+
+      /* ============================================================
+         FILTER TABS
+         ============================================================ */
+      const filterTabs = document.querySelectorAll(".filter-tab");
+      const filterCards = document.querySelectorAll(".card[data-category]");
+      filterTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const filter = tab.dataset.filter;
+          filterTabs.forEach((t) => {
+            t.classList.toggle("active", t === tab);
+            t.setAttribute("aria-selected", String(t === tab));
+          });
+          filterCards.forEach((card) => {
+            const match = filter === "all" || card.dataset.category === filter;
+            card.hidden = !match;
+          });
+        });
+      });
+
+    })();
+  </script>
   <script src="../scripts/site_navigation.js" defer></script>
 </body>
 </html>

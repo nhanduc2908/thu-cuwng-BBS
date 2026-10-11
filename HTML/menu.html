@@ -1,144 +1,565 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#12372b">
-  <meta name="description" content="Menu điều hướng với đường dẫn trực tiếp đến toàn bộ trang website, tài liệu hỗ trợ và 17 phân hệ PetCare.">
-  <title>PetCare | Menu danh sách trang</title>
-  <style>
-    :root{--ink:#20382e;--muted:#718078;--green:#1c684a;--dark:#12372b;--line:#e1e9e1;--paper:#f3f7f2;--white:#fff}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.55 "Segoe UI",Arial,sans-serif}a{color:inherit;text-decoration:none}button,input{font:inherit}.shell{width:min(1050px,calc(100% - 32px));margin:auto}
-    .topbar{position:sticky;top:0;z-index:3;border-bottom:1px solid var(--line);background:rgba(255,255,255,.94);backdrop-filter:blur(12px)}.top-inner{display:flex;min-height:62px;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:850}.brand span{color:var(--green)}.top-links{display:flex;gap:8px}.top-links a{padding:8px 12px;border:1px solid var(--line);border-radius:9px;font-size:11px;font-weight:800}.top-links a:hover{border-color:#9fc9ae;color:var(--green)}
-    .hero{margin:20px 0 14px;padding:24px;border-radius:17px;background:linear-gradient(120deg,var(--dark),var(--green));color:#f5faf5}.eyebrow{color:#d9ed9a;font-size:9px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}.hero h1{margin:6px 0;font-size:clamp(26px,4vw,39px);letter-spacing:-.05em}.hero p{max-width:720px;margin:0;color:#d6e5da;font-size:12px}
-    .controls{display:flex;align-items:center;gap:10px;margin:12px 0}.search{flex:1;min-width:0;height:42px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);outline:none}.search:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(28,104,74,.1)}.count{flex:none;color:var(--muted);font-size:10px}
-    .group{margin:17px 0}.group-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0 2px 7px}.group h2{margin:0;font-size:14px}.group-head span{color:var(--muted);font-size:10px}.menu-list{margin:0;padding:0;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#fff;list-style:none}.menu-item+ .menu-item{border-top:1px solid #edf1ec}.menu-link{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 13px;transition:background .15s ease}.menu-link:hover,.menu-link:focus-visible{background:#f2f8f2;outline:none}.link-name{display:block;font-size:12px;font-weight:800}.link-url{display:block;margin-top:2px;color:var(--muted);font:10px/1.4 Consolas,"Courier New",monospace;overflow-wrap:anywhere}.arrow{flex:none;color:var(--green);font-size:15px;font-weight:800}.menu-item[hidden],.group[hidden]{display:none}
-    .empty{display:none;margin:14px 0;padding:18px;border:1px dashed #adc2b3;border-radius:12px;color:var(--muted);text-align:center;font-size:12px}.empty.visible{display:block}footer{margin:25px 0 0;padding:14px 0 26px;border-top:1px solid var(--line);color:var(--muted);font-size:10px}
-    @media(max-width:560px){.shell{width:calc(100% - 20px)}.top-inner{min-height:54px}.top-links a{padding:7px 9px;font-size:10px}.hero{margin-top:13px;padding:18px}.controls{align-items:stretch;flex-direction:column;gap:5px}.count{padding:2px}.menu-link{padding:10px}.link-name{font-size:11px}.link-url{font-size:9px}}
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#12372b">
+<meta name="description" content="Menu điều hướng với đường dẫn trực tiếp đến toàn bộ trang website, tài liệu hỗ trợ và 17 phân hệ PetCare.">
+<title>PetCare | Menu danh sách trang</title>
+<style>
+  :root{
+    --ink:#20382e;--muted:#718078;--green:#1c684a;--green-soft:#e6f2ea;
+    --dark:#12372b;--line:#e1e9e1;--paper:#f3f7f2;--white:#fff;
+    --shadow:0 1px 2px rgba(18,55,43,.04),0 6px 20px rgba(18,55,43,.06);
+    --radius:12px;--radius-lg:17px;
+    --hl:#fff2a8;
+  }
+  html[data-theme="dark"]{
+    --ink:#e6efe9;--muted:#9bb0a5;--green:#5fd39a;--green-soft:#14342a;
+    --dark:#0c231c;--line:#25382f;--paper:#0f1a16;--white:#152420;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.35);
+    --hl:#5a4a12;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font:14px/1.55 "Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+    transition:background .25s ease,color .25s ease;
+  }
+  a{color:inherit;text-decoration:none}
+  button,input,select{font:inherit;color:inherit}
+  .shell{width:min(1080px,calc(100% - 32px));margin:auto}
+
+  /* Topbar */
+  .topbar{
+    position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);
+    background:color-mix(in srgb,var(--white) 88%,transparent);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  }
+  .top-inner{display:flex;min-height:62px;align-items:center;justify-content:space-between;gap:12px}
+  .brand{font-weight:850;letter-spacing:-.02em}
+  .brand span{color:var(--green)}
+  .top-links{display:flex;gap:8px;align-items:center}
+  .top-links a{
+    padding:8px 12px;border:1px solid var(--line);border-radius:9px;
+    font-size:11px;font-weight:800;transition:.18s ease;white-space:nowrap;
+  }
+  .top-links a:hover{border-color:var(--green);color:var(--green);background:var(--green-soft)}
+
+  .icon-btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:36px;border:1px solid var(--line);border-radius:9px;
+    background:var(--white);cursor:pointer;transition:.18s ease;
+  }
+  .icon-btn:hover{border-color:var(--green);color:var(--green)}
+  .icon-btn svg{width:16px;height:16px}
+
+  /* Hero */
+  .hero{
+    margin:20px 0 14px;padding:26px;border-radius:var(--radius-lg);
+    background:linear-gradient(120deg,var(--dark),var(--green));
+    color:#f5faf5;position:relative;overflow:hidden;
+  }
+  .hero::after{
+    content:"";position:absolute;inset:auto -60px -120px auto;
+    width:280px;height:280px;border-radius:50%;
+    background:radial-gradient(circle,rgba(217,237,154,.22),transparent 65%);
+  }
+  .eyebrow{color:#d9ed9a;font-size:9px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
+  .hero h1{margin:6px 0;font-size:clamp(26px,4vw,39px);letter-spacing:-.05em}
+  .hero p{max-width:720px;margin:0;color:#d6e5da;font-size:12px;position:relative;z-index:1}
+
+  /* Controls */
+  .controls{
+    display:flex;align-items:center;gap:10px;margin:12px 0;
+    padding:10px;border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--white);box-shadow:var(--shadow);
+  }
+  .search-wrap{position:relative;flex:1;min-width:0}
+  .search-wrap svg{
+    position:absolute;left:11px;top:50%;transform:translateY(-50%);
+    width:15px;height:15px;color:var(--muted);pointer-events:none;
+  }
+  .search{
+    width:100%;height:42px;padding:0 76px 0 34px;border:1px solid var(--line);
+    border-radius:10px;background:var(--white);outline:none;transition:.18s ease;
+  }
+  .search:focus{border-color:var(--green);box-shadow:0 0 0 3px color-mix(in srgb,var(--green) 18%,transparent)}
+  .kbd-hint{
+    position:absolute;right:10px;top:50%;transform:translateY(-50%);
+    display:flex;gap:4px;pointer-events:none;
+  }
+  .kbd{
+    min-width:20px;padding:2px 6px;border:1px solid var(--line);border-bottom-width:2px;
+    border-radius:5px;background:var(--paper);color:var(--muted);
+    font:10px/1 ui-monospace,Consolas,monospace;text-align:center;
+  }
+  .count{flex:none;color:var(--muted);font-size:11px;padding:0 6px;white-space:nowrap}
+
+  .toolbar{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+  .chip{
+    padding:5px 11px;border:1px solid var(--line);border-radius:999px;
+    background:var(--white);font-size:11px;font-weight:700;cursor:pointer;
+    transition:.18s ease;color:var(--muted);
+  }
+  .chip:hover{border-color:var(--green);color:var(--green)}
+  .chip[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+
+  /* Group */
+  .group{margin:17px 0}
+  .group[hidden]{display:none}
+  .group-head{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    margin:0 2px 7px;
+  }
+  .group-title{display:flex;align-items:center;gap:8px;min-width:0}
+  .group h2{margin:0;font-size:14px;letter-spacing:-.01em}
+  .badge{
+    display:inline-block;min-width:20px;padding:1px 7px;border-radius:999px;
+    background:var(--green-soft);color:var(--green);
+    font-size:10px;font-weight:800;text-align:center;
+  }
+  html[data-theme="dark"] .badge{color:#8fe6b8}
+  .group-head span.hint{color:var(--muted);font-size:10px}
+  .collapse{
+    display:inline-flex;align-items:center;gap:5px;padding:4px 9px;
+    border:1px solid var(--line);border-radius:8px;background:var(--white);
+    font-size:10px;font-weight:700;color:var(--muted);cursor:pointer;transition:.18s ease;
+  }
+  .collapse:hover{border-color:var(--green);color:var(--green)}
+  .collapse svg{width:11px;height:11px;transition:transform .22s ease}
+  .group.collapsed .collapse svg{transform:rotate(-90deg)}
+
+  .menu-list{
+    margin:0;padding:0;overflow:hidden;border:1px solid var(--line);
+    border-radius:var(--radius);background:var(--white);list-style:none;
+    box-shadow:var(--shadow);transition:max-height .28s ease,opacity .2s ease;
+  }
+  .group.collapsed .menu-list{display:none}
+  .menu-item + .menu-item{border-top:1px solid var(--line)}
+  .menu-item[hidden]{display:none}
+  .menu-link{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:11px 14px;transition:background .15s ease;position:relative;
+  }
+  .menu-link::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+    background:var(--green);transform:scaleY(0);transform-origin:center;
+    transition:transform .2s ease;
+  }
+  .menu-link:hover,.menu-link:focus-visible{background:var(--green-soft);outline:none}
+  .menu-link:hover::before,.menu-link:focus-visible::before{transform:scaleY(1)}
+  .link-name{display:block;font-size:12px;font-weight:800}
+  .link-url{
+    display:block;margin-top:2px;color:var(--muted);
+    font:10px/1.4 ui-monospace,Consolas,"Courier New",monospace;
+    overflow-wrap:anywhere;
+  }
+  .arrow{
+    flex:none;color:var(--green);font-size:15px;font-weight:800;
+    transition:transform .2s ease;
+  }
+  .menu-link:hover .arrow{transform:translate(2px,-2px)}
+  mark{background:var(--hl);color:inherit;border-radius:3px;padding:0 2px}
+
+  /* Empty */
+  .empty{
+    display:none;margin:14px 0;padding:26px 18px;border:1px dashed var(--line);
+    border-radius:var(--radius);color:var(--muted);text-align:center;font-size:12px;
+    background:var(--white);
+  }
+  .empty.visible{display:block}
+  .empty strong{display:block;color:var(--ink);font-size:14px;margin-bottom:4px}
+
+  /* Footer */
+  footer{
+    margin:25px 0 0;padding:16px 0 26px;border-top:1px solid var(--line);
+    color:var(--muted);font-size:10px;text-align:center;
+  }
+
+  /* Back to top */
+  .to-top{
+    position:fixed;right:18px;bottom:18px;z-index:15;
+    width:42px;height:42px;border-radius:50%;border:1px solid var(--line);
+    background:var(--white);color:var(--green);cursor:pointer;
+    box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;transform:translateY(10px);
+    transition:.25s ease;
+  }
+  .to-top.visible{opacity:1;pointer-events:auto;transform:translateY(0)}
+  .to-top:hover{background:var(--green);color:#fff;border-color:var(--green)}
+  .to-top svg{width:16px;height:16px}
+
+  @media(max-width:560px){
+    .shell{width:calc(100% - 20px)}
+    .top-inner{min-height:54px}
+    .top-links a{padding:7px 9px;font-size:10px}
+    .top-links a:first-child{display:none}
+    .hero{margin-top:13px;padding:18px}
+    .controls{flex-direction:column;align-items:stretch;gap:6px;padding:8px}
+    .count{text-align:center}
+    .kbd-hint{display:none}
+    .search{padding-right:12px}
+    .menu-link{padding:10px}
+    .link-name{font-size:11px}
+    .link-url{font-size:9px}
+    .group-head{flex-wrap:wrap}
+  }
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*:before,*:after{transition:none!important;animation:none!important}
+  }
+</style>
 </head>
 <body>
-  <header class="topbar"><div class="shell top-inner"><a class="brand" href="index.html"><span>PetCare</span> / Menu danh sách</a><nav class="top-links" aria-label="Liên kết nhanh"><a href="index.html">Cổng hệ thống</a><a href="TRrang chính/petcare_management.html">Bảng điều hành</a></nav></div></header>
-  <main class="shell">
-    <section class="hero"><span class="eyebrow">Direct page directory</span><h1>Menu điều hướng PetCare</h1><p>Danh sách link trực tiếp đến toàn bộ trang HTML trong dự án. URL hiển thị là đường dẫn thực tính từ thư mục HTML; chọn một mục để mở đúng trang, không qua trang trung gian.</p></section>
-    <div class="controls"><input id="menuSearch" class="search" type="search" placeholder="Tìm theo tên trang, nội dung hoặc URL…" aria-label="Tìm trang trong menu"><span class="count" id="pageCount" aria-live="polite"></span></div>
+<header class="topbar">
+  <div class="shell top-inner">
+    <a class="brand" href="index.html"><span>PetCare</span> / Menu danh sách</a>
+    <nav class="top-links" aria-label="Liên kết nhanh">
+      <a href="index.html">Cổng hệ thống</a>
+      <a href="TRrang chính/petcare_management.html">Bảng điều hành</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Đổi giao diện sáng/tối" title="Đổi giao diện">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+      </button>
+    </nav>
+  </div>
+</header>
 
-    <section class="group" aria-labelledby="portalTitle">
-      <div class="group-head"><h2 id="portalTitle">Cổng & điều hướng</h2><span>Điểm vào chính của website</span></div>
-      <ul class="menu-list">
-        <li class="menu-item"><a class="menu-link" href="index.html"><span><span class="link-name">Cổng hệ thống PetCare</span><code class="link-url">index.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="menu.html"><span><span class="link-name">Menu danh sách trang này</span><code class="link-url">menu.html</code></span><span class="arrow">↗</span></a></li>
-      </ul>
-    </section>
+<main class="shell">
+  <section class="hero">
+    <span class="eyebrow">Direct page directory</span>
+    <h1>Menu điều hướng PetCare</h1>
+    <p>Danh sách link trực tiếp đến toàn bộ trang HTML trong dự án. URL hiển thị là đường dẫn thực tính từ thư mục HTML; chọn một mục để mở đúng trang, không qua trang trung gian.</p>
+  </section>
 
-    <section class="group" aria-labelledby="mainPagesTitle">
-      <div class="group-head"><h2 id="mainPagesTitle">Website chính</h2><span>Trang dành cho khách hàng và thương hiệu</span></div>
-      <ul class="menu-list">
-        <li class="menu-item"><a class="menu-link" href="TRrang chính/index.html"><span><span class="link-name">Trang chủ Bông Bông Pet Care</span><code class="link-url">TRrang chính/index.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="TRrang chính/petcare_system.html"><span><span class="link-name">PetCare System</span><code class="link-url">TRrang chính/petcare_system.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="TRrang chính/user_portal.html"><span><span class="link-name">Portal khách hàng (xác thực cục bộ)</span><code class="link-url">TRrang chính/user_portal.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="TRrang chính/index_customer.html"><span><span class="link-name">Landing demo khách hàng</span><code class="link-url">TRrang chính/index_customer.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="TRrang chính/product_showcase.html"><span><span class="link-name">Trưng bày sản phẩm</span><code class="link-url">TRrang chính/product_showcase.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="TRrang chính/nutrition_products.html"><span><span class="link-name">Danh mục dinh dưỡng</span><code class="link-url">TRrang chính/nutrition_products.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="TRrang chính/nutrition_products_dog.html"><span><span class="link-name">Dinh dưỡng cho chó</span><code class="link-url">TRrang chính/nutrition_products_dog.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="TRrang chính/nutrition_products_cat.html"><span><span class="link-name">Dinh dưỡng cho mèo</span><code class="link-url">TRrang chính/nutrition_products_cat.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/chuan-dinh-duong-thu-cung-hoa-ky.html"><span><span class="link-name">Chuẩn dinh dưỡng · Hoa Kỳ, EU, Trung Quốc, Việt Nam</span><code class="link-url">Trang hỗ trợ/chuan-dinh-duong-thu-cung-hoa-ky.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang thông số của các sản phẩm/index.html"><span><span class="link-name">Thông số sản phẩm chó mèo · 70 trường</span><code class="link-url">Trang thông số của các sản phẩm/index.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang thông số của các sản phẩm/thuong-hieu.html"><span><span class="link-name">Thương hiệu & dòng thức ăn chó mèo toàn cầu</span><code class="link-url">Trang thông số của các sản phẩm/thuong-hieu.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="TRrang chính/workflow.html"><span><span class="link-name">Quy trình chăm sóc</span><code class="link-url">TRrang chính/workflow.html</code></span><span class="arrow">↗</span></a></li>
-      </ul>
-    </section>
+  <div class="controls">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+      </svg>
+      <input id="menuSearch" class="search" type="search"
+             placeholder="Tìm theo tên trang, nội dung hoặc URL…"
+             aria-label="Tìm trang trong menu" autocomplete="off">
+      <span class="kbd-hint"><span class="kbd">/</span><span class="kbd">Esc</span></span>
+    </div>
+    <span class="count" id="pageCount" aria-live="polite"></span>
+  </div>
 
-    <section class="group" aria-labelledby="operationsTitle">
-      <div class="group-head"><h2 id="operationsTitle">Điều hành & dữ liệu</h2><span>Dashboard, báo cáo, quản trị và nguồn dữ liệu</span></div>
-      <ul class="menu-list">
-        <li class="menu-item"><a class="menu-link" href="TRrang chính/petcare_management.html"><span><span class="link-name">Bảng điều hành PetCare</span><code class="link-url">TRrang chính/petcare_management.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/admin_store_management.html"><span><span class="link-name">Quản trị cửa hàng</span><code class="link-url">Trang hỗ trợ/admin_store_management.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/index.html"><span><span class="link-name">Thư viện 17 phân hệ</span><code class="link-url">Trang hỗ trợ/Module/index.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/data_explorer.html"><span><span class="link-name">Trung tâm dữ liệu JSON</span><code class="link-url">Trang hỗ trợ/data_explorer.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/pet_health_report.html"><span><span class="link-name">Báo cáo sức khỏe thú cưng</span><code class="link-url">Trang hỗ trợ/pet_health_report.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/disease_support.html"><span><span class="link-name">Hỗ trợ tra cứu bệnh lý</span><code class="link-url">Trang hỗ trợ/disease_support.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/operations_snapshot.html"><span><span class="link-name">Tổng quan vận hành</span><code class="link-url">Trang hỗ trợ/operations_snapshot.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/workflow_story.html"><span><span class="link-name">Câu chuyện quy trình</span><code class="link-url">Trang hỗ trợ/workflow_story.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/bao-cao-khoa-hoc-trien-vong.html"><span><span class="link-name">Thư viện nghiên cứu thú y tiềm năng</span><code class="link-url">Trang hỗ trợ/bao-cao-khoa-hoc-trien-vong.html</code></span><span class="arrow">↗</span></a></li>
-      </ul>
-    </section>
+  <div class="toolbar" id="groupFilter" role="group" aria-label="Lọc theo nhóm">
+    <button class="chip" type="button" data-group="all" aria-pressed="true">Tất cả</button>
+    <button class="chip" type="button" data-group="portal">Cổng</button>
+    <button class="chip" type="button" data-group="main">Website chính</button>
+    <button class="chip" type="button" data-group="operations">Điều hành</button>
+    <button class="chip" type="button" data-group="modules">17 phân hệ</button>
+    <button class="chip" type="button" data-group="project">Hồ sơ dự án</button>
+  </div>
 
-    <section class="group" aria-labelledby="modulesTitle">
-      <div class="group-head"><h2 id="modulesTitle">Danh sách 17 phân hệ</h2><span>Mỗi mục mở thẳng trang phân hệ tương ứng</span></div>
-      <ul class="menu-list">
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_01_platform.html"><span><span class="link-name">01 · Nền tảng & dữ liệu</span><code class="link-url">Trang hỗ trợ/Module/module_01_platform.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_02_accounts.html"><span><span class="link-name">02 · Tài khoản & vai trò</span><code class="link-url">Trang hỗ trợ/Module/module_02_accounts.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_03_dashboard.html"><span><span class="link-name">03 · Bảng điều khiển</span><code class="link-url">Trang hỗ trợ/Module/module_03_dashboard.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_04_pets.html"><span><span class="link-name">04 · Hồ sơ thú cưng</span><code class="link-url">Trang hỗ trợ/Module/module_04_pets.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_05_housing.html"><span><span class="link-name">05 · Chuồng trại</span><code class="link-url">Trang hỗ trợ/Module/module_05_housing.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_06_suppliers.html"><span><span class="link-name">06 · Nhà cung cấp</span><code class="link-url">Trang hỗ trợ/Module/module_06_suppliers.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_07_imports.html"><span><span class="link-name">07 · Nhập hàng</span><code class="link-url">Trang hỗ trợ/Module/module_07_imports.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_08_health.html"><span><span class="link-name">08 · Sức khỏe</span><code class="link-url">Trang hỗ trợ/Module/module_08_health.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_09_care.html"><span><span class="link-name">09 · Chăm sóc</span><code class="link-url">Trang hỗ trợ/Module/module_09_care.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_10_customers.html"><span><span class="link-name">10 · Khách hàng</span><code class="link-url">Trang hỗ trợ/Module/module_10_customers.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_11_reservations.html"><span><span class="link-name">11 · Đặt trước</span><code class="link-url">Trang hỗ trợ/Module/module_11_reservations.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_12_orders.html"><span><span class="link-name">12 · Đơn hàng</span><code class="link-url">Trang hỗ trợ/Module/module_12_orders.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_13_memberships.html"><span><span class="link-name">13 · Hội viên</span><code class="link-url">Trang hỗ trợ/Module/module_13_memberships.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_14_services.html"><span><span class="link-name">14 · Dịch vụ & lịch hẹn</span><code class="link-url">Trang hỗ trợ/Module/module_14_services.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_15_inventory.html"><span><span class="link-name">15 · Kho & sản phẩm</span><code class="link-url">Trang hỗ trợ/Module/module_15_inventory.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_16_reports.html"><span><span class="link-name">16 · Báo cáo</span><code class="link-url">Trang hỗ trợ/Module/module_16_reports.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_17_alerts.html"><span><span class="link-name">17 · Cảnh báo</span><code class="link-url">Trang hỗ trợ/Module/module_17_alerts.html</code></span><span class="arrow">↗</span></a></li>
-      </ul>
-    </section>
+  <section class="group" data-group="portal" aria-labelledby="portalTitle">
+    <div class="group-head">
+      <div class="group-title"><h2 id="portalTitle">Cổng &amp; điều hướng</h2><span class="badge" data-badge>Cổng</span></div>
+      <button class="collapse" type="button" aria-expanded="true" aria-controls="portalList">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        <span>Thu gọn</span>
+      </button>
+    </div>
+    <ul class="menu-list" id="portalList">
+      <li class="menu-item"><a class="menu-link" href="index.html"><span><span class="link-name">Cổng hệ thống PetCare</span><code class="link-url">index.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="menu.html"><span><span class="link-name">Menu danh sách trang này</span><code class="link-url">menu.html</code></span><span class="arrow">↗</span></a></li>
+    </ul>
+  </section>
 
-    <section class="group" aria-labelledby="projectTitle">
-      <div class="group-head"><h2 id="projectTitle">Hồ sơ & tài liệu dự án</h2><span>Báo giá, proposal, tài chính và báo cáo</span></div>
-      <ul class="menu-list">
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_master_summary.html"><span><span class="link-name">Hồ sơ tổng hợp dự án</span><code class="link-url">Trang hỗ trợ/project_master_summary.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_overview.html"><span><span class="link-name">Tổng quan dự án</span><code class="link-url">Trang hỗ trợ/project_overview.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_quote.html"><span><span class="link-name">Báo giá dự án</span><code class="link-url">Trang hỗ trợ/project_quote.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_invoice.html"><span><span class="link-name">Hóa đơn & lịch thanh toán</span><code class="link-url">Trang hỗ trợ/project_invoice.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/business_case.html"><span><span class="link-name">Business case</span><code class="link-url">Trang hỗ trợ/business_case.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/executive_summary.html"><span><span class="link-name">Tóm tắt điều hành</span><code class="link-url">Trang hỗ trợ/executive_summary.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_security.html"><span><span class="link-name">Bảo mật & dữ liệu</span><code class="link-url">Trang hỗ trợ/project_security.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_workflow_full.html"><span><span class="link-name">Quy trình dự án chi tiết</span><code class="link-url">Trang hỗ trợ/project_workflow_full.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_slides_final.html"><span><span class="link-name">Proposal trình bày đầy đủ</span><code class="link-url">Trang hỗ trợ/project_slides_final.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_slides.html"><span><span class="link-name">Slide dự án</span><code class="link-url">Trang hỗ trợ/project_slides.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/slides_pitch.html"><span><span class="link-name">Pitch deck</span><code class="link-url">Trang hỗ trợ/slides_pitch.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/slides_demo.html"><span><span class="link-name">Slide trình diễn</span><code class="link-url">Trang hỗ trợ/slides_demo.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/index_presentation.html"><span><span class="link-name">Trang trình bày tổng quan</span><code class="link-url">Trang hỗ trợ/index_presentation.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/report_kpi_board.html"><span><span class="link-name">Bảng chỉ số KPI</span><code class="link-url">Trang hỗ trợ/report_kpi_board.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/report_business_review.html"><span><span class="link-name">Đánh giá kinh doanh</span><code class="link-url">Trang hỗ trợ/report_business_review.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/report_final.html"><span><span class="link-name">Báo cáo tổng kết</span><code class="link-url">Trang hỗ trợ/report_final.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/app_interface_preview.html"><span><span class="link-name">Xem trước giao diện ứng dụng</span><code class="link-url">Trang hỗ trợ/app_interface_preview.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/petcare_demo_full.html"><span><span class="link-name">Bản demo PetCare đầy đủ</span><code class="link-url">Trang hỗ trợ/petcare_demo_full.html</code></span><span class="arrow">↗</span></a></li>
-        <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/projext _Full.html"><span><span class="link-name">Tài liệu dự án đầy đủ</span><code class="link-url">Trang hỗ trợ/projext _Full.html</code></span><span class="arrow">↗</span></a></li>
-      </ul>
-    </section>
+  <section class="group" data-group="main" aria-labelledby="mainPagesTitle">
+    <div class="group-head">
+      <div class="group-title"><h2 id="mainPagesTitle">Website chính</h2><span class="badge" data-badge>0</span></div>
+      <button class="collapse" type="button" aria-expanded="true" aria-controls="mainList">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        <span>Thu gọn</span>
+      </button>
+    </div>
+    <ul class="menu-list" id="mainList">
+      <li class="menu-item"><a class="menu-link" href="TRrang chính/index.html"><span><span class="link-name">Trang chủ Bông Bông Pet Care</span><code class="link-url">TRrang chính/index.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="TRrang chính/petcare_system.html"><span><span class="link-name">PetCare System</span><code class="link-url">TRrang chính/petcare_system.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="TRrang chính/user_portal.html"><span><span class="link-name">Portal khách hàng (xác thực cục bộ)</span><code class="link-url">TRrang chính/user_portal.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="TRrang chính/index_customer.html"><span><span class="link-name">Landing demo khách hàng</span><code class="link-url">TRrang chính/index_customer.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="TRrang chính/product_showcase.html"><span><span class="link-name">Trưng bày sản phẩm</span><code class="link-url">TRrang chính/product_showcase.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="TRrang chính/nutrition_products.html"><span><span class="link-name">Danh mục dinh dưỡng</span><code class="link-url">TRrang chính/nutrition_products.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="TRrang chính/nutrition_products_dog.html"><span><span class="link-name">Dinh dưỡng cho chó</span><code class="link-url">TRrang chính/nutrition_products_dog.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="TRrang chính/nutrition_products_cat.html"><span><span class="link-name">Dinh dưỡng cho mèo</span><code class="link-url">TRrang chính/nutrition_products_cat.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/chuan-dinh-duong-thu-cung-hoa-ky.html"><span><span class="link-name">Chuẩn dinh dưỡng · Hoa Kỳ, EU, Trung Quốc, Việt Nam</span><code class="link-url">Trang hỗ trợ/chuan-dinh-duong-thu-cung-hoa-ky.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang thông số của các sản phẩm/index.html"><span><span class="link-name">Thông số sản phẩm chó mèo · 70 trường</span><code class="link-url">Trang thông số của các sản phẩm/index.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang thông số của các sản phẩm/thuong-hieu.html"><span><span class="link-name">Thương hiệu &amp; dòng thức ăn chó mèo toàn cầu</span><code class="link-url">Trang thông số của các sản phẩm/thuong-hieu.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="TRrang chính/workflow.html"><span><span class="link-name">Quy trình chăm sóc</span><code class="link-url">TRrang chính/workflow.html</code></span><span class="arrow">↗</span></a></li>
+    </ul>
+  </section>
 
-    <p class="empty" id="emptyState">Không tìm thấy trang phù hợp với từ khóa.</p>
-    <footer>PetCare · Menu điều hướng độc lập · URL là đường dẫn trực tiếp bên trong thư mục HTML.</footer>
-  </main>
-  <script>
-    const search = document.querySelector("#menuSearch");
-    const items = [...document.querySelectorAll(".menu-item")];
-    const groups = [...document.querySelectorAll(".group")];
-    const count = document.querySelector("#pageCount");
-    const empty = document.querySelector("#emptyState");
-    function filterMenu() {
-      const query = search.value.trim().toLocaleLowerCase("vi");
-      let visible = 0;
-      for (const item of items) {
-        const matches = item.textContent.toLocaleLowerCase("vi").includes(query);
-        item.hidden = !matches;
-        if (matches) visible += 1;
-      }
-      for (const group of groups) {
-        group.hidden = !group.querySelector(".menu-item:not([hidden])");
-      }
-      count.textContent = `${visible} / ${items.length} trang`;
-      empty.classList.toggle("visible", visible === 0);
+  <section class="group" data-group="operations" aria-labelledby="operationsTitle">
+    <div class="group-head">
+      <div class="group-title"><h2 id="operationsTitle">Điều hành &amp; dữ liệu</h2><span class="badge" data-badge>0</span></div>
+      <button class="collapse" type="button" aria-expanded="true" aria-controls="opsList">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        <span>Thu gọn</span>
+      </button>
+    </div>
+    <ul class="menu-list" id="opsList">
+      <li class="menu-item"><a class="menu-link" href="TRrang chính/petcare_management.html"><span><span class="link-name">Bảng điều hành PetCare</span><code class="link-url">TRrang chính/petcare_management.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/admin_store_management.html"><span><span class="link-name">Quản trị cửa hàng</span><code class="link-url">Trang hỗ trợ/admin_store_management.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/index.html"><span><span class="link-name">Thư viện 17 phân hệ</span><code class="link-url">Trang hỗ trợ/Module/index.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/data_explorer.html"><span><span class="link-name">Trung tâm dữ liệu JSON</span><code class="link-url">Trang hỗ trợ/data_explorer.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/pet_health_report.html"><span><span class="link-name">Báo cáo sức khỏe thú cưng</span><code class="link-url">Trang hỗ trợ/pet_health_report.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/disease_support.html"><span><span class="link-name">Hỗ trợ tra cứu bệnh lý</span><code class="link-url">Trang hỗ trợ/disease_support.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/operations_snapshot.html"><span><span class="link-name">Tổng quan vận hành</span><code class="link-url">Trang hỗ trợ/operations_snapshot.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/workflow_story.html"><span><span class="link-name">Câu chuyện quy trình</span><code class="link-url">Trang hỗ trợ/workflow_story.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/bao-cao-khoa-hoc-trien-vong.html"><span><span class="link-name">Thư viện nghiên cứu thú y tiềm năng</span><code class="link-url">Trang hỗ trợ/bao-cao-khoa-hoc-trien-vong.html</code></span><span class="arrow">↗</span></a></li>
+    </ul>
+  </section>
+
+  <section class="group" data-group="modules" aria-labelledby="modulesTitle">
+    <div class="group-head">
+      <div class="group-title"><h2 id="modulesTitle">Danh sách 17 phân hệ</h2><span class="badge" data-badge>0</span></div>
+      <button class="collapse" type="button" aria-expanded="true" aria-controls="modulesList">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        <span>Thu gọn</span>
+      </button>
+    </div>
+    <ul class="menu-list" id="modulesList">
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_01_platform.html"><span><span class="link-name">01 · Nền tảng &amp; dữ liệu</span><code class="link-url">Trang hỗ trợ/Module/module_01_platform.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_02_accounts.html"><span><span class="link-name">02 · Tài khoản &amp; vai trò</span><code class="link-url">Trang hỗ trợ/Module/module_02_accounts.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_03_dashboard.html"><span><span class="link-name">03 · Bảng điều khiển</span><code class="link-url">Trang hỗ trợ/Module/module_03_dashboard.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_04_pets.html"><span><span class="link-name">04 · Hồ sơ thú cưng</span><code class="link-url">Trang hỗ trợ/Module/module_04_pets.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_05_housing.html"><span><span class="link-name">05 · Chuồng trại</span><code class="link-url">Trang hỗ trợ/Module/module_05_housing.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_06_suppliers.html"><span><span class="link-name">06 · Nhà cung cấp</span><code class="link-url">Trang hỗ trợ/Module/module_06_suppliers.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_07_imports.html"><span><span class="link-name">07 · Nhập hàng</span><code class="link-url">Trang hỗ trợ/Module/module_07_imports.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_08_health.html"><span><span class="link-name">08 · Sức khỏe</span><code class="link-url">Trang hỗ trợ/Module/module_08_health.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_09_care.html"><span><span class="link-name">09 · Chăm sóc</span><code class="link-url">Trang hỗ trợ/Module/module_09_care.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_10_customers.html"><span><span class="link-name">10 · Khách hàng</span><code class="link-url">Trang hỗ trợ/Module/module_10_customers.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_11_reservations.html"><span><span class="link-name">11 · Đặt trước</span><code class="link-url">Trang hỗ trợ/Module/module_11_reservations.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_12_orders.html"><span><span class="link-name">12 · Đơn hàng</span><code class="link-url">Trang hỗ trợ/Module/module_12_orders.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_13_memberships.html"><span><span class="link-name">13 · Hội viên</span><code class="link-url">Trang hỗ trợ/Module/module_13_memberships.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_14_services.html"><span><span class="link-name">14 · Dịch vụ &amp; lịch hẹn</span><code class="link-url">Trang hỗ trợ/Module/module_14_services.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_15_inventory.html"><span><span class="link-name">15 · Kho &amp; sản phẩm</span><code class="link-url">Trang hỗ trợ/Module/module_15_inventory.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_16_reports.html"><span><span class="link-name">16 · Báo cáo</span><code class="link-url">Trang hỗ trợ/Module/module_16_reports.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/Module/module_17_alerts.html"><span><span class="link-name">17 · Cảnh báo</span><code class="link-url">Trang hỗ trợ/Module/module_17_alerts.html</code></span><span class="arrow">↗</span></a></li>
+    </ul>
+  </section>
+
+  <section class="group" data-group="project" aria-labelledby="projectTitle">
+    <div class="group-head">
+      <div class="group-title"><h2 id="projectTitle">Hồ sơ &amp; tài liệu dự án</h2><span class="badge" data-badge>0</span></div>
+      <button class="collapse" type="button" aria-expanded="true" aria-controls="projectList">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        <span>Thu gọn</span>
+      </button>
+    </div>
+    <ul class="menu-list" id="projectList">
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_master_summary.html"><span><span class="link-name">Hồ sơ tổng hợp dự án</span><code class="link-url">Trang hỗ trợ/project_master_summary.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_overview.html"><span><span class="link-name">Tổng quan dự án</span><code class="link-url">Trang hỗ trợ/project_overview.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_quote.html"><span><span class="link-name">Báo giá dự án</span><code class="link-url">Trang hỗ trợ/project_quote.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_invoice.html"><span><span class="link-name">Hóa đơn &amp; lịch thanh toán</span><code class="link-url">Trang hỗ trợ/project_invoice.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/business_case.html"><span><span class="link-name">Business case</span><code class="link-url">Trang hỗ trợ/business_case.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/executive_summary.html"><span><span class="link-name">Tóm tắt điều hành</span><code class="link-url">Trang hỗ trợ/executive_summary.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_security.html"><span><span class="link-name">Bảo mật &amp; dữ liệu</span><code class="link-url">Trang hỗ trợ/project_security.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_workflow_full.html"><span><span class="link-name">Quy trình dự án chi tiết</span><code class="link-url">Trang hỗ trợ/project_workflow_full.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_slides_final.html"><span><span class="link-name">Proposal trình bày đầy đủ</span><code class="link-url">Trang hỗ trợ/project_slides_final.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/project_slides.html"><span><span class="link-name">Slide dự án</span><code class="link-url">Trang hỗ trợ/project_slides.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/slides_pitch.html"><span><span class="link-name">Pitch deck</span><code class="link-url">Trang hỗ trợ/slides_pitch.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/slides_demo.html"><span><span class="link-name">Slide trình diễn</span><code class="link-url">Trang hỗ trợ/slides_demo.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/index_presentation.html"><span><span class="link-name">Trang trình bày tổng quan</span><code class="link-url">Trang hỗ trợ/index_presentation.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/report_kpi_board.html"><span><span class="link-name">Bảng chỉ số KPI</span><code class="link-url">Trang hỗ trợ/report_kpi_board.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/report_business_review.html"><span><span class="link-name">Đánh giá kinh doanh</span><code class="link-url">Trang hỗ trợ/report_business_review.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/report_final.html"><span><span class="link-name">Báo cáo tổng kết</span><code class="link-url">Trang hỗ trợ/report_final.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/app_interface_preview.html"><span><span class="link-name">Xem trước giao diện ứng dụng</span><code class="link-url">Trang hỗ trợ/app_interface_preview.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/petcare_demo_full.html"><span><span class="link-name">Bản demo PetCare đầy đủ</span><code class="link-url">Trang hỗ trợ/petcare_demo_full.html</code></span><span class="arrow">↗</span></a></li>
+      <li class="menu-item"><a class="menu-link" href="Trang hỗ trợ/projext _Full.html"><span><span class="link-name">Tài liệu dự án đầy đủ</span><code class="link-url">Trang hỗ trợ/projext _Full.html</code></span><span class="arrow">↗</span></a></li>
+    </ul>
+  </section>
+
+  <p class="empty" id="emptyState">
+    <strong>Không tìm thấy trang phù hợp</strong>
+    Thử từ khóa khác hoặc xóa bộ lọc để xem toàn bộ danh sách.
+  </p>
+
+  <footer>PetCare · Menu điều hướng độc lập · URL là đường dẫn trực tiếp bên trong thư mục HTML.</footer>
+</main>
+
+<button class="to-top" id="toTop" type="button" aria-label="Về đầu trang">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+</button>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Theme ---------- */
+  const html = document.documentElement;
+  const THEME_KEY = "petcare_menu_theme";
+  function applyTheme(t){
+    html.setAttribute("data-theme", t);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", t === "dark" ? "#0c231c" : "#12372b");
+  }
+  const saved = localStorage.getItem(THEME_KEY);
+  const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  applyTheme(saved || (prefersDark ? "dark" : "light"));
+  document.getElementById("themeToggle").addEventListener("click", () => {
+    const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(next);
+    localStorage.setItem(THEME_KEY, next);
+  });
+
+  /* ---------- Elements ---------- */
+  const search = document.getElementById("menuSearch");
+  const countEl = document.getElementById("pageCount");
+  const emptyEl = document.getElementById("emptyState");
+  const items = Array.from(document.querySelectorAll(".menu-item"));
+  const groups = Array.from(document.querySelectorAll(".group"));
+  const chips = Array.from(document.querySelectorAll(".chip"));
+  const toTop = document.getElementById("toTop");
+
+  /* Lưu nội dung gốc để highlight không phá vỡ DOM */
+  const itemData = items.map(li => {
+    const nameEl = li.querySelector(".link-name");
+    const urlEl = li.querySelector(".link-url");
+    return {
+      li,
+      nameEl,
+      urlEl,
+      name: nameEl ? nameEl.textContent : "",
+      url: urlEl ? urlEl.textContent : "",
+      text: li.textContent.toLocaleLowerCase("vi"),
+      group: li.closest(".group")?.dataset.group || ""
+    };
+  });
+
+  /* ---------- Badge đếm số trang mỗi nhóm ---------- */
+  groups.forEach(g => {
+    const n = g.querySelectorAll(".menu-item").length;
+    const badge = g.querySelector("[data-badge]");
+    if (badge) badge.textContent = n;
+  });
+
+  /* ---------- Collapse nhóm (lưu localStorage) ---------- */
+  const COLLAPSE_KEY = "petcare_menu_collapsed";
+  let collapsed = new Set();
+  try { collapsed = new Set(JSON.parse(localStorage.getItem(COLLAPSE_KEY) || "[]")); } catch(e){}
+
+  function saveCollapsed(){
+    localStorage.setItem(COLLAPSE_KEY, JSON.stringify([...collapsed]));
+  }
+
+  groups.forEach(g => {
+    const key = g.dataset.group;
+    const btn = g.querySelector(".collapse");
+    const label = btn.querySelector("span");
+    function setCollapsed(state){
+      g.classList.toggle("collapsed", state);
+      btn.setAttribute("aria-expanded", String(!state));
+      label.textContent = state ? "Mở rộng" : "Thu gọn";
+      if (state) collapsed.add(key); else collapsed.delete(key);
+      saveCollapsed();
     }
-    search.addEventListener("input", filterMenu);
-    filterMenu();
-  </script>
-  <script src="scripts/site_navigation.js" defer></script>
+    setCollapsed(collapsed.has(key));
+    btn.addEventListener("click", () => setCollapsed(!g.classList.contains("collapsed")));
+  });
+
+  /* ---------- Highlight ---------- */
+  function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+  function highlight(el, text, q){
+    if (!q){ el.textContent = text; return; }
+    const parts = text.split(new RegExp(`(${escapeRegExp(q)})`, "gi"));
+    el.textContent = "";
+    parts.forEach(p => {
+      if (p.toLocaleLowerCase("vi") === q.toLocaleLowerCase("vi")) {
+        const m = document.createElement("mark");
+        m.textContent = p;
+        el.appendChild(m);
+      } else {
+        el.appendChild(document.createTextNode(p));
+      }
+    });
+  }
+
+  /* ---------- Lọc ---------- */
+  let activeGroup = "all";
+
+  function filter(){
+    const q = search.value.trim().toLocaleLowerCase("vi");
+    let visible = 0;
+
+    itemData.forEach(d => {
+      const inGroup = activeGroup === "all" || d.group === activeGroup;
+      const matches = inGroup && (!q || d.text.includes(q));
+      d.li.hidden = !matches;
+      if (matches) visible++;
+      highlight(d.nameEl, d.name, q);
+      highlight(d.urlEl, d.url, q);
+    });
+
+    groups.forEach(g => {
+      const hasVisible = !!g.querySelector(".menu-item:not([hidden])");
+      g.hidden = !hasVisible;
+      /* Khi đang tìm kiếm thì tạm mở nhóm để thấy kết quả */
+      if (q && hasVisible) {
+        g.classList.remove("collapsed");
+        const btn = g.querySelector(".collapse");
+        btn.setAttribute("aria-expanded", "true");
+        const label = btn.querySelector("span");
+        if (label) label.textContent = "Thu gọn";
+      }
+    });
+
+    const total = itemData.length;
+    countEl.textContent = visible === total
+      ? `${total} trang`
+      : `${visible} / ${total} trang`;
+
+    emptyEl.classList.toggle("visible", visible === 0);
+  }
+
+  /* Debounce nhẹ */
+  let t;
+  search.addEventListener("input", () => {
+    clearTimeout(t);
+    t = setTimeout(filter, 60);
+  });
+
+  /* Chip lọc nhóm */
+  chips.forEach(chip => {
+    chip.addEventListener("click", () => {
+      activeGroup = chip.dataset.group;
+      chips.forEach(c => c.setAttribute("aria-pressed", String(c === chip)));
+      filter();
+    });
+  });
+
+  /* Phím tắt */
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/" && document.activeElement !== search) {
+      e.preventDefault();
+      search.focus();
+      search.select();
+    } else if (e.key === "Escape" && document.activeElement === search) {
+      search.value = "";
+      filter();
+      search.blur();
+    }
+  });
+
+  /* ---------- Nút về đầu trang ---------- */
+  const onScroll = () => toTop.classList.toggle("visible", window.scrollY > 400);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+  /* ---------- Khởi tạo ---------- */
+  filter();
+  onScroll();
+})();
+</script>
+
+<!-- Giữ nguyên script điều hướng gốc nếu có -->
+<script src="scripts/site_navigation.js" defer></script>
 </body>
 </html>
