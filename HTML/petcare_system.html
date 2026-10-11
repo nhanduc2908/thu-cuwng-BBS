@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pet Care SYSTEM | Bông Bông Pet Care</title>
+  <style>
+    :root {
+      --bg: #071a1f;
+      --bg-2: #0d2b35;
+      --bg-3: #123c4f;
+      --sidebar: rgba(10, 27, 32, 0.92);
+      --panel: rgba(13, 31, 36, 0.9);
+      --panel-strong: rgba(16, 38, 45, 0.96);
+      --panel-soft: rgba(19, 47, 56, 0.72);
+      --card: rgba(255,255,255,0.03);
+      --line: rgba(196, 222, 232, 0.14);
+      --text: #edf9ff;
+      --muted: #cedfe7;
+      --gold: #efc86d;
+      --gold-soft: #f9e8ba;
+      --green: #7fe8b4;
+      --sky: #8ad7ff;
+      --red: #ff9a8d;
+      --shadow: 0 28px 70px rgba(1, 10, 15, 0.32);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
+
+    body.light {
+      --bg: #edf6f3;
+      --bg-2: #e8f5ef;
+      --bg-3: #dff0ed;
+      --sidebar: rgba(255, 255, 255, 0.88);
+      --panel: rgba(255, 255, 255, 0.92);
+      --panel-strong: rgba(255,255,255,0.98);
+      --panel-soft: rgba(245, 250, 247, 0.96);
+      --card: rgba(18, 42, 48, 0.03);
+      --line: rgba(17, 57, 48, 0.09);
+      --text: #12363e;
+      --muted: #4d666d;
+      --gold: #c7923d;
+      --gold-soft: #a96a19;
+      --green: #1d7a5e;
+      --sky: #2a89b2;
+      --red: #d95d4d;
+      --shadow: 0 18px 42px rgba(14, 41, 50, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(239, 200, 109, 0.12), transparent 17%),
+        radial-gradient(circle at bottom right, rgba(138, 215, 255, 0.08), transparent 18%),
+        linear-gradient(135deg, var(--bg), var(--bg-2), var(--bg-3));
+      line-height: 1.6;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    img { max-width: 100%; }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 24px 18px 18px;
+      background: var(--sidebar);
+      border-right: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 10px 18px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 18px;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px 14px 14px 5px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+      color: #0b1d28;
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+
+    .brand-name {
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      color: var(--gold-soft);
+    }
+
+    .nav-group {
+      margin-bottom: 18px;
+    }
+
+    .nav-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 8px 12px 10px;
+      opacity: 0.8;
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 12px;
+      background: rgba(255,255,255,0.015);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--muted);
+      transition: all 0.2s ease;
+    }
+
+    .nav-item:hover {
+      transform: translateX(2px);
+      border-color: rgba(239, 200, 109, 0.35);
+      color: var(--text);
+    }
+
+    .nav-item .left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+    }
+
+    .nav-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--green));
+      box-shadow: 0 0 16px rgba(127, 232, 180, 0.5);
+    }
+
+    .theme-toggle {
+      margin-top: 18px;
+      width: 100%;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 26px 26px 44px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      padding: 10px 6px 18px;
+    }
+
+    .crumbs {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .crumbs strong { color: var(--text); }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill-btn, .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, rgba(239,200,109,0.12), rgba(138,215,255,0.08));
+      border-color: rgba(239,200,109,0.32);
+      color: var(--gold-soft);
+    }
+
+    .pill-btn:hover, .primary-btn:hover { transform: translateY(-1px); }
+
+    .hero-panel {
+      display: grid;
+      grid-template-columns: 1.45fr 0.8fr;
+      gap: 18px;
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(13,43,53,0.98), rgba(18,60,79,0.96), rgba(10,27,32,0.96));
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    body.light .hero-panel {
+      background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(240,248,245,0.98), rgba(231,244,239,0.96));
+      border-color: var(--line);
+    }
+
+    .hero-panel::after {
+      content: "";
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      right: -70px;
+      top: -80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(239,200,109,0.15), transparent 60%);
+    }
+
+    .hero-copy, .hero-side {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(239, 200, 109, 0.32);
+      background: rgba(239,200,109,0.08);
+      color: var(--gold-soft);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 16px 0 12px;
+      font-size: clamp(2.8rem, 5vw, 5rem);
+      letter-spacing: -0.08em;
+      line-height: 0.94;
+    }
+
+    .lead {
+      margin: 0;
+      max-width: 650px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      font-size: 0.64rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 12px;
+      align-self: stretch;
+    }
+
+    .mini-stat {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .mini-stat .label {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .mini-stat strong {
+      font-size: clamp(2rem, 3vw, 3rem);
+      letter-spacing: -0.08em;
+      line-height: 1.05;
+      margin-top: 10px;
+    }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .feature-card,
+    .section-panel,
+    .link-box,
+    .slide-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+
+    .feature-card {
+      padding: 18px;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(139, 215, 255, 0.35);
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(127, 232, 180, 0.3);
+      background: rgba(127, 232, 180, 0.06);
+      color: var(--green);
+      font-size: 0.64rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .feature-card h3 {
+      margin: 0;
+      font-size: 1.32rem;
+      letter-spacing: -0.05em;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.7;
+    }
+
+    .feature-card .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .feature-card .links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .section-panel {
+      padding: 20px 18px 18px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.5rem, 2vw, 2.2rem);
+      letter-spacing: -0.05em;
+    }
+
+    .section-head .meta {
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .link-box {
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
+    .link-box a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .link-box small {
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .carousel-wrap {
+      position: relative;
+      min-height: 380px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+    }
+
+    .slide {
+      display: none;
+      position: relative;
+      min-height: 380px;
+      padding: 20px 20px 14px;
+      background: linear-gradient(150deg, rgba(17, 58, 66, 0.9), rgba(10, 28, 35, 0.9));
+    }
+
+    body.light .slide {
+      background: linear-gradient(150deg, rgba(217,245,230,0.9), rgba(240,250,246,0.98));
+    }
+
+    .slide.active { display: block; }
+
+    .slide-inner {
+      display: grid;
+      grid-template-columns: 1fr 180px;
+      gap: 16px;
+      height: 100%;
+    }
+
+    .slide-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 12px;
+      padding: 8px 4px;
+    }
+
+    .slide-kicker {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(139, 215, 255, 0.08);
+      border: 1px solid rgba(139, 215, 255, 0.26);
+      font-size: 0.66rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sky);
+      font-weight: 800;
+    }
+
+    .slide-copy h3 {
+      margin: 0;
+      font-size: clamp(1.7rem, 2.5vw, 2.7rem);
+      letter-spacing: -0.06em;
+    }
+
+    .slide-copy p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .mini-visual {
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      font-weight: 900;
+      font-size: 1.3rem;
+      letter-spacing: -0.04em;
+    }
+
+    .carousel-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid var(--line);
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background: var(--gold);
+      box-shadow: 0 0 18px rgba(239,200,109,0.4);
+    }
+
+    .swap-btn {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.15rem;
+    }
+
+    @media (max-width: 980px) {
+      .app-shell { grid-template-columns: 1fr; }
+      .sidebar {
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+      .panel-grid, .two-col { grid-template-columns: 1fr; }
+      .hero-panel { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .content { padding: 18px 16px 30px; }
+      .topbar { padding-left: 0; padding-right: 0; }
+      .nav-list { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .slide-inner { grid-template-columns: 1fr; }
+      .nav-item { min-height: 52px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand-block">
+        <div class="brand-mark">P</div>
+        <div class="brand-name">Pet Care SYSTEM</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Overview</div>
+        <div class="nav-list">
+          <a class="nav-item" href="index.html"><span class="left"><span class="nav-dot"></span>Home</span><span>›</span></a>
+          <a class="nav-item" href="project_master_summary.html"><span class="left"><span class="nav-dot"></span>Master Summary</span><span>›</span></a>
+          <a class="nav-item" href="project_overview.html"><span class="left"><span class="nav-dot"></span>Overview</span><span>›</span></a>
+          <a class="nav-item" href="project_quote.html"><span class="left"><span class="nav-dot"></span>Official Quote</span><span>›</span></a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Operations</div>
+        <div class="nav-list">
+          <a class="nav-item" href="pet_health_report.html"><span class="left"><span class="nav-dot"></span>Health Report</span><span>›</span></a>
+          <a class="nav-item" href="disease_support.html"><span class="left"><span class="nav-dot"></span>Disease Support</span><span>›</span></a>
+          <a class="nav-item" href="nutrition_products.html"><span class="left"><span class="nav-dot"></span>Nutrition</span><span>›</span></a>
+          <a class="nav-item" href="Module/index.html"><span class="left"><span class="nav-dot"></span>Modules</span><span>›</span></a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Reports</div>
+        <div class="nav-list">
+          <a class="nav-item" href="report_kpi_board.html"><span class="left"><span class="nav-dot"></span>KPI Board</span><span>›</span></a>
+          <a class="nav-item" href="report_business_review.html"><span class="left"><span class="nav-dot"></span>Business Review</span><span>›</span></a>
+          <a class="nav-item" href="report_final.html"><span class="left"><span class="nav-dot"></span>Final Report</span><span>›</span></a>
+          <a class="nav-item" href="project_invoice.html"><span class="left"><span class="nav-dot"></span>Invoice</span><span>›</span></a>
+        </div>
+      </div>
+
+      <button class="theme-toggle" id="themeToggle" type="button"> 
+        <span>Dark mode</span>
+        <strong id="themeLabel">On</strong>
+      </button>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div class="crumbs"><span>Home</span><span>›</span><strong>Pet Care SYSTEM</strong></div>
+        <div class="top-actions">
+          <button class="pill-btn" type="button" onclick="window.location.href='project_quote.html'">Official Quote</button>
+          <button class="primary-btn" type="button" onclick="window.location.href='project_invoice.html'">View Invoice</button>
+        </div>
+      </div>
+
+      <section class="hero-panel">
+        <div class="hero-copy">
+          <span class="eyebrow">Premium enterprise platform</span>
+          <h1>Pet Care SYSTEM</h1>
+          <p class="lead">
+            Bông Bông Pet Care brings together pet health tracking, service operations, nutrition guidance, and executive reporting into one premium digital ecosystem. Built for clinics, retail growth, customer trust, and scalable pet care operations.
+          </p>
+          <div class="hero-actions">
+            <button class="primary-btn" type="button" onclick="window.location.href='project_overview.html'">Explore Overview</button>
+            <button class="pill-btn" type="button" onclick="window.location.href='Module/index.html'">Open Modules</button>
+          </div>
+          <div class="hero-tags">
+            <span class="hero-tag">Clinic Ops</span>
+            <span class="hero-tag">Pet Health</span>
+            <span class="hero-tag">Nutrition</span>
+            <span class="hero-tag">Executive Reports</span>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="mini-stat">
+            <span class="label">Business coverage</span>
+            <strong>17</strong>
+            <small>core modules</small>
+          </div>
+          <div class="mini-stat">
+            <span class="label">Customer journey</span>
+            <strong>4.9/5</strong>
+            <small>service experience rating</small>
+          </div>
+          <div class="mini-stat">
+            <span class="label">Growth outlook</span>
+            <strong>+36%</strong>
+            <small>service retention target</small>
+          </div>
+        </div>
+      </section>
+
+      <div class="panel-grid">
+        <article class="feature-card">
+          <span class="chip">Operations</span>
+          <h3>End-to-end pet operations</h3>
+          <p>Manage appointments, pet profiles, medical care, inventory and service fulfillment in one streamlined dashboard.</p>
+          <div class="links">
+            <a href="workflow.html">Workflow</a>
+            <a href="admin_store_management.html">Admin</a>
+          </div>
+        </article>
+
+        <article class="feature-card">
+          <span class="chip">Health</span>
+          <h3>Evidence-based pet care</h3>
+          <p>Track health conditions, risk levels, disease support and treatment pathways across each pet profile.</p>
+          <div class="links">
+            <a href="pet_health_report.html">Health</a>
+            <a href="disease_support.html">Disease</a>
+          </div>
+        </article>
+
+        <article class="feature-card">
+          <span class="chip">Business</span>
+          <h3>Executive decision support</h3>
+          <p>Deliver board-ready insights, KPI tracking, sales reviews and enterprise proposal decks for strategic momentum.</p>
+          <div class="links">
+            <a href="report_final.html">Report</a>
+            <a href="project_quote.html">Quote</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="two-col">
+        <section class="section-panel">
+          <div class="section-head">
+            <h2>Project access map</h2>
+            <span class="meta">Navigation</span>
+          </div>
+          <div class="stack">
+            <div class="link-box">
+              <a href="project_master_summary.html"><span>Project Master Summary</span><small>hub</small></a>
+            </div>
+            <div class="link-box">
+              <a href="project_overview.html"><span>Project Overview</span><small>vision</small></a>
+            </div>
+            <div class="link-box">
+              <a href="project_slides_final.html"><span>Final Slide Deck</span><small>pitch</small></a>
+            </div>
+            <div class="link-box">
+              <a href="project_security.html"><span>Security & Trust</span><small>risk</small></a>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-panel">
+          <div class="section-head">
+            <h2>Premium showcase</h2>
+            <span class="meta">Highlights</span>
+          </div>
+          <div class="carousel-wrap" aria-label="Pet Care showcase slider">
+            <div class="slide active">
+              <div class="slide-inner">
+                <div class="slide-copy">
+                  <span class="slide-kicker">Dashboard</span>
+                  <h3>Clinic intelligence dashboard</h3>
+                  <p>Clear visibility into pet health, inventory, service outcomes and operational performance for management teams.</p>
+                </div>
+                <div class="mini-visual">Live</div>
+              </div>
+            </div>
+
+            <div class="slide">
+              <div class="slide-inner">
+                <div class="slide-copy">
+                  <span class="slide-kicker">Customer</span>
+                  <h3>Premium customer journey</h3>
+                  <p>Profiles, care plans, nutrition recommendations and seamless product support across desktop and mobile.</p>
+                </div>
+                <div class="mini-visual">CRM</div>
+              </div>
+            </div>
+
+            <div class="slide">
+              <div class="slide-inner">
+                <div class="slide-copy">
+                  <span class="slide-kicker">Reports</span>
+                  <h3>Board-ready analytics</h3>
+                  <p>Visual KPI dashboards, growth metrics, operational snapshots and financing-ready summary materials.</p>
+                </div>
+                <div class="mini-visual">KPI</div>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-controls">
+            <div class="dots">
+              <button class="dot active" type="button" aria-label="Slide 1"></button>
+              <button class="dot" type="button" aria-label="Slide 2"></button>
+              <button class="dot" type="button" aria-label="Slide 3"></button>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="swap-btn" type="button" id="prevSlide" aria-label="Previous slide">←</button>
+              <button class="swap-btn" type="button" id="nextSlide" aria-label="Next slide">→</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const body = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeLabel = document.getElementById('themeLabel');
+
+    const applyTheme = (isDark) => {
+      body.classList.toggle('light', !isDark);
+      themeLabel.textContent = isDark ? 'On' : 'Off';
+    };
+
+    const savedTheme = localStorage.getItem('petcare-theme');
+    if (savedTheme) {
+      applyTheme(savedTheme !== 'light');
+    } else {
+      applyTheme(true);
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = !body.classList.contains('light');
+      localStorage.setItem('petcare-theme', isDark ? 'dark' : 'light');
+      applyTheme(isDark);
+    });
+
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const dots = Array.from(document.querySelectorAll('.dot'));
+    let currentSlide = 0;
+
+    function renderSlide(index) {
+      currentSlide = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
+    }
+
+    document.getElementById('nextSlide').addEventListener('click', () => renderSlide(currentSlide + 1));
+    document.getElementById('prevSlide').addEventListener('click', () => renderSlide(currentSlide - 1));
+    dots.forEach((dot, index) => dot.addEventListener('click', () => renderSlide(index)));
+
+    setInterval(() => renderSlide(currentSlide + 1), 4600);
+  </script>
+</body>
+</html>
