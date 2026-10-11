@@ -682,7 +682,7 @@
   }
 
   .petcare-global-links {
-    gap: 0;
+    display: none;
   }
 
   .petcare-global-links a {

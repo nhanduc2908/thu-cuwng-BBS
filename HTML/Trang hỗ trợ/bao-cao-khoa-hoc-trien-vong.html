@@ -162,6 +162,42 @@
     }
     .check strong { display: block; color: var(--green-950); }
     .check span { display: block; margin-top: 4px; color: var(--muted); font-size: .9rem; }
+    .catalog-form {
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px; align-items: end; padding: 18px;
+      border: 1px solid var(--line); border-radius: var(--radius-lg); background: #f6faf7;
+    }
+    .field { display: grid; gap: 6px; color: var(--green-950); font-size: .83rem; font-weight: 750; }
+    .field input, .field select {
+      width: 100%; min-height: 44px; padding: 9px 11px; border: 1px solid #cbdcd1;
+      border-radius: 10px; background: #fff; color: var(--ink); font: inherit;
+    }
+    .catalog-submit {
+      min-height: 44px; padding: 9px 14px; border: 0; border-radius: 999px;
+      background: var(--green-900); color: #fff; font: inherit; font-weight: 800; cursor: pointer;
+    }
+    .catalog-submit:hover { background: var(--green-700); }
+    .catalog-submit:disabled { cursor: wait; opacity: .65; }
+    .catalog-note, .catalog-status { color: var(--muted); font-size: .9rem; }
+    .catalog-status { min-height: 1.5em; margin: 14px 0 8px; }
+    .catalog-status[data-state="error"] { color: #9b2929; }
+    .catalog-results { display: grid; gap: 10px; }
+    .catalog-record {
+      display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 5px 14px;
+      padding: 15px 16px; border: 1px solid var(--line); border-radius: var(--radius-md);
+      background: #fff; transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+    }
+    .catalog-record:hover { transform: translateY(-1px); border-color: #a9c9b4; box-shadow: 0 10px 24px rgba(16,47,39,.07); }
+    .catalog-record h3 { font-size: 1rem; }
+    .catalog-record-meta, .catalog-record-type { color: var(--muted); font-size: .83rem; }
+    .catalog-record a { grid-column: 2; grid-row: 1 / span 2; align-self: center; color: var(--green-700); font-weight: 800; white-space: nowrap; }
+    .catalog-pager { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 16px; }
+    .catalog-pager button {
+      min-height: 40px; padding: 7px 13px; border: 1px solid var(--line);
+      border-radius: 999px; background: #fff; color: var(--green-900); font: inherit; font-weight: 750; cursor: pointer;
+    }
+    .catalog-pager button:disabled { cursor: default; opacity: .5; }
+    .catalog-pager[hidden] { display: none; }
     .footer {
       display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px;
       padding: 24px 4px 34px; color: var(--muted); font-size: .85rem;
@@ -172,6 +208,7 @@
       .study-body { grid-template-columns: 1fr; gap: 14px; }
       .study-head { flex-direction: column; }
       .checklist { grid-template-columns: 1fr; }
+      .catalog-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 520px) {
       .shell { width: min(100% - 22px, 1120px); }
@@ -181,6 +218,9 @@
       .section { border-radius: 21px; }
       .study-head, .study-body { padding-inline: 16px; }
       .disclaimer { padding: 15px; }
+      .catalog-form { grid-template-columns: 1fr; padding: 14px; }
+      .catalog-record { grid-template-columns: 1fr; }
+      .catalog-record a { grid-column: 1; grid-row: auto; justify-self: start; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
@@ -202,9 +242,9 @@
         <span class="eyebrow">Evidence watch · Thú y</span>
         <h1 id="page-title">Triển vọng nghiên cứu, chưa phải kết luận</h1>
         <p class="hero-copy">
-          Theo dõi một số hướng nghiên cứu trên chó có kết quả ban đầu đáng quan tâm.
-          Mỗi bản tóm tắt đi cùng cỡ mẫu, giới hạn và liên kết tới bài gốc để người đọc
-          tự thẩm định thay vì xem tín hiệu sơ bộ như bằng chứng điều trị đã được xác nhận.
+          Theo dõi nghiên cứu thú y trên chó và mèo, từ các hồ sơ được tóm tắt đến danh mục
+          trích dẫn có thể tìm trực tiếp trên PubMed. Bản ghi tìm kiếm chỉ là đầu vào để sàng lọc,
+          không đồng nghĩa với kết quả triển vọng hay bằng chứng điều trị đã được xác nhận.
         </p>
         <div class="hero-actions">
           <a class="button primary" href="#studies">Xem các nghiên cứu</a>
@@ -256,7 +296,7 @@
       <section class="section" id="studies" aria-labelledby="studies-title">
         <div class="section-heading">
           <span class="kicker">Hồ sơ theo dõi</span>
-          <h2 id="studies-title">Ba hướng nghiên cứu đáng theo dõi</h2>
+          <h2 id="studies-title">Nghiên cứu điển hình đã được tóm tắt</h2>
           <p>
             Tóm tắt dưới đây dựa trên bài báo được lập chỉ mục trên PubMed và/hoặc toàn văn
             truy cập qua PubMed Central. Diễn giải ngắn gọn không thay thế việc đọc toàn văn.
@@ -399,6 +439,68 @@
         </div>
       </section>
 
+      <section class="section" id="pubmed-catalog" aria-labelledby="catalog-title">
+        <div class="section-heading">
+          <span class="kicker">Danh mục mở · PubMed</span>
+          <h2 id="catalog-title">Tra cứu tối đa 200 hồ sơ nghiên cứu</h2>
+          <p>
+            Tìm trực tiếp trong PubMed theo loài, chủ đề và năm xuất bản. Danh sách hiển thị
+            tối đa 100 hoặc 200 trích dẫn mỗi lần, chia thành từng trang nhỏ để dễ đọc; nội dung
+            được lấy lúc tra cứu, không lưu thành bộ dữ liệu cố định.
+          </p>
+        </div>
+        <form class="catalog-form" id="catalog-form">
+          <label class="field" for="catalog-species">
+            Loài
+            <select id="catalog-species" name="species">
+              <option value="all">Chó và mèo</option>
+              <option value="dogs">Chó</option>
+              <option value="cats">Mèo</option>
+            </select>
+          </label>
+          <label class="field" for="catalog-topic">
+            Nhóm chủ đề
+            <select id="catalog-topic" name="topic">
+              <option value="clinical">Thử nghiệm, pilot, khả thi</option>
+              <option value="nutrition">Dinh dưỡng & chế độ ăn</option>
+              <option value="microbiome">Hệ vi sinh & probiotic</option>
+              <option value="pain">Đau & thoái hóa khớp</option>
+              <option value="aging">Lão hóa & tuổi thọ</option>
+              <option value="cancer">Ung thư & tân sinh</option>
+            </select>
+          </label>
+          <label class="field" for="catalog-year">
+            Từ năm
+            <input id="catalog-year" name="year" type="number" min="2000" max="2026" value="2015" required>
+          </label>
+          <label class="field" for="catalog-limit">
+            Số hồ sơ tối đa
+            <select id="catalog-limit" name="limit">
+              <option value="100">100 hồ sơ</option>
+              <option value="200" selected>200 hồ sơ</option>
+            </select>
+          </label>
+          <label class="field" for="catalog-keyword">
+            Từ khóa tùy chọn
+            <input id="catalog-keyword" name="keyword" type="search" maxlength="80" placeholder="Ví dụ: rapamycin">
+          </label>
+          <button class="catalog-submit" id="catalog-submit" type="submit">Tải danh sách từ PubMed</button>
+        </form>
+        <p class="catalog-note">
+          Nguồn: NCBI PubMed. Cần kết nối Internet. Hồ sơ được sắp xếp theo ngày xuất bản;
+          hãy mở tóm tắt/toàn văn và tự đánh giá thiết kế, cỡ mẫu, kết quả âm tính, an toàn
+          và xung đột lợi ích. Không coi mọi kết quả là “nghiên cứu triển vọng”.
+        </p>
+        <p class="catalog-status" id="catalog-status" role="status" aria-live="polite">Chọn bộ lọc rồi tải dữ liệu từ PubMed.</p>
+        <div class="catalog-results" id="catalog-results" aria-busy="false"></div>
+        <nav class="catalog-pager" id="catalog-pager" aria-label="Phân trang kết quả" hidden>
+          <button id="catalog-prev" type="button">Trang trước</button>
+          <span id="catalog-page-label"></span>
+          <button id="catalog-next" type="button">Trang sau</button>
+        </nav>
+        <p><a class="source-link" id="catalog-pubmed-link" href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" rel="noopener noreferrer">Mở tìm kiếm trên PubMed</a></p>
+      </section>
+
       <section class="section" aria-labelledby="review-title">
         <div class="section-heading">
           <span class="kicker">Quy tắc biên tập</span>
@@ -431,6 +533,186 @@
       <a href="../TRrang chính/index.html">Quay về trang chủ</a>
     </footer>
   </div>
+  <script>
+    (() => {
+      "use strict";
+
+      const form = document.getElementById("catalog-form");
+      const status = document.getElementById("catalog-status");
+      const results = document.getElementById("catalog-results");
+      const submit = document.getElementById("catalog-submit");
+      const pager = document.getElementById("catalog-pager");
+      const previous = document.getElementById("catalog-prev");
+      const next = document.getElementById("catalog-next");
+      const pageLabel = document.getElementById("catalog-page-label");
+      const pubmedLink = document.getElementById("catalog-pubmed-link");
+      const pageSize = 20;
+      let records = [];
+      let currentPage = 0;
+      let totalMatches = 0;
+      form.elements.year.max = String(new Date().getFullYear());
+
+      const topics = {
+        clinical: '("clinical trial"[pt] OR "randomized controlled trial"[pt] OR pilot[Title/Abstract] OR "proof-of-concept"[Title/Abstract] OR feasibility[Title/Abstract])',
+        nutrition: '(nutrition[Title/Abstract] OR diet[Title/Abstract] OR dietary[Title/Abstract])',
+        microbiome: '(microbiome[Title/Abstract] OR "fecal microbiota transplantation"[Title/Abstract] OR probiotic[Title/Abstract])',
+        pain: '(pain[Title/Abstract] OR osteoarthritis[Title/Abstract] OR analgesia[Title/Abstract])',
+        aging: '(aging[Title/Abstract] OR longevity[Title/Abstract] OR geriatric[Title/Abstract])',
+        cancer: '(cancer[Title/Abstract] OR neoplasm[Title/Abstract] OR tumor[Title/Abstract])'
+      };
+
+      const makeQuery = () => {
+        const species = form.elements.species.value === "all"
+          ? '(dogs[MeSH Terms] OR cats[MeSH Terms])'
+          : `${form.elements.species.value}[MeSH Terms]`;
+        const year = Number(form.elements.year.value);
+        const latestYear = new Date().getFullYear();
+        if (!Number.isInteger(year) || year < 2000 || year > latestYear) {
+          throw new Error(`Nhập năm từ 2000 đến ${latestYear}.`);
+        }
+        const startDate = `${year}/01/01`;
+        const endDate = `${latestYear}/12/31`;
+        const keyword = form.elements.keyword.value.trim().replace(/[()[\]{}"]/g, " ").replace(/\s+/g, " ");
+        const keywordQuery = keyword ? ` AND (${keyword}[Title/Abstract])` : "";
+        return `${species} AND ${topics[form.elements.topic.value]} AND (${startDate}[Date - Publication] : ${endDate}[Date - Publication])${keywordQuery}`;
+      };
+
+      const setStatus = (message, state = "info") => {
+        status.textContent = message;
+        status.dataset.state = state;
+      };
+
+      const setExternalSearch = (query) => {
+        pubmedLink.href = `https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(query)}`;
+      };
+
+      const addText = (parent, tagName, className, text) => {
+        const element = document.createElement(tagName);
+        if (className) element.className = className;
+        element.textContent = text;
+        parent.append(element);
+        return element;
+      };
+
+      const renderPage = () => {
+        const start = currentPage * pageSize;
+        const pageRecords = records.slice(start, start + pageSize);
+        const fragment = document.createDocumentFragment();
+
+        for (const record of pageRecords) {
+          const article = document.createElement("article");
+          article.className = "catalog-record";
+          const title = record.title || "Không có tiêu đề";
+          addText(article, "h3", "", title);
+          const firstAuthor = record.authors?.[0]?.name;
+          const authorText = firstAuthor ? `${firstAuthor}${record.authors.length > 1 ? " và cộng sự" : ""} · ` : "";
+          const meta = [authorText + (record.fulljournalname || record.source || "Tạp chí chưa rõ"), record.pubdate]
+            .filter(Boolean)
+            .join(" · ");
+          addText(article, "span", "catalog-record-meta", meta);
+          addText(article, "span", "catalog-record-type", (record.pubtype || []).join(" · ") || "Loại bài chưa ghi nhận");
+          const link = document.createElement("a");
+          link.href = `https://pubmed.ncbi.nlm.nih.gov/${encodeURIComponent(record.uid)}/`;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = `PMID ${record.uid}`;
+          article.append(link);
+          fragment.append(article);
+        }
+
+        results.replaceChildren(fragment);
+        const pageCount = Math.ceil(records.length / pageSize);
+        pager.hidden = pageCount <= 1;
+        pageLabel.textContent = pageCount ? `Trang ${currentPage + 1} / ${pageCount}` : "";
+        previous.disabled = currentPage === 0;
+        next.disabled = currentPage >= pageCount - 1;
+      };
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        let query;
+        try {
+          query = makeQuery();
+        } catch (error) {
+          setStatus(error.message, "error");
+          return;
+        }
+
+        setExternalSearch(query);
+        const maximum = Number(form.elements.limit.value);
+        const searchUrl = new URL("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi");
+        searchUrl.search = new URLSearchParams({
+          db: "pubmed",
+          term: query,
+          retmax: String(maximum),
+          retstart: "0",
+          sort: "pub date",
+          retmode: "json"
+        });
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 30000);
+        submit.disabled = true;
+        results.setAttribute("aria-busy", "true");
+        pager.hidden = true;
+        results.replaceChildren();
+        setStatus("Đang tìm hồ sơ trên PubMed…");
+
+        try {
+          const searchResponse = await fetch(searchUrl, { signal: controller.signal });
+          if (!searchResponse.ok) throw new Error(`PubMed trả về lỗi HTTP ${searchResponse.status}.`);
+          const searchData = await searchResponse.json();
+          const searchResult = searchData.esearchresult;
+          if (searchResult?.error) throw new Error(searchResult.error.join(" "));
+          const ids = searchResult?.idlist || [];
+          totalMatches = Number(searchResult?.count || 0);
+          if (!ids.length) {
+            records = [];
+            currentPage = 0;
+            renderPage();
+            setStatus("Không tìm thấy hồ sơ phù hợp. Hãy đổi từ khóa hoặc mở truy vấn trực tiếp trên PubMed.");
+            return;
+          }
+
+          const summaryUrl = new URL("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi");
+          summaryUrl.search = new URLSearchParams({ db: "pubmed", id: ids.join(","), retmode: "json" });
+          const summaryResponse = await fetch(summaryUrl, { signal: controller.signal });
+          if (!summaryResponse.ok) throw new Error(`PubMed không tải được chi tiết hồ sơ (HTTP ${summaryResponse.status}).`);
+          const summaryData = await summaryResponse.json();
+          const summaryResult = summaryData.result || {};
+          records = (summaryResult.uids || ids)
+            .map((id) => summaryResult[id])
+            .filter(Boolean);
+          currentPage = 0;
+          renderPage();
+          setStatus(`Tìm thấy ${totalMatches.toLocaleString("vi-VN")} hồ sơ; đang hiển thị ${records.length} trích dẫn (tối đa ${maximum} mỗi lượt). Đây là danh sách để sàng lọc, chưa phải đánh giá chất lượng bằng chứng.`);
+        } catch (error) {
+          records = [];
+          renderPage();
+          const message = error.name === "AbortError"
+            ? "Yêu cầu tới PubMed quá thời gian chờ. Hãy thử lại hoặc mở truy vấn trực tiếp trên PubMed."
+            : `Không thể tải dữ liệu từ PubMed: ${error.message} Hãy kiểm tra Internet hoặc mở truy vấn trực tiếp trên PubMed.`;
+          setStatus(message, "error");
+        } finally {
+          window.clearTimeout(timeout);
+          submit.disabled = false;
+          results.setAttribute("aria-busy", "false");
+        }
+      });
+
+      previous.addEventListener("click", () => {
+        if (currentPage > 0) {
+          currentPage -= 1;
+          renderPage();
+        }
+      });
+      next.addEventListener("click", () => {
+        if ((currentPage + 1) * pageSize < records.length) {
+          currentPage += 1;
+          renderPage();
+        }
+      });
+    })();
+  </script>
   <script src="../scripts/site_navigation.js" defer></script>
 </body>
 </html>

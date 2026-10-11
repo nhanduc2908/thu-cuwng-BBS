@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Tổng quan chuẩn dinh dưỡng và quản lý thức ăn chó mèo tại Hoa Kỳ: FDA, AAFCO, cách đọc nhãn và tra cứu 50 bang cùng 3 khu vực bổ sung.">
+  <meta name="theme-color" content="#12392f">
+  <title>Chuẩn dinh dưỡng thú cưng Hoa Kỳ | PetCare</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #18372d;
+      --muted: #60766c;
+      --green-950: #103229;
+      --green-900: #174737;
+      --green-700: #276b51;
+      --green-100: #e8f4ec;
+      --line: #dce9e1;
+      --paper: #f1f6f2;
+      --gold: #e9bf68;
+      --amber-bg: #fff6df;
+      --amber-ink: #745819;
+      --shadow: 0 18px 48px rgba(16, 47, 39, .08);
+      --radius: 22px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: linear-gradient(180deg, #edf6f0 0, var(--paper) 40rem);
+      font: 16px/1.65 "Segoe UI", Tahoma, Arial, sans-serif;
+    }
+    a { color: inherit; }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 3px;
+    }
+    .shell { width: min(1160px, calc(100% - 32px)); margin: 24px auto 44px; }
+    .topline { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--green-950); font-weight: 850; text-decoration: none; }
+    .brand-mark { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 13px 13px 13px 5px; background: linear-gradient(135deg, #d9ee9b, #b9d96b); }
+    .home-link { display: inline-flex; min-height: 40px; align-items: center; padding: 7px 13px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green-900); font-size: .84rem; font-weight: 750; text-decoration: none; }
+    .hero {
+      position: relative; overflow: hidden; padding: clamp(26px, 5vw, 54px);
+      border-radius: 28px;
+      background: radial-gradient(circle at 88% 8%, #d9ee9b2b, transparent 21rem), linear-gradient(125deg, #174b3b, #103229 68%, #183f4b);
+      box-shadow: var(--shadow); color: #f5faf6;
+    }
+    .eyebrow { color: #dff1b4; font-size: .73rem; font-weight: 850; letter-spacing: .13em; text-transform: uppercase; }
+    h1 { max-width: 850px; margin: 14px 0 12px; font-size: clamp(2.2rem, 6vw, 4.4rem); line-height: 1.02; letter-spacing: -.055em; }
+    .hero p { max-width: 760px; margin: 0; color: #e1eee6; font-size: 1.04rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 22px; }
+    .button { display: inline-flex; min-height: 43px; align-items: center; justify-content: center; padding: 8px 14px; border: 1px solid #ffffff3d; border-radius: 999px; color: #fff; font-weight: 750; text-decoration: none; transition: transform .18s ease, background .18s ease; }
+    .button:hover { transform: translateY(-2px); background: #ffffff18; }
+    .button.primary { border-color: #d9ee9b; background: #d9ee9b; color: var(--green-950); }
+    .button.primary:hover { background: #e6f5bd; }
+    .scope-note { margin: 16px 0 0; color: #d9e7de; font-size: .82rem; }
+    .notice { display: grid; grid-template-columns: auto 1fr; gap: 12px; margin: 18px 0; padding: 16px 18px; border: 1px solid #f0dfa9; border-radius: 17px; background: var(--amber-bg); color: var(--amber-ink); }
+    .notice strong { display: block; }
+    .notice p { margin: 3px 0 0; font-size: .9rem; }
+    .section { margin-top: 20px; padding: clamp(20px, 4vw, 32px); border: 1px solid var(--line); border-radius: var(--radius); background: #ffffffed; box-shadow: 0 10px 30px #102f2708; }
+    .section-head { max-width: 820px; margin-bottom: 20px; }
+    .kicker { color: var(--green-700); font-size: .72rem; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+    h2 { margin: 5px 0 8px; color: var(--green-950); font-size: clamp(1.45rem, 3vw, 2.2rem); line-height: 1.15; letter-spacing: -.04em; }
+    h3 { margin: 0; color: var(--green-950); font-size: 1.07rem; line-height: 1.3; }
+    .section-head p, .muted { color: var(--muted); }
+    .framework { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+    .framework-card { padding: 18px; border: 1px solid var(--line); border-radius: 17px; background: linear-gradient(150deg, #fff, #f5f9f6); }
+    .framework-card .number { display: grid; width: 34px; height: 34px; margin-bottom: 12px; place-items: center; border-radius: 11px; background: var(--green-100); color: var(--green-700); font-weight: 900; }
+    .framework-card p { margin: 8px 0 0; color: var(--muted); font-size: .9rem; }
+    .stage-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .stage { padding: 16px; border-left: 3px solid var(--green-700); border-radius: 0 13px 13px 0; background: #f5f9f6; }
+    .stage strong { display: block; color: var(--green-950); }
+    .stage p { margin: 5px 0 0; color: var(--muted); font-size: .88rem; }
+    .check-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .check { padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: #fbfdfb; }
+    .check strong { display: block; color: var(--green-950); }
+    .check p { margin: 4px 0 0; color: var(--muted); font-size: .88rem; }
+    .directory-tools { display: grid; grid-template-columns: minmax(0, 1fr) 190px; gap: 10px; margin: 18px 0 8px; }
+    .directory-tools input, .directory-tools select { min-height: 44px; width: 100%; padding: 9px 12px; border: 1px solid #cbdcd1; border-radius: 10px; background: #fff; color: var(--ink); font: inherit; }
+    .directory-count { min-height: 1.5em; color: var(--muted); font-size: .86rem; }
+    .jurisdiction-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .jurisdiction { min-width: 0; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: #fff; transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease; }
+    .jurisdiction:hover { transform: translateY(-1px); border-color: #a8cbb4; box-shadow: 0 10px 24px #102f270d; }
+    .jurisdiction[hidden] { display: none; }
+    .jurisdiction-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .jurisdiction h3 { font-size: .98rem; }
+    .jurisdiction p { margin: 7px 0 0; color: var(--muted); font-size: .8rem; }
+    .code { flex: 0 0 auto; color: var(--green-700); font: 800 .76rem/1.5 Consolas, monospace; }
+    .type { display: inline-flex; margin-top: 10px; padding: 4px 8px; border-radius: 999px; background: var(--green-100); color: #315e47; font-size: .68rem; font-weight: 800; }
+    .type.territory { background: #fff3d6; color: #765b17; }
+    .empty { display: none; margin-top: 12px; padding: 18px; border: 1px dashed #b9cbbd; border-radius: 12px; color: var(--muted); text-align: center; }
+    .empty.visible { display: block; }
+    .source-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .source { padding: 14px; border: 1px solid var(--line); border-radius: 13px; background: #fff; }
+    .source a { color: var(--green-700); font-weight: 800; text-decoration: none; }
+    .source p { margin: 5px 0 0; color: var(--muted); font-size: .82rem; }
+    .footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; padding: 22px 3px 30px; color: var(--muted); font-size: .82rem; }
+    .footer a { color: var(--green-700); font-weight: 750; }
+    @media (max-width: 760px) { .framework, .stage-grid { grid-template-columns: 1fr; } .jurisdiction-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 520px) {
+      .shell { width: min(100% - 20px, 1160px); margin-top: 12px; }
+      .hero { border-radius: 21px; }
+      .section { border-radius: 18px; }
+      .topline { align-items: flex-start; }
+      .home-link { min-height: 36px; padding: 6px 10px; font-size: .76rem; }
+      .directory-tools, .jurisdiction-grid, .check-grid, .source-list { grid-template-columns: 1fr; }
+      .notice { padding: 13px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topline">
+      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">P</span><span>PetCare <span class="muted">/ Chuẩn Hoa Kỳ</span></span></a>
+      <a class="home-link" href="../menu.html">Danh mục toàn bộ trang</a>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <span class="eyebrow">Pet food standards · United States</span>
+        <h1 id="page-title">Chuẩn dinh dưỡng thú cưng tại Hoa Kỳ</h1>
+        <p>
+          Hướng dẫn cách hiểu vai trò của FDA, AAFCO, thông tin dinh dưỡng trên nhãn
+          thức ăn chó/mèo và tra cứu phạm vi 50 bang cùng 3 khu vực bổ sung.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#jurisdictions">Tra cứu 53 khu vực</a>
+          <a class="button" href="#framework">Xem khung quản lý</a>
+          <a class="button" href="#sources">Nguồn chính thức</a>
+        </div>
+        <p class="scope-note">Phạm vi danh mục: 50 bang + Washington, D.C. + Puerto Rico + Guam. D.C., Puerto Rico và Guam không phải bang.</p>
+      </section>
+
+      <aside class="notice" aria-label="Lưu ý về phạm vi pháp lý">
+        <span aria-hidden="true">ℹ</span>
+        <div>
+          <strong>Không có một bộ luật “53 bang” đồng nhất.</strong>
+          <p>
+            Hoa Kỳ có 50 bang. AAFCO ban hành mô hình/quy chuẩn tham khảo nhưng không tự
+            quản lý, phê duyệt hay chứng nhận sản phẩm; các cơ quan liên bang và cơ quan
+            cấp bang/lãnh thổ thực thi các yêu cầu áp dụng tại phạm vi của họ. Danh mục
+            dưới đây giúp xác định nơi cần tra cứu, không khẳng định đã kiểm toán luật
+            hoặc tình trạng đăng ký riêng của từng khu vực.
+          </p>
+        </div>
+      </aside>
+
+      <section class="section" id="framework" aria-labelledby="framework-title">
+        <div class="section-head">
+          <span class="kicker">Khung quản lý</span>
+          <h2 id="framework-title">Ai đặt chuẩn, ai thực thi?</h2>
+          <p>Phân biệt hướng dẫn mô hình với quy định pháp luật là bước đầu khi đánh giá sản phẩm hoặc phân phối qua nhiều bang.</p>
+        </div>
+        <div class="framework">
+          <article class="framework-card">
+            <span class="number">01</span>
+            <h3>FDA · yêu cầu liên bang</h3>
+            <p>
+              FDA giám sát thức ăn vật nuôi theo luật liên bang: an toàn, thành phần,
+              ghi nhãn không gây hiểu lầm và yêu cầu sản xuất áp dụng. Thức ăn phải phù
+              hợp loài/đối tượng, không bị pha tạp hoặc ghi nhãn sai; cơ sở thuộc phạm
+              vi áp dụng phải đáp ứng quy tắc an toàn thực phẩm cho thức ăn động vật.
+            </p>
+          </article>
+          <article class="framework-card">
+            <span class="number">02</span>
+            <h3>AAFCO · mô hình và định nghĩa</h3>
+            <p>
+              AAFCO là hiệp hội các cơ quan quản lý thức ăn chăn nuôi. Mô hình của AAFCO
+              được nhiều bang dùng làm cơ sở xây dựng luật/quy định địa phương. AAFCO
+              không phải cơ quan quản lý và không phê duyệt hay chứng nhận từng sản phẩm.
+            </p>
+          </article>
+          <article class="framework-card">
+            <span class="number">03</span>
+            <h3>Cơ quan bang/lãnh thổ · áp dụng địa phương</h3>
+            <p>
+              Yêu cầu đăng ký sản phẩm, giấy phép nhà phân phối, nhãn hoặc thủ tục trước
+              khi bán có thể khác theo nơi phân phối. Kiểm tra với cơ quan feed control
+              có thẩm quyền tại từng khu vực trước khi kinh doanh hoặc gửi hàng.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="nutrition-title">
+        <div class="section-head">
+          <span class="kicker">Đọc nhãn dinh dưỡng</span>
+          <h2 id="nutrition-title">Các điểm cần đối chiếu trên thức ăn chó/mèo</h2>
+          <p>Đây là danh sách kiểm tra thông tin, không phải lời khuyên điều trị hay xác nhận một nhãn hiệu cụ thể đạt chuẩn.</p>
+        </div>
+        <div class="check-grid">
+          <article class="check"><strong>Loài và giai đoạn sống</strong><p>Xác định sản phẩm dành cho chó hay mèo, và cho duy trì trưởng thành, tăng trưởng/sinh sản hay “all life stages”. Đối chiếu hướng dẫn riêng trên bao bì.</p></article>
+          <article class="check"><strong>Tuyên bố dinh dưỡng đầy đủ</strong><p>Tìm tuyên bố về tính đầy đủ/cân bằng dinh dưỡng và phương thức chứng minh nêu trên nhãn (đáp ứng profile dinh dưỡng hoặc thử nghiệm cho ăn khi được công bố).</p></article>
+          <article class="check"><strong>Guaranteed Analysis</strong><p>So sánh các bảo đảm tối thiểu/tối đa như protein, chất béo, xơ và độ ẩm. Đây không phải bảng phân tích đầy đủ mọi chất dinh dưỡng.</p></article>
+          <article class="check"><strong>Hàm lượng calo và khẩu phần</strong><p>Đọc năng lượng (thường biểu thị kcal/kg và/hoặc theo đơn vị dùng), hướng dẫn cho ăn và điều chỉnh theo thể trạng cùng tư vấn thú y.</p></article>
+          <article class="check"><strong>Thành phần và đơn vị chịu trách nhiệm</strong><p>Kiểm tra danh sách thành phần, tên/địa chỉ đơn vị chịu trách nhiệm, khối lượng tịnh, cảnh báo và thông tin truy xuất theo nhãn áp dụng.</p></article>
+          <article class="check"><strong>Phân biệt thức ăn hoàn chỉnh với đồ bổ sung</strong><p>Snack, toppers, treats hoặc sản phẩm ghi chỉ dùng bổ sung/liên tục không được mặc định là khẩu phần hoàn chỉnh cho thú cưng.</p></article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="life-stage-title">
+        <div class="section-head">
+          <span class="kicker">Dinh dưỡng theo giai đoạn</span>
+          <h2 id="life-stage-title">Không có một công thức phù hợp mọi thú cưng</h2>
+        </div>
+        <div class="stage-grid">
+          <article class="stage"><strong>Tăng trưởng và sinh sản</strong><p>Nhu cầu được đánh giá theo profile cho tăng trưởng/sinh sản; chó con giống lớn có điều kiện/ghi chú riêng trên một số tuyên bố đầy đủ dinh dưỡng.</p></article>
+          <article class="stage"><strong>Duy trì trưởng thành</strong><p>Đối chiếu sản phẩm với tuyên bố dành cho duy trì chó/mèo trưởng thành, khẩu phần, năng lượng và tình trạng cơ thể của từng con.</p></article>
+          <article class="stage"><strong>All life stages / mục tiêu y khoa</strong><p>“All life stages” không thay thế đánh giá phù hợp cá thể. Chế độ ăn thú y hoặc bệnh lý cần bác sĩ thú y lựa chọn và theo dõi.</p></article>
+        </div>
+      </section>
+
+      <section class="section" id="jurisdictions" aria-labelledby="jurisdictions-title">
+        <div class="section-head">
+          <span class="kicker">Danh mục 53 khu vực</span>
+          <h2 id="jurisdictions-title">Tra cứu nơi cần xác nhận quy định địa phương</h2>
+          <p>
+            Chọn khu vực để chuẩn bị câu hỏi về đăng ký thức ăn thú cưng, giấy phép phân phối,
+            ghi nhãn và điều kiện bán hàng. Các thẻ không tuyên bố trạng thái pháp lý cụ thể;
+            hãy xác nhận trực tiếp với cơ quan địa phương và nguồn AAFCO hiện hành.
+          </p>
+        </div>
+        <div class="directory-tools">
+          <label>
+            <span class="muted small">Tìm theo tên hoặc mã</span>
+            <input id="jurisdiction-search" type="search" autocomplete="off" placeholder="Ví dụ: California, CA, Guam" aria-label="Tìm bang hoặc khu vực">
+          </label>
+          <label>
+            <span class="muted small">Lọc phạm vi</span>
+            <select id="jurisdiction-type" aria-label="Lọc bang hoặc khu vực">
+              <option value="all">Tất cả khu vực</option>
+              <option value="state">50 bang</option>
+              <option value="territory">D.C. và lãnh thổ</option>
+            </select>
+          </label>
+        </div>
+        <p id="jurisdiction-count" class="directory-count" aria-live="polite"></p>
+        <div id="jurisdiction-grid" class="jurisdiction-grid"></div>
+        <p id="jurisdiction-empty" class="empty">Không tìm thấy bang hoặc khu vực phù hợp.</p>
+      </section>
+
+      <section class="section" id="sources" aria-labelledby="sources-title">
+        <div class="section-head">
+          <span class="kicker">Nguồn gốc và giới hạn</span>
+          <h2 id="sources-title">Tài liệu tham khảo chính thức</h2>
+          <p>Trang này là bản tổng quan giáo dục; không thay thế văn bản luật, tư vấn tuân thủ, bác sĩ thú y hoặc kiểm tra nhãn sản phẩm thực tế.</p>
+        </div>
+        <div class="source-list">
+          <article class="source"><a href="https://www.fda.gov/animal-veterinary/animal-foods-feeds/pet-food" target="_blank" rel="noopener noreferrer">FDA · Pet Food</a><p>Thông tin liên bang về an toàn, thành phần, ghi nhãn, thức ăn đầy đủ/cân bằng và quản lý thức ăn thú cưng.</p></article>
+          <article class="source"><a href="https://www.aafco.org/consumers/understanding-pet-food/" target="_blank" rel="noopener noreferrer">AAFCO · Understanding Pet Food</a><p>Vai trò của AAFCO và giải thích vì sao AAFCO không quản lý, kiểm nghiệm, phê duyệt hay chứng nhận thức ăn vật nuôi.</p></article>
+          <article class="source"><a href="https://www.aafco.org/consumers/understanding-pet-food/reading-labels/" target="_blank" rel="noopener noreferrer">AAFCO · Reading Labels</a><p>Giải thích các phần của nhãn thức ăn chó/mèo, tuyên bố đầy đủ dinh dưỡng và loại nhãn bắt buộc/tùy chọn.</p></article>
+          <article class="source"><a href="https://www.aafco.org/resources/startups/internet-farmers-market/" target="_blank" rel="noopener noreferrer">AAFCO · Internet Sales</a><p>Nhắc nhà bán hàng kiểm tra yêu cầu đăng ký/giấy phép của từng bang khi phân phối hoặc gửi sản phẩm qua bang.</p></article>
+          <article class="source"><a href="https://www.ecfr.gov/current/title-21/chapter-I/subchapter-E/part-507" target="_blank" rel="noopener noreferrer">eCFR · 21 CFR Part 507</a><p>Quy định liên bang về thực hành sản xuất tốt hiện hành và phân tích mối nguy/kiểm soát phòng ngừa cho thức ăn động vật, trong phạm vi áp dụng.</p></article>
+          <article class="source"><a href="https://www.ecfr.gov/current/title-21/chapter-I/subchapter-E/part-501" target="_blank" rel="noopener noreferrer">eCFR · 21 CFR Part 501</a><p>Quy định liên bang về ghi nhãn thức ăn động vật; quy định cấp bang/lãnh thổ có thể bổ sung yêu cầu địa phương.</p></article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>PetCare · Cập nhật biên tập: 12/10/2026 · Không phải tư vấn pháp lý hoặc thú y.</span>
+      <a href="../index.html">Về cổng hệ thống PetCare</a>
+    </footer>
+  </div>
+  <script>
+    (() => {
+      "use strict";
+
+      const states = [
+        ["Alabama", "AL"], ["Alaska", "AK"], ["Arizona", "AZ"], ["Arkansas", "AR"],
+        ["California", "CA"], ["Colorado", "CO"], ["Connecticut", "CT"], ["Delaware", "DE"],
+        ["Florida", "FL"], ["Georgia", "GA"], ["Hawaii", "HI"], ["Idaho", "ID"],
+        ["Illinois", "IL"], ["Indiana", "IN"], ["Iowa", "IA"], ["Kansas", "KS"],
+        ["Kentucky", "KY"], ["Louisiana", "LA"], ["Maine", "ME"], ["Maryland", "MD"],
+        ["Massachusetts", "MA"], ["Michigan", "MI"], ["Minnesota", "MN"], ["Mississippi", "MS"],
+        ["Missouri", "MO"], ["Montana", "MT"], ["Nebraska", "NE"], ["Nevada", "NV"],
+        ["New Hampshire", "NH"], ["New Jersey", "NJ"], ["New Mexico", "NM"], ["New York", "NY"],
+        ["North Carolina", "NC"], ["North Dakota", "ND"], ["Ohio", "OH"], ["Oklahoma", "OK"],
+        ["Oregon", "OR"], ["Pennsylvania", "PA"], ["Rhode Island", "RI"], ["South Carolina", "SC"],
+        ["South Dakota", "SD"], ["Tennessee", "TN"], ["Texas", "TX"], ["Utah", "UT"],
+        ["Vermont", "VT"], ["Virginia", "VA"], ["Washington", "WA"], ["West Virginia", "WV"],
+        ["Wisconsin", "WI"], ["Wyoming", "WY"]
+      ].map(([name, code]) => ({ name, code, kind: "state", type: "Bang" }));
+
+      const additional = [
+        { name: "District of Columbia", code: "DC", kind: "territory", type: "Đặc khu liên bang · không phải bang" },
+        { name: "Puerto Rico", code: "PR", kind: "territory", type: "Lãnh thổ Hoa Kỳ · không phải bang" },
+        { name: "Guam", code: "GU", kind: "territory", type: "Lãnh thổ Hoa Kỳ · không phải bang" }
+      ];
+      const search = document.getElementById("jurisdiction-search");
+      const filter = document.getElementById("jurisdiction-type");
+      const grid = document.getElementById("jurisdiction-grid");
+      const count = document.getElementById("jurisdiction-count");
+      const empty = document.getElementById("jurisdiction-empty");
+      const allJurisdictions = [...states, ...additional];
+
+      if (states.length !== 50 || allJurisdictions.length !== 53) {
+        throw new Error("Danh mục địa lý không đủ 50 bang và 3 khu vực bổ sung.");
+      }
+
+      const cards = allJurisdictions.map((jurisdiction) => {
+        const card = document.createElement("article");
+        card.className = "jurisdiction";
+        card.dataset.kind = jurisdiction.kind;
+        card.dataset.search = `${jurisdiction.name} ${jurisdiction.code} ${jurisdiction.type}`.toLocaleLowerCase("en");
+        const heading = document.createElement("div");
+        heading.className = "jurisdiction-head";
+        const name = document.createElement("h3");
+        name.textContent = jurisdiction.name;
+        const code = document.createElement("span");
+        code.className = "code";
+        code.textContent = jurisdiction.code;
+        heading.append(name, code);
+        const description = document.createElement("p");
+        description.textContent = "Xác nhận yêu cầu thức ăn thú cưng với cơ quan địa phương trước khi phân phối.";
+        const type = document.createElement("span");
+        type.className = `type${jurisdiction.kind === "territory" ? " territory" : ""}`;
+        type.textContent = jurisdiction.type;
+        card.append(heading, description, type);
+        return card;
+      });
+      grid.replaceChildren(...cards);
+
+      const updateDirectory = () => {
+        const query = search.value.trim().toLocaleLowerCase("en");
+        const selectedType = filter.value;
+        let visible = 0;
+        for (const card of cards) {
+          const matches = (selectedType === "all" || card.dataset.kind === selectedType)
+            && card.dataset.search.includes(query);
+          card.hidden = !matches;
+          if (matches) visible += 1;
+        }
+        count.textContent = `Đang hiển thị ${visible} / ${allJurisdictions.length} khu vực · ${states.length} bang`;
+        empty.classList.toggle("visible", visible === 0);
+      };
+
+      search.addEventListener("input", updateDirectory);
+      filter.addEventListener("change", updateDirectory);
+      updateDirectory();
+    })();
+  </script>
+  <script src="../scripts/site_navigation.js" defer></script>
+</body>
+</html>

@@ -18,12 +18,13 @@
         ["Menu danh sách trang", "menu.html"],
         ["Trang chủ Bông Bông Pet Care", "TRrang chính/index.html"],
         ["PetCare System", "TRrang chính/petcare_system.html"],
-        ["Cổng khách hàng", "TRrang chính/index_customer.html"],
-        ["Khách hàng & nhân viên", "TRrang chính/user_portal.html"],
+        ["Cổng khách hàng · đăng nhập hồ sơ", "TRrang chính/user_portal.html"],
+        ["Trang giới thiệu khách hàng · demo", "TRrang chính/index_customer.html"],
         ["Trưng bày sản phẩm", "TRrang chính/product_showcase.html"],
         ["Danh mục dinh dưỡng", "TRrang chính/nutrition_products.html"],
         ["Dinh dưỡng cho chó", "TRrang chính/nutrition_products_dog.html"],
         ["Dinh dưỡng cho mèo", "TRrang chính/nutrition_products_cat.html"],
+        ["Chuẩn dinh dưỡng thú cưng Hoa Kỳ · 53 khu vực", "Trang hỗ trợ/chuan-dinh-duong-thu-cung-hoa-ky.html"],
         ["Nghiên cứu khoa học tiềm năng · chờ xác thực", "Trang hỗ trợ/bao-cao-khoa-hoc-trien-vong.html"],
         ["Thông số sản phẩm chó mèo · 70 trường", "Trang thông số của các sản phẩm/index.html"],
         ["Thương hiệu thức ăn chó mèo toàn cầu", "Trang thông số của các sản phẩm/thuong-hieu.html"],
@@ -128,7 +129,7 @@
 
   const stylesheet = document.createElement("link");
   stylesheet.rel = "stylesheet";
-  stylesheet.href = new URL("../styles/site_navigation.css", scriptUrl).href;
+  stylesheet.href = new URL("../styles/site_navigation.css?v=2", scriptUrl).href;
   document.head.append(stylesheet);
 
   const header = document.createElement("header");
@@ -143,7 +144,12 @@
   const quickLinks = document.createElement("nav");
   quickLinks.className = "petcare-global-links";
   quickLinks.setAttribute("aria-label", "Liên kết nhanh");
-  for (const [label, url] of [["Trang chính", mainPage], ["Cổng hệ thống", systemHub]]) {
+  const customerPortal = new URL("TRrang chính/user_portal.html", siteRoot);
+  for (const [label, url] of [
+    ["Trang chính", mainPage],
+    ["Cổng khách hàng", customerPortal],
+    ["Cổng hệ thống", systemHub]
+  ]) {
     const link = document.createElement("a");
     link.href = url.href;
     link.textContent = label;
