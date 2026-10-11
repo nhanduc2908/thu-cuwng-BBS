@@ -10,6 +10,29 @@
   const systemHub = new URL("index.html", siteRoot);
   const historyKey = `petcare-wayfinder:${siteRoot.href}`;
   const returningKey = `${historyKey}:returning`;
+  const polishedPages = new Set([
+    "data_explorer.html",
+    "disease_support.html",
+    "executive_summary.html",
+    "index_presentation.html",
+    "pet_health_report.html",
+    "operations_snapshot.html",
+    "petcare_demo_full.html",
+    "project_invoice.html",
+    "project_master_summary.html",
+    "project_overview.html",
+    "project_security.html",
+    "project_quote.html",
+    "project_slides_final.html",
+    "project_slides.html",
+    "projext _Full.html",
+    "report_business_review.html",
+    "report_final.html",
+    "report_kpi_board.html",
+    "slides_demo.html",
+    "slides_pitch.html",
+    "workflow_story.html"
+  ]);
   const pageGroups = [
     {
       title: "Cổng & trang chính",
@@ -237,6 +260,47 @@
   headerInner.append(brand, quickLinks, directory);
   header.append(headerInner);
   document.body.prepend(header);
+
+  const currentPageFile = decodeURIComponent(location.pathname).split("/").pop();
+  if (polishedPages.has(currentPageFile)) {
+    document.body.classList.add("petcare-polished-page");
+    const pageStylesheet = document.createElement("link");
+    pageStylesheet.rel = "stylesheet";
+    pageStylesheet.href = new URL("../styles/page_experience.css?v=1", scriptUrl).href;
+    document.head.append(pageStylesheet);
+
+    const mainContent = document.querySelector("main, [role=\"main\"]");
+    if (mainContent) {
+      if (!mainContent.id) mainContent.id = "petcare-main-content";
+      const skipLink = document.createElement("a");
+      skipLink.className = "petcare-skip-link";
+      skipLink.href = `#${mainContent.id}`;
+      skipLink.textContent = "Bỏ qua điều hướng, đến nội dung";
+      header.before(skipLink);
+      mainContent.setAttribute("tabindex", "-1");
+    }
+
+    for (const table of document.querySelectorAll("main table, [role=\"main\"] table")) {
+      const parent = table.parentElement;
+      if (!parent || parent.classList.contains("petcare-table-scroll")) continue;
+      let ancestor = parent;
+      let alreadyScrollable = false;
+      while (ancestor && ancestor !== mainContent) {
+        if (["auto", "scroll"].includes(getComputedStyle(ancestor).overflowX)) {
+          alreadyScrollable = true;
+          break;
+        }
+        ancestor = ancestor.parentElement;
+      }
+      if (alreadyScrollable) continue;
+      const scrollContainer = document.createElement("div");
+      scrollContainer.className = "petcare-table-scroll";
+      scrollContainer.setAttribute("role", "region");
+      scrollContainer.setAttribute("aria-label", "Bảng dữ liệu có thể cuộn ngang");
+      parent.insertBefore(scrollContainer, table);
+      scrollContainer.append(table);
+    }
+  }
 
   const pageLocation = new URL(location.href);
   const pageGroup = pageGroups.find((group) =>

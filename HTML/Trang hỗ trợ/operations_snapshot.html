@@ -4,44 +4,1447 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Mẫu báo cáo vận hành PetCare với trạng thái nguồn dữ liệu, định nghĩa KPI và các hàng chờ vận hành; không chứa số liệu kết quả giả lập.">
-  <title>PetCare | Operations Snapshot</title>
-  <link rel="stylesheet" href="../styles/petcare_pages.css">
+  <title>PetCare | Operations Snapshot — Command Center</title>
   <style>
-    .report-meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 20px; }
-    .meta-item, .metric, .report-panel { min-width: 0; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
-    .meta-item { padding: 12px 14px; }
-    .meta-item span { display: block; color: var(--muted); font-size: 11px; }
-    .meta-item strong { display: block; margin-top: 4px; font-size: 13px; overflow-wrap: anywhere; }
-    .report-notice { margin-top: 16px; padding: 13px 16px; border-left: 3px solid var(--coral); background: #fff; color: var(--ink); }
-    .report-notice strong { display: block; margin-bottom: 3px; }
-    .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-    .metric { padding: 16px; }
-    .metric-label { display: block; color: var(--muted); font-size: 12px; }
-    .metric-value { display: block; margin: 12px 0 8px; color: var(--green-dark); font: 500 25px/1.1 'Newsreader', Georgia, serif; }
-    .metric small { display: block; min-height: 36px; color: var(--muted); font-size: 11px; line-height: 1.45; }
-    .metric-tag { display: inline-block; margin-top: 10px; padding: 3px 7px; border-radius: 3px; color: #79501f; background: #fff2d8; font-size: 10px; font-weight: 700; }
-    .report-layout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-    .report-panel { padding: 18px; }
-    .report-panel h3 { margin-bottom: 5px; font-size: 22px; }
-    .panel-intro { margin: 0 0 14px; color: var(--muted); font-size: 12px; }
-    .data-table { width: 100%; border-collapse: collapse; text-align: left; }
-    .data-table th, .data-table td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
-    .data-table th { color: var(--green); font-size: 10px; text-transform: uppercase; }
-    .data-table td { font-size: 12px; }
-    .empty-row { color: var(--muted); font-style: italic; }
-    .metric-definitions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-    .metric-definitions .tile { min-height: 0; }
-    .metric-definitions code { color: var(--green); font-size: 11px; white-space: normal; }
-    .source-list { margin: 0; padding-left: 20px; color: var(--muted); }
-    .source-list li { margin: 7px 0; }
-    @media (max-width: 760px) { .report-meta, .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .report-layout, .metric-definitions { grid-template-columns: 1fr; } }
-    @media (max-width: 440px) { .report-meta { grid-template-columns: 1fr 1fr; } .metric-grid { grid-template-columns: 1fr 1fr; } .data-table th, .data-table td { padding: 8px 5px; font-size: 11px; } }
+    /* ============================================================
+       CORE RESET
+       ============================================================ */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* Background */
+      --bg-0: #040d10;
+      --bg-1: #061716;
+      --bg-2: #081d1c;
+      --bg-3: #0b2422;
+
+      /* Surfaces */
+      --surface: rgba(9, 27, 26, 0.7);
+      --surface-2: rgba(13, 38, 36, 0.88);
+      --glass: rgba(255, 255, 255, 0.035);
+      --glass-2: rgba(255, 255, 255, 0.065);
+
+      /* Lines */
+      --line: rgba(180, 240, 220, 0.11);
+      --line-2: rgba(180, 240, 220, 0.05);
+      --line-3: rgba(180, 240, 220, 0.22);
+
+      /* Text */
+      --text: #edfaf5;
+      --ink: #edfaf5;
+      --muted: #a8c8ba;
+      --muted-2: #7fa394;
+      --muted-3: #557066;
+
+      /* Accents */
+      --green: #7fe6b5;
+      --green-2: #4dd99a;
+      --green-dark: #4dd99a;
+      --green-deep: #1e6b52;
+      --gold: #efc86d;
+      --gold-soft: #f9e3a3;
+      --gold-deep: #c9a84c;
+      --sky: #8ad7ff;
+      --sky-2: #5bc0f0;
+      --purple: #b8a9ff;
+      --coral: #ff8d7d;
+      --danger: #ff8d7d;
+      --amber: #f5b855;
+
+      /* Shadows */
+      --shadow-xl: 0 40px 100px rgba(0, 0, 0, 0.6);
+      --shadow-lg: 0 30px 80px rgba(0, 0, 0, 0.5);
+      --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.35);
+      --shadow-sm: 0 6px 18px rgba(0, 0, 0, 0.25);
+
+      /* Radii */
+      --radius-xl: 32px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --radius-xs: 8px;
+
+      /* Fonts */
+      --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
+      --font-body: "Segoe UI", "Inter", Tahoma, Geneva, Verdana, sans-serif;
+      --font-mono: "SF Mono", Consolas, "Courier New", monospace;
+
+      /* Transitions */
+      --transition: 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      --transition-fast: 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--bg-0);
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      font-feature-settings: "ss01", "cv11";
+      transition: background 0.6s ease, color 0.6s ease;
+    }
+
+    /* ============================================================
+       ANIMATED BACKGROUND
+       ============================================================ */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      background:
+        radial-gradient(ellipse 85% 60% at 12% 8%, rgba(127, 230, 181, 0.13), transparent 55%),
+        radial-gradient(ellipse 70% 55% at 88% 18%, rgba(138, 215, 255, 0.1), transparent 55%),
+        radial-gradient(ellipse 90% 70% at 50% 100%, rgba(239, 200, 109, 0.08), transparent 60%),
+        radial-gradient(ellipse 60% 50% at 0% 60%, rgba(184, 169, 255, 0.05), transparent 60%),
+        linear-gradient(160deg, var(--bg-0), var(--bg-1) 40%, var(--bg-2) 70%, var(--bg-3));
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(127, 230, 181, 0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(127, 230, 181, 0.022) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 75% 65% at 50% 30%, #000 15%, transparent 78%);
+      -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 30%, #000 15%, transparent 78%);
+    }
+
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.32;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.5;
+      animation: float 22s ease-in-out infinite;
+      will-change: transform;
+    }
+    .orb-1 { width: 500px; height: 500px; top: -160px; left: -140px; background: radial-gradient(circle, rgba(127, 230, 181, 0.38), transparent 70%); }
+    .orb-2 { width: 560px; height: 560px; bottom: -220px; right: -160px; background: radial-gradient(circle, rgba(138, 215, 255, 0.28), transparent 70%); animation-delay: -7s; }
+    .orb-3 { width: 440px; height: 440px; top: 45%; left: 55%; background: radial-gradient(circle, rgba(239, 200, 109, 0.22), transparent 70%); animation-delay: -14s; }
+    .orb-4 { width: 380px; height: 380px; top: 15%; right: 25%; background: radial-gradient(circle, rgba(184, 169, 255, 0.16), transparent 70%); animation-delay: -18s; }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(45px, -35px) scale(1.08); }
+      66% { transform: translate(-35px, 28px) scale(0.94); }
+    }
+
+    a { color: inherit; text-decoration: none; }
+    ::selection { background: rgba(127, 230, 181, 0.35); color: #041210; }
+
+    ::-webkit-scrollbar { width: 11px; height: 11px; }
+    ::-webkit-scrollbar-track { background: var(--bg-0); }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--green-2), var(--sky-2));
+      border-radius: 11px;
+      border: 2px solid var(--bg-0);
+    }
+    ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--green), var(--sky)); }
+
+    /* ============================================================
+       SCROLL PROGRESS
+       ============================================================ */
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--green), var(--sky), var(--gold));
+      z-index: 200;
+      box-shadow: 0 0 20px rgba(127, 230, 181, 0.6);
+      transition: width 0.1s linear;
+    }
+
+    /* ============================================================
+       LANGUAGE SWITCH (giữ cơ chế cũ)
+       ============================================================ */
+    [data-lang="en"] { display: none; }
+    body.show-en [data-lang="vi"] { display: none; }
+    body.show-en [data-lang="en"] { display: inline; }
+    body.show-en .en { display: block; }
+
+    /* ============================================================
+       HEADER
+       ============================================================ */
+    .site-header {
+      position: sticky;
+      top: 16px;
+      z-index: 100;
+      max-width: 1420px;
+      margin: 16px auto 0;
+      padding: 14px 24px;
+      background: rgba(4, 13, 15, 0.72);
+      backdrop-filter: blur(24px) saturate(170%);
+      -webkit-backdrop-filter: blur(24px) saturate(170%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+      transition: var(--transition);
+    }
+
+    .site-header.scrolled {
+      background: rgba(4, 13, 15, 0.94);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .header-inner {
+      max-width: 1420px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      transition: var(--transition);
+    }
+
+    .brand:hover { transform: translateY(-1px); filter: brightness(1.1); }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px 14px 14px 5px;
+      background: linear-gradient(135deg, var(--green), var(--sky-2), var(--gold), var(--purple));
+      background-size: 200% 200%;
+      animation: gradientShift 6s ease infinite;
+      color: #041210;
+      font-weight: 900;
+      font-size: 1.15rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(127, 230, 181, 0.4), inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.7) 50%, transparent 60%);
+      transform: translateX(-100%);
+      animation: shine 3.5s ease-in-out infinite;
+    }
+
+    @keyframes shine {
+      0%, 70%, 100% { transform: translateX(-100%); }
+      85% { transform: translateX(100%); }
+    }
+
+    .brand-text {
+      background: linear-gradient(135deg, #fff, var(--green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .header-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .header-nav a {
+      position: relative;
+      padding: 10px 15px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--glass);
+      color: var(--muted);
+      font-size: 0.66rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 800;
+      transition: var(--transition);
+      overflow: hidden;
+    }
+
+    .header-nav a::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(127, 230, 181, 0.18), rgba(138, 215, 255, 0.1));
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .header-nav a:hover {
+      border-color: rgba(127, 230, 181, 0.4);
+      color: var(--green);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(127, 230, 181, 0.15);
+    }
+
+    .header-nav a:hover::before { opacity: 1; }
+
+    .lang-button {
+      padding: 10px 18px;
+      border: 1px solid rgba(127, 230, 181, 0.35);
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(127, 230, 181, 0.12), rgba(138, 215, 255, 0.08));
+      color: var(--green);
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: inherit;
+      box-shadow: 0 4px 14px rgba(127, 230, 181, 0.15);
+    }
+
+    .lang-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(127, 230, 181, 0.3);
+      background: linear-gradient(135deg, rgba(127, 230, 181, 0.2), rgba(138, 215, 255, 0.12));
+    }
+
+    /* ============================================================
+       PAGE SHELL
+       ============================================================ */
+    .page-shell {
+      max-width: 1420px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+      position: relative;
+    }
+
+    /* ============================================================
+       LIVE STATUS BAR
+       ============================================================ */
+    .live-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 26px;
+      padding: 14px 22px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      background: linear-gradient(90deg, rgba(127, 230, 181, 0.06), rgba(138, 215, 255, 0.04));
+      flex-wrap: wrap;
+      animation: fadeUp 0.7s ease both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .live-bar::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--green), var(--sky));
+      box-shadow: 0 0 20px rgba(127, 230, 181, 0.6);
+    }
+
+    .live-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--amber);
+    }
+
+    .live-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--amber);
+      box-shadow: 0 0 12px var(--amber);
+      position: relative;
+    }
+
+    .live-dot::after {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px solid var(--amber);
+      animation: ringPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes ringPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.8); opacity: 0; }
+    }
+
+    .live-timestamp {
+      color: var(--muted-2);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      font-family: var(--font-mono);
+    }
+
+    .live-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .live-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: var(--glass-2);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .live-chip:hover {
+      color: var(--green);
+      border-color: rgba(127, 230, 181, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(127, 230, 181, 0.15);
+    }
+
+    /* ============================================================
+       PAGE HERO
+       ============================================================ */
+    .page-hero {
+      position: relative;
+      margin-top: 32px;
+      padding: 44px 40px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, rgba(127, 230, 181, 0.07), rgba(138, 215, 255, 0.04) 40%, rgba(8, 22, 20, 0.95));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+      animation: fadeUp 0.9s ease both;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .page-hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(127, 230, 181, 0.7), rgba(138, 215, 255, 0.7), transparent);
+    }
+
+    .page-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(700px circle at var(--mx, 50%) var(--my, 50%), rgba(127, 230, 181, 0.1), transparent 50%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    .page-hero:hover::after { opacity: 1; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: rgba(127, 230, 181, 0.08);
+      color: var(--green);
+      font-size: 0.66rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 800;
+      border: 1px solid rgba(127, 230, 181, 0.3);
+      box-shadow: 0 4px 18px rgba(127, 230, 181, 0.1);
+      position: relative;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.75); }
+    }
+
+    .page-hero h1 {
+      margin: 22px 0 18px;
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: clamp(2.6rem, 5vw, 5rem);
+      line-height: 0.96;
+      letter-spacing: -0.06em;
+      background: linear-gradient(135deg, #ffffff 0%, var(--green) 40%, var(--sky) 70%, var(--gold) 100%);
+      background-size: 200% 200%;
+      animation: gradientShift 8s ease infinite;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 80px rgba(127, 230, 181, 0.15);
+    }
+
+    .lede {
+      margin: 0;
+      max-width: 780px;
+      color: var(--muted);
+      font-size: 1.06rem;
+      line-height: 1.82;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-foot {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--glass);
+      color: var(--text);
+      font-size: 0.65rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      font-weight: 800;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tag::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(127, 230, 181, 0.15), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+    }
+
+    .tag:hover {
+      transform: translateY(-2px);
+      border-color: rgba(127, 230, 181, 0.5);
+      box-shadow: 0 8px 24px rgba(127, 230, 181, 0.15);
+      color: var(--green);
+    }
+
+    .tag:hover::before { transform: translateX(0); }
+
+    /* ============================================================
+       REPORT META
+       ============================================================ */
+    .report-meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+      animation: fadeUp 0.9s ease both;
+      animation-delay: 0.1s;
+    }
+
+    .meta-item {
+      position: relative;
+      padding: 20px 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: linear-gradient(150deg, rgba(255,255,255,0.035), rgba(255,255,255,0.008));
+      transition: var(--transition);
+      overflow: hidden;
+    }
+
+    .meta-item::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--green), var(--sky));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s ease;
+    }
+
+    .meta-item:hover {
+      transform: translateY(-4px);
+      border-color: rgba(127, 230, 181, 0.3);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .meta-item:hover::before { transform: scaleX(1); }
+
+    .meta-item span {
+      display: block;
+      color: var(--muted-2);
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .meta-item strong {
+      display: block;
+      margin-top: 10px;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+      overflow-wrap: anywhere;
+      letter-spacing: -0.01em;
+    }
+
+    /* ============================================================
+       REPORT NOTICE
+       ============================================================ */
+    .report-notice {
+      position: relative;
+      margin-top: 22px;
+      padding: 20px 24px 20px 30px;
+      border-left: 4px solid var(--amber);
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, rgba(245, 184, 85, 0.08), rgba(245, 184, 85, 0.02));
+      border-top: 1px solid rgba(245, 184, 85, 0.15);
+      border-right: 1px solid rgba(245, 184, 85, 0.15);
+      border-bottom: 1px solid rgba(245, 184, 85, 0.15);
+      color: var(--text);
+      animation: fadeUp 0.9s ease both;
+      animation-delay: 0.15s;
+      overflow: hidden;
+    }
+
+    .report-notice::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0% 50%, rgba(245, 184, 85, 0.15), transparent 40%);
+      pointer-events: none;
+    }
+
+    .report-notice strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--amber);
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .report-notice span {
+      position: relative;
+      z-index: 1;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.94rem;
+    }
+
+    /* ============================================================
+       SECTION
+       ============================================================ */
+    .section {
+      margin-top: 60px;
+      animation: fadeUp 0.9s ease both;
+      animation-delay: 0.2s;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 28px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .section-head::after {
+      content: "";
+      position: absolute;
+      left: 0; bottom: -1px;
+      width: 100px; height: 2px;
+      background: linear-gradient(90deg, var(--green), var(--sky), transparent);
+      border-radius: 2px;
+      box-shadow: 0 0 20px rgba(127, 230, 181, 0.4);
+    }
+
+    .section-head h2 {
+      margin: 12px 0 0;
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: clamp(1.6rem, 2.6vw, 2.5rem);
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, #fff, var(--sky));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.15;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 460px;
+      color: var(--muted-2);
+      font-size: 0.86rem;
+      line-height: 1.6;
+      text-align: right;
+    }
+
+    /* ============================================================
+       METRIC GRID
+       ============================================================ */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      perspective: 1200px;
+    }
+
+    .metric {
+      position: relative;
+      padding: 28px 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(150deg, rgba(255,255,255,0.035), rgba(255,255,255,0.008));
+      transition: var(--transition);
+      overflow: hidden;
+      transform-style: preserve-3d;
+      will-change: transform;
+      min-height: 240px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--green), var(--sky));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s ease;
+    }
+
+    .metric::after {
+      content: "";
+      position: absolute;
+      width: 150px; height: 150px;
+      border-radius: 50%;
+      top: -55px; right: -55px;
+      background: radial-gradient(circle, rgba(127, 230, 181, 0.12), transparent 70%);
+      transition: var(--transition);
+      pointer-events: none;
+    }
+
+    .metric:hover {
+      transform: translateY(-6px);
+      border-color: rgba(127, 230, 181, 0.32);
+      box-shadow: 0 26px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(127, 230, 181, 0.1);
+      background: linear-gradient(150deg, rgba(127, 230, 181, 0.07), rgba(138, 215, 255, 0.035));
+    }
+
+    .metric:hover::before { transform: scaleX(1); }
+    .metric:hover::after { transform: scale(1.5); opacity: 0.9; }
+
+    .metric-label {
+      display: block;
+      color: var(--muted-2);
+      font-size: 0.66rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 800;
+      position: relative;
+      z-index: 1;
+      transition: var(--transition);
+    }
+
+    .metric:hover .metric-label { color: var(--green); }
+
+    .metric-value {
+      display: block;
+      margin: 16px 0 10px;
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #fff, var(--green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      z-index: 1;
+      transition: var(--transition);
+    }
+
+    .metric:hover .metric-value {
+      background: linear-gradient(135deg, var(--green), var(--sky));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .metric small {
+      display: block;
+      min-height: 40px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.55;
+      position: relative;
+      z-index: 1;
+      margin-top: auto;
+    }
+
+    .metric-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      color: var(--amber);
+      background: rgba(245, 184, 85, 0.08);
+      border: 1px solid rgba(245, 184, 85, 0.25);
+      font-size: 0.62rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+      width: fit-content;
+      transition: var(--transition);
+    }
+
+    .metric-tag::before {
+      content: "";
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--amber);
+      box-shadow: 0 0 8px var(--amber);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .metric:hover .metric-tag {
+      background: rgba(245, 184, 85, 0.15);
+      box-shadow: 0 0 20px rgba(245, 184, 85, 0.3);
+    }
+
+    /* ============================================================
+       REPORT LAYOUT (Queues)
+       ============================================================ */
+    .report-layout {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .report-panel {
+      position: relative;
+      padding: 28px 26px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(150deg, rgba(255,255,255,0.035), rgba(255,255,255,0.008));
+      transition: var(--transition);
+      overflow: hidden;
+    }
+
+    .report-panel::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--green), var(--sky));
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.5s ease;
+    }
+
+    .report-panel::after {
+      content: "";
+      position: absolute;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      top: -65px; right: -65px;
+      background: radial-gradient(circle, rgba(127, 230, 181, 0.1), transparent 70%);
+      transition: var(--transition);
+      pointer-events: none;
+    }
+
+    .report-panel:hover {
+      transform: translateY(-4px);
+      border-color: rgba(127, 230, 181, 0.28);
+      box-shadow: 0 22px 55px rgba(0, 0, 0, 0.42);
+      background: linear-gradient(150deg, rgba(127, 230, 181, 0.05), rgba(138, 215, 255, 0.025));
+    }
+
+    .report-panel:hover::before { transform: scaleY(1); }
+    .report-panel:hover::after { transform: scale(1.4); opacity: 0.9; }
+
+    .report-panel h3 {
+      margin: 0 0 8px;
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 1.4rem;
+      letter-spacing: -0.03em;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .report-panel h3::before {
+      content: "";
+      width: 4px; height: 20px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, var(--green), var(--sky));
+      box-shadow: 0 0 12px rgba(127, 230, 181, 0.5);
+      flex-shrink: 0;
+    }
+
+    .panel-intro {
+      margin: 0 0 18px;
+      color: var(--muted-2);
+      font-size: 0.86rem;
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================================================
+       DATA TABLE
+       ============================================================ */
+    .data-table-wrap {
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line-2);
+      overflow: hidden;
+      background: rgba(255,255,255,0.015);
+      position: relative;
+      z-index: 1;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line-2);
+      vertical-align: top;
+      transition: var(--transition);
+    }
+
+    .data-table th {
+      color: var(--green);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-weight: 900;
+      background: linear-gradient(90deg, rgba(127, 230, 181, 0.06), transparent);
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .data-table th::after {
+      content: "";
+      position: absolute;
+      left: 16px; bottom: 8px;
+      width: 20px; height: 2px;
+      background: linear-gradient(90deg, var(--green), transparent);
+      border-radius: 2px;
+    }
+
+    .data-table td {
+      font-size: 0.86rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .data-table td:first-child {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .data-table td:nth-child(3) {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: var(--sky);
+      letter-spacing: 0.02em;
+    }
+
+    .data-table tbody tr {
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .data-table tbody tr:hover {
+      background: linear-gradient(90deg, rgba(127, 230, 181, 0.06), transparent);
+    }
+
+    .data-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .empty-row {
+      color: var(--amber) !important;
+      font-style: italic;
+      font-family: var(--font-body) !important;
+      font-weight: 700 !important;
+    }
+
+    .empty-row::before {
+      content: "○ ";
+      color: var(--amber);
+    }
+
+    /* ============================================================
+       SOURCE LIST
+       ============================================================ */
+    .source-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .source-list li {
+      position: relative;
+      padding: 12px 14px 12px 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line-2);
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.6;
+      transition: var(--transition);
+    }
+
+    .source-list li::before {
+      content: "▸";
+      position: absolute;
+      left: 16px;
+      color: var(--sky);
+      font-weight: 900;
+      text-shadow: 0 0 8px rgba(138, 215, 255, 0.5);
+      transition: var(--transition);
+    }
+
+    .source-list li:hover {
+      background: rgba(127, 230, 181, 0.05);
+      border-color: rgba(127, 230, 181, 0.25);
+      color: var(--text);
+      transform: translateX(3px);
+    }
+
+    .source-list li:hover::before {
+      color: var(--green);
+      text-shadow: 0 0 15px rgba(127, 230, 181, 0.8);
+    }
+
+    /* ============================================================
+       METRIC DEFINITIONS
+       ============================================================ */
+    .metric-definitions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      perspective: 1200px;
+    }
+
+    .metric-definitions .tile {
+      position: relative;
+      padding: 30px 26px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(150deg, rgba(255,255,255,0.035), rgba(255,255,255,0.008));
+      transition: var(--transition);
+      overflow: hidden;
+      transform-style: preserve-3d;
+      will-change: transform;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-definitions .tile::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--sky));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s ease;
+    }
+
+    .metric-definitions .tile::after {
+      content: "";
+      position: absolute;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      top: -60px; right: -60px;
+      background: radial-gradient(circle, rgba(239, 200, 109, 0.12), transparent 70%);
+      transition: var(--transition);
+      pointer-events: none;
+    }
+
+    .metric-definitions .tile:hover {
+      transform: translateY(-6px);
+      border-color: rgba(239, 200, 109, 0.32);
+      box-shadow: 0 26px 60px rgba(0, 0, 0, 0.45);
+      background: linear-gradient(150deg, rgba(239, 200, 109, 0.07), rgba(138, 215, 255, 0.03));
+    }
+
+    .metric-definitions .tile:hover::before { transform: scaleX(1); }
+    .metric-definitions .tile:hover::after { transform: scale(1.4); opacity: 0.9; }
+
+    .tile-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(239, 200, 109, 0.08);
+      border: 1px solid rgba(239, 200, 109, 0.28);
+      color: var(--gold);
+      font-size: 0.6rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      width: fit-content;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tile-kicker::before {
+      content: "";
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 8px var(--gold);
+    }
+
+    .metric-definitions .tile h3 {
+      margin: 18px 0 14px;
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 1.3rem;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      position: relative;
+      z-index: 1;
+    }
+
+    .metric-definitions code {
+      display: block;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(127, 230, 181, 0.06);
+      border: 1px solid rgba(127, 230, 181, 0.18);
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      line-height: 1.6;
+      white-space: normal;
+      word-break: break-word;
+      position: relative;
+      z-index: 1;
+    }
+
+    .metric-definitions .tile p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.65;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================================================
+       NOTE BLOCK
+       ============================================================ */
+    .note {
+      position: relative;
+      margin-top: 30px;
+      padding: 22px 26px 22px 32px;
+      border-left: 4px solid var(--green);
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, rgba(127, 230, 181, 0.06), rgba(127, 230, 181, 0.015));
+      border-top: 1px solid rgba(127, 230, 181, 0.15);
+      border-right: 1px solid rgba(127, 230, 181, 0.15);
+      border-bottom: 1px solid rgba(127, 230, 181, 0.15);
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.94rem;
+      overflow: hidden;
+    }
+
+    .note::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0% 50%, rgba(127, 230, 181, 0.12), transparent 40%);
+      pointer-events: none;
+    }
+
+    .note strong {
+      color: var(--green);
+      font-weight: 900;
+      position: relative;
+      z-index: 1;
+    }
+
+    .note span {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================================================
+       CTA TAG
+       ============================================================ */
+    .cta-row {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .cta-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 22px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(127, 230, 181, 0.4);
+      background: linear-gradient(135deg, rgba(127, 230, 181, 0.12), rgba(138, 215, 255, 0.06));
+      color: var(--green);
+      font-weight: 900;
+      font-size: 0.82rem;
+      letter-spacing: 0.05em;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .cta-tag::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(127, 230, 181, 0.2), rgba(138, 215, 255, 0.1));
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .cta-tag:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 34px rgba(127, 230, 181, 0.3);
+      border-color: rgba(127, 230, 181, 0.7);
+    }
+
+    .cta-tag:hover::before { opacity: 1; }
+
+    .cta-tag .arrow {
+      display: inline-block;
+      transition: transform var(--transition-fast);
+    }
+
+    .cta-tag:hover .arrow { transform: translate(3px, -3px); }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .site-footer {
+      margin-top: 70px;
+      padding: 28px 0;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted-2);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .site-footer span:first-child {
+      background: linear-gradient(135deg, #fff, var(--green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+
+    .site-footer a {
+      color: var(--green);
+      font-weight: 800;
+      border-bottom: 1px dashed rgba(127, 230, 181, 0.4);
+      transition: var(--transition);
+    }
+
+    .site-footer a:hover {
+      color: #fff;
+      border-bottom-color: var(--green);
+      text-shadow: 0 0 12px rgba(127, 230, 181, 0.5);
+    }
+
+    /* ============================================================
+       SCROLL REVEAL
+       ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 1100px) {
+      .report-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .report-layout { grid-template-columns: 1fr; }
+      .metric-definitions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 720px) {
+      .site-header { flex-direction: column; align-items: flex-start; padding: 14px 18px; margin: 10px auto 0; }
+      .header-nav { width: 100%; justify-content: flex-start; }
+      .header-nav a { flex: 1 1 auto; text-align: center; }
+      .page-shell { padding: 22px 14px 60px; }
+      .page-hero { padding: 30px 22px; }
+      .page-hero h1 { font-size: clamp(2.2rem, 9vw, 3.6rem); }
+      .metric-grid { grid-template-columns: 1fr; }
+      .metric-definitions { grid-template-columns: 1fr; }
+      .report-meta { grid-template-columns: 1fr; }
+      .section-head p { text-align: left; max-width: 100%; }
+      .site-footer { flex-direction: column; }
+      .data-table th,
+      .data-table td { padding: 10px 12px; font-size: 0.78rem; }
+      .data-table th { font-size: 0.58rem; }
+      .report-panel h3 { font-size: 1.2rem; }
+      .metric-definitions .tile { padding: 24px 22px; min-height: 0; }
+    }
+
+    /* ============================================================
+       ACCESSIBILITY
+       ============================================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
+    }
   </style>
 </head>
 <body>
-  <header class="site-header">
+  <!-- Scroll progress -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- Noise overlay -->
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <!-- Floating orbs -->
+  <div class="orb orb-1" aria-hidden="true"></div>
+  <div class="orb orb-2" aria-hidden="true"></div>
+  <div class="orb orb-3" aria-hidden="true"></div>
+  <div class="orb orb-4" aria-hidden="true"></div>
+
+  <header class="site-header" id="siteHeader">
     <div class="header-inner">
-      <a class="brand" href="../TRrang chính/index.html"><span class="brand-mark">P</span> PetCare / Operations</a>
+      <a class="brand" href="../TRrang chính/index.html">
+        <span class="brand-mark">P</span>
+        <span class="brand-text">PetCare / Operations</span>
+      </a>
       <div class="header-actions">
         <nav class="header-nav" aria-label="Primary navigation">
           <a href="../TRrang chính/index.html"><span data-lang="vi">Trang chủ</span><span data-lang="en">Home</span></a>
@@ -52,70 +1455,618 @@
       </div>
     </div>
   </header>
-  <main class="page-shell">
-    <section class="page-hero">
-      <span class="eyebrow"><span data-lang="vi">Snapshot / Mẫu báo cáo</span><span data-lang="en">Snapshot / Report template</span></span>
-      <h1><span data-lang="vi">Ảnh chụp vận hành</span><span data-lang="en">Operations Snapshot</span></h1>
-      <p class="lede"><span data-lang="vi">Khung rà soát nhanh cho chăm sóc, dịch vụ, bán hàng và tồn kho. Trang này không kết nối database và không đưa ra KPI thực tế.</span><span class="en" data-lang="en">A review layout for care, services, sales and inventory. This page is not connected to the database and reports no actual KPIs.</span></p>
-      <div class="hero-foot"><span class="tag">Python + PySide6</span><span class="tag">SQLite local</span><span class="tag"><span data-lang="vi">Không có dữ liệu trực tiếp</span><span data-lang="en">No live data</span></span></div>
-    </section>
 
-    <div class="report-meta" aria-label="Reporting context">
-      <div class="meta-item"><span><span data-lang="vi">Kỳ báo cáo</span><span data-lang="en">Reporting period</span></span><strong><span data-lang="vi">Chưa chọn</span><span data-lang="en">Not selected</span></strong></div>
-      <div class="meta-item"><span><span data-lang="vi">Nguồn dữ liệu</span><span data-lang="en">Data source</span></span><strong><span data-lang="vi">Chưa kết nối</span><span data-lang="en">Not connected</span></strong></div>
-      <div class="meta-item"><span><span data-lang="vi">Ngày trích xuất</span><span data-lang="en">Extracted at</span></span><strong>—</strong></div>
-      <div class="meta-item"><span><span data-lang="vi">Người xác nhận</span><span data-lang="en">Reviewed by</span></span><strong>—</strong></div>
+  <main class="page-shell">
+    <!-- LIVE STATUS BAR -->
+    <div class="live-bar">
+      <div class="live-status">
+        <span class="live-dot"></span>
+        <span data-lang="vi">Mẫu trình bày · Chưa kết nối dữ liệu</span>
+        <span data-lang="en">Presentation template · No data connected</span>
+      </div>
+      <div class="live-timestamp" id="liveTimestamp">—:—:—</div>
+      <div class="live-actions">
+        <span class="live-chip" data-filter="template">
+          <span data-lang="vi">📋 Template</span>
+          <span data-lang="en">📋 Template</span>
+        </span>
+        <span class="live-chip" data-filter="audit">
+          <span data-lang="vi">🔍 Audit ready</span>
+          <span data-lang="en">🔍 Audit ready</span>
+        </span>
+      </div>
     </div>
 
+    <!-- PAGE HERO -->
+    <section class="page-hero" id="pageHero">
+      <span class="eyebrow">
+        <span data-lang="vi">Snapshot / Mẫu báo cáo</span>
+        <span data-lang="en">Snapshot / Report template</span>
+      </span>
+      <h1>
+        <span data-lang="vi">Ảnh chụp vận hành</span>
+        <span data-lang="en">Operations Snapshot</span>
+      </h1>
+      <p class="lede">
+        <span data-lang="vi">Khung rà soát nhanh cho chăm sóc, dịch vụ, bán hàng và tồn kho. Trang này không kết nối database và không đưa ra KPI thực tế.</span>
+        <span class="en" data-lang="en">A review layout for care, services, sales and inventory. This page is not connected to the database and reports no actual KPIs.</span>
+      </p>
+      <div class="hero-foot">
+        <span class="tag">Python + PySide6</span>
+        <span class="tag">SQLite local</span>
+        <span class="tag">
+          <span data-lang="vi">Không có dữ liệu trực tiếp</span>
+          <span data-lang="en">No live data</span>
+        </span>
+        <span class="tag">
+          <span data-lang="vi">Audit-ready</span>
+          <span data-lang="en">Audit-ready</span>
+        </span>
+      </div>
+    </section>
+
+    <!-- REPORT META -->
+    <div class="report-meta" aria-label="Reporting context">
+      <div class="meta-item">
+        <span><span data-lang="vi">Kỳ báo cáo</span><span data-lang="en">Reporting period</span></span>
+        <strong><span data-lang="vi">Chưa chọn</span><span data-lang="en">Not selected</span></strong>
+      </div>
+      <div class="meta-item">
+        <span><span data-lang="vi">Nguồn dữ liệu</span><span data-lang="en">Data source</span></span>
+        <strong><span data-lang="vi">Chưa kết nối</span><span data-lang="en">Not connected</span></strong>
+      </div>
+      <div class="meta-item">
+        <span><span data-lang="vi">Ngày trích xuất</span><span data-lang="en">Extracted at</span></span>
+        <strong>—</strong>
+      </div>
+      <div class="meta-item">
+        <span><span data-lang="vi">Người xác nhận</span><span data-lang="en">Reviewed by</span></span>
+        <strong>—</strong>
+      </div>
+    </div>
+
+    <!-- REPORT NOTICE -->
     <div class="report-notice" role="note">
-      <strong><span data-lang="vi">Trạng thái: mẫu trình bày, chưa có số liệu vận hành.</span><span data-lang="en">Status: presentation template, no operational data loaded.</span></strong>
+      <strong>
+        <span data-lang="vi">Trạng thái: mẫu trình bày, chưa có số liệu vận hành.</span>
+        <span data-lang="en">Status: presentation template, no operational data loaded.</span>
+      </strong>
       <span data-lang="vi">Không thay trạng thái “Chưa có dữ liệu” bằng 0 hoặc phần trăm ước lượng. Chỉ phát hành snapshot sau khi xác định nguồn, kỳ báo cáo và người rà soát.</span>
       <span class="en" data-lang="en">Do not replace “No data” with zero or estimated percentages. Publish a snapshot only after identifying its source, reporting period and reviewer.</span>
     </div>
 
-    <section class="section">
-      <div class="section-head"><div><span class="eyebrow">01 / Summary</span><h2><span data-lang="vi">Chỉ số tổng quan</span><span data-lang="en">At-a-glance measures</span></h2></div><p><span data-lang="vi">Các giá trị hiện để trống có chủ ý; công thức và nguồn cần được xác nhận trước khi điền.</span><span data-lang="en">Values are intentionally empty; formulas and sources must be confirmed before entry.</span></p></div>
+    <!-- SECTION 01 - SUMMARY -->
+    <section class="section reveal">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">01 / Summary</span>
+          <h2>
+            <span data-lang="vi">Chỉ số tổng quan</span>
+            <span data-lang="en">At-a-glance measures</span>
+          </h2>
+        </div>
+        <p>
+          <span data-lang="vi">Các giá trị hiện để trống có chủ ý; công thức và nguồn cần được xác nhận trước khi điền.</span>
+          <span data-lang="en">Values are intentionally empty; formulas and sources must be confirmed before entry.</span>
+        </p>
+      </div>
+
       <div class="metric-grid">
-        <article class="metric"><span class="metric-label"><span data-lang="vi">Lịch dịch vụ hoàn tất</span><span data-lang="en">Completed service appointments</span></span><strong class="metric-value"><span data-lang="vi">Chưa có dữ liệu</span><span data-lang="en">No data</span></strong><small><span data-lang="vi">Nguồn yêu cầu: lịch hẹn trong kỳ đã chọn.</span><span data-lang="en">Required source: appointments in the selected period.</span></small><span class="metric-tag"><span data-lang="vi">Chưa đo</span><span data-lang="en">Not measured</span></span></article>
-        <article class="metric"><span class="metric-label"><span data-lang="vi">Đơn đã thanh toán</span><span data-lang="en">Paid orders</span></span><strong class="metric-value"><span data-lang="vi">Chưa có dữ liệu</span><span data-lang="en">No data</span></strong><small><span data-lang="vi">Đối chiếu trạng thái đơn và khoản thanh toán.</span><span data-lang="en">Reconcile order status and recorded payments.</span></small><span class="metric-tag"><span data-lang="vi">Chưa đo</span><span data-lang="en">Not measured</span></span></article>
-        <article class="metric"><span class="metric-label"><span data-lang="vi">Tác vụ chăm sóc còn mở</span><span data-lang="en">Open care tasks</span></span><strong class="metric-value"><span data-lang="vi">Chưa có dữ liệu</span><span data-lang="en">No data</span></strong><small><span data-lang="vi">Cần lọc theo trạng thái và thời điểm.</span><span data-lang="en">Filter by task status and timestamp.</span></small><span class="metric-tag"><span data-lang="vi">Chưa đo</span><span data-lang="en">Not measured</span></span></article>
-        <article class="metric"><span class="metric-label"><span data-lang="vi">Cảnh báo tồn cần rà soát</span><span data-lang="en">Inventory alerts to review</span></span><strong class="metric-value"><span data-lang="vi">Chưa có dữ liệu</span><span data-lang="en">No data</span></strong><small><span data-lang="vi">Phụ thuộc số lượng, ngưỡng và hạn dùng đã nhập.</span><span data-lang="en">Depends on entered quantities, thresholds and expiry dates.</span></small><span class="metric-tag"><span data-lang="vi">Chưa đo</span><span data-lang="en">Not measured</span></span></article>
+        <article class="metric">
+          <span class="metric-label">
+            <span data-lang="vi">Lịch dịch vụ hoàn tất</span>
+            <span data-lang="en">Completed service appointments</span>
+          </span>
+          <strong class="metric-value">
+            <span data-lang="vi">Chưa có dữ liệu</span>
+            <span data-lang="en">No data</span>
+          </strong>
+          <small>
+            <span data-lang="vi">Nguồn yêu cầu: lịch hẹn trong kỳ đã chọn.</span>
+            <span data-lang="en">Required source: appointments in the selected period.</span>
+          </small>
+          <span class="metric-tag">
+            <span data-lang="vi">Chưa đo</span>
+            <span data-lang="en">Not measured</span>
+          </span>
+        </article>
+
+        <article class="metric">
+          <span class="metric-label">
+            <span data-lang="vi">Đơn đã thanh toán</span>
+            <span data-lang="en">Paid orders</span>
+          </span>
+          <strong class="metric-value">
+            <span data-lang="vi">Chưa có dữ liệu</span>
+            <span data-lang="en">No data</span>
+          </strong>
+          <small>
+            <span data-lang="vi">Đối chiếu trạng thái đơn và khoản thanh toán.</span>
+            <span data-lang="en">Reconcile order status and recorded payments.</span>
+          </small>
+          <span class="metric-tag">
+            <span data-lang="vi">Chưa đo</span>
+            <span data-lang="en">Not measured</span>
+          </span>
+        </article>
+
+        <article class="metric">
+          <span class="metric-label">
+            <span data-lang="vi">Tác vụ chăm sóc còn mở</span>
+            <span data-lang="en">Open care tasks</span>
+          </span>
+          <strong class="metric-value">
+            <span data-lang="vi">Chưa có dữ liệu</span>
+            <span data-lang="en">No data</span>
+          </strong>
+          <small>
+            <span data-lang="vi">Cần lọc theo trạng thái và thời điểm.</span>
+            <span data-lang="en">Filter by task status and timestamp.</span>
+          </small>
+          <span class="metric-tag">
+            <span data-lang="vi">Chưa đo</span>
+            <span data-lang="en">Not measured</span>
+          </span>
+        </article>
+
+        <article class="metric">
+          <span class="metric-label">
+            <span data-lang="vi">Cảnh báo tồn cần rà soát</span>
+            <span data-lang="en">Inventory alerts to review</span>
+          </span>
+          <strong class="metric-value">
+            <span data-lang="vi">Chưa có dữ liệu</span>
+            <span data-lang="en">No data</span>
+          </strong>
+          <small>
+            <span data-lang="vi">Phụ thuộc số lượng, ngưỡng và hạn dùng đã nhập.</span>
+            <span data-lang="en">Depends on entered quantities, thresholds and expiry dates.</span>
+          </small>
+          <span class="metric-tag">
+            <span data-lang="vi">Chưa đo</span>
+            <span data-lang="en">Not measured</span>
+          </span>
+        </article>
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-head"><div><span class="eyebrow">02 / Operational queues</span><h2><span data-lang="vi">Hàng chờ cần theo dõi</span><span data-lang="en">Queues to review</span></h2></div><p><span data-lang="vi">Không có kết nối dữ liệu trong trang mẫu; các bảng dưới đây thể hiện cấu trúc báo cáo đề xuất.</span><span data-lang="en">This template has no data connection; the tables below show a proposed reporting structure.</span></p></div>
+    <!-- SECTION 02 - OPERATIONAL QUEUES -->
+    <section class="section reveal">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">02 / Operational queues</span>
+          <h2>
+            <span data-lang="vi">Hàng chờ cần theo dõi</span>
+            <span data-lang="en">Queues to review</span>
+          </h2>
+        </div>
+        <p>
+          <span data-lang="vi">Không có kết nối dữ liệu trong trang mẫu; các bảng dưới đây thể hiện cấu trúc báo cáo đề xuất.</span>
+          <span data-lang="en">This template has no data connection; the tables below show a proposed reporting structure.</span>
+        </p>
+      </div>
+
       <div class="report-layout">
-        <article class="report-panel"><h3><span data-lang="vi">Chăm sóc & sức khỏe</span><span data-lang="en">Care & health</span></h3><p class="panel-intro"><span data-lang="vi">Đối chiếu bản ghi tác vụ/nhắc việc với hồ sơ nguồn.</span><span data-lang="en">Reconcile tasks/reminders with source records.</span></p><table class="data-table"><thead><tr><th><span data-lang="vi">Mục rà soát</span><span data-lang="en">Review item</span></th><th><span data-lang="vi">Số lượng</span><span data-lang="en">Count</span></th><th><span data-lang="vi">Nguồn</span><span data-lang="en">Source</span></th></tr></thead><tbody><tr><td><span data-lang="vi">Tác vụ đến hạn</span><span data-lang="en">Due tasks</span></td><td class="empty-row"><span data-lang="vi">Chưa tải</span><span data-lang="en">Not loaded</span></td><td>care_tasks</td></tr><tr><td><span data-lang="vi">Lịch tiêm cần rà</span><span data-lang="en">Vaccinations to review</span></td><td class="empty-row"><span data-lang="vi">Chưa tải</span><span data-lang="en">Not loaded</span></td><td>vaccinations</td></tr></tbody></table></article>
-        <article class="report-panel"><h3><span data-lang="vi">Dịch vụ & bán hàng</span><span data-lang="en">Services & sales</span></h3><p class="panel-intro"><span data-lang="vi">Tách lịch hoàn tất, hủy, không đến và thanh toán đã ghi nhận.</span><span data-lang="en">Separate completed, canceled, no-show and recorded payment states.</span></p><table class="data-table"><thead><tr><th><span data-lang="vi">Mục rà soát</span><span data-lang="en">Review item</span></th><th><span data-lang="vi">Số lượng</span><span data-lang="en">Count</span></th><th><span data-lang="vi">Nguồn</span><span data-lang="en">Source</span></th></tr></thead><tbody><tr><td><span data-lang="vi">Lịch hoàn tất</span><span data-lang="en">Completed appointments</span></td><td class="empty-row"><span data-lang="vi">Chưa tải</span><span data-lang="en">Not loaded</span></td><td>service_appointments</td></tr><tr><td><span data-lang="vi">Đơn đã thanh toán</span><span data-lang="en">Paid orders</span></td><td class="empty-row"><span data-lang="vi">Chưa tải</span><span data-lang="en">Not loaded</span></td><td>orders / payments</td></tr></tbody></table></article>
-        <article class="report-panel"><h3><span data-lang="vi">Kho & hạn dùng</span><span data-lang="en">Inventory & expiry</span></h3><p class="panel-intro"><span data-lang="vi">Đối chiếu số lượng khả dụng với lô và ngưỡng cảnh báo.</span><span data-lang="en">Reconcile available quantities with batches and alert thresholds.</span></p><table class="data-table"><thead><tr><th><span data-lang="vi">Mục rà soát</span><span data-lang="en">Review item</span></th><th><span data-lang="vi">Số lượng</span><span data-lang="en">Count</span></th><th><span data-lang="vi">Nguồn</span><span data-lang="en">Source</span></th></tr></thead><tbody><tr><td><span data-lang="vi">Dưới ngưỡng tồn</span><span data-lang="en">Below stock threshold</span></td><td class="empty-row"><span data-lang="vi">Chưa tải</span><span data-lang="en">Not loaded</span></td><td>inventory items</td></tr><tr><td><span data-lang="vi">Lô gần hết hạn</span><span data-lang="en">Near-expiry batches</span></td><td class="empty-row"><span data-lang="vi">Chưa tải</span><span data-lang="en">Not loaded</span></td><td>inventory batches</td></tr></tbody></table></article>
-        <article class="report-panel"><h3><span data-lang="vi">Tính đầy đủ dữ liệu</span><span data-lang="en">Data completeness</span></h3><p class="panel-intro"><span data-lang="vi">Trước khi so sánh kỳ, kiểm tra bản ghi thiếu và điều kiện loại trừ.</span><span data-lang="en">Before period comparisons, check missing records and exclusions.</span></p><ul class="source-list"><li><span data-lang="vi">Kỳ bắt đầu/kết thúc và múi giờ</span><span data-lang="en">Period start/end and timezone</span></li><li><span data-lang="vi">Định nghĩa trạng thái đủ điều kiện</span><span data-lang="en">Definition of eligible states</span></li><li><span data-lang="vi">Số bản ghi thiếu hoặc bị loại</span><span data-lang="en">Missing or excluded record counts</span></li></ul></article>
+        <article class="report-panel">
+          <h3>
+            <span data-lang="vi">Chăm sóc & sức khỏe</span>
+            <span data-lang="en">Care & health</span>
+          </h3>
+          <p class="panel-intro">
+            <span data-lang="vi">Đối chiếu bản ghi tác vụ/nhắc việc với hồ sơ nguồn.</span>
+            <span data-lang="en">Reconcile tasks/reminders with source records.</span>
+          </p>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th><span data-lang="vi">Mục rà soát</span><span data-lang="en">Review item</span></th>
+                  <th><span data-lang="vi">Số lượng</span><span data-lang="en">Count</span></th>
+                  <th><span data-lang="vi">Nguồn</span><span data-lang="en">Source</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span data-lang="vi">Tác vụ đến hạn</span><span data-lang="en">Due tasks</span></td>
+                  <td class="empty-row"><span data-lang="vi">Chưa tải</span><span data-lang="en">Not loaded</span></td>
+                  <td>care_tasks</td>
+                </tr>
+                <tr>
+                  <td><span data-lang="vi">Lịch tiêm cần rà</span><span data-lang="en">Vaccinations to review</span></td>
+                  <td class="empty-row"><span data-lang="vi">Chưa tải</span><span data-lang="en">Not loaded</span></td>
+                  <td>vaccinations</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="report-panel">
+          <h3>
+            <span data-lang="vi">Dịch vụ & bán hàng</span>
+            <span data-lang="en">Services & sales</span>
+          </h3>
+          <p class="panel-intro">
+            <span data-lang="vi">Tách lịch hoàn tất, hủy, không đến và thanh toán đã ghi nhận.</span>
+            <span data-lang="en">Separate completed, canceled, no-show and recorded payment states.</span>
+          </p>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th><span data-lang="vi">Mục rà soát</span><span data-lang="en">Review item</span></th>
+                  <th><span data-lang="vi">Số lượng</span><span data-lang="en">Count</span></th>
+                  <th><span data-lang="vi">Nguồn</span><span data-lang="en">Source</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span data-lang="vi">Lịch hoàn tất</span><span data-lang="en">Completed appointments</span></td>
+                  <td class="empty-row"><span data-lang="vi">Chưa tải</span><span data-lang="en">Not loaded</span></td>
+                  <td>service_appointments</td>
+                </tr>
+                <tr>
+                  <td><span data-lang="vi">Đơn đã thanh toán</span><span data-lang="en">Paid orders</span></td>
+                  <td class="empty-row"><span data-lang="vi">Chưa tải</span><span data-lang="en">Not loaded</span></td>
+                  <td>orders / payments</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="report-panel">
+          <h3>
+            <span data-lang="vi">Kho & hạn dùng</span>
+            <span data-lang="en">Inventory & expiry</span>
+          </h3>
+          <p class="panel-intro">
+            <span data-lang="vi">Đối chiếu số lượng khả dụng với lô và ngưỡng cảnh báo.</span>
+            <span data-lang="en">Reconcile available quantities with batches and alert thresholds.</span>
+          </p>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th><span data-lang="vi">Mục rà soát</span><span data-lang="en">Review item</span></th>
+                  <th><span data-lang="vi">Số lượng</span><span data-lang="en">Count</span></th>
+                  <th><span data-lang="vi">Nguồn</span><span data-lang="en">Source</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span data-lang="vi">Dưới ngưỡng tồn</span><span data-lang="en">Below stock threshold</span></td>
+                  <td class="empty-row"><span data-lang="vi">Chưa tải</span><span data-lang="en">Not loaded</span></td>
+                  <td>inventory items</td>
+                </tr>
+                <tr>
+                  <td><span data-lang="vi">Lô gần hết hạn</span><span data-lang="en">Near-expiry batches</span></td>
+                  <td class="empty-row"><span data-lang="vi">Chưa tải</span><span data-lang="en">Not loaded</span></td>
+                  <td>inventory batches</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="report-panel">
+          <h3>
+            <span data-lang="vi">Tính đầy đủ dữ liệu</span>
+            <span data-lang="en">Data completeness</span>
+          </h3>
+          <p class="panel-intro">
+            <span data-lang="vi">Trước khi so sánh kỳ, kiểm tra bản ghi thiếu và điều kiện loại trừ.</span>
+            <span data-lang="en">Before period comparisons, check missing records and exclusions.</span>
+          </p>
+          <ul class="source-list">
+            <li>
+              <span data-lang="vi">Kỳ bắt đầu/kết thúc và múi giờ</span>
+              <span data-lang="en">Period start/end and timezone</span>
+            </li>
+            <li>
+              <span data-lang="vi">Định nghĩa trạng thái đủ điều kiện</span>
+              <span data-lang="en">Definition of eligible states</span>
+            </li>
+            <li>
+              <span data-lang="vi">Số bản ghi thiếu hoặc bị loại</span>
+              <span data-lang="en">Missing or excluded record counts</span>
+            </li>
+          </ul>
+        </article>
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-head"><div><span class="eyebrow">03 / Metric definitions</span><h2><span data-lang="vi">Định nghĩa trước khi báo cáo</span><span data-lang="en">Define before reporting</span></h2></div></div>
+    <!-- SECTION 03 - METRIC DEFINITIONS -->
+    <section class="section reveal">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">03 / Metric definitions</span>
+          <h2>
+            <span data-lang="vi">Định nghĩa trước khi báo cáo</span>
+            <span data-lang="en">Define before reporting</span>
+          </h2>
+        </div>
+      </div>
+
       <div class="metric-definitions">
-        <article class="tile"><span class="tile-kicker">Service completion</span><h3><span data-lang="vi">Tỷ lệ hoàn tất lịch</span><span data-lang="en">Appointment completion</span></h3><p><code>completed eligible appointments / eligible scheduled appointments</code></p><p><span data-lang="vi">Cần kỳ đo, trạng thái đủ điều kiện và quy tắc xử lý hủy/không đến.</span><span data-lang="en">Requires a reporting period, eligible states, and cancellation/no-show rules.</span></p></article>
-        <article class="tile"><span class="tile-kicker">Order settlement</span><h3><span data-lang="vi">Đơn đã thanh toán</span><span data-lang="en">Settled orders</span></h3><p><code>orders with fully recorded payment / eligible orders</code></p><p><span data-lang="vi">Không cộng tiền cọc hoặc đơn trả một phần như đơn đã thanh toán đủ.</span><span data-lang="en">Do not count deposits or partially paid orders as fully settled.</span></p></article>
-        <article class="tile"><span class="tile-kicker">Stock risk</span><h3><span data-lang="vi">Rủi ro tồn kho</span><span data-lang="en">Stock risk</span></h3><p><code>available quantity vs. configured threshold / expiry window</code></p><p><span data-lang="vi">Phụ thuộc số lượng nhập chính xác, lô và ngưỡng do cửa hàng cấu hình.</span><span data-lang="en">Depends on accurate quantities, batches and store-configured thresholds.</span></p></article>
+        <article class="tile">
+          <span class="tile-kicker">Service completion</span>
+          <h3>
+            <span data-lang="vi">Tỷ lệ hoàn tất lịch</span>
+            <span data-lang="en">Appointment completion</span>
+          </h3>
+          <code>completed eligible appointments / eligible scheduled appointments</code>
+          <p>
+            <span data-lang="vi">Cần kỳ đo, trạng thái đủ điều kiện và quy tắc xử lý hủy/không đến.</span>
+            <span data-lang="en">Requires a reporting period, eligible states, and cancellation/no-show rules.</span>
+          </p>
+        </article>
+
+        <article class="tile">
+          <span class="tile-kicker">Order settlement</span>
+          <h3>
+            <span data-lang="vi">Đơn đã thanh toán</span>
+            <span data-lang="en">Settled orders</span>
+          </h3>
+          <code>orders with fully recorded payment / eligible orders</code>
+          <p>
+            <span data-lang="vi">Không cộng tiền cọc hoặc đơn trả một phần như đơn đã thanh toán đủ.</span>
+            <span data-lang="en">Do not count deposits or partially paid orders as fully settled.</span>
+          </p>
+        </article>
+
+        <article class="tile">
+          <span class="tile-kicker">Stock risk</span>
+          <h3>
+            <span data-lang="vi">Rủi ro tồn kho</span>
+            <span data-lang="en">Stock risk</span>
+          </h3>
+          <code>available quantity vs. configured threshold / expiry window</code>
+          <p>
+            <span data-lang="vi">Phụ thuộc số lượng nhập chính xác, lô và ngưỡng do cửa hàng cấu hình.</span>
+            <span data-lang="en">Depends on accurate quantities, batches and store-configured thresholds.</span>
+          </p>
+        </article>
       </div>
     </section>
 
-    <div class="note"><strong><span data-lang="vi">Quy tắc phát hành.</span><span data-lang="en">Publishing rule.</span></strong> <span data-lang="vi">Mỗi con số thật cần nguồn, kỳ báo cáo, ngày trích xuất và người rà soát. Trang này là mẫu trình bày, không thay thế báo cáo được truy vấn từ SQLite.</span><span data-lang="en">Every real figure needs a source, reporting period, extraction date and reviewer. This page is a presentation template, not a substitute for a report queried from SQLite.</span></div>
-    <section class="section">
-      <div class="section-head"><div><span class="eyebrow">Admin workspace</span><h2><span data-lang="vi">Mở giao diện quản trị cửa hàng</span><span data-lang="en">Open store admin workspace</span></h2></div><p><span data-lang="vi">Mô phỏng tổng quan, nhân sự, kho, lịch, đơn hàng, audit và backup.</span><span data-lang="en">A prototype for overview, staff, inventory, appointments, orders, audit and backup.</span></p></div>
-      <div class="note"><strong><span data-lang="vi">Bản mô phỏng tĩnh.</span><span data-lang="en">Static prototype.</span></strong> <span data-lang="vi">Không kết nối SQLite và không lưu thao tác; dùng để duyệt bố cục quản trị, không dùng để vận hành dữ liệu thật.</span><span data-lang="en">It does not connect to SQLite or persist actions; use it to review the admin layout, not to operate real data.</span></div>
-      <p><a class="tag" style="display:inline-flex;border-color:var(--green);color:var(--green);background:var(--surface);font-weight:700" href="admin_store_management.html"><span data-lang="vi">Mở Admin workspace ↗</span><span data-lang="en">Open Admin workspace ↗</span></a></p>
+    <!-- PUBLISHING RULE NOTE -->
+    <div class="note reveal">
+      <strong>
+        <span data-lang="vi">Quy tắc phát hành.</span>
+        <span data-lang="en">Publishing rule.</span>
+      </strong>
+      <span data-lang="vi">Mỗi con số thật cần nguồn, kỳ báo cáo, ngày trích xuất và người rà soát. Trang này là mẫu trình bày, không thay thế báo cáo được truy vấn từ SQLite.</span>
+      <span data-lang="en">Every real figure needs a source, reporting period, extraction date and reviewer. This page is a presentation template, not a substitute for a report queried from SQLite.</span>
+    </div>
+
+    <!-- ADMIN WORKSPACE -->
+    <section class="section reveal">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Admin workspace</span>
+          <h2>
+            <span data-lang="vi">Mở giao diện quản trị cửa hàng</span>
+            <span data-lang="en">Open store admin workspace</span>
+          </h2>
+        </div>
+        <p>
+          <span data-lang="vi">Mô phỏng tổng quan, nhân sự, kho, lịch, đơn hàng, audit và backup.</span>
+          <span data-lang="en">A prototype for overview, staff, inventory, appointments, orders, audit and backup.</span>
+        </p>
+      </div>
+
+      <div class="note">
+        <strong>
+          <span data-lang="vi">Bản mô phỏng tĩnh.</span>
+          <span data-lang="en">Static prototype.</span>
+        </strong>
+        <span data-lang="vi">Không kết nối SQLite và không lưu thao tác; dùng để duyệt bố cục quản trị, không dùng để vận hành dữ liệu thật.</span>
+        <span data-lang="en">It does not connect to SQLite or persist actions; use it to review the admin layout, not to operate real data.</span>
+      </div>
+
+      <div class="cta-row">
+        <a class="cta-tag" href="admin_store_management.html">
+          <span data-lang="vi">Mở Admin workspace</span>
+          <span data-lang="en">Open Admin workspace</span>
+          <span class="arrow">↗</span>
+        </a>
+      </div>
     </section>
-    <section class="section">
-      <div class="section-head"><div><span class="eyebrow">Nutrition reference</span><h2><span data-lang="vi">Tra cứu thức ăn & dinh dưỡng</span><span data-lang="en">Food & nutrition guide</span></h2></div><p><span data-lang="vi">Lọc theo loài, giai đoạn sống và nhóm kích thước giống.</span><span data-lang="en">Filter by species, life stage and breed-size group.</span></p></div>
-      <div class="note"><strong><span data-lang="vi">Dữ liệu tham khảo mẫu.</span><span data-lang="en">Sample reference data.</span></strong> <span data-lang="vi">Thành phần dinh dưỡng cần đối chiếu nhãn nhà sản xuất; không dùng thay tư vấn thú y.</span><span data-lang="en">Nutrition values must be checked against manufacturer labels; they do not replace veterinary advice.</span></div>
-      <p><a class="tag" style="display:inline-flex;border-color:var(--green);color:var(--green);background:var(--surface);font-weight:700" href="../TRrang chính/nutrition_products.html"><span data-lang="vi">Mở danh mục dinh dưỡng ↗</span><span data-lang="en">Open nutrition catalog ↗</span></a></p>
+
+    <!-- NUTRITION REFERENCE -->
+    <section class="section reveal">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Nutrition reference</span>
+          <h2>
+            <span data-lang="vi">Tra cứu thức ăn & dinh dưỡng</span>
+            <span data-lang="en">Food & nutrition guide</span>
+          </h2>
+        </div>
+        <p>
+          <span data-lang="vi">Lọc theo loài, giai đoạn sống và nhóm kích thước giống.</span>
+          <span data-lang="en">Filter by species, life stage and breed-size group.</span>
+        </p>
+      </div>
+
+      <div class="note">
+        <strong>
+          <span data-lang="vi">Dữ liệu tham khảo mẫu.</span>
+          <span data-lang="en">Sample reference data.</span>
+        </strong>
+        <span data-lang="vi">Thành phần dinh dưỡng cần đối chiếu nhãn nhà sản xuất; không dùng thay tư vấn thú y.</span>
+        <span data-lang="en">Nutrition values must be checked against manufacturer labels; they do not replace veterinary advice.</span>
+      </div>
+
+      <div class="cta-row">
+        <a class="cta-tag" href="../TRrang chính/nutrition_products.html">
+          <span data-lang="vi">Mở danh mục dinh dưỡng</span>
+          <span data-lang="en">Open nutrition catalog</span>
+          <span class="arrow">↗</span>
+        </a>
+      </div>
     </section>
-    <footer class="site-footer"><span>PetCare / Operations snapshot</span><a href="report_kpi_board.html"><span data-lang="vi">Mở mẫu KPI</span><span data-lang="en">Open KPI template</span></a></footer>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <span>PetCare / Operations snapshot</span>
+      <a href="report_kpi_board.html">
+        <span data-lang="vi">Mở mẫu KPI ↗</span>
+        <span data-lang="en">Open KPI template ↗</span>
+      </a>
+    </footer>
   </main>
-  <script src="../scripts/document_language.js" defer></script>
+
+  <script>
+    /* ============================================================
+       SCROLL PROGRESS BAR
+       ============================================================ */
+    const progressBar = document.getElementById('scrollProgress');
+    let tickingProgress = false;
+    window.addEventListener('scroll', () => {
+      if (!tickingProgress) {
+        window.requestAnimationFrame(() => {
+          const scrollTop = window.scrollY;
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+          progressBar.style.width = pct + '%';
+          tickingProgress = false;
+        });
+        tickingProgress = true;
+      }
+    }, { passive: true });
+
+    /* ============================================================
+       HEADER SCROLL EFFECT
+       ============================================================ */
+    const siteHeader = document.getElementById('siteHeader');
+    let tickingHeader = false;
+    window.addEventListener('scroll', () => {
+      if (!tickingHeader) {
+        window.requestAnimationFrame(() => {
+          siteHeader.classList.toggle('scrolled', window.scrollY > 20);
+          tickingHeader = false;
+        });
+        tickingHeader = true;
+      }
+    }, { passive: true });
+
+    /* ============================================================
+       SCROLL REVEAL
+       ============================================================ */
+    const revealEls = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+      revealEls.forEach((el) => io.observe(el));
+    } else {
+      revealEls.forEach((el) => el.classList.add('visible'));
+    }
+
+    /* ============================================================
+       PARALLAX ORBS
+       ============================================================ */
+    const orbs = document.querySelectorAll('.orb');
+    let mouseX = 0, mouseY = 0;
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    }, { passive: true });
+
+    function animateOrbs() {
+      orbs.forEach((orb, i) => {
+        const speed = (i + 1) * 8;
+        orb.style.transform = `translate(${mouseX * speed}px, ${mouseY * speed}px)`;
+      });
+      requestAnimationFrame(animateOrbs);
+    }
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      animateOrbs();
+    }
+
+    /* ============================================================
+       HERO SPOTLIGHT
+       ============================================================ */
+    const pageHero = document.getElementById('pageHero');
+    if (pageHero && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      pageHero.addEventListener('mousemove', (e) => {
+        const rect = pageHero.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        pageHero.style.setProperty('--mx', x + '%');
+        pageHero.style.setProperty('--my', y + '%');
+      });
+    }
+
+    /* ============================================================
+       3D TILT FOR CARDS
+       ============================================================ */
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll('.metric, .metric-definitions .tile').forEach((el) => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width - 0.5;
+          const y = (e.clientY - rect.top) / rect.height - 0.5;
+          el.style.transform = `translateY(-6px) rotateX(${-y * 4}deg) rotateY(${x * 4}deg)`;
+        });
+        el.addEventListener('mouseleave', () => {
+          el.style.transform = '';
+        });
+      });
+    }
+
+    /* ============================================================
+       LIVE TIMESTAMP (chỉ hiển thị giờ hệ thống)
+       ============================================================ */
+    function updateTimestamp() {
+      const now = new Date();
+      const time = now.toLocaleTimeString('vi-VN', { hour12: false });
+      const el = document.getElementById('liveTimestamp');
+      if (el) el.textContent = time;
+    }
+    updateTimestamp();
+    setInterval(updateTimestamp, 1000);
+
+    /* ============================================================
+       LIVE FILTER CHIPS
+       ============================================================ */
+    document.querySelectorAll('.live-chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.live-chip').forEach((c) => {
+          c.style.color = '';
+          c.style.borderColor = '';
+          c.style.background = '';
+        });
+        chip.style.color = 'var(--green)';
+        chip.style.borderColor = 'rgba(127, 230, 181, 0.5)';
+        chip.style.background = 'rgba(127, 230, 181, 0.08)';
+      });
+    });
+
+    /* ============================================================
+       SMOOTH ANCHOR SCROLL
+       ============================================================ */
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        const id = link.getAttribute('href');
+        if (id && id !== '#') {
+          const target = document.querySelector(id);
+          if (target) {
+            e.preventDefault();
+            const top = target.getBoundingClientRect().top + window.scrollY - 100;
+            window.scrollTo({ top, behavior: 'smooth' });
+          }
+        }
+      });
+    });
+  </script>
   <script src="../scripts/site_navigation.js" defer></script>
 </body>
 </html>

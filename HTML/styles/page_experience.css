@@ -1,0 +1,100 @@
+html {
+  scroll-padding-top: 96px;
+}
+
+body.petcare-polished-page {
+  overflow-x: clip;
+  text-rendering: optimizeLegibility;
+}
+
+body.petcare-polished-page :where(img, svg, video, canvas, iframe) {
+  max-width: 100%;
+}
+
+body.petcare-polished-page :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid #d8b75e;
+  outline-offset: 3px;
+}
+
+body.petcare-polished-page :where(h1, h2, h3, h4, [id]) {
+  scroll-margin-top: 96px;
+}
+
+body.petcare-polished-page :where(pre, code, td, th) {
+  overflow-wrap: anywhere;
+}
+
+.petcare-skip-link {
+  position: fixed;
+  z-index: 10002;
+  top: 8px;
+  left: 8px;
+  transform: translateY(calc(-100% - 12px));
+  padding: 10px 14px;
+  border: 2px solid #d8b75e;
+  border-radius: 8px;
+  background: #12372b;
+  color: #fff;
+  font: 700 14px/1.4 "Segoe UI", Arial, sans-serif;
+  text-decoration: none;
+  transition: transform .16s ease;
+}
+
+.petcare-skip-link:focus {
+  transform: translateY(0);
+}
+
+.petcare-table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.petcare-table-scroll table {
+  max-width: 100%;
+}
+
+@media print {
+  body.petcare-polished-page {
+    overflow: visible;
+    background: #fff !important;
+    color: #111 !important;
+    print-color-adjust: economy;
+  }
+
+  body.petcare-polished-page .petcare-global-header,
+  body.petcare-polished-page .petcare-page-guide,
+  body.petcare-polished-page .petcare-skip-link,
+  body.petcare-polished-page button,
+  body.petcare-polished-page .no-print,
+  body.petcare-polished-page [data-no-print] {
+    display: none !important;
+  }
+
+  body.petcare-polished-page :where(main, .page, .page-shell, .shell, .container) {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  body.petcare-polished-page :where(.petcare-table-scroll, .table-wrap, .table-container) {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  body.petcare-polished-page :where(.petcare-table-scroll, .table-wrap, .table-container) table {
+    width: 100% !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.petcare-polished-page *,
+  body.petcare-polished-page *::before,
+  body.petcare-polished-page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
