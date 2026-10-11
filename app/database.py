@@ -2045,6 +2045,51 @@ class Database:
     def expiring_inventory_batches(self, days: int = 30) -> list[sqlite3.Row]:
         return self.inventory.expiring_batches(days)
 
+    def forecast_inventory_demand(
+        self, item_id: int, window_days: int = 30, horizon_days: int = 30
+    ) -> dict[str, Any]:
+        self._require_permission("inventory.view")
+        return self.inventory.demand_forecast(item_id, window_days, horizon_days)
+
+    def inventory_replenishment_suggestions(
+        self,
+        lead_time_days: int = 7,
+        safety_days: int = 7,
+        window_days: int = 30,
+    ) -> list[dict[str, Any]]:
+        self._require_permission("inventory.view")
+        return self.inventory.replenishment_suggestions(
+            lead_time_days, safety_days, window_days
+        )
+
+    def inventory_stock_valuation(self) -> list[dict[str, Any]]:
+        self._require_permission("inventory.view")
+        return self.inventory.stock_valuation()
+
+    def inventory_ledger_discrepancies(
+        self, item_id: int | None = None
+    ) -> list[dict[str, Any]]:
+        self._require_permission("inventory.view")
+        return self.inventory.ledger_discrepancies(item_id)
+
+    def inventory_expiry_overview(self) -> dict[str, Any]:
+        self._require_permission("inventory.view")
+        return self.inventory.expiry_overview()
+
+    def inventory_category_overview(self) -> list[dict[str, Any]]:
+        self._require_permission("inventory.view")
+        return self.inventory.category_overview()
+
+    def trace_inventory_batch(self, batch_code: str) -> dict[str, Any]:
+        self._require_permission("inventory.view")
+        return self.inventory.batch_trace(batch_code)
+
+    def inventory_animal_consumption(
+        self, start_date: str, end_date: str
+    ) -> list[dict[str, Any]]:
+        self._require_permission("inventory.view")
+        return self.inventory.animal_consumption_report(start_date, end_date)
+
     def list_feeding_age_rules(
         self, active_only: bool = True
     ) -> list[sqlite3.Row]:

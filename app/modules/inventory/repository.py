@@ -1,15 +1,24 @@
 import sqlite3
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import math
 from typing import Any
 
+from app.modules.inventory.analytics import summarize_categories
 from app.modules.inventory.constants import INVENTORY_CATEGORIES
 from app.modules.inventory.catalog_seed import (
     COMBO_COMPONENTS,
     COMBO_DEFINITIONS,
     catalog_products,
 )
+from app.modules.inventory.demand import forecast_demand
+from app.modules.inventory.expiry import expiry_bucket, validate_expiry_window
 from app.modules.inventory.feeding_seed import AGE_RULES, FOOD_PROFILES
+from app.modules.inventory.ledger import find_ledger_discrepancies
+from app.modules.inventory.replenishment import recommend_replenishment
+from app.modules.inventory.traceability import build_batch_timeline
+from app.modules.inventory.utilization import summarize_animal_consumption
+from app.modules.inventory.validation import validate_date_range, validate_day_count
+from app.modules.inventory.valuation import value_stock
 
 
 class InventoryRepository:
@@ -1036,8 +1045,7 @@ class InventoryRepository:
         ]
 
     def expiring_batches(self, days: int = 30) -> list[sqlite3.Row]:
-        if days < 0:
-            raise ValueError("Số ngày cảnh báo không thể âm.")
+        days = validate_expiry_window(days)
         return self.connection.execute(
             """
             SELECT b.*, i.item_code, i.name AS item_name, i.unit
@@ -1050,6 +1058,252 @@ class InventoryRepository:
             """,
             (f"+{days} days",),
         ).fetchall()
+
+    def demand_forecast(
+        self, item_id: int, window_days: int = 30, horizon_days: int = 30
+    ) -> dict[str, Any]:
+        window = validate_day_count(window_days, "Số ngày lịch sử")
+        horizon = validate_day_count(horizon_days, "Số ngày dự báo")
+        item = self.get_item(item_id)
+        if item is None:
+            raise ValueError("Không tìm thấy vật tư.")
+        end_date = date.today()
+        start_date = end_date - timedelta(days=window - 1)
+        consumed = self.connection.execute(
+            """
+            SELECT COALESCE(SUM(quantity), 0)
+            FROM inventory_movements
+            WHERE item_id = ? AND movement_type = 'OUT'
+              AND occurred_on BETWEEN ? AND ?
+            """,
+            (item_id, start_date.isoformat(), end_date.isoformat()),
+        ).fetchone()[0]
+        return forecast_demand(
+            item_id,
+            float(consumed),
+            float(item["usable_quantity"]),
+            window,
+            horizon,
+        ).to_dict()
+
+    def replenishment_suggestions(
+        self,
+        lead_time_days: int = 7,
+        safety_days: int = 7,
+        window_days: int = 30,
+    ) -> list[dict[str, Any]]:
+        lead_time = validate_day_count(
+            lead_time_days, "Thời gian cung ứng", allow_zero=True
+        )
+        safety = validate_day_count(
+            safety_days, "Số ngày dự phòng", allow_zero=True
+        )
+        window = validate_day_count(window_days, "Số ngày lịch sử")
+        end_date = date.today()
+        start_date = end_date - timedelta(days=window - 1)
+        consumption = {
+            int(row["item_id"]): float(row["quantity"])
+            for row in self.connection.execute(
+                """
+                SELECT item_id, SUM(quantity) AS quantity
+                FROM inventory_movements
+                WHERE movement_type = 'OUT' AND occurred_on BETWEEN ? AND ?
+                GROUP BY item_id
+                """,
+                (start_date.isoformat(), end_date.isoformat()),
+            ).fetchall()
+        }
+        suggestions = []
+        for item in self.list_items():
+            if not item["is_active"] or (item["is_demo"] and not item["stock_quantity"]):
+                continue
+            daily = consumption.get(int(item["id"]), 0.0) / window
+            usable = float(item["usable_quantity"])
+            suggestion = recommend_replenishment(
+                item_id=int(item["id"]),
+                item_code=str(item["item_code"]),
+                name=str(item["name"]),
+                average_daily_quantity=daily,
+                usable_quantity=usable,
+                minimum_stock=float(item["minimum_stock"]),
+                lead_time_days=lead_time,
+                safety_days=safety,
+                days_of_stock=round(usable / daily, 2) if daily else None,
+            )
+            if suggestion.suggested_quantity > 0:
+                suggestions.append(suggestion.to_dict())
+        return sorted(
+            suggestions,
+            key=lambda item: (
+                item["days_of_stock"] is None,
+                item["days_of_stock"]
+                if item["days_of_stock"] is not None
+                else float("inf"),
+                item["name"].casefold(),
+            ),
+        )
+
+    def stock_valuation(self) -> list[dict[str, Any]]:
+        rows = self.connection.execute(
+            """
+            SELECT i.id AS item_id, i.item_code, i.name,
+                   COALESCE(SUM(b.quantity_remaining), 0) AS stock_quantity,
+                   COALESCE(SUM(CASE
+                       WHEN b.expiry_date IS NULL
+                         OR b.expiry_date >= date('now', 'localtime')
+                       THEN b.quantity_remaining ELSE 0 END), 0) AS usable_quantity,
+                   COALESCE(SUM(CASE
+                       WHEN b.expiry_date < date('now', 'localtime')
+                       THEN b.quantity_remaining ELSE 0 END), 0) AS expired_quantity,
+                   COALESCE(SUM(b.quantity_remaining * b.unit_cost), 0) AS stock_value,
+                   COALESCE(SUM(CASE
+                       WHEN b.expiry_date < date('now', 'localtime')
+                       THEN b.quantity_remaining * b.unit_cost ELSE 0 END), 0)
+                       AS expired_value
+            FROM inventory_items i
+            LEFT JOIN inventory_batches b ON b.item_id = i.id
+            GROUP BY i.id
+            ORDER BY i.name COLLATE NOCASE
+            """
+        ).fetchall()
+        return [item.to_dict() for item in value_stock(map(dict, rows))]
+
+    def ledger_discrepancies(
+        self, item_id: int | None = None
+    ) -> list[dict[str, Any]]:
+        where = "WHERE b.item_id = ?" if item_id is not None else ""
+        parameters = (item_id,) if item_id is not None else ()
+        rows = self.connection.execute(
+            f"""
+            SELECT b.id AS batch_id, b.item_id, b.batch_code,
+                   b.quantity_remaining AS recorded_quantity,
+                   COALESCE(SUM(CASE
+                       WHEN m.movement_type = 'IN' THEN m.quantity
+                       WHEN m.movement_type = 'OUT' THEN -m.quantity
+                       ELSE 0 END), 0) AS ledger_quantity
+            FROM inventory_batches b
+            LEFT JOIN inventory_movements m ON m.batch_id = b.id
+            {where}
+            GROUP BY b.id
+            ORDER BY b.item_id, b.id
+            """,
+            parameters,
+        ).fetchall()
+        return [
+            discrepancy.to_dict()
+            for discrepancy in find_ledger_discrepancies(map(dict, rows))
+        ]
+
+    def expiry_overview(self) -> dict[str, Any]:
+        overview: dict[str, Any] = {
+            "EXPIRED": {"batch_count": 0, "quantity": 0.0},
+            "DUE_7_DAYS": {"batch_count": 0, "quantity": 0.0},
+            "DUE_30_DAYS": {"batch_count": 0, "quantity": 0.0},
+            "LATER": {"batch_count": 0, "quantity": 0.0},
+            "NO_EXPIRY": {"batch_count": 0, "quantity": 0.0},
+        }
+        rows = self.connection.execute(
+            """
+            SELECT b.id, b.batch_code, b.expiry_date, b.quantity_remaining,
+                   i.id AS item_id, i.item_code, i.name AS item_name, i.unit
+            FROM inventory_batches b
+            JOIN inventory_items i ON i.id = b.item_id
+            WHERE b.quantity_remaining > 0
+            ORDER BY b.expiry_date IS NULL, b.expiry_date, i.name
+            """
+        ).fetchall()
+        batches = []
+        for row in rows:
+            bucket = expiry_bucket(row["expiry_date"])
+            quantity = float(row["quantity_remaining"])
+            overview[bucket]["batch_count"] += 1
+            overview[bucket]["quantity"] += quantity
+            batches.append(
+                {
+                    **dict(row),
+                    "expiry_bucket": bucket,
+                    "quantity_remaining": quantity,
+                }
+            )
+        for summary in overview.values():
+            summary["quantity"] = round(summary["quantity"], 6)
+        return {"summary": overview, "batches": batches}
+
+    def category_overview(self) -> list[dict[str, Any]]:
+        valuations = {
+            item["item_id"]: item for item in self.stock_valuation()
+        }
+        rows = []
+        for item in self.list_items():
+            value = valuations[int(item["id"])]
+            rows.append(
+                {
+                    "category": item["category"],
+                    "stock_quantity": value["stock_quantity"],
+                    "usable_quantity": value["usable_quantity"],
+                    "expired_quantity": value["expired_quantity"],
+                    "stock_value": value["stock_value"],
+                }
+            )
+        return summarize_categories(rows)
+
+    def batch_trace(self, batch_code: str) -> dict[str, Any]:
+        normalized_code = batch_code.strip()
+        if not normalized_code:
+            raise ValueError("Mã lô là bắt buộc.")
+        batches = self.connection.execute(
+            """
+            SELECT b.*, i.item_code, i.name AS item_name, i.unit
+            FROM inventory_batches b
+            JOIN inventory_items i ON i.id = b.item_id
+            WHERE b.batch_code = ?
+            ORDER BY b.id
+            """,
+            (normalized_code,),
+        ).fetchall()
+        if not batches:
+            raise ValueError("Không tìm thấy lô tồn kho.")
+        if len(batches) > 1:
+            raise ValueError("Mã lô bị trùng; cần xác định lô theo mã hàng.")
+        batch = batches[0]
+        movements = self.connection.execute(
+            """
+            SELECT id, occurred_on, movement_type, quantity, animal_id,
+                   reference, note
+            FROM inventory_movements
+            WHERE batch_id = ?
+            ORDER BY occurred_on, id
+            """,
+            (batch["id"],),
+        ).fetchall()
+        timeline = build_batch_timeline(map(dict, movements))
+        return {
+            "batch": dict(batch),
+            "timeline": timeline,
+            "ledger_quantity": timeline[-1]["balance_after"] if timeline else 0.0,
+        }
+
+    def animal_consumption_report(
+        self, start_date: str, end_date: str
+    ) -> list[dict[str, Any]]:
+        start, end = validate_date_range(start_date, end_date)
+        rows = self.connection.execute(
+            """
+            SELECT m.animal_id, a.animal_code, a.name AS animal_name,
+                   i.id AS item_id, i.item_code, i.name AS item_name, i.unit,
+                   SUM(m.quantity) AS quantity, b.unit_cost
+            FROM inventory_movements m
+            JOIN animals a ON a.id = m.animal_id
+            JOIN inventory_items i ON i.id = m.item_id
+            JOIN inventory_batches b ON b.id = m.batch_id
+            WHERE m.movement_type = 'OUT' AND m.animal_id IS NOT NULL
+              AND m.occurred_on BETWEEN ? AND ?
+            GROUP BY m.animal_id, i.id, b.unit_cost
+            ORDER BY a.name COLLATE NOCASE, i.name COLLATE NOCASE
+            """,
+            (start.isoformat(), end.isoformat()),
+        ).fetchall()
+        return summarize_animal_consumption(map(dict, rows))
 
     def set_item_active(self, item_id: int, active: bool) -> None:
         with self.connection:

@@ -24,6 +24,7 @@
         ["Danh mục dinh dưỡng", "TRrang chính/nutrition_products.html"],
         ["Dinh dưỡng cho chó", "TRrang chính/nutrition_products_dog.html"],
         ["Dinh dưỡng cho mèo", "TRrang chính/nutrition_products_cat.html"],
+        ["Nghiên cứu khoa học tiềm năng · chờ xác thực", "Trang hỗ trợ/bao-cao-khoa-hoc-trien-vong.html"],
         ["Thông số sản phẩm chó mèo · 70 trường", "Trang thông số của các sản phẩm/index.html"],
         ["Thương hiệu thức ăn chó mèo toàn cầu", "Trang thông số của các sản phẩm/thuong-hieu.html"],
         ["Quy trình chăm sóc", "TRrang chính/workflow.html"]
