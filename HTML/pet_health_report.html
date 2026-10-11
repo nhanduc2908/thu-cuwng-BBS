@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PetCare | Premium Pet Health Report</title>
+  <style>
+    :root {
+      --bg: #edf5f0;
+      --bg-strong: #e1efe7;
+      --panel: #ffffff;
+      --panel-alt: #f7faf8;
+      --primary: #1d6a55;
+      --primary-2: #245e49;
+      --primary-3: #67a884;
+      --primary-soft: #e5f4eb;
+      --ink: #182f2a;
+      --muted: #61756e;
+      --line: #dfe9e3;
+      --gold: #e4bf67;
+      --gold-soft: #fff3ce;
+      --blue: #6ea9d5;
+      --danger: #d85b4d;
+      --orange: #eb8d52;
+      --success: #4ca86d;
+      --warning: #d7a550;
+      --shadow: 0 22px 52px rgba(17, 37, 31, 0.08);
+      --dark-bg: #081610;
+      --dark-panel: #101c18;
+      --dark-panel-2: #14241d;
+      --dark-line: rgba(197, 228, 210, 0.12);
+      --dark-text: #ebf8f2;
+      --dark-muted: #b0c7bd;
+      --dark-accent: #9be3b3;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, var(--bg) 0%, #edf3ef 100%);
+      color: var(--ink);
+      line-height: 1.6;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+    body.dark {
+      background: linear-gradient(180deg, var(--dark-bg) 0%, #0d1a14 100%);
+      color: var(--dark-text);
+    }
+    a { text-decoration: none; color: inherit; }
+    button, select, input { font: inherit; }
+
+    .page-shell {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 20px 18px 40px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(29, 106, 85, 0.1);
+      box-shadow: 0 8px 20px rgba(17, 37, 31, 0.03);
+      transition: background 0.25s ease, border-color 0.25s ease;
+    }
+    body.dark .topbar {
+      background: rgba(10, 17, 15, 0.8);
+      border-color: var(--dark-line);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 18, 15, 0.58);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 120;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+      width: min(960px, 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,0.99), rgba(246,250,248,0.98));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: 0 28px 62px rgba(0,0,0,0.18);
+      overflow: hidden;
+    }
+    body.dark .modal-box {
+      background: linear-gradient(180deg, rgba(13,22,18,0.98), rgba(18,32,27,0.98));
+      border-color: var(--dark-line);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    body.dark .modal-header { border-color: var(--dark-line); }
+
+    .modal-title {
+      margin: 0;
+      font-size: 1.2rem;
+      letter-spacing: -0.04em;
+    }
+
+    .close-btn {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.7);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+    body.dark .close-btn {
+      background: rgba(17,28,24,0.8);
+      border-color: var(--dark-line);
+      color: var(--dark-text);
+    }
+
+    .modal-body {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 18px;
+      padding: 20px;
+    }
+
+    .modal-profile, .modal-report {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(247,250,248,0.8);
+      padding: 18px;
+    }
+    body.dark .modal-profile,
+    body.dark .modal-report {
+      background: rgba(255,255,255,0.02);
+      border-color: var(--dark-line);
+    }
+
+    .modal-profile h3, .modal-report h3 {
+      margin: 0 0 10px;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    body.dark .modal-profile h3,
+    body.dark .modal-report h3 { color: var(--dark-muted); }
+
+    .profile-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .profile-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(29,106,85,0.15), rgba(103,168,132,0.22));
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary-2);
+    }
+
+    .profile-meta strong {
+      display: block;
+      font-size: 1.2rem;
+      letter-spacing: -0.04em;
+    }
+
+    .profile-meta span {
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+    body.dark .profile-meta span { color: var(--dark-muted); }
+
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .profile-stat {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(29,106,85,0.03);
+      border: 1px solid rgba(29,106,85,0.08);
+    }
+    body.dark .profile-stat {
+      background: rgba(155,227,179,0.04);
+      border-color: rgba(155,227,179,0.08);
+    }
+
+    .profile-stat .k {
+      display: block;
+      color: var(--muted);
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+    body.dark .profile-stat .k { color: var(--dark-muted); }
+
+    .profile-stat .v {
+      display: block;
+      margin-top: 4px;
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .report-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .report-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.7);
+    }
+    body.dark .report-row {
+      background: rgba(255,255,255,0.02);
+      border-color: var(--dark-line);
+    }
+
+    .report-row strong { font-size: 0.82rem; }
+    .report-row span { color: var(--muted); font-size: 0.8rem; }
+    body.dark .report-row span { color: var(--dark-muted); }
+
+    .modal-report .report-large { font-size: 0.9rem; line-height: 1.7; color: var(--muted); }
+    body.dark .modal-report .report-large { color: var(--dark-muted); }
+
+    @media (max-width: 740px) {
+      .modal-body { grid-template-columns: 1fr; }
+    }
+
+    .topbar-inner {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      color: var(--primary-2);
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      font-size: 0.76rem;
+    }
+    body.dark .brand { color: #dffaf0; }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px 12px 12px 5px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #dfe77d, #c8dc67);
+      color: var(--primary-2);
+      font-weight: 900;
+      box-shadow: 0 10px 20px rgba(91, 150, 109, 0.25);
+    }
+
+    .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .nav a, .nav button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.66);
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    body.dark .nav a, body.dark .nav button {
+      background: rgba(17,28,24,0.76);
+      border-color: var(--dark-line);
+      color: var(--dark-muted);
+    }
+    .nav a:hover, .nav button:hover {
+      border-color: rgba(29, 106, 85, 0.24);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 22px;
+      margin-top: 22px;
+      transition: grid-template-columns 0.25s ease;
+    }
+
+    .dashboard-layout.collapsed {
+      grid-template-columns: 88px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 92px;
+      height: fit-content;
+      padding: 18px 16px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,249,246,0.98));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      transition: background 0.25s ease, border-color 0.25s ease, padding 0.25s ease;
+    }
+    body.dark .sidebar {
+      background: linear-gradient(180deg, rgba(16,28,24,0.96), rgba(20,36,29,0.96));
+      border-color: var(--dark-line);
+      box-shadow: 0 18px 36px rgba(0,0,0,0.22);
+    }
+
+    body.dark .side-label,
+    body.dark .nav-item,
+    body.dark .section-card,
+    body.dark .top-panel,
+    body.dark .metric-card,
+    body.dark .pet-card,
+    body.dark .diagnosis-box,
+    body.dark .timeline-item,
+    body.dark .table-wrap,
+    body.dark .footer-note,
+    body.dark .topbar-inner,
+    body.dark .screen-panel {
+      color: var(--dark-text);
+    }
+
+    .dashboard-layout.collapsed .sidebar .side-label,
+    .dashboard-layout.collapsed .sidebar .nav-item span:not(.nav-icon),
+    .dashboard-layout.collapsed .sidebar .nav-item .nav-text {
+      display: none;
+    }
+
+    .dashboard-layout.collapsed .sidebar {
+      padding: 18px 10px;
+    }
+
+    .dashboard-layout.collapsed .nav-item {
+      justify-content: center;
+      padding: 12px 8px;
+    }
+
+    .side-group {
+      display: grid;
+      gap: 6px;
+    }
+
+    .side-label {
+      margin: 8px 8px 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.68rem;
+      font-weight: 800;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 12px;
+      border-radius: 14px;
+      color: var(--muted);
+      font-weight: 700;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    body.dark .nav-item { color: var(--dark-muted); }
+
+    .nav-item:hover {
+      background: rgba(29,106,85,0.04);
+      border-color: rgba(29,106,85,0.08);
+      color: var(--ink);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, rgba(29,106,85,0.1), rgba(103,168,132,0.12));
+      color: var(--primary);
+      border-color: rgba(29,106,85,0.12);
+      box-shadow: inset 0 0 0 1px rgba(29,106,85,0.04);
+    }
+    body.dark .nav-item.active {
+      background: linear-gradient(135deg, rgba(155,227,179,0.08), rgba(17,28,24,0.72));
+      color: #dffaf0;
+      border-color: rgba(155,227,179,0.2);
+    }
+
+    .nav-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: rgba(29,106,85,0.08);
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+    body.dark .nav-icon { background: rgba(155,227,179,0.12); }
+
+    .main {
+      display: grid;
+      gap: 20px;
+    }
+
+    .top-panel,
+    .section-card,
+    .metric-card,
+    .pet-card,
+    .timeline-item,
+    .diagnosis-box,
+    .table-wrap,
+    .footer-note {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(247,250,248,0.98));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+    body.dark .top-panel,
+    body.dark .section-card,
+    body.dark .metric-card,
+    body.dark .pet-card,
+    body.dark .timeline-item,
+    body.dark .diagnosis-box,
+    body.dark .table-wrap,
+    body.dark .footer-note {
+      background: linear-gradient(180deg, rgba(16,28,24,0.96), rgba(20,36,29,0.96));
+      border-color: var(--dark-line);
+      box-shadow: 0 18px 36px rgba(0,0,0,0.18);
+    }
+
+    .top-panel {
+      border-radius: 28px;
+      overflow: hidden;
+    }
+
+    .top-panel-inner {
+      padding: 20px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .title-wrap h2 {
+      margin: 0;
+      font-size: clamp(1.6rem, 2.5vw, 2.5rem);
+      letter-spacing: -0.06em;
+    }
+
+    .title-wrap p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    body.dark .title-wrap p { color: var(--dark-muted); }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 0 16px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.8);
+      color: var(--ink);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    body.dark .btn {
+      background: rgba(17,28,24,0.82);
+      border-color: var(--dark-line);
+      color: var(--dark-text);
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(17, 37, 31, 0.06);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, rgba(29,106,85,0.12), rgba(103,168,132,0.12));
+      border-color: rgba(29,106,85,0.12);
+      color: var(--primary-2);
+    }
+    body.dark .btn.primary {
+      background: linear-gradient(135deg, rgba(155,227,179,0.12), rgba(17,28,24,0.8));
+      border-color: rgba(155,227,179,0.18);
+      color: #dffaf0;
+    }
+
+    .btn.gold {
+      background: linear-gradient(135deg, rgba(228,191,103,0.14), rgba(255,244,211,0.9));
+      border-color: rgba(228,191,103,0.35);
+      color: #7a5c17;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .operations-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: -4px;
+    }
+
+    .ops-card {
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(246,250,248,0.98));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 8px;
+    }
+    body.dark .ops-card {
+      background: linear-gradient(180deg, rgba(16,28,24,0.96), rgba(20,36,29,0.96));
+      border-color: var(--dark-line);
+      box-shadow: 0 18px 36px rgba(0,0,0,0.18);
+    }
+
+    .ops-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 0.66rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+    .ops-value {
+      font-size: clamp(1.3rem, 2vw, 2rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+    }
+    .ops-foot {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .metric-card {
+      padding: 18px;
+      border-radius: 20px;
+      display: grid;
+      gap: 8px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 26px 44px rgba(17,37,31,0.08);
+    }
+
+    .metric-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 800;
+    }
+    body.dark .metric-label { color: var(--dark-muted); }
+
+    .metric-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(29,106,85,0.08);
+      color: var(--primary-2);
+      font-size: 1rem;
+    }
+    body.dark .metric-icon { background: rgba(155,227,179,0.12); color: #dffaf0; }
+
+    .metric-value {
+      font-size: clamp(1.7rem, 2.4vw, 2.5rem);
+      font-weight: 900;
+      letter-spacing: -0.07em;
+      color: var(--ink);
+    }
+    body.dark .metric-value { color: var(--dark-text); }
+
+    .metric-meta {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    body.dark .metric-meta { color: var(--dark-muted); }
+
+    .section-card {
+      border-radius: 26px;
+      padding: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .section-head h3 {
+      margin: 0;
+      font-size: 1.18rem;
+      letter-spacing: -0.04em;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-select {
+      padding: 9px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.8);
+      color: var(--ink);
+      font-weight: 700;
+      min-width: 170px;
+    }
+    body.dark .filter-select {
+      background: rgba(17,28,24,0.82);
+      border-color: var(--dark-line);
+      color: var(--dark-text);
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.75);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    body.dark .pill {
+      background: rgba(17,28,24,0.82);
+      border-color: var(--dark-line);
+      color: var(--dark-muted);
+    }
+
+    .pill.active {
+      color: var(--primary-2);
+      background: rgba(29,106,85,0.08);
+      border-color: rgba(29,106,85,0.12);
+    }
+    body.dark .pill.active {
+      color: #dffaf0;
+      background: rgba(155,227,179,0.08);
+      border-color: rgba(155,227,179,0.18);
+    }
+
+    .screen-panel {
+      border-radius: 22px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,249,247,0.96));
+      display: grid;
+      gap: 16px;
+    }
+    body.dark .screen-panel {
+      background: linear-gradient(180deg, rgba(16,28,24,0.96), rgba(18,32,27,0.96));
+      border-color: var(--dark-line);
+    }
+
+    .pet-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .pet-card {
+      padding: 16px;
+      border-radius: 20px;
+      display: grid;
+      gap: 14px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+
+    .pet-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 26px rgba(17,37,31,0.04);
+    }
+
+    .pet-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pet-name {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pet-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, rgba(29,106,85,0.12), rgba(103,168,132,0.18));
+      color: var(--primary-2);
+      font-weight: 800;
+    }
+    body.dark .pet-avatar { color: #dffaf0; }
+
+    .pet-name h4 {
+      margin: 0;
+      font-size: 1.08rem;
+    }
+
+    .pet-name small {
+      display: block;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    body.dark .pet-name small { color: var(--dark-muted); }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .status-badge.critical { background: rgba(216,91,77,0.12); color: var(--danger); }
+    .status-badge.moderate { background: rgba(215,165,80,0.12); color: var(--warning); }
+    .status-badge.normal { background: rgba(76,168,109,0.12); color: var(--success); }
+
+    .pet-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
+
+    .pet-stat {
+      background: rgba(29,106,85,0.03);
+      border: 1px solid rgba(29,106,85,0.08);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    body.dark .pet-stat {
+      background: rgba(155,227,179,0.04);
+      border-color: rgba(155,227,179,0.1);
+    }
+
+    .pet-stat .k {
+      color: var(--muted);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    body.dark .pet-stat .k { color: var(--dark-muted); }
+
+    .pet-stat .v {
+      display: block;
+      margin-top: 2px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    body.dark .pet-stat .v { color: var(--dark-text); }
+
+    .pet-progress {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.7rem;
+    }
+    body.dark .pet-progress { color: var(--dark-muted); }
+
+    .progress-track {
+      height: 9px;
+      border-radius: 999px;
+      background: #edf2ef;
+      border: 1px solid rgba(29,106,85,0.06);
+      overflow: hidden;
+    }
+    body.dark .progress-track { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.06); }
+
+    .progress-fill {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(29,106,85,0.9), rgba(103,168,132,0.95));
+    }
+
+    .pet-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-wrap: wrap;
+    }
+    body.dark .pet-footer { color: var(--dark-muted); }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 0.9fr;
+      gap: 18px;
+    }
+
+    .chart-panel {
+      border-radius: 22px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(245,249,247,0.97));
+      display: grid;
+      gap: 18px;
+    }
+    body.dark .chart-panel {
+      background: linear-gradient(180deg, rgba(16,28,24,0.96), rgba(18,32,27,0.96));
+      border-color: var(--dark-line);
+    }
+
+    .chart-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .chart-head h4 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    body.dark .chart-head h4 { color: var(--dark-muted); }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.68rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    body.dark .legend { color: var(--dark-muted); }
+
+    .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .chart-host {
+      height: 260px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(29,106,85,0.02), rgba(255,255,255,1));
+      overflow: hidden;
+    }
+    body.dark .chart-host {
+      background: linear-gradient(180deg, rgba(155,227,179,0.02), rgba(20,36,29,0.8));
+      border-color: var(--dark-line);
+    }
+
+    .chart-host svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+    }
+
+    .table-wrap {
+      overflow: hidden;
+      border-radius: 18px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 12px 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+    body.dark th, body.dark td { border-color: var(--dark-line); }
+
+    th {
+      background: rgba(29,106,85,0.04);
+      color: var(--primary-2);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      font-size: 0.68rem;
+      font-weight: 800;
+    }
+    body.dark th { background: rgba(155,227,179,0.04); color: #dffaf0; }
+
+    tr:last-child td { border-bottom: none; }
+
+    .diagnosis-box {
+      padding: 16px;
+      border-radius: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .diagnosis-box h4 {
+      margin: 0;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    body.dark .diagnosis-box h4 { color: var(--dark-muted); }
+
+    .diagnosis-card {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(29,106,85,0.03);
+      border: 1px solid rgba(29,106,85,0.08);
+    }
+    body.dark .diagnosis-card {
+      background: rgba(155,227,179,0.03);
+      border-color: rgba(155,227,179,0.12);
+    }
+
+    .diagnosis-card strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .diagnosis-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    body.dark .diagnosis-card p { color: var(--dark-muted); }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 14px;
+    }
+
+    .timeline-item {
+      padding: 16px;
+      border-radius: 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .timeline-item .phase {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: rgba(29,106,85,0.08);
+      color: var(--primary-2);
+      font-size: 0.64rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    body.dark .timeline-item .phase { color: #dffaf0; background: rgba(155,227,179,0.08); }
+
+    .timeline-item h4 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .timeline-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    body.dark .timeline-item p { color: var(--dark-muted); }
+
+    .footer-note {
+      margin-top: 4px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+    body.dark .footer-note { color: var(--dark-muted); }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(29,106,85,0.04);
+      color: var(--primary-2);
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .chip.success { background: rgba(76,168,109,0.12); color: var(--success); }
+    .chip.warning { background: rgba(215,165,80,0.12); color: var(--warning); }
+    .chip.critical { background: rgba(216,91,77,0.12); color: var(--danger); }
+    body.dark .chip {
+      border-color: var(--dark-line);
+      background: rgba(155,227,179,0.05);
+      color: #dffaf0;
+    }
+
+    @media (max-width: 1180px) {
+      .dashboard-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .pet-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .detail-grid, .case-grid { grid-template-columns: 1fr; }
+      .timeline { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .operations-strip { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 820px) {
+      .metrics-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .pet-grid { grid-template-columns: 1fr; }
+      .timeline { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .page-shell { padding: 16px 12px 28px; }
+      .metrics-grid { grid-template-columns: 1fr; }
+      .topbar-inner { align-items: flex-start; flex-direction: column; }
+      .nav { width: 100%; }
+      .nav a, .nav button { flex: 1 1 auto; }
+      .header-actions { width: 100%; }
+      .btn { flex: 1 1 auto; }
+    }
+
+    @media print {
+      body { background: white; }
+      .topbar, .sidebar, .header-actions, .nav, .btn, .filter-row { display: none !important; }
+      .dashboard-layout { grid-template-columns: 1fr; }
+      .section-card, .top-panel, .metric-card, .pet-card, .diagnosis-box, .timeline-item, .footer-note, .chart-panel { box-shadow: none !important; }
+      .page-shell { max-width: 100%; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="brand-mark">P</span> PetCare</div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html">Dashboard</a>
+        <a href="disease_support.html">Disease Support</a>
+        <a href="nutrition_products.html">Nutrition</a>
+        <a href="report_kpi_board.html">Reports</a>
+        <button id="darkToggle" type="button">Dark mode</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <div class="dashboard-layout" id="dashboardLayout">
+      <aside class="sidebar">
+        <div class="side-group">
+          <div class="side-label">Overview</div>
+          <div class="nav-item active"><span class="nav-icon">◉</span><span class="nav-text">Health board</span></div>
+          <div class="nav-item"><span class="nav-icon">◎</span><span class="nav-text">Monitoring</span></div>
+          <div class="nav-item"><span class="nav-icon">▣</span><span class="nav-text">Treatment</span></div>
+          <div class="nav-item"><span class="nav-icon">◌</span><span class="nav-text">Nutrition</span></div>
+        </div>
+        <div class="side-group" style="margin-top: 16px;">
+          <div class="side-label">Clinical</div>
+          <div class="nav-item"><span class="nav-icon">✦</span><span class="nav-text">Cases</span></div>
+          <div class="nav-item"><span class="nav-icon">◫</span><span class="nav-text">Vaccines</span></div>
+          <div class="nav-item"><span class="nav-icon">↗</span><span class="nav-text">Reports</span></div>
+        </div>
+      </aside>
+
+      <div class="main">
+        <section class="top-panel">
+          <div class="top-panel-inner">
+            <div class="title-wrap">
+              <h2>Premium pet health portfolio</h2>
+              <p>Enterprise dashboard for multi-species monitoring, clinical trends, and treatment decision support.</p>
+            </div>
+            <div class="header-actions">
+              <button class="btn gold" type="button" onclick="window.print()">Export PDF</button>
+              <button class="btn primary" type="button" id="collapseSidebarBtn">Sidebar collapse</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="metrics-grid" id="metricsGrid"></section>
+
+        <section class="operations-strip">
+          <article class="ops-card">
+            <div class="ops-head"><span>Care team load</span><span>📊</span></div>
+            <div class="ops-value">83%</div>
+            <div class="ops-foot">3 specialists on overtime queue</div>
+          </article>
+          <article class="ops-card">
+            <div class="ops-head"><span>Follow-up backlog</span><span>🧾</span></div>
+            <div class="ops-value">26</div>
+            <div class="ops-foot">Weighted by urgency and referral type</div>
+          </article>
+          <article class="ops-card">
+            <div class="ops-head"><span>Team utilization</span><span>👥</span></div>
+            <div class="ops-value">91%</div>
+            <div class="ops-foot">Overview across surgery / internal / dermatology</div>
+          </article>
+        </section>
+
+        <section class="section-card">
+          <div class="section-head">
+            <h3>Per-pet portfolio</h3>
+            <div class="filter-row">
+              <button class="pill active" data-filter="all">All</button>
+              <button class="pill" data-filter="Dog">Dogs</button>
+              <button class="pill" data-filter="Cat">Cats</button>
+              <select class="filter-select" id="riskFilter">
+                <option value="all">All risk level</option>
+                <option value="normal">Normal</option>
+                <option value="moderate">Moderate</option>
+                <option value="critical">Critical</option>
+              </select>
+              <select class="filter-select" id="diseaseFilter">
+                <option value="all">All disease</option>
+                <option value="Arthritis">Arthritis</option>
+                <option value="Dermatitis">Dermatitis</option>
+                <option value="Digestive upset">Digestive upset</option>
+                <option value="Respiratory issue">Respiratory issue</option>
+                <option value="Skin infection">Skin infection</option>
+                <option value="Mild allergic flare">Mild allergic flare</option>
+                <option value="Ear infection">Ear infection</option>
+                <option value="Urinary issue">Urinary issue</option>
+                <option value="Post-op recovery">Post-op recovery</option>
+                <option value="Cardiac monitoring">Cardiac monitoring</option>
+                <option value="Neurology review">Neurology review</option>
+                <option value="Eye inflammation">Eye inflammation</option>
+                <option value="Endocrine support">Endocrine support</option>
+              </select>
+            </div>
+          </div>
+          <div class="screen-panel">
+            <div class="pet-grid" id="petGrid"></div>
+          </div>
+        </section>
+
+        <section class="detail-grid">
+          <div class="chart-panel">
+            <div class="chart-head">
+              <h4 id="chartTitle">Selected pet trend</h4>
+              <div class="legend">
+                <span><i class="dot" style="background:#1d6a55"></i>Recovery</span>
+                <span><i class="dot" style="background:#e4bf67"></i>Activity</span>
+              </div>
+            </div>
+            <div class="chart-host">
+              <svg id="lineAreaChart" viewBox="0 0 800 260" preserveAspectRatio="none" aria-label="pet recovery chart"></svg>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-head">
+              <h3>Selected pet report</h3>
+              <span class="chip" id="selectedBadge">Ready</span>
+            </div>
+            <div class="diagnosis-box" id="selectedReport"></div>
+          </div>
+        </section>
+
+        <section class="case-grid">
+          <div class="section-card">
+            <div class="section-head">
+              <h3>Case review table</h3>
+              <span class="chip">Last 7 days</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Pet</th>
+                    <th>Disease</th>
+                    <th>Stage</th>
+                    <th>Recovery</th>
+                    <th>Next check</th>
+                  </tr>
+                </thead>
+                <tbody id="caseTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-head">
+              <h3>Clinical focus</h3>
+              <span class="chip">Priority</span>
+            </div>
+            <div class="diagnosis-box">
+              <div class="diagnosis-card">
+                <strong>Arthritis follow-up</strong>
+                <p>Buddy shows sustained joint comfort improvement and strong response to therapeutic movement and supplements.</p>
+              </div>
+              <div class="diagnosis-card">
+                <strong>Dermatitis review</strong>
+                <p>Nova has stable skin condition but needs continued topical control and seasonal check-in.</p>
+              </div>
+              <div class="diagnosis-card">
+                <strong>GI stabilization</strong>
+                <p>Sunny remains stable, with normal appetite and no acute gastrointestinal symptoms after the latest diet plan.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-card">
+          <div class="section-head">
+            <h3>Treatment cycle overview</h3>
+            <span class="chip">Program plan</span>
+          </div>
+          <div class="timeline" id="timelineGrid"></div>
+        </section>
+
+        <div class="footer-note">
+          Summary: Most monitored pets show steady improvement across all active treatment plans. Recovery remains strong for majority of cases, with only a small number needing increased observational care during the next cycle.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="petModalOverlay" aria-hidden="true">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="petModalTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="petModalTitle">Pet detail</h3>
+        <button class="close-btn" type="button" aria-label="Close modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-profile">
+          <h3>Profile</h3>
+          <div id="petModalProfile"></div>
+        </div>
+        <div class="modal-report">
+          <h3>Clinical report</h3>
+          <div class="report-list" id="petModalReportList"></div>
+          <div class="report-large" id="petModalLargeText"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const metrics = [
+      { label: 'Active cases', value: '148', meta: '+21 from last week', icon: '🩺' },
+      { label: 'Critical watchlist', value: '12', meta: '3 need urgent review', icon: '⚠️' },
+      { label: 'Recovery rate', value: '87%', meta: '+8% from last month', icon: '📈' },
+      { label: 'Specialty teams', value: '9', meta: 'orthopedics, dermatology...', icon: '👩‍⚕️' }
+    ];
+
+    const pets = [
+      {
+        name: 'Buddy',
+        species: 'Dog',
+        breed: 'Golden Retriever',
+        disease: 'Arthritis',
+        department: 'Orthopedics',
+        doctor: 'Dr. Laura Chen',
+        owner: 'Emma Thompson',
+        stage: 'Recovery',
+        status: 'normal',
+        health: 88,
+        weight: '26.4 kg',
+        age: '4 yrs',
+        avatar: '🐶',
+        progress: 86,
+        nextCheck: '2026-10-18',
+        treatment: '3 / 4 cycle',
+        trend: [68, 70, 72, 75, 81, 86, 88],
+        alert: 'Joint response is improving; continue controlled mobility exercise.',
+        notes: 'No clear reversal of symptoms; prognosis remains favorable with low inflammation response and steady weight gain.',
+        diagnosis: 'Chronic joint inflammation with mild mobility stiffness.',
+        medication: 'Glucosamine + anti-inflammatory protocol',
+        carePlan: 'Low-impact walk, supplementation, weekly reassessment.'
+      },
+      {
+        name: 'Nova',
+        species: 'Cat',
+        breed: 'British Shorthair',
+        disease: 'Dermatitis',
+        department: 'Dermatology',
+        doctor: 'Dr. Sarah Patel',
+        owner: 'Daniel Vo',
+        stage: 'Monitoring',
+        status: 'moderate',
+        health: 74,
+        weight: '4.8 kg',
+        age: '2 yrs',
+        avatar: '🐱',
+        progress: 68,
+        nextCheck: '2026-10-17',
+        treatment: '2 / 3 cycle',
+        trend: [55, 57, 60, 64, 66, 69, 74],
+        alert: 'Skin condition is stable but requires continued topical management.',
+        notes: 'Mild itching remains during high pollen periods; lesions are reducing but not fully resolved.',
+        diagnosis: 'Allergic dermatitis with periodic fur irritation.',
+        medication: 'Topical soothing therapy and antihistamine support',
+        carePlan: 'Monitor skin barrier, adjust grooming, prevent contact allergens.'
+      },
+      {
+        name: 'Sunny',
+        species: 'Dog',
+        breed: 'Corgi',
+        disease: 'Digestive upset',
+        department: 'Internal medicine',
+        doctor: 'Dr. Ethan Brooks',
+        owner: 'Mia Nguyen',
+        stage: 'Stabilized',
+        status: 'normal',
+        health: 81,
+        weight: '12.6 kg',
+        age: '5 yrs',
+        avatar: '🐕',
+        progress: 79,
+        nextCheck: '2026-10-16',
+        treatment: '4 / 5 cycle',
+        trend: [52, 58, 61, 69, 74, 78, 81],
+        alert: 'Digestive symptoms are controlled; appetite remains strong.',
+        notes: 'Improved stool consistency and appetite; normal hydration levels support longer-term stabilization.',
+        diagnosis: 'Acute gastrointestinal irritation with improved recovery.',
+        medication: 'Diet-sensitive protocol and digestive support',
+        carePlan: 'Gentle diet transition and continued monitoring of stool quality.'
+      },
+      {
+        name: 'Milo',
+        species: 'Cat',
+        breed: 'Siamese',
+        disease: 'Respiratory issue',
+        department: 'Pulmonary care',
+        doctor: 'Dr. Priya Shah',
+        owner: 'Linh Tran',
+        stage: 'Critical',
+        status: 'critical',
+        health: 61,
+        weight: '3.7 kg',
+        age: '1 yr',
+        avatar: '🐈',
+        progress: 55,
+        nextCheck: '2026-10-15',
+        treatment: '1 / 2 cycle',
+        trend: [40, 44, 48, 52, 56, 58, 61],
+        alert: 'Requires urgent review for respiratory symptoms and recovery monitoring.',
+        notes: 'Breathing pattern remains elevated; close observation is required before next treatment stage.',
+        diagnosis: 'Upper respiratory issue with moderate respiratory distress.',
+        medication: 'Respiratory support and monitored treatment course',
+        carePlan: 'Intensive monitoring, reduce stress, continue supervised recovery.'
+      },
+      {
+        name: 'Luna',
+        species: 'Dog',
+        breed: 'Shih Tzu',
+        disease: 'Skin infection',
+        department: 'Dermatology',
+        doctor: 'Dr. Alina Woods',
+        owner: 'Harper Lee',
+        stage: 'Recovery',
+        status: 'normal',
+        health: 86,
+        weight: '7.1 kg',
+        age: '3 yrs',
+        avatar: '🐕',
+        progress: 84,
+        nextCheck: '2026-10-19',
+        treatment: '3 / 4 cycle',
+        trend: [60, 65, 70, 74, 79, 82, 86],
+        alert: 'Skin infection is responding well to treatment and improved hygiene.',
+        notes: 'Skin integrity is improving; redness is less visible and healing continues without worsening signs.',
+        diagnosis: 'Superficial skin infection with favorable treatment response.',
+        medication: 'Localized anti-infective therapy and skin support',
+        carePlan: 'Continue treatment, maintain grooming hygiene, monitor erythema.'
+      },
+      {
+        name: 'Maple',
+        species: 'Cat',
+        breed: 'Persian',
+        disease: 'Mild allergic flare',
+        department: 'Allergy care',
+        doctor: 'Dr. Olivia Hart',
+        owner: 'Shawn Moore',
+        stage: 'Monitoring',
+        status: 'moderate',
+        health: 72,
+        weight: '5.3 kg',
+        age: '4 yrs',
+        avatar: '🐈',
+        progress: 66,
+        nextCheck: '2026-10-20',
+        treatment: '2 / 3 cycle',
+        trend: [50, 53, 57, 62, 66, 70, 72],
+        alert: 'Allergic flare is improving, but routine monitoring remains necessary.',
+        notes: 'Seasonal triggers continue; signs have reduced, but inflammatory symptoms remain intermittent.',
+        diagnosis: 'Mild allergy flare affecting skin and comfort.',
+        medication: 'Symptom control and allergen avoidance',
+        carePlan: 'Maintain environment control, skincare support, and periodic reassessment.'
+      },
+      {
+        name: 'Amber',
+        species: 'Dog',
+        breed: 'Labrador',
+        disease: 'Ear infection',
+        department: 'Audiology / ENT',
+        doctor: 'Dr. Henry Cole',
+        owner: 'Chloe Nguyen',
+        stage: 'Recovery',
+        status: 'normal',
+        health: 90,
+        weight: '29.5 kg',
+        age: '6 yrs',
+        avatar: '🐕',
+        progress: 88,
+        nextCheck: '2026-10-21',
+        treatment: '4 / 5 cycle',
+        trend: [66, 69, 74, 80, 85, 88, 90],
+        alert: 'Ear discomfort significantly reduced, with normal behavior and strong appetite.',
+        notes: 'No recurrent discharge; response to treatment remains consistent and well controlled.',
+        diagnosis: 'Otitis issues resolving under standard protocol.',
+        medication: 'Ear cleaning and anti-inflammatory support',
+        carePlan: 'Continue care and review after final cycle completion.'
+      },
+      {
+        name: 'Poppy',
+        species: 'Cat',
+        breed: 'Tabby',
+        disease: 'Urinary issue',
+        department: 'Urology',
+        doctor: 'Dr. Maya Rivera',
+        owner: 'Aiden Park',
+        stage: 'Monitoring',
+        status: 'moderate',
+        health: 71,
+        weight: '3.9 kg',
+        age: '3 yrs',
+        avatar: '🐈',
+        progress: 64,
+        nextCheck: '2026-10-18',
+        treatment: '2 / 3 cycle',
+        trend: [48, 52, 57, 60, 63, 67, 71],
+        alert: 'Urinary discomfort has reduced, but continued monitoring remains essential.',
+        notes: 'Water intake remains stable; frequency has improved after environmental changes.',
+        diagnosis: 'Mild urinary discomfort with observed improvement.',
+        medication: 'Hydration support and symptom-focused therapy',
+        carePlan: 'Continue hydration access and arrange check-in after cycle review.'
+      },
+      {
+        name: 'Teddy',
+        species: 'Dog',
+        breed: 'Beagle',
+        disease: 'Post-op recovery',
+        department: 'Surgery follow-up',
+        doctor: 'Dr. James Owens',
+        owner: 'Sofia Carter',
+        stage: 'Critical',
+        status: 'critical',
+        health: 58,
+        weight: '11.2 kg',
+        age: '2 yrs',
+        avatar: '🐶',
+        progress: 51,
+        nextCheck: '2026-10-14',
+        treatment: '1 / 3 cycle',
+        trend: [39, 42, 45, 49, 52, 56, 58],
+        alert: 'Postoperative recovery is progressing slowly and requires closer observation.',
+        notes: 'Incision is clean, but mobility remains limited and rest is still recommended.',
+        diagnosis: 'Surgical recovery with slow but stable healing progress.',
+        medication: 'Post-op recovery support and activity restriction',
+        carePlan: 'Restrict movement, monitor incision, reassess in 48 hours.'
+      },
+      {
+        name: 'Coco',
+        species: 'Dog',
+        breed: 'Mini Poodle',
+        disease: 'Cardiac monitoring',
+        department: 'Cardiology',
+        doctor: 'Dr. Claire Adams',
+        owner: 'Noah Kim',
+        stage: 'Monitoring',
+        status: 'moderate',
+        health: 76,
+        weight: '6.9 kg',
+        age: '7 yrs',
+        avatar: '🐕',
+        progress: 72,
+        nextCheck: '2026-10-24',
+        treatment: '2 / 4 cycle',
+        trend: [52, 55, 61, 66, 69, 73, 76],
+        alert: 'Cardiac rhythm remains stable with mild exercise limitations; continue monitoring.',
+        notes: 'Telemetry suggests partly stable pattern with no acute arrhythmia, but rest periods remain essential.',
+        diagnosis: 'Mild cardiac stress pattern requiring continued periodic monitoring.',
+        medication: 'Cardiac support and controlled activity plan',
+        carePlan: 'Moderate exercise, heart rhythm review, and diet timing checks.'
+      },
+      {
+        name: 'Jasper',
+        species: 'Cat',
+        breed: 'Maine Coon',
+        disease: 'Neurology review',
+        department: 'Neurology',
+        doctor: 'Dr. Natalie Wu',
+        owner: 'Ava Brooks',
+        stage: 'Recovery',
+        status: 'normal',
+        health: 84,
+        weight: '6.4 kg',
+        age: '5 yrs',
+        avatar: '🐈',
+        progress: 82,
+        nextCheck: '2026-10-22',
+        treatment: '3 / 5 cycle',
+        trend: [59, 63, 68, 72, 76, 81, 84],
+        alert: 'Neurological signs have improved; mobility and responsiveness remain stable.',
+        notes: 'No alarming episodes observed in the last week; sensory response and movement remain within expected range.',
+        diagnosis: 'Neurological observation with improving neuromotor balance.',
+        medication: 'Neuro-support and controlled environmental enrichment',
+        carePlan: 'Keep environment calm, continue monitoring movement and coordination.'
+      },
+      {
+        name: 'Olive',
+        species: 'Dog',
+        breed: 'Cavalier King Charles',
+        disease: 'Eye inflammation',
+        department: 'Ophthalmology',
+        doctor: 'Dr. Faye Owens',
+        owner: 'Leo Smith',
+        stage: 'Monitoring',
+        status: 'moderate',
+        health: 70,
+        weight: '8.2 kg',
+        age: '4 yrs',
+        avatar: '🐕',
+        progress: 65,
+        nextCheck: '2026-10-23',
+        treatment: '2 / 4 cycle',
+        trend: [46, 49, 54, 58, 62, 66, 70],
+        alert: 'Ocular irritation decreased, but visual comfort requires ongoing weekly review.',
+        notes: 'Inflammation is reducing, though the eye remains more sensitive than normal during active hours.',
+        diagnosis: 'Subacute ocular inflammation with moderate response to treatment.',
+        medication: 'Ocular anti-inflammatory drops and lubrication',
+        carePlan: 'Preserve eye hygiene, monitor discharge and discomfort, continue review.'
+      },
+      {
+        name: 'Nori',
+        species: 'Cat',
+        breed: 'Russian Blue',
+        disease: 'Endocrine support',
+        department: 'Endocrinology',
+        doctor: 'Dr. Samir Bhandari',
+        owner: 'Liam Garcia',
+        stage: 'Recovery',
+        status: 'normal',
+        health: 89,
+        weight: '4.1 kg',
+        age: '6 yrs',
+        avatar: '🐱',
+        progress: 87,
+        nextCheck: '2026-10-25',
+        treatment: '4 / 5 cycle',
+        trend: [61, 66, 71, 75, 81, 85, 89],
+        alert: 'Metabolic markers are trending in the right direction with no acute adverse signs.',
+        notes: 'Weight remains stable and appetite is normal; no rebound symptoms observed after the last adjustment.',
+        diagnosis: 'Long-term endocrine support with favorable metabolic balance.',
+        medication: 'Targeted endocrine management and controlled nutrition',
+        carePlan: 'Continue scheduled monitoring and nutrition maintenance.'
+      }
+    ];
+
+    const timeline = [
+      { phase: 'Phase 1', title: 'Assessment', text: 'Initial exam, vitals, and disease classification were completed.' },
+      { phase: 'Phase 2', title: 'Medication', text: 'Protocol started with symptom management and controlled nutrition adjustments.' },
+      { phase: 'Phase 3', title: 'Monitoring', text: 'Clinical signs are compared against recovery markers and daily progress.' },
+      { phase: 'Phase 4', title: 'Review', text: 'Follow-up plan is scheduled based on response to treatment and risk level.' }
+    ];
+
+    let selectedPet = pets[0];
+    let activeSpeciesFilter = 'all';
+    let activeRiskFilter = 'all';
+    let activeDiseaseFilter = 'all';
+
+    function renderMetrics() {
+      const grid = document.getElementById('metricsGrid');
+      grid.innerHTML = metrics.map(item => `
+        <article class="metric-card">
+          <div class="metric-label">
+            <span>${item.label}</span>
+            <span class="metric-icon">${item.icon}</span>
+          </div>
+          <div class="metric-value">${item.value}</div>
+          <div class="metric-meta">${item.meta}</div>
+        </article>
+      `).join('');
+    }
+
+    function getFilteredPets() {
+      return pets.filter(p => {
+        const speciesPass = activeSpeciesFilter === 'all' || p.species === activeSpeciesFilter;
+        const riskPass = activeRiskFilter === 'all' || p.status === activeRiskFilter;
+        const diseasePass = activeDiseaseFilter === 'all' || p.disease === activeDiseaseFilter;
+        return speciesPass && riskPass && diseasePass;
+      });
+    }
+
+    function renderPets() {
+      const filtered = getFilteredPets();
+      const grid = document.getElementById('petGrid');
+      if (!filtered.length) {
+        grid.innerHTML = '<div class="screen-panel" style="grid-column: 1 / -1;">No pets match the selected filters.</div>';
+        return;
+      }
+      grid.innerHTML = filtered.map(p => `
+        <article class="pet-card" data-name="${p.name}">
+          <div class="pet-top">
+            <div class="pet-name">
+              <div class="pet-avatar">${p.avatar}</div>
+              <div>
+                <h4>${p.name}</h4>
+                <small>${p.breed}</small>
+              </div>
+            </div>
+            <span class="status-badge ${p.status}">${p.stage}</span>
+          </div>
+          <div class="pet-summary">
+            <div class="pet-stat">
+              <span class="k">Species</span>
+              <span class="v">${p.species}</span>
+            </div>
+            <div class="pet-stat">
+              <span class="k">Age</span>
+              <span class="v">${p.age}</span>
+            </div>
+            <div class="pet-stat">
+              <span class="k">Weight</span>
+              <span class="v">${p.weight}</span>
+            </div>
+            <div class="pet-stat">
+              <span class="k">Score</span>
+              <span class="v">${p.health}</span>
+            </div>
+          </div>
+          <div class="pet-progress">
+            <span>${p.disease} · ${p.treatment}</span>
+            <div class="progress-track"><span class="progress-fill" style="width:${p.progress}%"></span></div>
+          </div>
+          <div class="pet-footer">
+            <span>Next check: ${p.nextCheck}</span>
+            <span>${p.progress}%</span>
+          </div>
+        </article>
+      `).join('');
+
+      document.querySelectorAll('.pet-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const found = pets.find(p => p.name === card.dataset.name);
+          if (found) {
+            selectedPet = found;
+            renderSelectedReport();
+            renderChart();
+            openPetModal(found);
+          }
+        });
+      });
+    }
+
+    function openPetModal(pet) {
+      const overlay = document.getElementById('petModalOverlay');
+      const title = document.getElementById('petModalTitle');
+      const profile = document.getElementById('petModalProfile');
+      const reportList = document.getElementById('petModalReportList');
+      const reportText = document.getElementById('petModalLargeText');
+
+      title.textContent = `${pet.name} · ${pet.disease}`;
+      profile.innerHTML = `
+        <div class="profile-head">
+          <div class="profile-avatar">${pet.avatar}</div>
+          <div class="profile-meta">
+            <strong>${pet.name}</strong>
+            <span>${pet.species} · ${pet.breed}</span>
+          </div>
+        </div>
+        <div class="profile-stats">
+          <div class="profile-stat"><span class="k">Age</span><span class="v">${pet.age}</span></div>
+          <div class="profile-stat"><span class="k">Weight</span><span class="v">${pet.weight}</span></div>
+          <div class="profile-stat"><span class="k">Health</span><span class="v">${pet.health}/100</span></div>
+          <div class="profile-stat"><span class="k">Stage</span><span class="v">${pet.stage}</span></div>
+        </div>
+      `;
+
+      reportList.innerHTML = `
+        <div class="report-row"><strong>Department</strong><span>${pet.department}</span></div>
+        <div class="report-row"><strong>Doctor</strong><span>${pet.doctor}</span></div>
+        <div class="report-row"><strong>Owner</strong><span>${pet.owner}</span></div>
+        <div class="report-row"><strong>Diagnosis</strong><span>${pet.diagnosis}</span></div>
+        <div class="report-row"><strong>Medication</strong><span>${pet.medication}</span></div>
+        <div class="report-row"><strong>Next review</strong><span>${pet.nextCheck}</span></div>
+        <div class="report-row"><strong>Treatment cycle</strong><span>${pet.treatment}</span></div>
+      `;
+
+      reportText.innerHTML = `
+        <strong>Clinical insight:</strong><br>
+        ${pet.notes}<br><br>
+        <strong>Care plan:</strong><br>
+        ${pet.carePlan}<br><br>
+        <strong>Priority note:</strong><br>
+        ${pet.alert}
+      `;
+
+      overlay.classList.add('active');
+      overlay.setAttribute('aria-hidden', 'false');
+    }
+
+    function closePetModal() {
+      const overlay = document.getElementById('petModalOverlay');
+      overlay.classList.remove('active');
+      overlay.setAttribute('aria-hidden', 'true');
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('caseTableBody');
+      const rows = getFilteredPets();
+      tbody.innerHTML = rows.slice(0, 6).map(p => `
+        <tr>
+          <td>${p.name}</td>
+          <td>${p.disease}</td>
+          <td><span class="status-badge ${p.status}">${p.stage}</span></td>
+          <td>${p.progress}%</td>
+          <td>${p.nextCheck}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderSelectedReport() {
+      const report = document.getElementById('selectedReport');
+      const badge = document.getElementById('selectedBadge');
+      badge.textContent = selectedPet.status.toUpperCase();
+      badge.className = 'chip';
+      if (selectedPet.status === 'critical') badge.classList.add('critical');
+      if (selectedPet.status === 'moderate') badge.classList.add('warning');
+      if (selectedPet.status === 'normal') badge.classList.add('success');
+
+      report.innerHTML = `
+        <div class="diagnosis-card">
+          <strong>${selectedPet.name}</strong>
+          <p>${selectedPet.species} · ${selectedPet.breed} · ${selectedPet.age}</p>
+        </div>
+        <div class="diagnosis-card">
+          <strong>Current condition</strong>
+          <p>${selectedPet.disease} is in ${selectedPet.stage.toLowerCase()} stage with a score of ${selectedPet.health}/100.</p>
+        </div>
+        <div class="diagnosis-card">
+          <strong>Clinical summary</strong>
+          <p>${selectedPet.alert}</p>
+        </div>
+        <div class="diagnosis-card">
+          <strong>Care team</strong>
+          <p>${selectedPet.department} · ${selectedPet.doctor} · Owner: ${selectedPet.owner}</p>
+        </div>
+        <div class="diagnosis-card">
+          <strong>Treatment progress</strong>
+          <p>${selectedPet.treatment}. Recovery trend is tracking above the expected clinical baseline.</p>
+        </div>
+      `;
+    }
+
+    function renderChart() {
+      const title = document.getElementById('chartTitle');
+      title.textContent = `${selectedPet.name} recovery trajectory`;
+      const svg = document.getElementById('lineAreaChart');
+      const values = selectedPet.trend;
+      const padding = { top: 22, right: 22, bottom: 28, left: 28 };
+      const w = 800;
+      const h = 260;
+      const max = 100;
+      const min = 0;
+      const xStep = (w - padding.left - padding.right) / (values.length - 1);
+
+      const points = values.map((value, index) => {
+        const x = padding.left + index * xStep;
+        const y = h - padding.bottom - ((value - min) / (max - min)) * (h - padding.top - padding.bottom);
+        return { x, y, value, label: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][index] };
+      });
+
+      const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+      const areaPath = `${linePath} L ${points[points.length - 1].x} ${h - padding.bottom} L ${points[0].x} ${h - padding.bottom} Z`;
+
+      const gridLines = Array.from({ length: 5 }, (_, i) => {
+        const y = padding.top + (i * (h - padding.top - padding.bottom)) / 4;
+        return `<line x1="${padding.left}" y1="${y}" x2="${w - padding.right}" y2="${y}" stroke="rgba(29,106,85,0.08)" />`;
+      }).join('');
+
+      const pointDots = points.map(p => `
+        <g>
+          <circle cx="${p.x}" cy="${p.y}" r="5" fill="#1d6a55" />
+          <circle cx="${p.x}" cy="${p.y}" r="9" fill="rgba(29,106,85,0.10)" />
+        </g>
+      `).join('');
+
+      const labels = points.map(p => `<text x="${p.x}" y="${h - 8}" fill="currentColor" text-anchor="middle" font-size="11" opacity="0.7">${p.label}</text>`).join('');
+
+      svg.innerHTML = `
+        <g fill="none" stroke="currentColor" stroke-opacity="0.7" font-family="Segoe UI, sans-serif">
+          ${gridLines}
+          <path d="${areaPath}" fill="rgba(29,106,85,0.12)" stroke="none"/>
+          <path d="${linePath}" stroke="#1d6a55" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M ${points[0].x} ${h - padding.bottom} ${points.map(p => `L ${p.x} ${p.y}`).join(' ')}" stroke="#e4bf67" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.9"/>
+          ${pointDots}
+          ${labels}
+        </g>
+      `;
+    }
+
+    function renderTimeline() {
+      const target = document.getElementById('timelineGrid');
+      target.innerHTML = timeline.map(item => `
+        <article class="timeline-item">
+          <span class="phase">${item.phase}</span>
+          <h4>${item.title}</h4>
+          <p>${item.text}</p>
+        </article>
+      `).join('');
+    }
+
+    document.querySelectorAll('.pill').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+        button.classList.add('active');
+        activeSpeciesFilter = button.dataset.filter;
+        renderPets();
+        renderTable();
+      });
+    });
+
+    document.getElementById('riskFilter').addEventListener('change', function () {
+      activeRiskFilter = this.value;
+      renderPets();
+      renderTable();
+    });
+
+    document.getElementById('diseaseFilter').addEventListener('change', function () {
+      activeDiseaseFilter = this.value;
+      renderPets();
+      renderTable();
+    });
+
+    document.getElementById('collapseSidebarBtn').addEventListener('click', function () {
+      const layout = document.getElementById('dashboardLayout');
+      layout.classList.toggle('collapsed');
+    });
+
+    document.getElementById('darkToggle').addEventListener('click', function () {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      this.textContent = isDark ? 'Light mode' : 'Dark mode';
+    });
+
+    const petModalOverlay = document.getElementById('petModalOverlay');
+    document.querySelector('.close-btn').addEventListener('click', closePetModal);
+    petModalOverlay.addEventListener('click', function (event) {
+      if (event.target === petModalOverlay) {
+        closePetModal();
+      }
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && petModalOverlay.classList.contains('active')) {
+        closePetModal();
+      }
+    });
+
+    renderMetrics();
+    renderPets();
+    renderSelectedReport();
+    renderChart();
+    renderTable();
+    renderTimeline();
+  </script>
+</body>
+</html>
