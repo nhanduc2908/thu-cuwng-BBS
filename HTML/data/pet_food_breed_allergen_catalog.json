@@ -17,7 +17,8 @@
     "productsWithExplicitAllergenDeclaration": 0,
     "productMarketCoverageComplete": false,
     "lifeStageGuidanceCount": 9,
-    "productsWithQuantitativeEnergyVerified": 0
+    "productsWithQuantitativeEnergyVerified": 0,
+    "breedProfilesWithSpecificSources": 42
   },
   "limitations": [
     "Đây là hồ sơ đã có trong pet_product_specs.json, không phải danh mục toàn bộ thức ăn đang bán trên thị trường.",
@@ -28,13 +29,14 @@
     "Hồ sơ giống lấy từ catalog nội bộ; bản ghi trùng tên và sai khác được giữ trong conflicts, chưa xác minh độc lập.",
     "Tuổi trưởng thành theo kích thước chó chỉ là khoảng ước lượng; tuổi chuyển senior cần đánh giá thú y và không suy ra riêng từ tên giống.",
     "Hướng dẫn năng lượng là định tính theo giai đoạn; không tạo kcal hoặc khẩu phần chỉ từ tên giống.",
-    "Bốn hồ sơ bổ sung chỉ có tên/loài từ chỉ mục nội bộ chưa xác minh; không sử dụng thông tin dinh dưỡng của danh mục tạo tự động."
+    "Các hồ sơ bổ sung và những trường giống đã đối chiếu chỉ có phạm vi nguồn một phần; trường thiếu nguồn vẫn không được suy đoán. Không sử dụng dữ liệu dinh dưỡng từ danh mục tạo tự động."
   ],
   "sourceFiles": {
     "products": "HTML/data/pet_product_specs.json",
     "productFieldDefinitions": "HTML/data/product_spec_fields.json",
     "breeds": "HTML/data/nutrition_breed_profiles.json",
-    "breedNutritionDossiers": "HTML/data/pet_breed_nutrition_profiles_200.json"
+    "breedNutritionDossiers": "HTML/data/pet_breed_nutrition_profiles_200.json",
+    "breedFactOverrides": "HTML/data/breed_fact_overrides.json"
   },
   "excludedGeneratedCatalogs": [
     "HTML/data/nutrition_catalog_dog_4000.json",
@@ -501,12 +503,13 @@
       "name": "Golden Retriever",
       "nameEn": "Golden Retriever",
       "sizeInProjectCatalog": "Lớn",
-      "adultWeightKgInProjectCatalog": "25-34",
-      "lifespanYearsInProjectCatalog": "10-12",
+      "adultWeightKgInProjectCatalog": "25–34",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -545,8 +548,9 @@
       "name": "Labrador Retriever",
       "nameEn": "Labrador Retriever",
       "sizeInProjectCatalog": "Lớn",
-      "adultWeightKgInProjectCatalog": "25-36",
-      "lifespanYearsInProjectCatalog": "10-13",
+      "adultWeightKgInProjectCatalog": "25–35",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -558,8 +562,8 @@
           "Gia đình tích cực, yêu thích hoạt động ngoài trời"
         ]
       },
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -598,12 +602,13 @@
       "name": "German Shepherd",
       "nameEn": "German Shepherd",
       "sizeInProjectCatalog": "Lớn",
-      "adultWeightKgInProjectCatalog": "22-40",
-      "lifespanYearsInProjectCatalog": "9-13",
+      "adultWeightKgInProjectCatalog": "35–43",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -644,6 +649,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "4-30",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -685,13 +691,14 @@
       "speciesLabel": "Chó",
       "name": "French Bulldog",
       "nameEn": "French Bulldog",
-      "sizeInProjectCatalog": "Vừa",
-      "adultWeightKgInProjectCatalog": "10-13",
-      "lifespanYearsInProjectCatalog": "10-12",
+      "sizeInProjectCatalog": "Nhỏ",
+      "adultWeightKgInProjectCatalog": "11–12,5",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 1 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -730,8 +737,9 @@
       "name": "Pomeranian",
       "nameEn": "Pomeranian",
       "sizeInProjectCatalog": "Nhỏ",
-      "adultWeightKgInProjectCatalog": "1.5-3.5",
-      "lifespanYearsInProjectCatalog": "12-16",
+      "adultWeightKgInProjectCatalog": "2–3",
+      "lifespanYearsInProjectCatalog": "Trên 12 năm",
+      "dailyExercise": "Tối thiểu 30 phút/ngày",
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -743,8 +751,8 @@
           "Căn hộ hoặc gia đình nhỏ"
         ]
       },
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -782,13 +790,14 @@
       "speciesLabel": "Chó",
       "name": "Chihuahua",
       "nameEn": "Chihuahua",
-      "sizeInProjectCatalog": "Rất nhỏ",
-      "adultWeightKgInProjectCatalog": "1-3",
-      "lifespanYearsInProjectCatalog": "12-20",
+      "sizeInProjectCatalog": "Nhỏ",
+      "adultWeightKgInProjectCatalog": "1,8–2,7",
+      "lifespanYearsInProjectCatalog": "Trên 12 năm",
+      "dailyExercise": "Tối thiểu 30 phút/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -829,6 +838,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "8-11",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -880,12 +890,13 @@
       "name": "Akita Inu",
       "nameEn": "Akita Inu",
       "sizeInProjectCatalog": "Lớn",
-      "adultWeightKgInProjectCatalog": "30-50",
-      "lifespanYearsInProjectCatalog": "10-15",
+      "adultWeightKgInProjectCatalog": "31–59",
+      "lifespanYearsInProjectCatalog": "Dưới 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -924,12 +935,13 @@
       "name": "Siberian Husky",
       "nameEn": "Siberian Husky",
       "sizeInProjectCatalog": "Lớn",
-      "adultWeightKgInProjectCatalog": "16-27",
-      "lifespanYearsInProjectCatalog": "12-14",
+      "adultWeightKgInProjectCatalog": "16–27",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -968,12 +980,13 @@
       "name": "Alaskan Malamute",
       "nameEn": "Alaskan Malamute",
       "sizeInProjectCatalog": "Lớn",
-      "adultWeightKgInProjectCatalog": "24-40",
-      "lifespanYearsInProjectCatalog": "10-14",
+      "adultWeightKgInProjectCatalog": "34–39",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -1012,8 +1025,9 @@
       "name": "Dachshund",
       "nameEn": "Dachshund",
       "sizeInProjectCatalog": "Vừa",
-      "adultWeightKgInProjectCatalog": "4-9",
-      "lifespanYearsInProjectCatalog": "12-16",
+      "adultWeightKgInProjectCatalog": "Standard 9–12; miniature 4,5–5",
+      "lifespanYearsInProjectCatalog": "Trên 12 năm",
+      "dailyExercise": "Standard 1 giờ/ngày; miniature 30 phút/ngày",
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -1029,8 +1043,8 @@
           "Chủ thích chó nhỏ, bền bỉ và mạnh mẽ"
         ]
       },
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -1071,6 +1085,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "10-15",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -1113,8 +1128,9 @@
       "name": "Beagle",
       "nameEn": "Beagle",
       "sizeInProjectCatalog": "Vừa",
-      "adultWeightKgInProjectCatalog": "9-11",
-      "lifespanYearsInProjectCatalog": "10-15",
+      "adultWeightKgInProjectCatalog": "9–11",
+      "lifespanYearsInProjectCatalog": "Trên 12 năm",
+      "dailyExercise": "Tối thiểu 1 giờ/ngày",
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -1130,8 +1146,8 @@
           "Chủ thích chó vui vẻ, dễ gần, hoạt động"
         ]
       },
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -1170,8 +1186,9 @@
       "name": "Rottweiler",
       "nameEn": "Rottweiler",
       "sizeInProjectCatalog": "Lớn",
-      "adultWeightKgInProjectCatalog": "35-60",
-      "lifespanYearsInProjectCatalog": "8-10",
+      "adultWeightKgInProjectCatalog": "35–60",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -1187,8 +1204,8 @@
           "Chủ có kinh nghiệm với chó lớn"
         ]
       },
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -1229,6 +1246,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "30-45",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -1270,13 +1288,14 @@
       "speciesLabel": "Chó",
       "name": "Border Collie",
       "nameEn": "Border Collie",
-      "sizeInProjectCatalog": "Vừa - lớn",
-      "adultWeightKgInProjectCatalog": "14-20",
-      "lifespanYearsInProjectCatalog": "10-14",
+      "sizeInProjectCatalog": "Vừa",
+      "adultWeightKgInProjectCatalog": "25–30",
+      "lifespanYearsInProjectCatalog": "Trên 12 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -1284,20 +1303,20 @@
           "dog_senior_individualized"
         ],
         "growthToAdultTransitionApproxMonths": {
-          "fromMonths": 18,
-          "toMonths": 24
+          "fromMonths": 10,
+          "toMonths": 12
         },
-        "sizeGroupUsed": "large_or_giant",
+        "sizeGroupUsed": "small_or_medium",
         "ageBands": [
           {
             "stageId": "dog_growth",
             "fromMonths": 0,
-            "toMonthsApprox": 24,
+            "toMonthsApprox": 12,
             "transitionNote": "Mốc trưởng thành thay đổi theo giống và cá thể; khoảng tuổi chỉ là ước lượng theo nhóm kích thước."
           },
           {
             "stageId": "dog_adult_maintenance",
-            "fromMonthsApprox": 18,
+            "fromMonthsApprox": 10,
             "toAge": "Trước khi xuất hiện nhu cầu/chuyển biến liên quan tuổi già; không có mốc cố định cho mọi chó."
           },
           {
@@ -1315,8 +1334,9 @@
       "name": "Yorkshire Terrier",
       "nameEn": "Yorkshire Terrier",
       "sizeInProjectCatalog": "Nhỏ",
-      "adultWeightKgInProjectCatalog": "2-3",
-      "lifespanYearsInProjectCatalog": "11-15",
+      "adultWeightKgInProjectCatalog": "3,2",
+      "lifespanYearsInProjectCatalog": "Trên 12 năm",
+      "dailyExercise": "Tối thiểu 30 phút/ngày",
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -1336,8 +1356,8 @@
           "Căn hộ và chủ muốn chó cỡ nhỏ"
         ]
       },
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -1376,8 +1396,9 @@
       "name": "Maltese",
       "nameEn": "Maltese",
       "sizeInProjectCatalog": "Nhỏ",
-      "adultWeightKgInProjectCatalog": "2-4",
-      "lifespanYearsInProjectCatalog": "12-15",
+      "adultWeightKgInProjectCatalog": "3–4",
+      "lifespanYearsInProjectCatalog": "Trên 12 năm",
+      "dailyExercise": "Tối thiểu 30 phút/ngày",
       "sourceRecordCount": 2,
       "conflicts": {
         "origin_region": [
@@ -1393,8 +1414,8 @@
           "Căn hộ và người chủ dễ chăm"
         ]
       },
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -1433,8 +1454,9 @@
       "name": "Shih Tzu",
       "nameEn": "Shih Tzu",
       "sizeInProjectCatalog": "Nhỏ",
-      "adultWeightKgInProjectCatalog": "4-7",
-      "lifespanYearsInProjectCatalog": "10-16",
+      "adultWeightKgInProjectCatalog": "4,5–7,5",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 1 giờ/ngày",
       "sourceRecordCount": 2,
       "conflicts": {
         "origin_region": [
@@ -1450,8 +1472,8 @@
           "Căn hộ hoặc gia đình thích chó dễ thương"
         ]
       },
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -1489,13 +1511,14 @@
       "speciesLabel": "Chó",
       "name": "Chow Chow",
       "nameEn": "Chow Chow",
-      "sizeInProjectCatalog": "Vừa - lớn",
-      "adultWeightKgInProjectCatalog": "18-32",
-      "lifespanYearsInProjectCatalog": "9-15",
+      "sizeInProjectCatalog": "Vừa",
+      "adultWeightKgInProjectCatalog": "20–30",
+      "lifespanYearsInProjectCatalog": "Dưới 10 năm",
+      "dailyExercise": "Tối thiểu 1 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -1503,20 +1526,20 @@
           "dog_senior_individualized"
         ],
         "growthToAdultTransitionApproxMonths": {
-          "fromMonths": 18,
-          "toMonths": 24
+          "fromMonths": 10,
+          "toMonths": 12
         },
-        "sizeGroupUsed": "large_or_giant",
+        "sizeGroupUsed": "small_or_medium",
         "ageBands": [
           {
             "stageId": "dog_growth",
             "fromMonths": 0,
-            "toMonthsApprox": 24,
+            "toMonthsApprox": 12,
             "transitionNote": "Mốc trưởng thành thay đổi theo giống và cá thể; khoảng tuổi chỉ là ước lượng theo nhóm kích thước."
           },
           {
             "stageId": "dog_adult_maintenance",
-            "fromMonthsApprox": 18,
+            "fromMonthsApprox": 10,
             "toAge": "Trước khi xuất hiện nhu cầu/chuyển biến liên quan tuổi già; không có mốc cố định cho mọi chó."
           },
           {
@@ -1534,8 +1557,9 @@
       "name": "Samoyed",
       "nameEn": "Samoyed",
       "sizeInProjectCatalog": "Lớn",
-      "adultWeightKgInProjectCatalog": "20-30",
-      "lifespanYearsInProjectCatalog": "12-14",
+      "adultWeightKgInProjectCatalog": "16–29",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -1547,8 +1571,8 @@
           "Chủ yêu thích chó lông trắng và hoạt động"
         ]
       },
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -1586,9 +1610,10 @@
       "speciesLabel": "Chó",
       "name": "Great Dane",
       "nameEn": "Great Dane",
-      "sizeInProjectCatalog": "Rất lớn",
-      "adultWeightKgInProjectCatalog": "45-90",
-      "lifespanYearsInProjectCatalog": "7-10",
+      "sizeInProjectCatalog": "Lớn",
+      "adultWeightKgInProjectCatalog": "46–54",
+      "lifespanYearsInProjectCatalog": "Dưới 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -1600,8 +1625,8 @@
           "Chủ có không gian rộng và chăm sóc tốt"
         ]
       },
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -1639,9 +1664,10 @@
       "speciesLabel": "Chó",
       "name": "Saint Bernard",
       "nameEn": "Saint Bernard",
-      "sizeInProjectCatalog": "Rất lớn",
-      "adultWeightKgInProjectCatalog": "55-90",
-      "lifespanYearsInProjectCatalog": "8-10",
+      "sizeInProjectCatalog": "Lớn",
+      "adultWeightKgInProjectCatalog": "54–81",
+      "lifespanYearsInProjectCatalog": "Dưới 10 năm",
+      "dailyExercise": "Tối thiểu 1 giờ/ngày",
       "sourceRecordCount": 2,
       "conflicts": {
         "climate": [
@@ -1657,8 +1683,8 @@
           "Gia đình rộng, có không gian và phương án giữ ấm"
         ]
       },
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -1699,6 +1725,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "4-8",
       "lifespanYearsInProjectCatalog": "12-17",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -1756,6 +1783,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-7",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -1817,6 +1845,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "3-7",
       "lifespanYearsInProjectCatalog": "12-18",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -1882,6 +1911,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "5-9",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -1943,6 +1973,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "4-9",
       "lifespanYearsInProjectCatalog": "12-18",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -2004,6 +2035,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -2065,6 +2097,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "4-8",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -2118,6 +2151,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "10-14",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -2175,6 +2209,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -2236,6 +2271,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "4-8",
       "lifespanYearsInProjectCatalog": "12-16",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -2280,6 +2316,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "3-7",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "origin_region": [
@@ -2353,6 +2390,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "9-15",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "origin_region": [
@@ -2414,6 +2452,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -2471,6 +2510,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -2524,6 +2564,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "12-18",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -2577,6 +2618,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-7",
       "lifespanYearsInProjectCatalog": "12-17",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -2630,6 +2672,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -2687,6 +2730,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "10-16",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "origin_region": [
@@ -2744,6 +2788,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "2-4",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -2797,6 +2842,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "2-5",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 2,
       "conflicts": {
         "suitable_environment": [
@@ -2848,12 +2894,13 @@
       "name": "Afghan Hound",
       "nameEn": "Afghan Hound",
       "sizeInProjectCatalog": "Lớn",
-      "adultWeightKgInProjectCatalog": "22-30",
-      "lifespanYearsInProjectCatalog": "12-15",
+      "adultWeightKgInProjectCatalog": "23–27",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -2894,6 +2941,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "18-30",
       "lifespanYearsInProjectCatalog": "10-13",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -2938,6 +2986,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "25-50",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -2982,6 +3031,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "5-20",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -3026,6 +3076,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "14-30",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -3070,6 +3121,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "18-32",
       "lifespanYearsInProjectCatalog": "10-16",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -3111,13 +3163,14 @@
       "speciesLabel": "Chó",
       "name": "Australian Cattle Dog",
       "nameEn": "Australian Cattle Dog",
-      "sizeInProjectCatalog": "Vừa - lớn",
-      "adultWeightKgInProjectCatalog": "15-25",
-      "lifespanYearsInProjectCatalog": "12-16",
+      "sizeInProjectCatalog": "Vừa",
+      "adultWeightKgInProjectCatalog": "16–20",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -3125,20 +3178,20 @@
           "dog_senior_individualized"
         ],
         "growthToAdultTransitionApproxMonths": {
-          "fromMonths": 18,
-          "toMonths": 24
+          "fromMonths": 10,
+          "toMonths": 12
         },
-        "sizeGroupUsed": "large_or_giant",
+        "sizeGroupUsed": "small_or_medium",
         "ageBands": [
           {
             "stageId": "dog_growth",
             "fromMonths": 0,
-            "toMonthsApprox": 24,
+            "toMonthsApprox": 12,
             "transitionNote": "Mốc trưởng thành thay đổi theo giống và cá thể; khoảng tuổi chỉ là ước lượng theo nhóm kích thước."
           },
           {
             "stageId": "dog_adult_maintenance",
-            "fromMonthsApprox": 18,
+            "fromMonthsApprox": 10,
             "toAge": "Trước khi xuất hiện nhu cầu/chuyển biến liên quan tuổi già; không có mốc cố định cho mọi chó."
           },
           {
@@ -3155,13 +3208,14 @@
       "speciesLabel": "Chó",
       "name": "Australian Shepherd",
       "nameEn": "Australian Shepherd",
-      "sizeInProjectCatalog": "Vừa - lớn",
-      "adultWeightKgInProjectCatalog": "18-35",
-      "lifespanYearsInProjectCatalog": "12-15",
+      "sizeInProjectCatalog": "Lớn",
+      "adultWeightKgInProjectCatalog": "18–29",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -3202,6 +3256,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "5-8",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -3244,12 +3299,13 @@
       "name": "Basenji",
       "nameEn": "Basenji",
       "sizeInProjectCatalog": "Vừa",
-      "adultWeightKgInProjectCatalog": "10-12",
-      "lifespanYearsInProjectCatalog": "12-14",
+      "adultWeightKgInProjectCatalog": "9–11",
+      "lifespanYearsInProjectCatalog": "Trên 12 năm",
+      "dailyExercise": "Tối thiểu 1 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -3287,13 +3343,14 @@
       "speciesLabel": "Chó",
       "name": "Basset Hound",
       "nameEn": "Basset Hound",
-      "sizeInProjectCatalog": "Vừa - lớn",
-      "adultWeightKgInProjectCatalog": "18-30",
-      "lifespanYearsInProjectCatalog": "10-12",
+      "sizeInProjectCatalog": "Lớn",
+      "adultWeightKgInProjectCatalog": "18–27",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 1 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -3332,12 +3389,13 @@
       "name": "Bedlington Terrier",
       "nameEn": "Bedlington Terrier",
       "sizeInProjectCatalog": "Vừa",
-      "adultWeightKgInProjectCatalog": "8-10",
-      "lifespanYearsInProjectCatalog": "12-14",
+      "adultWeightKgInProjectCatalog": "8–10",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 1 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -3378,6 +3436,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "20-40",
       "lifespanYearsInProjectCatalog": "10-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -3422,6 +3481,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "20-35",
       "lifespanYearsInProjectCatalog": "10-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -3464,12 +3524,13 @@
       "name": "Bernese Mountain Dog",
       "nameEn": "Bernese Mountain Dog",
       "sizeInProjectCatalog": "Lớn",
-      "adultWeightKgInProjectCatalog": "30-55",
-      "lifespanYearsInProjectCatalog": "7-10",
+      "adultWeightKgInProjectCatalog": "Cái 42–53; đực 48–63",
+      "lifespanYearsInProjectCatalog": "Tối đa 10 năm",
+      "dailyExercise": "Tối thiểu 1 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -3508,12 +3569,13 @@
       "name": "Bichon Frise",
       "nameEn": "Bichon Frise",
       "sizeInProjectCatalog": "Nhỏ",
-      "adultWeightKgInProjectCatalog": "3-6",
-      "lifespanYearsInProjectCatalog": "12-15",
+      "adultWeightKgInProjectCatalog": "4–7",
+      "lifespanYearsInProjectCatalog": "Trên 12 năm",
+      "dailyExercise": "Tối thiểu 30 phút/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -3554,6 +3616,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "25-40",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -3596,12 +3659,13 @@
       "name": "Bloodhound",
       "nameEn": "Bloodhound",
       "sizeInProjectCatalog": "Lớn",
-      "adultWeightKgInProjectCatalog": "30-50",
-      "lifespanYearsInProjectCatalog": "8-12",
+      "adultWeightKgInProjectCatalog": "45–50",
+      "lifespanYearsInProjectCatalog": "Dưới 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -3639,13 +3703,14 @@
       "speciesLabel": "Chó",
       "name": "Blue Heeler",
       "nameEn": "Blue Heeler",
-      "sizeInProjectCatalog": "Vừa - lớn",
-      "adultWeightKgInProjectCatalog": "15-25",
-      "lifespanYearsInProjectCatalog": "12-15",
+      "sizeInProjectCatalog": "Vừa",
+      "adultWeightKgInProjectCatalog": "16–20",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "alias_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -3653,20 +3718,20 @@
           "dog_senior_individualized"
         ],
         "growthToAdultTransitionApproxMonths": {
-          "fromMonths": 18,
-          "toMonths": 24
+          "fromMonths": 10,
+          "toMonths": 12
         },
-        "sizeGroupUsed": "large_or_giant",
+        "sizeGroupUsed": "small_or_medium",
         "ageBands": [
           {
             "stageId": "dog_growth",
             "fromMonths": 0,
-            "toMonthsApprox": 24,
+            "toMonthsApprox": 12,
             "transitionNote": "Mốc trưởng thành thay đổi theo giống và cá thể; khoảng tuổi chỉ là ước lượng theo nhóm kích thước."
           },
           {
             "stageId": "dog_adult_maintenance",
-            "fromMonthsApprox": 18,
+            "fromMonthsApprox": 10,
             "toAge": "Trước khi xuất hiện nhu cầu/chuyển biến liên quan tuổi già; không có mốc cố định cho mọi chó."
           },
           {
@@ -3683,13 +3748,14 @@
       "speciesLabel": "Chó",
       "name": "Border Terrier",
       "nameEn": "Border Terrier",
-      "sizeInProjectCatalog": "Vừa",
-      "adultWeightKgInProjectCatalog": "5-7",
-      "lifespanYearsInProjectCatalog": "12-15",
+      "sizeInProjectCatalog": "Nhỏ",
+      "adultWeightKgInProjectCatalog": "5–7",
+      "lifespanYearsInProjectCatalog": "Trên 12 năm",
+      "dailyExercise": "Tối thiểu 1 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -3727,13 +3793,14 @@
       "speciesLabel": "Chó",
       "name": "Boston Terrier",
       "nameEn": "Boston Terrier",
-      "sizeInProjectCatalog": "Vừa",
-      "adultWeightKgInProjectCatalog": "5-11",
-      "lifespanYearsInProjectCatalog": "11-13",
+      "sizeInProjectCatalog": "Nhỏ",
+      "adultWeightKgInProjectCatalog": "7–11",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 1 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -3772,12 +3839,13 @@
       "name": "Boxer",
       "nameEn": "Boxer",
       "sizeInProjectCatalog": "Lớn",
-      "adultWeightKgInProjectCatalog": "25-40",
-      "lifespanYearsInProjectCatalog": "9-12",
+      "adultWeightKgInProjectCatalog": "Cái 25–27; đực 30–32",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -3818,6 +3886,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "30-45",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -3862,6 +3931,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "15-20",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -3906,6 +3976,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "20-35",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -3948,12 +4019,13 @@
       "name": "Bullmastiff",
       "nameEn": "Bullmastiff",
       "sizeInProjectCatalog": "Lớn",
-      "adultWeightKgInProjectCatalog": "40-60",
-      "lifespanYearsInProjectCatalog": "8-12",
+      "adultWeightKgInProjectCatalog": "41–59",
+      "lifespanYearsInProjectCatalog": "Dưới 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -3992,12 +4064,13 @@
       "name": "Cairn Terrier",
       "nameEn": "Cairn Terrier",
       "sizeInProjectCatalog": "Nhỏ",
-      "adultWeightKgInProjectCatalog": "6-7",
-      "lifespanYearsInProjectCatalog": "12-15",
+      "adultWeightKgInProjectCatalog": "6–8",
+      "lifespanYearsInProjectCatalog": "Trên 10 năm",
+      "dailyExercise": "Tối thiểu 1 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -4035,13 +4108,14 @@
       "speciesLabel": "Chó",
       "name": "Cane Corso",
       "nameEn": "Cane Corso",
-      "sizeInProjectCatalog": "Rất lớn",
-      "adultWeightKgInProjectCatalog": "40-60",
-      "lifespanYearsInProjectCatalog": "9-12",
+      "sizeInProjectCatalog": "Lớn",
+      "adultWeightKgInProjectCatalog": "40–50",
+      "lifespanYearsInProjectCatalog": "Dưới 10 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -4082,6 +4156,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "11-17",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4123,13 +4198,14 @@
       "speciesLabel": "Chó",
       "name": "Cavalier King Charles Spaniel",
       "nameEn": "Cavalier King Charles Spaniel",
-      "sizeInProjectCatalog": "Nhỏ - vừa",
-      "adultWeightKgInProjectCatalog": "5-8",
-      "lifespanYearsInProjectCatalog": "10-14",
+      "sizeInProjectCatalog": "Nhỏ",
+      "adultWeightKgInProjectCatalog": "5,4–8,2",
+      "lifespanYearsInProjectCatalog": "Trên 12 năm",
+      "dailyExercise": "Tối thiểu 1 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -4170,6 +4246,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "25-36",
       "lifespanYearsInProjectCatalog": "10-13",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4214,6 +4291,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "4-5",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4258,6 +4336,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "23-35",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4302,6 +4381,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "18-30",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4346,6 +4426,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "25-40",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4387,13 +4468,14 @@
       "speciesLabel": "Chó",
       "name": "Dalmatian",
       "nameEn": "Dalmatian",
-      "sizeInProjectCatalog": "Vừa - lớn",
-      "adultWeightKgInProjectCatalog": "20-30",
-      "lifespanYearsInProjectCatalog": "10-13",
+      "sizeInProjectCatalog": "Lớn",
+      "adultWeightKgInProjectCatalog": "18–27",
+      "lifespanYearsInProjectCatalog": "Trên 12 năm",
+      "dailyExercise": "Tối thiểu 2 giờ/ngày",
       "sourceRecordCount": 1,
       "conflicts": {},
-      "dataSource": "app/modules/animals/breed_catalog.py",
-      "verificationStatus": "project_reference_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
@@ -4434,6 +4516,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "8-11",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4478,6 +4561,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "30-45",
       "lifespanYearsInProjectCatalog": "9-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4522,6 +4606,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "12-16",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4566,6 +4651,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "20-30",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4610,6 +4696,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "18-25",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4654,6 +4741,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "18-30",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4698,6 +4786,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "16-25",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4742,6 +4831,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "25-35",
       "lifespanYearsInProjectCatalog": "8-10",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4786,6 +4876,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "7-9",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4830,6 +4921,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "25-35",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4874,6 +4966,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "20-32",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4918,6 +5011,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "35-50",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -4962,6 +5056,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "12-18",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5006,6 +5101,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "20-32",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5050,6 +5146,7 @@
       "sizeInProjectCatalog": "Rất lớn",
       "adultWeightKgInProjectCatalog": "40-70",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5094,6 +5191,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "25-40",
       "lifespanYearsInProjectCatalog": "10-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5138,6 +5236,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "18-30",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5182,6 +5281,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "13-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5226,6 +5326,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "20-30",
       "lifespanYearsInProjectCatalog": "11-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5270,6 +5371,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "20-35",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5314,6 +5416,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "11-12",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5358,6 +5461,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "20-30",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5402,6 +5506,7 @@
       "sizeInProjectCatalog": "Rất lớn",
       "adultWeightKgInProjectCatalog": "40-70",
       "lifespanYearsInProjectCatalog": "6-8",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5446,6 +5551,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5490,6 +5596,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "5-8",
       "lifespanYearsInProjectCatalog": "13-16",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5534,6 +5641,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "2-5",
       "lifespanYearsInProjectCatalog": "10-13",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5578,6 +5686,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "15-20",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5622,6 +5731,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "15-18",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5666,6 +5776,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "35-50",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5710,6 +5821,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "35-55",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5754,6 +5866,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "12-16",
       "lifespanYearsInProjectCatalog": "15-17",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5798,6 +5911,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "7-8",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5842,6 +5956,7 @@
       "sizeInProjectCatalog": "Rất lớn",
       "adultWeightKgInProjectCatalog": "45-75",
       "lifespanYearsInProjectCatalog": "7-10",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5886,6 +6001,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "6-8",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5930,6 +6046,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "5-8",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -5974,6 +6091,7 @@
       "sizeInProjectCatalog": "Rất lớn",
       "adultWeightKgInProjectCatalog": "50-90",
       "lifespanYearsInProjectCatalog": "8-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6018,6 +6136,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "8-12",
       "lifespanYearsInProjectCatalog": "11-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6062,6 +6181,7 @@
       "sizeInProjectCatalog": "Rất nhỏ",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "12-16",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6106,6 +6226,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "5-8",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6150,6 +6271,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "45-70",
       "lifespanYearsInProjectCatalog": "8-10",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6194,6 +6316,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "7-9",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6238,6 +6361,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "5-7",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6282,6 +6406,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "25-45",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6326,6 +6451,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "25-45",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6370,6 +6496,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "2-5",
       "lifespanYearsInProjectCatalog": "12-16",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6414,6 +6541,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "6-8",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6458,6 +6586,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "3-7",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6502,6 +6631,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "10-15",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6546,6 +6676,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "18-25",
       "lifespanYearsInProjectCatalog": "11-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6590,6 +6721,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "20-30",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6634,6 +6766,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "15-25",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6678,6 +6811,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "16-27",
       "lifespanYearsInProjectCatalog": "10-13",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6722,6 +6856,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "6-8",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6766,6 +6901,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "35-55",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6810,6 +6946,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "30-40",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6854,6 +6991,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "18-30",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6898,6 +7036,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "5-8",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6942,6 +7081,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "8-10",
       "lifespanYearsInProjectCatalog": "11-13",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -6986,6 +7126,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "8-10",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7030,6 +7171,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "20-30",
       "lifespanYearsInProjectCatalog": "8-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7074,6 +7216,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "5-8",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7118,6 +7261,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7162,6 +7306,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "15-18",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7206,6 +7351,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "20-30",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7250,6 +7396,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "18-30",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7294,6 +7441,7 @@
       "sizeInProjectCatalog": "Trung bình",
       "adultWeightKgInProjectCatalog": "15-20",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7338,6 +7486,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "25-40",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7382,6 +7531,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "11-17",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7426,6 +7576,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "16-22",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7470,6 +7621,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "18-25",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7514,6 +7666,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "11-15",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7558,6 +7711,7 @@
       "sizeInProjectCatalog": "Rất lớn",
       "adultWeightKgInProjectCatalog": "45-75",
       "lifespanYearsInProjectCatalog": "10-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7602,6 +7756,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "4-7",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7646,6 +7801,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "8-14",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7690,6 +7846,7 @@
       "sizeInProjectCatalog": "Rất nhỏ",
       "adultWeightKgInProjectCatalog": "2-4",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7734,6 +7891,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "20-30",
       "lifespanYearsInProjectCatalog": "10-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7778,6 +7936,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "25-40",
       "lifespanYearsInProjectCatalog": "10-13",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7822,6 +7981,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "8-10",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7866,6 +8026,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "6-8",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7910,6 +8071,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "10-18",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7954,6 +8116,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "7-9",
       "lifespanYearsInProjectCatalog": "12-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -7998,6 +8161,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "4-8",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8042,6 +8206,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "12-16",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8086,6 +8251,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8130,6 +8296,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "10-18",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8174,6 +8341,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "12-16",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8218,6 +8386,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "4-7",
       "lifespanYearsInProjectCatalog": "12-16",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8262,6 +8431,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-7",
       "lifespanYearsInProjectCatalog": "11-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8306,6 +8476,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8350,6 +8521,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8394,6 +8566,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "4-7",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8438,6 +8611,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "12-18",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8482,6 +8656,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "10-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8526,6 +8701,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "8-12",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8570,6 +8746,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-7",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8614,6 +8791,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "10-16",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8658,6 +8836,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "10-16",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8702,6 +8881,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8746,6 +8926,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8790,6 +8971,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "8-14",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8834,6 +9016,7 @@
       "sizeInProjectCatalog": "Nhỏ - vừa",
       "adultWeightKgInProjectCatalog": "2-4",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8878,6 +9061,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8922,6 +9106,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "4-9",
       "lifespanYearsInProjectCatalog": "12-16",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -8966,6 +9151,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "12-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -9010,6 +9196,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -9054,6 +9241,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -9098,6 +9286,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "4-8",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -9142,6 +9331,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "4-9",
       "lifespanYearsInProjectCatalog": "12-16",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -9186,6 +9376,7 @@
       "sizeInProjectCatalog": "Lớn",
       "adultWeightKgInProjectCatalog": "5-10",
       "lifespanYearsInProjectCatalog": "12-20",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -9230,6 +9421,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -9274,6 +9466,7 @@
       "sizeInProjectCatalog": "Vừa - lớn",
       "adultWeightKgInProjectCatalog": "4-8",
       "lifespanYearsInProjectCatalog": "10-16",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -9318,6 +9511,7 @@
       "sizeInProjectCatalog": "Nhỏ",
       "adultWeightKgInProjectCatalog": "2-4",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -9362,6 +9556,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -9406,6 +9601,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -9450,6 +9646,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-6",
       "lifespanYearsInProjectCatalog": "10-16",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -9494,6 +9691,7 @@
       "sizeInProjectCatalog": "Vừa",
       "adultWeightKgInProjectCatalog": "3-5",
       "lifespanYearsInProjectCatalog": "10-15",
+      "dailyExercise": null,
       "sourceRecordCount": 1,
       "conflicts": {},
       "dataSource": "app/modules/animals/breed_catalog.py",
@@ -9535,38 +9733,43 @@
       "speciesLabel": "Chó",
       "name": "Affenpinscher",
       "nameEn": "Affenpinscher",
-      "sizeInProjectCatalog": null,
-      "adultWeightKgInProjectCatalog": null,
-      "lifespanYearsInProjectCatalog": null,
+      "sizeInProjectCatalog": "Nhỏ",
+      "adultWeightKgInProjectCatalog": "3,2–4,5",
+      "lifespanYearsInProjectCatalog": "12–15",
+      "dailyExercise": null,
       "sourceRecordCount": 0,
       "conflicts": {},
-      "dataSource": "unverified_legacy_index_name_only",
-      "verificationStatus": "supplemental_name_only_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
           "dog_adult_maintenance",
           "dog_senior_individualized"
         ],
-        "growthToAdultTransitionApproxMonths": null,
-        "sizeGroupUsed": "unclassified_size_needs_verification",
+        "growthToAdultTransitionApproxMonths": {
+          "fromMonths": 10,
+          "toMonths": 12
+        },
+        "sizeGroupUsed": "small_or_medium",
         "ageBands": [
           {
             "stageId": "dog_growth",
             "fromMonths": 0,
-            "toMonthsApprox": null,
-            "transitionNote": "Thiếu phân loại kích thước đã xác minh; không ước tính tuổi trưởng thành riêng cho giống."
+            "toMonthsApprox": 12,
+            "transitionNote": "Mốc trưởng thành thay đổi theo giống và cá thể; khoảng tuổi chỉ là ước lượng theo nhóm kích thước."
           },
           {
             "stageId": "dog_adult_maintenance",
-            "fromAge": "Sau khi xác nhận trưởng thành theo cá thể và tư vấn thú y."
+            "fromMonthsApprox": 10,
+            "toAge": "Trước khi xuất hiện nhu cầu/chuyển biến liên quan tuổi già; không có mốc cố định cho mọi chó."
           },
           {
             "stageId": "dog_senior_individualized",
-            "fromAge": "Đánh giá cá thể hóa cùng bác sĩ thú y; không có tuổi bắt đầu senior thống nhất."
+            "fromAge": "Đánh giá cá thể hóa cùng bác sĩ thú y; không có tuổi bắt đầu senior thống nhất trong hồ sơ giống này."
           }
         ],
-        "ageBasis": "Thiếu kích thước/tuổi trưởng thành đáng tin cậy trong hồ sơ; áp dụng giai đoạn theo nhãn và bác sĩ thú y."
+        "ageBasis": "Ước lượng trưởng thành chó con theo nhóm kích thước dựa trên VCA; tuổi senior cần cá thể hóa. Kích thước trong catalog dự án chưa được xác minh độc lập."
       }
     },
     {
@@ -9575,38 +9778,43 @@
       "speciesLabel": "Chó",
       "name": "Bearded Collie",
       "nameEn": "Bearded Collie",
-      "sizeInProjectCatalog": null,
-      "adultWeightKgInProjectCatalog": null,
-      "lifespanYearsInProjectCatalog": null,
+      "sizeInProjectCatalog": "Trung bình",
+      "adultWeightKgInProjectCatalog": "20,4–24,9",
+      "lifespanYearsInProjectCatalog": "12–14",
+      "dailyExercise": null,
       "sourceRecordCount": 0,
       "conflicts": {},
-      "dataSource": "unverified_legacy_index_name_only",
-      "verificationStatus": "supplemental_name_only_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "dog_growth",
           "dog_adult_maintenance",
           "dog_senior_individualized"
         ],
-        "growthToAdultTransitionApproxMonths": null,
-        "sizeGroupUsed": "unclassified_size_needs_verification",
+        "growthToAdultTransitionApproxMonths": {
+          "fromMonths": 10,
+          "toMonths": 12
+        },
+        "sizeGroupUsed": "small_or_medium",
         "ageBands": [
           {
             "stageId": "dog_growth",
             "fromMonths": 0,
-            "toMonthsApprox": null,
-            "transitionNote": "Thiếu phân loại kích thước đã xác minh; không ước tính tuổi trưởng thành riêng cho giống."
+            "toMonthsApprox": 12,
+            "transitionNote": "Mốc trưởng thành thay đổi theo giống và cá thể; khoảng tuổi chỉ là ước lượng theo nhóm kích thước."
           },
           {
             "stageId": "dog_adult_maintenance",
-            "fromAge": "Sau khi xác nhận trưởng thành theo cá thể và tư vấn thú y."
+            "fromMonthsApprox": 10,
+            "toAge": "Trước khi xuất hiện nhu cầu/chuyển biến liên quan tuổi già; không có mốc cố định cho mọi chó."
           },
           {
             "stageId": "dog_senior_individualized",
-            "fromAge": "Đánh giá cá thể hóa cùng bác sĩ thú y; không có tuổi bắt đầu senior thống nhất."
+            "fromAge": "Đánh giá cá thể hóa cùng bác sĩ thú y; không có tuổi bắt đầu senior thống nhất trong hồ sơ giống này."
           }
         ],
-        "ageBasis": "Thiếu kích thước/tuổi trưởng thành đáng tin cậy trong hồ sơ; áp dụng giai đoạn theo nhãn và bác sĩ thú y."
+        "ageBasis": "Ước lượng trưởng thành chó con theo nhóm kích thước dựa trên VCA; tuổi senior cần cá thể hóa. Kích thước trong catalog dự án chưa được xác minh độc lập."
       }
     },
     {
@@ -9618,10 +9826,11 @@
       "sizeInProjectCatalog": null,
       "adultWeightKgInProjectCatalog": null,
       "lifespanYearsInProjectCatalog": null,
+      "dailyExercise": null,
       "sourceRecordCount": 0,
       "conflicts": {},
-      "dataSource": "unverified_legacy_index_name_only",
-      "verificationStatus": "supplemental_name_only_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "recognition_only_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "cat_growth",
@@ -9659,13 +9868,14 @@
       "speciesLabel": "Mèo",
       "name": "Khao Manee",
       "nameEn": "Khao Manee",
-      "sizeInProjectCatalog": null,
+      "sizeInProjectCatalog": "Trung bình",
       "adultWeightKgInProjectCatalog": null,
       "lifespanYearsInProjectCatalog": null,
+      "dailyExercise": null,
       "sourceRecordCount": 0,
       "conflicts": {},
-      "dataSource": "unverified_legacy_index_name_only",
-      "verificationStatus": "supplemental_name_only_unverified",
+      "dataSource": "HTML/data/breed_fact_overrides.json",
+      "verificationStatus": "partial_source_checked",
       "ageStageGrouping": {
         "lifeStageIds": [
           "cat_growth",

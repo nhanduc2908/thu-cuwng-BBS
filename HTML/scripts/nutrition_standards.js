@@ -54,6 +54,14 @@
       : "";
   }).filter(Boolean).join(" · ");
 
+  const factStatusLabel = (status) => ({
+    partial_source_checked: "Một số dữ kiện cơ bản đã đối chiếu nguồn",
+    recognition_only_source_checked: "Chỉ tình trạng ghi nhận giống đã có nguồn",
+    alias_source_checked: "Tên gọi khác đã đối chiếu nguồn",
+    supplemental_name_only_unverified: "Chỉ có tên giống/loài; chưa xác minh thuộc tính",
+    project_reference_unverified: "Thông tin tham khảo từ catalog dự án; chưa xác minh độc lập"
+  })[status] || "Trạng thái dữ liệu chưa xác định";
+
   const dossierMarkup = (breed) => {
     const dossier = breed.profile;
     const overview = dossier.partI_overview;
@@ -114,9 +122,10 @@
 
     list.innerHTML = filtered.slice(0, visibleLimit).map((breed, index) => {
       const disagreements = breed.conflicts || {};
-      const weightConflict = disagreements.adult_weight_kg;
-      const sizeConflict = disagreements.size;
       const overview = breed.profile.partI_overview;
+      const hasBreedSource = overview.breedFactSourceIds?.length > 0;
+      const weightConflict = hasBreedSource ? null : disagreements.adult_weight_kg;
+      const sizeConflict = hasBreedSource ? null : disagreements.size;
       const conflictLabels = {
         size: "Kích thước",
         adult_weight_kg: "Cân nặng trưởng thành (kg)",
@@ -135,15 +144,19 @@
         : (overview.adultWeightKg ? `${escapeHtml(overview.adultWeightKg)} kg` : "Chưa có dữ liệu");
       const size = sizeConflict ? sizeConflict.join(" / ") : (overview.size || "Chưa phân loại");
       const conflictNote = Object.keys(disagreements).length
-        ? `<p class="ns-record-note">Sai khác giữa các bản ghi trùng tên: ${Object.entries(disagreements).map(([field, values]) => `${escapeHtml(conflictLabels[field] || field)}: ${escapeHtml(values.join(" / "))}`).join("; ")}. Các giá trị chưa được xác minh là biến thể giống.</p>`
+        ? `<p class="ns-record-note">${hasBreedSource
+          ? "Catalog nội bộ có dữ kiện khác nhau; các trường được nguồn riêng xác nhận bên trên được ưu tiên. Các trường còn lại vẫn chưa xác minh."
+          : `Sai khác giữa các bản ghi trùng tên: ${Object.entries(disagreements).map(([field, values]) => `${escapeHtml(conflictLabels[field] || field)}: ${escapeHtml(values.join(" / "))}`).join("; ")}. Các giá trị chưa được xác minh là biến thể giống.`}</p>`
         : "";
+      const activity = [breed.exercise_level, overview.dailyExercise].filter(Boolean).join(" · ");
       return `<article class="ns-breed" style="animation-delay:${Math.min(index % 12, 11) * 25}ms">
         <h3>${escapeHtml(breed.breed_name)}</h3>
         <div class="latin">${escapeHtml(breed.breed_name_en || "")}</div>
         <div class="ns-tags"><span class="ns-tag">${escapeHtml(size)}</span><span class="ns-tag">${escapeHtml(species)}</span></div>
         <p><strong>Cân nặng trưởng thành tham khảo:</strong> ${weight}</p>
         <p><strong>Xuất xứ trong catalog:</strong> ${escapeHtml([overview.originRegion, overview.originCountry].filter(Boolean).join(", ") || "Chưa có dữ liệu")}</p>
-        <p><strong>Hoạt động:</strong> ${escapeHtml(breed.exercise_level || "Chưa có dữ liệu")} · <strong>Tuổi thọ:</strong> ${escapeHtml(overview.lifespanYears || "Chưa có dữ liệu")}</p>
+        <p><strong>Hoạt động/vận động:</strong> ${escapeHtml(activity || "Chưa có dữ liệu")} · <strong>Tuổi thọ:</strong> ${escapeHtml(overview.lifespanYears || "Chưa có dữ liệu")}</p>
+        <p class="ns-record-note"><strong>Trạng thái dữ kiện:</strong> ${escapeHtml(factStatusLabel(overview.breedFactStatus))}${overview.breedFactSourceIds?.length ? `<br><strong>Nguồn giống:</strong> ${sourceMarkup(overview.breedFactSourceIds)}` : ""}</p>
         <p><strong>Khung chọn khẩu phần:</strong> đối chiếu giai đoạn sống, thể trạng và tuyên bố dinh dưỡng cho ${escapeHtml(species.toLocaleLowerCase("vi"))}; không có ngưỡng AAFCO/FEDIAF riêng cho tên giống này.</p>
         ${conflictNote}
         ${dossierMarkup(breed)}
@@ -179,7 +192,7 @@
         .sort((a, b) => a.localeCompare(b, "vi"));
       sizeFilter.innerHTML = '<option value="">Tất cả kích thước</option>'
         + sizes.map((size) => `<option value="${escapeHtml(size)}">${escapeHtml(size)}</option>`).join("");
-      status.textContent = `${breeds.length} hồ sơ giống · khung dinh dưỡng theo giai đoạn và nguồn tham khảo; ${data.summary.supplementalNameOnlyCount} mục bổ sung chỉ có tên/loài, dữ liệu giống chưa xác minh độc lập.`;
+      status.textContent = `${breeds.length} hồ sơ giống · khung dinh dưỡng theo giai đoạn; ${data.summary.profilesWithBreedSpecificSourceFacts} hồ sơ có một số dữ kiện giống kèm nguồn, các trường khác giữ trạng thái riêng.`;
       render(breeds);
       query.addEventListener("input", () => { visibleLimit = 24; render(breeds); });
       sizeFilter.addEventListener("change", () => { visibleLimit = 24; render(breeds); });

@@ -1,0 +1,286 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "speciesLabel": "Chó",
+      "name": "Affenpinscher",
+      "status": "partial_source_checked",
+      "values": {
+        "size": "Nhỏ",
+        "adult_weight_kg": "3,2–4,5",
+        "lifespan_years": "12–15",
+        "origin_country": "Đức",
+        "exercise_level": "Trung bình"
+      },
+      "sourceIds": ["petmd_affenpinscher"],
+      "notes": [
+        "Nguồn mô tả Affenpinscher là chó nhỏ, nặng 7–10 lb (xấp xỉ 3,2–4,5 kg), tuổi thọ trung bình 12–15 năm và mức năng lượng vừa phải."
+      ]
+    },
+    {
+      "speciesLabel": "Chó",
+      "name": "Bearded Collie",
+      "status": "partial_source_checked",
+      "values": {
+        "size": "Trung bình",
+        "adult_weight_kg": "20,4–24,9",
+        "lifespan_years": "12–14",
+        "origin_country": "Vương quốc Anh",
+        "origin_region": "Scotland",
+        "exercise_level": "Cao"
+      },
+      "sourceIds": ["petmd_bearded_collie", "akc_bearded_collie"],
+      "notes": [
+        "Bearded Collie là chó chăn gia súc cỡ trung có nguồn gốc Scotland; cân nặng được nguồn ghi 45–55 lb (xấp xỉ 20,4–24,9 kg), tuổi thọ trung bình 12–14 năm.",
+        "Giống năng động, cần vận động hằng ngày và kích thích tinh thần; không có số giờ vận động bắt buộc riêng được xác minh."
+      ]
+    },
+    {
+      "speciesLabel": "Mèo",
+      "name": "Khao Manee",
+      "status": "partial_source_checked",
+      "values": {
+        "size": "Trung bình",
+        "origin_country": "Thái Lan"
+      },
+      "sourceIds": ["cfa_khao_manee", "gccf_unrecognised_breeds"],
+      "notes": [
+        "Tiêu chuẩn CFA mô tả Khao Manee là giống mèo tự nhiên của Thái Lan, thân hình cỡ trung, cơ bắp và thể thao; nguồn này không đưa cân nặng, tuổi thọ hoặc mức vận động hằng ngày.",
+        "GCCF ghi nhận Khao Manee có tên được công nhận nhưng chưa có sự quan tâm của nhà nhân giống hoạt động tại GCCF; tình trạng công nhận có thể khác giữa các tổ chức."
+      ]
+    },
+    {
+      "speciesLabel": "Mèo",
+      "name": "Arabian Mau",
+      "status": "recognition_only_source_checked",
+      "values": {},
+      "sourceIds": ["gccf_unrecognised_breeds"],
+      "notes": [
+        "GCCF liệt kê Arabian Mau trong nhóm giống hiếm/thử nghiệm được biết đến, không hiện diện tại Vương quốc Anh; nguồn không cung cấp chuẩn cân nặng, kích thước, tuổi thọ hay mức vận động. Các trường này được để chưa xác minh."
+      ]
+    },
+    {
+      "speciesLabel": "Chó", "name": "Golden Retriever", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/golden-retriever",
+      "values": {"size": "Lớn", "adult_weight_kg": "25–34", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Labrador Retriever", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/labrador-retriever",
+      "values": {"size": "Lớn", "adult_weight_kg": "25–35", "lifespan_years": "Trên 10 năm", "daily_exercise": null, "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "German Shepherd", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/german-shepherd",
+      "values": {"size": "Lớn", "adult_weight_kg": "35–43", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "French Bulldog", "status": "partial_source_checked",
+      "sourcePath": "small-dogs/french-bulldog",
+      "values": {"size": "Nhỏ", "adult_weight_kg": "11–12,5", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 1 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Pomeranian", "status": "partial_source_checked",
+      "sourcePath": "small-dogs/pomeranian",
+      "values": {"size": "Nhỏ", "adult_weight_kg": "2–3", "lifespan_years": "Trên 12 năm", "daily_exercise": "Tối thiểu 30 phút/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Chihuahua", "status": "partial_source_checked",
+      "sourcePath": "small-dogs/chihuahua",
+      "values": {"size": "Nhỏ", "adult_weight_kg": "1,8–2,7", "lifespan_years": "Trên 12 năm", "daily_exercise": "Tối thiểu 30 phút/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Akita Inu", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/akita",
+      "values": {"size": "Lớn", "adult_weight_kg": "31–59", "lifespan_years": "Dưới 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Siberian Husky", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/siberian-husky",
+      "values": {"size": "Lớn", "adult_weight_kg": "16–27", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Alaskan Malamute", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/alaskan-malamute",
+      "values": {"size": "Lớn", "adult_weight_kg": "34–39", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Dachshund", "status": "partial_source_checked",
+      "sourcePath": "medium-dogs/dachshund",
+      "values": {"size": "Vừa", "adult_weight_kg": "Standard 9–12; miniature 4,5–5", "lifespan_years": "Trên 12 năm", "daily_exercise": "Standard 1 giờ/ngày; miniature 30 phút/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Beagle", "status": "partial_source_checked",
+      "sourcePath": "medium-dogs/beagle",
+      "values": {"size": "Vừa", "adult_weight_kg": "9–11", "lifespan_years": "Trên 12 năm", "daily_exercise": "Tối thiểu 1 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Rottweiler", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/rottweiler",
+      "values": {"size": "Lớn", "adult_weight_kg": "35–60", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Border Collie", "status": "partial_source_checked",
+      "sourcePath": "medium-dogs/border-collie",
+      "values": {"size": "Vừa", "adult_weight_kg": "25–30", "lifespan_years": "Trên 12 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Yorkshire Terrier", "status": "partial_source_checked",
+      "sourcePath": "small-dogs/yorkshire-terrier",
+      "values": {"size": "Nhỏ", "adult_weight_kg": "3,2", "lifespan_years": "Trên 12 năm", "daily_exercise": "Tối thiểu 30 phút/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Maltese", "status": "partial_source_checked",
+      "sourcePath": "small-dogs/maltese",
+      "values": {"size": "Nhỏ", "adult_weight_kg": "3–4", "lifespan_years": "Trên 12 năm", "daily_exercise": "Tối thiểu 30 phút/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Shih Tzu", "status": "partial_source_checked",
+      "sourcePath": "small-dogs/shih-tzu",
+      "values": {"size": "Nhỏ", "adult_weight_kg": "4,5–7,5", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 1 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Chow Chow", "status": "partial_source_checked",
+      "sourcePath": "medium-dogs/chow-chow",
+      "values": {"size": "Vừa", "adult_weight_kg": "20–30", "lifespan_years": "Dưới 10 năm", "daily_exercise": "Tối thiểu 1 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Samoyed", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/samoyed",
+      "values": {"size": "Lớn", "adult_weight_kg": "16–29", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Great Dane", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/great-dane",
+      "values": {"size": "Lớn", "adult_weight_kg": "46–54", "lifespan_years": "Dưới 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Saint Bernard", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/saint-bernard",
+      "values": {"size": "Lớn", "adult_weight_kg": "54–81", "lifespan_years": "Dưới 10 năm", "daily_exercise": "Tối thiểu 1 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Afghan Hound", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/afghan-hound",
+      "values": {"size": "Lớn", "adult_weight_kg": "23–27", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Australian Cattle Dog", "status": "partial_source_checked",
+      "sourcePath": "medium-dogs/australian-cattle-dog",
+      "values": {"size": "Vừa", "adult_weight_kg": "16–20", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Australian Shepherd", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/australian-shepherd",
+      "values": {"size": "Lớn", "adult_weight_kg": "18–29", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Basenji", "status": "partial_source_checked",
+      "sourcePath": "medium-dogs/basenji",
+      "values": {"size": "Vừa", "adult_weight_kg": "9–11", "lifespan_years": "Trên 12 năm", "daily_exercise": "Tối thiểu 1 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Basset Hound", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/basset-hound",
+      "values": {"size": "Lớn", "adult_weight_kg": "18–27", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 1 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Bedlington Terrier", "status": "partial_source_checked",
+      "sourcePath": "medium-dogs/bedlington-terrier",
+      "values": {"size": "Vừa", "adult_weight_kg": "8–10", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 1 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Bernese Mountain Dog", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/bernese-mountain-dog",
+      "values": {"size": "Lớn", "adult_weight_kg": "Cái 42–53; đực 48–63", "lifespan_years": "Tối đa 10 năm", "daily_exercise": "Tối thiểu 1 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Bichon Frise", "status": "partial_source_checked",
+      "sourcePath": "small-dogs/bichon-frise",
+      "values": {"size": "Nhỏ", "adult_weight_kg": "4–7", "lifespan_years": "Trên 12 năm", "daily_exercise": "Tối thiểu 30 phút/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Bloodhound", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/bloodhound",
+      "values": {"size": "Lớn", "adult_weight_kg": "45–50", "lifespan_years": "Dưới 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Blue Heeler", "status": "alias_source_checked",
+      "sourcePath": "medium-dogs/australian-cattle-dog",
+      "values": {"size": "Vừa", "adult_weight_kg": "16–20", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null},
+      "notes": ["Blue Heeler là tên gọi khác của Australian Cattle Dog; dùng chung nguồn giống, không xem là giống độc lập."]
+    },
+    {
+      "speciesLabel": "Chó", "name": "Border Terrier", "status": "partial_source_checked",
+      "sourcePath": "small-dogs/border-terrier",
+      "values": {"size": "Nhỏ", "adult_weight_kg": "5–7", "lifespan_years": "Trên 12 năm", "daily_exercise": "Tối thiểu 1 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Boston Terrier", "status": "partial_source_checked",
+      "sourcePath": "small-dogs/boston-terrier",
+      "values": {"size": "Nhỏ", "adult_weight_kg": "7–11", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 1 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Boxer", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/boxer",
+      "values": {"size": "Lớn", "adult_weight_kg": "Cái 25–27; đực 30–32", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Bullmastiff", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/bullmastiff",
+      "values": {"size": "Lớn", "adult_weight_kg": "41–59", "lifespan_years": "Dưới 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Cairn Terrier", "status": "partial_source_checked",
+      "sourcePath": "small-dogs/cairn-terrier",
+      "values": {"size": "Nhỏ", "adult_weight_kg": "6–8", "lifespan_years": "Trên 10 năm", "daily_exercise": "Tối thiểu 1 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Cane Corso", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/cane-corso",
+      "values": {"size": "Lớn", "adult_weight_kg": "40–50", "lifespan_years": "Dưới 10 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Cavalier King Charles Spaniel", "status": "partial_source_checked",
+      "sourcePath": "small-dogs/cavalier-king-charles-spaniel",
+      "values": {"size": "Nhỏ", "adult_weight_kg": "5,4–8,2", "lifespan_years": "Trên 12 năm", "daily_exercise": "Tối thiểu 1 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    },
+    {
+      "speciesLabel": "Chó", "name": "Dalmatian", "status": "partial_source_checked",
+      "sourcePath": "large-dogs/dalmatian",
+      "values": {"size": "Lớn", "adult_weight_kg": "18–27", "lifespan_years": "Trên 12 năm", "daily_exercise": "Tối thiểu 2 giờ/ngày", "origin_country": null, "origin_region": null, "exercise_level": null}
+    }
+  ],
+  "sourceReferences": [
+    {
+      "id": "petmd_affenpinscher",
+      "label": "PetMD · Affenpinscher",
+      "url": "https://www.petmd.com/dog/breeds/affenpinscher",
+      "supports": "Kích thước, khoảng cân nặng, tuổi thọ tham khảo, nguồn gốc Đức và mức năng lượng vừa phải."
+    },
+    {
+      "id": "petmd_bearded_collie",
+      "label": "PetMD · Bearded Collie",
+      "url": "https://www.petmd.com/dog/breeds/bearded-collie",
+      "supports": "Kích thước, khoảng cân nặng, tuổi thọ tham khảo, nguồn gốc Scotland và nhu cầu vận động/kích thích tinh thần."
+    },
+    {
+      "id": "akc_bearded_collie",
+      "label": "American Kennel Club · Bearded Collie",
+      "url": "https://www.akc.org/dog-breeds/bearded-collie/",
+      "supports": "Nguồn gốc Scotland và đặc tính thích vận động ngoài trời."
+    },
+    {
+      "id": "cfa_khao_manee",
+      "label": "Cat Fanciers' Association · Khao Manee",
+      "url": "https://cfa.org/breed/khao-manee/",
+      "supports": "Nguồn gốc Thái Lan; thể hình cỡ trung, cơ bắp và thể thao."
+    },
+    {
+      "id": "gccf_unrecognised_breeds",
+      "label": "GCCF · Other recognised and unrecognised breeds",
+      "url": "https://www.gccfcats.org/getting-a-cat/unrecognised-breeds/",
+      "supports": "Tình trạng ghi nhận/tên giống và mức độ hiếm theo GCCF; không phải chuẩn cân nặng hay tuổi thọ."
+    }
+  ]
+}

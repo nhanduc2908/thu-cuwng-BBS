@@ -11,6 +11,7 @@ PRODUCT_SOURCE_PATH = DATA / "pet_product_specs.json"
 BREED_SOURCE_PATH = DATA / "nutrition_breed_profiles.json"
 LEGACY_BREED_INDEX_PATH = DATA / "nutrition_catalog_4000.json"
 BREED_DOSSIER_PATH = DATA / "pet_breed_nutrition_profiles_200.json"
+BREED_FACT_OVERRIDES_PATH = DATA / "breed_fact_overrides.json"
 
 SUPPLEMENTAL_BREED_NAMES = {
     ("Chó", "Affenpinscher"),
@@ -105,6 +106,7 @@ def breed_id(species: str, name: str) -> str:
 def build_breed_records() -> tuple[list[dict], dict[str, int], dict[str, bool]]:
     source = json.loads(BREED_SOURCE_PATH.read_text(encoding="utf-8"))
     legacy = json.loads(LEGACY_BREED_INDEX_PATH.read_text(encoding="utf-8"))
+    fact_overrides = json.loads(BREED_FACT_OVERRIDES_PATH.read_text(encoding="utf-8"))
     legacy_breeds = legacy.get("breeds", [])
     breed_rows = [dict(item) for item in source["breeds"]]
     included_names = {(item["species"], item["breed_name"]) for item in breed_rows}
@@ -140,6 +142,34 @@ def build_breed_records() -> tuple[list[dict], dict[str, int], dict[str, bool]]:
                 "source_status": "name_only_from_unverified_legacy_index",
             }
         )
+
+    fact_lookup = {
+        (item["speciesLabel"], item["name"]): item
+        for item in fact_overrides["profiles"]
+    }
+    for item in breed_rows:
+        reference = fact_lookup.get((item["species"], item["breed_name"]))
+        if not reference:
+            continue
+        if reference.get("sourcePath"):
+            source_id = f"pdsa_{slug(item['breed_name'])}"
+            reference["sourceIds"] = list(dict.fromkeys(reference.get("sourceIds", []) + [source_id]))
+            reference.setdefault("notes", []).append(
+                "PDSA cho các thông tin kích thước/cân nặng/tuổi thọ/vận động được ghi ở trên; trang này không xác minh xuất xứ. Tên giống có phân nhóm được giữ đúng như chú thích nguồn."
+            )
+        for field, value in reference.get("values", {}).items():
+            if field not in {
+                "size",
+                "adult_weight_kg",
+                "lifespan_years",
+                "origin_country",
+                "origin_region",
+                "exercise_level",
+                "daily_exercise",
+            }:
+                raise ValueError(f"Unsupported breed fact field: {field}")
+            item[field] = value
+        item["breedFactReference"] = reference
 
     for item in breed_rows:
         item["ageStageGrouping"] = breed_age_group(item)
@@ -389,6 +419,7 @@ def nutrition_dossier(
     species = breed["species"]
     stage_ids = breed_stage_ids(species)
     age_grouping = breed["ageStageGrouping"]
+    fact_reference = breed.get("breedFactReference", {})
     known_name = breed["breed_name"] == "Maine Coon" and species == "Mèo"
     breed_specific_facts = []
     if known_name:
@@ -411,6 +442,16 @@ def nutrition_dossier(
                 "status": "source_checked",
                 "feedingImplication": "Đây là lưu ý sức khỏe để trao đổi với bác sĩ thú y, không phải căn cứ tự bổ sung taurine, omega-3, thuốc hoặc chọn chế độ điều trị.",
             },
+        ]
+    elif fact_reference.get("notes"):
+        breed_specific_facts = [
+            {
+                "fact": note,
+                "sourceIds": fact_reference.get("sourceIds", []),
+                "status": fact_reference.get("status"),
+                "feedingImplication": "Dùng như thông tin nhận diện/tham khảo giống; không suy ra khẩu phần, kcal hay điều trị từ dữ kiện này.",
+            }
+            for note in fact_reference["notes"]
         ]
     else:
         breed_specific_facts = [
@@ -452,7 +493,9 @@ def nutrition_dossier(
         ]
 
     size_note = (
-        "Bản ghi bổ sung chỉ có tên loài/giống từ chỉ mục nội bộ chưa xác minh; các thuộc tính khác để trống."
+        "Có một số dữ kiện cơ bản đối chiếu được nguồn; các trường không có nguồn vẫn để trống hoặc gắn trạng thái chưa xác minh."
+        if fact_reference
+        else "Bản ghi bổ sung chỉ có tên loài/giống từ chỉ mục nội bộ chưa xác minh; các thuộc tính khác để trống."
         if supplementary
         else "Đặc điểm giống lấy từ catalog nội bộ dự án, chưa xác minh độc lập; xem conflicts nếu có sai khác."
     )
@@ -465,15 +508,24 @@ def nutrition_dossier(
         "adultWeightKg": breed.get("adult_weight_kg"),
         "lifespanYears": breed.get("lifespan_years"),
         "exerciseLevel": breed.get("exercise_level"),
+        "dailyExercise": breed.get("daily_exercise"),
         "maturityEstimate": (
             "Trưởng thành chậm, có thể đến khoảng 4 năm theo GCCF; điều này không xác định riêng tuổi chuyển thức ăn."
             if known_name
             else age_grouping.get("growthToAdultTransitionApproxMonths")
             or age_grouping.get("ageBands")
         ),
-        "dataStatus": "supplemental_name_only_unverified" if supplementary else "project_reference_unverified",
+        "dataStatus": fact_reference.get(
+            "status",
+            "supplemental_name_only_unverified"
+            if supplementary
+            else "project_reference_unverified",
+        ),
         "sourceNote": size_note,
         "conflicts": breed.get("conflicts", {}),
+        "breedFactStatus": fact_reference.get("status", "project_reference_unverified"),
+        "breedFactSourceIds": fact_reference.get("sourceIds", []),
+        "breedFactNotes": fact_reference.get("notes", []),
         "breedSpecificFacts": breed_specific_facts,
     }
 
@@ -563,11 +615,13 @@ def main() -> None:
     catalog = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
     original_products = json.loads(PRODUCT_SOURCE_PATH.read_text(encoding="utf-8"))["products"]
     originals_by_id = {product["id"]: product for product in original_products}
+    fact_overrides = json.loads(BREED_FACT_OVERRIDES_PATH.read_text(encoding="utf-8"))
     breed_rows, breed_counts, supplemental_ids = build_breed_records()
     stage_lookup = {item["id"]: item for item in GUIDANCE["stages"]}
 
     catalog["title"] = "Danh mục sản phẩm thức ăn chó mèo, 70 trường, liên kết giống và thành phần cần lưu ý"
     catalog["sourceFiles"]["breedNutritionDossiers"] = "HTML/data/pet_breed_nutrition_profiles_200.json"
+    catalog["sourceFiles"]["breedFactOverrides"] = "HTML/data/breed_fact_overrides.json"
     catalog["lifeStageGuidance"] = GUIDANCE
     catalog["breeds"] = [
         {
@@ -579,17 +633,21 @@ def main() -> None:
             "sizeInProjectCatalog": breed.get("size"),
             "adultWeightKgInProjectCatalog": breed.get("adult_weight_kg"),
             "lifespanYearsInProjectCatalog": breed.get("lifespan_years"),
+            "dailyExercise": breed.get("daily_exercise"),
             "sourceRecordCount": breed.get("source_record_count", 0),
             "conflicts": breed.get("conflicts", {}),
             "dataSource": (
-                "unverified_legacy_index_name_only"
+                "HTML/data/breed_fact_overrides.json"
+                if breed.get("breedFactReference")
+                else "unverified_legacy_index_name_only"
                 if breed_id(breed["species"], breed["breed_name"]) in supplemental_ids
                 else "app/modules/animals/breed_catalog.py"
             ),
-            "verificationStatus": (
+            "verificationStatus": breed.get("breedFactReference", {}).get(
+                "status",
                 "supplemental_name_only_unverified"
                 if breed_id(breed["species"], breed["breed_name"]) in supplemental_ids
-                else "project_reference_unverified"
+                else "project_reference_unverified",
             ),
             "ageStageGrouping": breed["ageStageGrouping"],
         }
@@ -615,6 +673,24 @@ def main() -> None:
         ("gccf_maine_coon", MAINE_COON_SOURCES[0]),
         ("cornell_hcm", MAINE_COON_SOURCES[1]),
     ]
+    source_references.extend(
+        {"id": item["id"], **item}
+        for item in fact_overrides["sourceReferences"]
+    )
+    for item in fact_overrides["profiles"]:
+        if item.get("sourcePath"):
+            source_id = f"pdsa_{slug(item['name'])}"
+            source_references.append(
+                {
+                    "id": source_id,
+                    "label": f"PDSA · {item['name']}",
+                    "url": (
+                        "https://www.pdsa.org.uk/pet-help-and-advice/looking-after-your-pet/"
+                        f"puppies-dogs/{item['sourcePath']}"
+                    ),
+                    "supports": "Kích thước phân loại, cân nặng và tuổi thọ tham khảo; khuyến nghị vận động hằng ngày nếu trang giống có nêu.",
+                }
+            )
     for source_id, source in source_details:
         source_references.append({"id": source_id, **source})
 
@@ -630,10 +706,11 @@ def main() -> None:
                 "name": breed["breed_name"],
                 "nameEn": breed.get("breed_name_en"),
                 "sourceRecordCount": breed.get("source_record_count", 0),
-                "verificationStatus": (
+                "verificationStatus": breed.get("breedFactReference", {}).get(
+                    "status",
                     "supplemental_name_only_unverified"
                     if supplementary
-                    else "project_reference_unverified"
+                    else "project_reference_unverified",
                 ),
                 "profile": nutrition_dossier(breed, stage_lookup, supplementary),
             }
@@ -648,13 +725,21 @@ def main() -> None:
             "profileCount": len(dossier_profiles),
             "dogProfileCount": breed_counts["Chó"],
             "catProfileCount": breed_counts["Mèo"],
-            "supplementalNameOnlyCount": len(supplemental_ids),
+            "supplementalNameOnlyCount": sum(
+                profile["verificationStatus"] == "supplemental_name_only_unverified"
+                for profile in dossier_profiles
+            ),
+            "profilesWithBreedSpecificSourceFacts": sum(
+                bool(profile["profile"]["partI_overview"]["breedFactSourceIds"])
+                for profile in dossier_profiles
+            ),
             "breedSpecificAafcoFediafThresholdsVerified": 0,
         },
         "methodology": (
             "Mỗi hồ sơ dùng khung loài/giai đoạn sống và tài liệu tham chiếu; không suy ra ngưỡng "
-            "dinh dưỡng, kcal hoặc khẩu phần theo giống nếu không có nguồn đã xác minh. Bốn mục "
-            "bổ sung chỉ có tên và loài từ chỉ mục cũ chưa xác minh."
+            "dinh dưỡng, kcal hoặc khẩu phần theo giống nếu không có nguồn đã xác minh. Dữ kiện "
+            "giống chỉ được thay thế khi có nguồn phù hợp; các trường chưa đối chiếu tiếp tục mang "
+            "trạng thái tham khảo/chưa xác minh. Một số tên chung hoặc tên đồng nghĩa cần phân biệt."
         ),
         "lifeStageGuidance": GUIDANCE,
         "sourceReferences": source_references,
@@ -698,6 +783,10 @@ def main() -> None:
     catalog["summary"]["breedProfileCount"] = len(breed_rows)
     catalog["summary"]["dogBreedProfileCount"] = breed_counts["Chó"]
     catalog["summary"]["catBreedProfileCount"] = breed_counts["Mèo"]
+    catalog["summary"]["breedProfilesWithSpecificSources"] = sum(
+        bool(breed.get("breedFactReference", {}).get("sourceIds"))
+        for breed in breed_rows
+    )
     catalog["limitations"] = [
         "Đây là hồ sơ đã có trong pet_product_specs.json, không phải danh mục toàn bộ thức ăn đang bán trên thị trường.",
         "Chỉ có 4 hồ sơ tham khảo; phần lớn trường nhãn/dinh dưỡng chưa xác minh và để null.",
@@ -707,7 +796,7 @@ def main() -> None:
         "Hồ sơ giống lấy từ catalog nội bộ; bản ghi trùng tên và sai khác được giữ trong conflicts, chưa xác minh độc lập.",
         "Tuổi trưởng thành theo kích thước chó chỉ là khoảng ước lượng; tuổi chuyển senior cần đánh giá thú y và không suy ra riêng từ tên giống.",
         "Hướng dẫn năng lượng là định tính theo giai đoạn; không tạo kcal hoặc khẩu phần chỉ từ tên giống.",
-        "Bốn hồ sơ bổ sung chỉ có tên/loài từ chỉ mục nội bộ chưa xác minh; không sử dụng thông tin dinh dưỡng của danh mục tạo tự động.",
+        "Các hồ sơ bổ sung và những trường giống đã đối chiếu chỉ có phạm vi nguồn một phần; trường thiếu nguồn vẫn không được suy đoán. Không sử dụng dữ liệu dinh dưỡng từ danh mục tạo tự động.",
     ]
     CATALOG_PATH.write_text(
         json.dumps(catalog, ensure_ascii=False, indent=2) + "\n",
