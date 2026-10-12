@@ -97,5 +97,8 @@ def test_product_details_show_only_catalog_facts_and_mark_missing_fields():
     assert "Giá niêm yết · đã gồm VAT 10%" in script
     assert "Giá dữ liệu demo · cần xác nhận" not in script
     assert "Dữ liệu demo · cần cửa hàng xác nhận" not in script
+    assert "store-sync-status" not in script
+    assert "Đang xem snapshot" not in script
+    assert "Live API chưa kết nối" not in script
     assert "Không có liều dùng" not in script
     assert ".product-detail-panel" in styles

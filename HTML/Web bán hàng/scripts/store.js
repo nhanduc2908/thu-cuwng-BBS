@@ -96,8 +96,7 @@
         <a class="cart-link" href="gio-hang.html" aria-label="Giỏ hàng">
           <span aria-hidden="true">Giỏ hàng</span><span class="cart-count" data-cart-count>0</span>
         </a>
-      </div>
-      <div class="demo-banner" id="store-sync-status" role="status" aria-live="polite">Đang đồng bộ catalog sản phẩm…</div>`;
+      </div>`;
     const toggle = host.querySelector(".menu-toggle");
     const nav = host.querySelector(".main-nav");
     toggle.addEventListener("click", () => {
@@ -207,23 +206,6 @@
       ...catalog.products.map((item) => normalizeProduct(item)),
       ...catalog.combos.map((item) => normalizeProduct(item, "combo")),
     ];
-    const status = document.getElementById("store-sync-status");
-    if (status) {
-      const sourceLabel = catalog.sourceType === "live_sqlite"
-        ? "Đang đồng bộ trực tiếp từ SQLite ứng dụng"
-        : `Đang xem snapshot ${escapeHtml(catalog.generatedAt || "chưa rõ thời điểm")}`;
-      const problem = catalog.dataStatus === "demo_only"
-        ? "Dữ liệu catalog có trạng thái demo hoặc cần xác minh; hãy xem trạng thái riêng của từng hồ sơ trước khi sử dụng."
-        : "Hãy kiểm tra trạng thái giá và tồn kho trong chi tiết hàng hóa.";
-      const ownerConfirmedCount = products.filter((product) => product.ownerConfirmedOfficial).length;
-      const ownerConfirmedNotice = ownerConfirmedCount
-        ? ` ${ownerConfirmedCount} hồ sơ giống được quản trị viên xác nhận là catalog chính thức; trường chưa có nhãn/tài liệu đối chiếu vẫn được ghi rõ.`
-        : "";
-      const fallback = catalog.liveSyncError
-        ? ` Live API chưa kết nối (${escapeHtml(catalog.liveSyncError)}).`
-        : "";
-      status.innerHTML = `<strong>${sourceLabel} · ${products.length} mặt hàng/combo.</strong> ${problem}${ownerConfirmedNotice}${fallback}`;
-    }
     return { catalog, liveError };
   }
 
