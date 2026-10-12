@@ -10,29 +10,6 @@
   const systemHub = new URL("index.html", siteRoot);
   const historyKey = `petcare-wayfinder:${siteRoot.href}`;
   const returningKey = `${historyKey}:returning`;
-  const polishedPages = new Set([
-    "data_explorer.html",
-    "disease_support.html",
-    "executive_summary.html",
-    "index_presentation.html",
-    "pet_health_report.html",
-    "operations_snapshot.html",
-    "petcare_demo_full.html",
-    "project_invoice.html",
-    "project_master_summary.html",
-    "project_overview.html",
-    "project_security.html",
-    "project_quote.html",
-    "project_slides_final.html",
-    "project_slides.html",
-    "projext _Full.html",
-    "report_business_review.html",
-    "report_final.html",
-    "report_kpi_board.html",
-    "slides_demo.html",
-    "slides_pitch.html",
-    "workflow_story.html"
-  ]);
   const pageGroups = [
     {
       title: "Cổng & trang chính",
@@ -47,6 +24,10 @@
         ["Danh mục dinh dưỡng", "TRrang chính/nutrition_products.html"],
         ["Dinh dưỡng cho chó", "TRrang chính/nutrition_products_dog.html"],
         ["Dinh dưỡng cho mèo", "TRrang chính/nutrition_products_cat.html"],
+        ["Dịch vụ chăm sóc & combo giá tham khảo", "TRrang chính/care_packages.html"],
+        ["Từ tư vấn đến chăm sóc", "TRrang chính/care_consultation.html"],
+        ["Danh mục 40 phiếu xuất theo vấn đề cửa hàng", "Phiếu xuất/index.html"],
+        ["Phiếu xuất hàng · nhân viên", "Phiếu xuất/phieu-xuat-hang.html"],
         ["Chuẩn dinh dưỡng · Hoa Kỳ, EU, Trung Quốc, Việt Nam", "Trang hỗ trợ/chuan-dinh-duong-thu-cung-hoa-ky.html"],
         ["Nghiên cứu khoa học tiềm năng · chờ xác thực", "Trang hỗ trợ/bao-cao-khoa-hoc-trien-vong.html"],
         ["Thông số sản phẩm chó mèo · 70 trường", "Trang thông số của các sản phẩm/index.html"],
@@ -152,7 +133,7 @@
 
   const stylesheet = document.createElement("link");
   stylesheet.rel = "stylesheet";
-  stylesheet.href = new URL("../styles/site_navigation.css?v=2", scriptUrl).href;
+  stylesheet.href = new URL("../styles/site_navigation.css?v=4", scriptUrl).href;
   document.head.append(stylesheet);
 
   const header = document.createElement("header");
@@ -261,15 +242,17 @@
   header.append(headerInner);
   document.body.prepend(header);
 
-  const currentPageFile = decodeURIComponent(location.pathname).split("/").pop();
-  if (polishedPages.has(currentPageFile)) {
+  const contentPagePath = decodeURIComponent(location.pathname);
+  const isPetCareContentPage = /\/HTML\/(?:Trang hỗ trợ|TRrang chính)\//i.test(contentPagePath);
+  let contentAnalysis = null;
+  if (isPetCareContentPage) {
     document.body.classList.add("petcare-polished-page");
     const pageStylesheet = document.createElement("link");
     pageStylesheet.rel = "stylesheet";
-    pageStylesheet.href = new URL("../styles/page_experience.css?v=1", scriptUrl).href;
+    pageStylesheet.href = new URL("../styles/page_experience.css?v=2", scriptUrl).href;
     document.head.append(pageStylesheet);
 
-    const mainContent = document.querySelector("main, [role=\"main\"]");
+    const mainContent = document.querySelector("main, [role=\"main\"], .page-shell, .page, .shell");
     if (mainContent) {
       if (!mainContent.id) mainContent.id = "petcare-main-content";
       const skipLink = document.createElement("a");
@@ -278,6 +261,198 @@
       skipLink.textContent = "Bỏ qua điều hướng, đến nội dung";
       header.before(skipLink);
       mainContent.setAttribute("tabindex", "-1");
+
+      const contentPageKey = contentPagePath.toLocaleLowerCase("en");
+      const contentProfiles = [
+        {
+          match: /trrang chính\/index\.html$/,
+          title: "Định vị nền tảng và tuyên bố",
+          summary: "Đọc trang như nội dung giới thiệu/thuyết trình; chỉ coi số liệu, lời chứng thực và kết quả kinh doanh là thực tế khi có nguồn được duyệt.",
+          checks: [
+            "Phân biệt chức năng đang hoạt động, giao diện demo, kế hoạch và năng lực mục tiêu.",
+            "Xác minh nguồn, kỳ đo, cơ sở tính và quyền công bố cho từng KPI hoặc nhận xét.",
+            "Đối chiếu lời kêu gọi hành động với điểm đến thực tế và khả năng xử lý của ứng dụng."
+          ]
+        },
+        {
+          match: /module\/index\.html$/,
+          title: "Thư viện phân hệ và phạm vi",
+          summary: "Dùng danh mục để tìm đúng trang nghiệp vụ; tài liệu mô tả phân hệ không đồng nghĩa các thao tác đã được kết nối tới dữ liệu live.",
+          checks: [
+            "Xác định phân hệ sở hữu bản ghi, các phụ thuộc và bước bàn giao liên quan.",
+            "Mở đúng tài liệu chi tiết và phân biệt mô tả nghiệp vụ với chức năng ứng dụng hiện triển khai.",
+            "Kiểm tra quyền, nguồn JSON/SQLite và trạng thái cập nhật trước khi thao tác."
+          ]
+        },
+        {
+          match: /petcare_system\.html/,
+          title: "Định vị nền tảng và phạm vi sản phẩm",
+          summary: "Tách năng lực sản phẩm đã kiểm chứng khỏi định hướng, nội dung quảng bá và dữ liệu minh họa.",
+          checks: [
+            "Đối chiếu mô tả năng lực với trang demo, phân hệ và luồng ứng dụng thực tế.",
+            "Gắn nguồn và trạng thái cho số liệu về quy mô, kết quả hoặc thị trường.",
+            "Nêu rõ phụ thuộc, giới hạn triển khai và bước xác minh trước khi cam kết."
+          ]
+        },
+        {
+          match: /bao-cao-khoa-hoc|research/,
+          title: "Nghiên cứu và bằng chứng",
+          summary: "Tách giả thuyết khỏi kết quả đã được kiểm chứng; không xem triển vọng nghiên cứu là khuyến nghị điều trị.",
+          checks: [
+            "Truy nguồn tài liệu, ngày công bố, thiết kế, cỡ mẫu, nhóm đối chứng và kết quả đo.",
+            "Đánh giá giới hạn, sai lệch, khả năng lặp lại và mức độ phù hợp với chó/mèo cụ thể.",
+            "Gắn nhãn rõ bằng chứng sơ bộ, nghiên cứu quan sát, thử nghiệm và hướng dẫn đã được thẩm định."
+          ]
+        },
+        {
+          match: /chuan-dinh-duong|nutrition_products|thuong-hieu|product_showcase/,
+          title: "Dinh dưỡng, sản phẩm và quy chuẩn",
+          summary: "Đánh giá theo SKU, thị trường và tuyên bố ghi trên nhãn; không suy ra chứng nhận hoặc profile dinh dưỡng từ tên thương hiệu hay giống.",
+          checks: [
+            "Đối chiếu loài, giai đoạn sống, công thức, nhãn hiện hành và nguồn nhà sản xuất.",
+            "Phân biệt luật bắt buộc với hướng dẫn ngành; xác minh cơ quan, văn bản, phạm vi và hiệu lực.",
+            "Để trống thông tin không công bố hoặc chưa xác minh; không biến dữ liệu thiếu thành giá trị ước đoán."
+          ]
+        },
+        {
+          match: /disease_support|pet_health_report|module_08_health/,
+          title: "Sức khỏe và an toàn thú y",
+          summary: "Dùng chỉ số, triệu chứng và cảnh báo như tín hiệu để theo dõi, không thay thế chẩn đoán hoặc quyết định điều trị của bác sĩ thú y.",
+          checks: [
+            "Xác nhận thú cưng, thời điểm ghi nhận, đơn vị đo, nguồn và diễn biến so với nền trước đó.",
+            "Phân biệt dữ kiện quan sát được với giả thuyết, cảnh báo tự động hoặc nội dung tham khảo.",
+            "Ưu tiên khám thú y khi có dấu hiệu nặng, diễn tiến nhanh hoặc thông tin không nhất quán."
+          ]
+        },
+        {
+          match: /data_explorer|admin_store|petcare_management|module_/,
+          title: "Dữ liệu và vận hành",
+          summary: "Xác định nguồn và trạng thái dữ liệu trước khi diễn giải; bản xem trước, JSON mẫu và hồ sơ vận hành không mặc nhiên là cùng một bộ dữ liệu.",
+          checks: [
+            "Kiểm tra nguồn, thời điểm cập nhật, phạm vi lọc, mã định danh và các trường trống.",
+            "Phân biệt bản ghi demo, JSON chuẩn bị, SQLite workspace và dữ liệu nghiệp vụ đang hoạt động.",
+            "Trước thao tác ghi, xác nhận quyền, đối tượng, tác động, khả năng khôi phục và kết quả sau lưu."
+          ]
+        },
+        {
+          match: /care_packages/,
+          title: "Chăm sóc, combo và bảng giá",
+          summary: "Chọn dịch vụ theo nhu cầu và điều kiện an toàn của thú cưng; giá trên trang là mức tham khảo mẫu, chưa phải bảng giá đã được cửa hàng xác nhận.",
+          checks: [
+            "Đối chiếu hạng mục bao gồm/không bao gồm, số lần, thời hạn combo và phụ phí trước khi đặt.",
+            "Xác nhận cân nặng, loại lông, hành vi, dị ứng, tình trạng sức khỏe và thời gian dự kiến.",
+            "Chốt giá cuối, chính sách đổi lịch/hủy và người chịu trách nhiệm trước khi thực hiện."
+          ]
+        },
+        {
+          match: /care_consultation/,
+          title: "Từ tư vấn đến chăm sóc",
+          summary: "Quy trình tư vấn chuẩn bị và kết nối trực tiếp với danh mục dịch vụ, combo cùng mức giá tham khảo; phiếu trên trang không gửi thông tin tới cửa hàng.",
+          checks: [
+            "Thu thập thông tin cần thiết tối thiểu và lưu ý sức khỏe/hành vi trước buổi hẹn.",
+            "Xác nhận phạm vi, mức giá cuối, thời lượng, điều kiện đổi lịch và sự đồng ý của khách.",
+            "Không coi phiếu cục bộ hoặc hướng dẫn grooming là hồ sơ đặt lịch hay tư vấn y tế."
+          ]
+        },
+        {
+          match: /operations_snapshot|report_|executive_summary|kpi/,
+          title: "Báo cáo và chỉ số",
+          summary: "Đọc chỉ số trong đúng kỳ và phạm vi; phân biệt giá trị thực tế, mục tiêu, dự báo và dữ liệu minh họa.",
+          checks: [
+            "Kiểm tra định nghĩa KPI, tử số/mẫu số, đơn vị, bộ lọc, kỳ báo cáo và nguồn dữ liệu.",
+            "So sánh với đường cơ sở và kỳ tương đương; nêu rõ cỡ mẫu và yếu tố có thể gây nhiễu.",
+            "Không diễn giải tương quan thành quan hệ nhân quả hoặc trình bày mục tiêu như kết quả đạt được."
+          ]
+        },
+        {
+          match: /invoice|quote|business_case/,
+          title: "Tài chính và đề xuất thương mại",
+          summary: "Coi tổng tiền và điều khoản là nội dung cần đối chiếu với giả định được duyệt, không mặc nhiên là hóa đơn hợp lệ hay cam kết cung cấp.",
+          checks: [
+            "Kiểm tra số lượng, đơn giá, phép tính, loại tiền, thuế/phí và thời điểm áp dụng.",
+            "Đối chiếu mốc thanh toán, phạm vi bàn giao, điều kiện thay đổi và người có thẩm quyền phê duyệt.",
+            "Phân biệt ước tính/kịch bản kinh doanh với báo giá chính thức, giao dịch thực và số liệu kế toán."
+          ]
+        },
+        {
+          match: /security/,
+          title: "Bảo mật và quản trị rủi ro",
+          summary: "Phân biệt biện pháp đã triển khai với đề xuất thiết kế; một mô tả kiểm soát không tự chứng minh hệ thống đã được kiểm thử.",
+          checks: [
+            "Rà soát tài sản, luồng dữ liệu, vai trò, quyền tối thiểu và thông tin nhạy cảm.",
+            "Tìm bằng chứng kiểm thử cho xác thực, phân quyền, sao lưu/khôi phục và ghi nhận sự cố.",
+            "Nêu chủ sở hữu rủi ro, khả năng xảy ra, tác động, biện pháp giảm thiểu và việc còn tồn đọng."
+          ]
+        },
+        {
+          match: /workflow|reservation|orders|services|imports/,
+          title: "Quy trình và bàn giao",
+          summary: "Đọc quy trình như chuỗi trạng thái có người chịu trách nhiệm, dữ liệu đầu vào và điểm bàn giao; xác định cả luồng ngoại lệ.",
+          checks: [
+            "Tìm sự kiện kích hoạt, điều kiện bắt đầu/kết thúc và trạng thái hợp lệ của từng bước.",
+            "Xác định vai trò thực hiện, thông tin bắt buộc, thời hạn và dấu vết bàn giao.",
+            "Kiểm tra hủy, trùng lặp, lỗi, hoàn tiền, quá hạn và cách khôi phục khi bước sau thất bại."
+          ]
+        },
+        {
+          match: /slides|presentation|pitch|app_interface_preview|petcare_demo_full/,
+          title: "Trình bày và minh họa",
+          summary: "Đánh giá mạch nội dung theo người xem và quyết định cần hỗ trợ; phân biệt bản demo giao diện với năng lực đã vận hành.",
+          checks: [
+            "Xác định thông điệp chính, đối tượng, quyết định mong đợi và hành động tiếp theo.",
+            "Gắn từng tuyên bố về lợi ích với dữ liệu, nguồn, giả định hoặc nhãn minh họa tương ứng.",
+            "Kiểm tra tính nhất quán về thuật ngữ, số liệu, phạm vi sản phẩm và mức độ sẵn sàng triển khai."
+          ]
+        },
+        {
+          match: /project_|projext|business_case/,
+          title: "Phạm vi và mức độ sẵn sàng dự án",
+          summary: "Tách chức năng hiện hữu khỏi kế hoạch, giả định và đề xuất; dùng tài liệu như đầu vào rà soát chứ không thay thế nghiệm thu.",
+          checks: [
+            "Đối chiếu mục tiêu, phạm vi, bên chịu trách nhiệm, phụ thuộc và tiêu chí chấp nhận.",
+            "Kiểm tra mốc thời gian, ngân sách, rủi ro và phiên bản tài liệu được phê duyệt.",
+            "Ghi rõ bằng chứng còn thiếu, quyết định cần đưa ra và bước xác minh tiếp theo."
+          ]
+        },
+        {
+          match: /user_portal|index_customer|customer|membership/,
+          title: "Trải nghiệm khách hàng",
+          summary: "Đánh giá độ rõ của hành trình và ranh giới dữ liệu; không đưa thông tin thật của khách hàng vào bản demo hoặc liên kết chia sẻ công khai.",
+          checks: [
+            "Kiểm tra trạng thái đăng nhập, quyền xem, lỗi xác thực và thông tin chỉ được hiển thị sau khi cấp quyền.",
+            "Đảm bảo bản demo ghi rõ dữ liệu minh họa và hành động nào cần ứng dụng/backend.",
+            "Đối chiếu nội dung quyền lợi, giá và cam kết dịch vụ với chính sách đang được phê duyệt."
+          ]
+        },
+        {
+          match: /./,
+          title: "Nội dung và quyết định",
+          summary: "Đọc mục tiêu, thông tin hỗ trợ và kết quả mong đợi như ba phần riêng; kiểm chứng dữ liệu trước khi dùng để ra quyết định.",
+          checks: [
+            "Xác định đối tượng, phạm vi và thời điểm mà nội dung mô tả.",
+            "Tìm nguồn, giả định và giới hạn cho các con số hoặc tuyên bố quan trọng.",
+            "Ghi lại điểm cần xác minh và bước tiếp theo có người chịu trách nhiệm."
+          ]
+        }
+      ];
+      const profile = contentProfiles.find((item) => item.match.test(contentPageKey));
+      const pageTitle = mainContent.querySelector("h1")?.textContent.trim()
+        || document.title.trim()
+        || contentPageKey.split("/").pop();
+      const sections = [...mainContent.querySelectorAll("h2")]
+        .map((heading) => heading.textContent.trim())
+        .filter(Boolean);
+      const distinctSections = [...new Set(sections)].slice(0, 6);
+      contentAnalysis = {
+        profile,
+        pageTitle,
+        sections: distinctSections,
+        metrics: {
+          sections: mainContent.querySelectorAll("section").length,
+          tables: mainContent.querySelectorAll("table").length,
+          forms: mainContent.querySelectorAll("form").length
+        }
+      };
     }
 
     for (const table of document.querySelectorAll("main table, [role=\"main\"] table")) {
@@ -369,12 +544,59 @@
       const guide = document.createElement("details");
       guide.className = "petcare-page-guide";
       const guideSummary = document.createElement("summary");
-      guideSummary.innerHTML = "<span>▤ Hướng dẫn chi tiết trang</span><span class=\"petcare-page-guide-hint\">Phạm vi · quy trình · điểm kiểm tra</span>";
+      guideSummary.innerHTML = "<span>▤ Phân tích nội dung & hướng dẫn sử dụng</span><span class=\"petcare-page-guide-hint\">Phạm vi · cấu trúc · điểm kiểm tra</span>";
       const guideBody = document.createElement("div");
       guideBody.className = "petcare-page-guide-body";
       const intro = document.createElement("p");
       intro.className = "petcare-page-guide-intro";
       intro.textContent = `${pageEntry[0]} — ${guideContent.intro}`;
+      const guideSections = [intro];
+
+      if (contentAnalysis) {
+        const analysis = document.createElement("section");
+        analysis.className = "petcare-content-analysis";
+        const analysisHeading = document.createElement("h2");
+        analysisHeading.textContent = contentAnalysis.profile.title;
+        const analysisSummary = document.createElement("p");
+        analysisSummary.className = "petcare-content-analysis-summary";
+        analysisSummary.textContent = `${contentAnalysis.pageTitle}. ${contentAnalysis.profile.summary}`;
+
+        const metrics = document.createElement("ul");
+        metrics.className = "petcare-content-analysis-metrics";
+        for (const [label, value] of [
+          ["Phần nội dung", contentAnalysis.metrics.sections],
+          ["Bảng dữ liệu", contentAnalysis.metrics.tables],
+          ["Biểu mẫu", contentAnalysis.metrics.forms]
+        ]) {
+          const metric = document.createElement("li");
+          const valueElement = document.createElement("strong");
+          valueElement.textContent = String(value);
+          const labelElement = document.createElement("span");
+          labelElement.textContent = label;
+          metric.append(valueElement, labelElement);
+          metrics.append(metric);
+        }
+
+        const outline = document.createElement("p");
+        outline.className = "petcare-content-analysis-outline";
+        outline.textContent = contentAnalysis.sections.length
+          ? `Các chủ đề chính hiện có: ${contentAnalysis.sections.join(" · ")}.`
+          : "Trang chưa có tiêu đề mục H2 để tạo dàn ý tự động; hãy xác định phạm vi trực tiếp từ nội dung trang.";
+
+        const analysisChecks = document.createElement("ul");
+        analysisChecks.className = "petcare-content-analysis-checks";
+        for (const item of contentAnalysis.profile.checks) {
+          const listItem = document.createElement("li");
+          listItem.textContent = item;
+          analysisChecks.append(listItem);
+        }
+        analysis.append(analysisHeading, analysisSummary, metrics, outline, analysisChecks);
+        const metricsNote = document.createElement("p");
+        metricsNote.className = "petcare-content-analysis-note";
+        metricsNote.textContent = "Các con số mô tả cấu trúc HTML tại thời điểm mở trang; nội dung nạp sau khi tìm kiếm, chọn nguồn hoặc thao tác có thể chưa được tính. Đây không phải điểm chất lượng hay xác nhận độ chính xác.";
+        analysis.append(metricsNote);
+        guideSections.push(analysis);
+      }
 
       const guideColumns = document.createElement("div");
       guideColumns.className = "petcare-page-guide-columns";
@@ -414,7 +636,8 @@
         related.append(link);
         if (related.childElementCount >= 5) break;
       }
-      guideBody.append(intro, guideColumns, related);
+      guideSections.push(guideColumns, related);
+      guideBody.append(...guideSections);
       guide.append(guideSummary, guideBody);
       header.after(guide);
     }

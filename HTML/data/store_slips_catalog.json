@@ -1,0 +1,362 @@
+[
+  {
+    "id": "ban-giao-don-da-thanh-toan",
+    "number": 1,
+    "title": "Bàn giao đơn khách đã thanh toán",
+    "problem": "Ngăn giao nhầm hoặc giao hàng khi đơn chưa trả đủ.",
+    "category": "Bán hàng & bàn giao khách",
+    "permission": "sales.manage",
+    "page": "phieu-xuat-hang.html"
+  },
+  {
+    "id": "giao-hang-con-thieu",
+    "number": 2,
+    "title": "Giao một phần đơn hàng",
+    "problem": "Ghi nhận phần hàng giao trước và phần còn thiếu để tránh thất lạc công nợ hàng.",
+    "category": "Bán hàng & bàn giao khách",
+    "permission": "sales.manage",
+    "page": "giao-hang-con-thieu.html"
+  },
+  {
+    "id": "doi-hang-loi-cho-khach",
+    "number": 3,
+    "title": "Đổi hàng lỗi cho khách",
+    "problem": "Kiểm soát hàng thay thế sau khi xác minh lỗi sản phẩm.",
+    "category": "Bán hàng & bàn giao khách",
+    "permission": "sales.manage",
+    "page": "doi-hang-loi-cho-khach.html"
+  },
+  {
+    "id": "cap-hang-bao-hanh",
+    "number": 4,
+    "title": "Cấp hàng bảo hành",
+    "problem": "Theo dõi vật tư hoặc sản phẩm xuất phục vụ bảo hành.",
+    "category": "Bán hàng & bàn giao khách",
+    "permission": "sales.manage",
+    "page": "cap-hang-bao-hanh.html"
+  },
+  {
+    "id": "gui-mau-thu-san-pham",
+    "number": 5,
+    "title": "Gửi mẫu thử sản phẩm",
+    "problem": "Quản lý mẫu trải nghiệm gửi khách và tránh thất thoát hàng mẫu.",
+    "category": "Bán hàng & bàn giao khách",
+    "permission": "sales.manage",
+    "page": "gui-mau-thu-san-pham.html"
+  },
+  {
+    "id": "tang-qua-khuyen-mai",
+    "number": 6,
+    "title": "Xuất quà khuyến mãi",
+    "problem": "Theo dõi quà tặng theo chương trình và đối tượng nhận.",
+    "category": "Bán hàng & bàn giao khách",
+    "permission": "sales.manage",
+    "page": "tang-qua-khuyen-mai.html"
+  },
+  {
+    "id": "cho-khach-muon-hang-demo",
+    "number": 7,
+    "title": "Cho khách mượn hàng demo",
+    "problem": "Quản lý hàng cho mượn và thời hạn hoàn trả.",
+    "category": "Bán hàng & bàn giao khách",
+    "permission": "sales.manage",
+    "page": "cho-khach-muon-hang-demo.html"
+  },
+  {
+    "id": "muon-hang-chup-anh",
+    "number": 8,
+    "title": "Mượn hàng chụp ảnh nội dung",
+    "problem": "Theo dõi sản phẩm rời kho để chụp ảnh, quay video hoặc đăng nội dung.",
+    "category": "Kho & vận hành cửa hàng",
+    "permission": "inventory.manage",
+    "page": "muon-hang-chup-anh.html"
+  },
+  {
+    "id": "cap-hang-trung-bay",
+    "number": 9,
+    "title": "Cấp hàng trưng bày",
+    "problem": "Ghi nhận hàng chuyển khỏi khu lưu kho sang quầy trưng bày.",
+    "category": "Kho & vận hành cửa hàng",
+    "permission": "inventory.manage",
+    "page": "cap-hang-trung-bay.html"
+  },
+  {
+    "id": "chuyen-hang-giua-cua-hang",
+    "number": 10,
+    "title": "Chuyển hàng giữa cửa hàng",
+    "problem": "Xác định điểm đi, điểm đến và người chịu trách nhiệm hàng luân chuyển.",
+    "category": "Kho & vận hành cửa hàng",
+    "permission": "inventory.manage",
+    "page": "chuyen-hang-giua-cua-hang.html"
+  },
+  {
+    "id": "chuyen-hang-ra-kho-ngoai",
+    "number": 11,
+    "title": "Chuyển hàng sang kho ngoài",
+    "problem": "Kiểm soát tồn đang gửi tại kho hoặc đơn vị lưu trữ bên ngoài.",
+    "category": "Kho & vận hành cửa hàng",
+    "permission": "inventory.manage",
+    "page": "chuyen-hang-ra-kho-ngoai.html"
+  },
+  {
+    "id": "cap-hang-gian-hang-su-kien",
+    "number": 12,
+    "title": "Cấp hàng cho gian hàng sự kiện",
+    "problem": "Theo dõi hàng đưa đi hội chợ, sự kiện hoặc điểm bán tạm thời.",
+    "category": "Kho & vận hành cửa hàng",
+    "permission": "inventory.manage",
+    "page": "cap-hang-gian-hang-su-kien.html"
+  },
+  {
+    "id": "lay-mau-kiem-nghiem-noi-bo",
+    "number": 13,
+    "title": "Lấy mẫu kiểm tra chất lượng",
+    "problem": "Lưu vết mẫu trích khỏi lô hàng để kiểm tra nội bộ.",
+    "category": "Chất lượng & kiểm soát rủi ro",
+    "permission": "inventory.manage",
+    "page": "lay-mau-kiem-nghiem-noi-bo.html"
+  },
+  {
+    "id": "gui-mau-phong-thi-nghiem",
+    "number": 14,
+    "title": "Gửi mẫu đến phòng kiểm nghiệm",
+    "problem": "Theo dõi mẫu, đơn vị tiếp nhận và hồ sơ kiểm nghiệm.",
+    "category": "Chất lượng & kiểm soát rủi ro",
+    "permission": "inventory.manage",
+    "page": "gui-mau-phong-thi-nghiem.html"
+  },
+  {
+    "id": "gui-hang-bao-hanh-nha-cung-cap",
+    "number": 15,
+    "title": "Gửi hàng bảo hành nhà cung cấp",
+    "problem": "Theo dõi hàng gửi nhà cung cấp sửa chữa hoặc đổi bảo hành.",
+    "category": "Kho & vận hành cửa hàng",
+    "permission": "inventory.manage",
+    "page": "gui-hang-bao-hanh-nha-cung-cap.html"
+  },
+  {
+    "id": "tra-hang-thu-hoi-nha-cung-cap",
+    "number": 16,
+    "title": "Trả lô hàng bị thu hồi",
+    "problem": "Ghi nhận lô hàng thu hồi được xuất trả nhà cung cấp.",
+    "category": "Chất lượng & kiểm soát rủi ro",
+    "permission": "inventory.manage",
+    "page": "tra-hang-thu-hoi-nha-cung-cap.html"
+  },
+  {
+    "id": "tra-hang-hu-nha-cung-cap",
+    "number": 17,
+    "title": "Trả hàng hư hỏng nhà cung cấp",
+    "problem": "Theo dõi hàng lỗi đầu vào khi hoàn trả đối tác.",
+    "category": "Kho & vận hành cửa hàng",
+    "permission": "inventory.manage",
+    "page": "tra-hang-hu-nha-cung-cap.html"
+  },
+  {
+    "id": "huy-hang-het-han",
+    "number": 18,
+    "title": "Hủy hàng hết hạn",
+    "problem": "Lưu chứng từ hàng quá hạn đưa khỏi khu vực kinh doanh để xử lý an toàn.",
+    "category": "Chất lượng & kiểm soát rủi ro",
+    "permission": "inventory.manage",
+    "page": "huy-hang-het-han.html"
+  },
+  {
+    "id": "huy-hang-vo-hong",
+    "number": 19,
+    "title": "Hủy hàng vỡ hỏng",
+    "problem": "Ghi nhận hàng hư hỏng không thể bán và người phê duyệt xử lý.",
+    "category": "Chất lượng & kiểm soát rủi ro",
+    "permission": "inventory.manage",
+    "page": "huy-hang-vo-hong.html"
+  },
+  {
+    "id": "cach-ly-hang-nghi-nhiem",
+    "number": 20,
+    "title": "Cách ly hàng nghi nhiễm bẩn",
+    "problem": "Di chuyển lô có nguy cơ nhiễm bẩn ra khỏi hàng bán thông thường.",
+    "category": "Chất lượng & kiểm soát rủi ro",
+    "permission": "inventory.manage",
+    "page": "cach-ly-hang-nghi-nhiem.html"
+  },
+  {
+    "id": "xuat-hang-thu-hoi-khach",
+    "number": 21,
+    "title": "Xuất hàng phục vụ thu hồi khách",
+    "problem": "Theo dõi hàng thay thế hoặc vật tư xử lý trong quy trình thu hồi sản phẩm.",
+    "category": "Chất lượng & kiểm soát rủi ro",
+    "permission": "sales.manage",
+    "page": "xuat-hang-thu-hoi-khach.html"
+  },
+  {
+    "id": "ghi-nhan-that-thoat-ton-kho",
+    "number": 22,
+    "title": "Ghi nhận thất thoát tồn kho",
+    "problem": "Lập biên bản lượng hàng thiếu, nguyên nhân dự kiến và người xác nhận.",
+    "category": "Chất lượng & kiểm soát rủi ro",
+    "permission": "inventory.manage",
+    "page": "ghi-nhan-that-thoat-ton-kho.html"
+  },
+  {
+    "id": "cap-vat-tu-su-dung-noi-bo",
+    "number": 23,
+    "title": "Cấp vật tư sử dụng nội bộ",
+    "problem": "Theo dõi hàng tiêu hao dùng cho hoạt động cửa hàng thay vì bán.",
+    "category": "Kho & vận hành cửa hàng",
+    "permission": "inventory.manage",
+    "page": "cap-vat-tu-su-dung-noi-bo.html"
+  },
+  {
+    "id": "cap-dung-cu-ve-sinh",
+    "number": 24,
+    "title": "Cấp dụng cụ vệ sinh",
+    "problem": "Kiểm soát vật tư vệ sinh và khu vực được nhận sử dụng.",
+    "category": "Kho & vận hành cửa hàng",
+    "permission": "inventory.manage",
+    "page": "cap-dung-cu-ve-sinh.html"
+  },
+  {
+    "id": "cap-bao-bi-dong-goi",
+    "number": 25,
+    "title": "Cấp bao bì đóng gói",
+    "problem": "Theo dõi bao bì sử dụng cho đơn giao hàng và đóng gói tại quầy.",
+    "category": "Kho & vận hành cửa hàng",
+    "permission": "inventory.manage",
+    "page": "cap-bao-bi-dong-goi.html"
+  },
+  {
+    "id": "cap-vat-tu-bao-tri",
+    "number": 26,
+    "title": "Cấp vật tư bảo trì cửa hàng",
+    "problem": "Ghi nhận vật tư dùng sửa chữa thiết bị và cơ sở vật chất.",
+    "category": "Kho & vận hành cửa hàng",
+    "permission": "inventory.manage",
+    "page": "cap-vat-tu-bao-tri.html"
+  },
+  {
+    "id": "cap-phu-kien-cong-nghe",
+    "number": 27,
+    "title": "Cấp phụ kiện công nghệ",
+    "problem": "Bàn giao thiết bị/phụ kiện cho nhân viên kỹ thuật hoặc quầy sử dụng.",
+    "category": "Kho & vận hành cửa hàng",
+    "permission": "inventory.manage",
+    "page": "cap-phu-kien-cong-nghe.html"
+  },
+  {
+    "id": "cap-van-phong-pham",
+    "number": 28,
+    "title": "Cấp văn phòng phẩm",
+    "problem": "Theo dõi vật tư hành chính xuất dùng cho từng bộ phận.",
+    "category": "Kho & vận hành cửa hàng",
+    "permission": "inventory.manage",
+    "page": "cap-van-phong-pham.html"
+  },
+  {
+    "id": "cap-vat-tu-cham-soc-thuong-ngay",
+    "number": 29,
+    "title": "Cấp vật tư chăm sóc thường ngày",
+    "problem": "Cấp định lượng vật tư tiêu hao phục vụ lịch chăm sóc thú cưng.",
+    "category": "Chăm sóc & thú y",
+    "permission": "care.manage",
+    "page": "cap-vat-tu-cham-soc-thuong-ngay.html"
+  },
+  {
+    "id": "cap-vat-tu-dieu-tri-thu-y",
+    "number": 30,
+    "title": "Cấp vật tư điều trị thú y",
+    "problem": "Ghi nhận vật tư sử dụng theo hồ sơ và chỉ định chuyên môn.",
+    "category": "Chăm sóc & thú y",
+    "permission": "health.manage",
+    "page": "cap-vat-tu-dieu-tri-thu-y.html"
+  },
+  {
+    "id": "cap-bo-cach-ly-thu-cung",
+    "number": 31,
+    "title": "Cấp bộ vật tư cách ly thú cưng",
+    "problem": "Kiểm soát vật tư phòng hộ và khu cách ly khi tiếp nhận thú nghi bệnh.",
+    "category": "Chăm sóc & thú y",
+    "permission": "health.manage",
+    "page": "cap-bo-cach-ly-thu-cung.html"
+  },
+  {
+    "id": "xuat-vat-tu-van-chuyen-khan-cap",
+    "number": 32,
+    "title": "Xuất vật tư vận chuyển khẩn cấp",
+    "problem": "Chuẩn bị vật tư và điều kiện vận chuyển thú cưng an toàn khi có sự cố.",
+    "category": "Bàn giao thú cưng",
+    "permission": "care.manage",
+    "page": "xuat-vat-tu-van-chuyen-khan-cap.html"
+  },
+  {
+    "id": "xuat-hang-quyen-gop-cuu-ho",
+    "number": 33,
+    "title": "Xuất hàng quyên góp cứu hộ",
+    "problem": "Lưu danh mục và đơn vị nhận vật tư cứu hộ động vật.",
+    "category": "Kho & vận hành cửa hàng",
+    "permission": "inventory.manage",
+    "page": "xuat-hang-quyen-gop-cuu-ho.html"
+  },
+  {
+    "id": "xuat-hang-ho-tro-nha-nuoi-tam",
+    "number": 34,
+    "title": "Xuất hàng hỗ trợ nhà nuôi tạm",
+    "problem": "Theo dõi vật tư hỗ trợ chăm sóc thú cưng trong thời gian lưu tạm.",
+    "category": "Chăm sóc & thú y",
+    "permission": "care.manage",
+    "page": "xuat-hang-ho-tro-nha-nuoi-tam.html"
+  },
+  {
+    "id": "ban-giao-thuoc-theo-chi-dinh",
+    "number": 35,
+    "title": "Bàn giao thuốc theo chỉ định",
+    "problem": "Ghi nhận vật tư/thuốc bàn giao cùng hướng dẫn của nhân sự thú y.",
+    "category": "Chăm sóc & thú y",
+    "permission": "health.manage",
+    "page": "ban-giao-thuoc-theo-chi-dinh.html"
+  },
+  {
+    "id": "ban-giao-bo-nhan-nuoi",
+    "number": 36,
+    "title": "Bàn giao bộ nhận nuôi thú cưng",
+    "problem": "Ghi nhận thú cưng và bộ vật dụng bàn giao khi hoàn tất nhận nuôi.",
+    "category": "Bàn giao thú cưng",
+    "permission": "sales.manage",
+    "page": "ban-giao-bo-nhan-nuoi.html"
+  },
+  {
+    "id": "cap-vat-tu-dich-vu-lam-dep",
+    "number": 37,
+    "title": "Cấp vật tư dịch vụ làm đẹp",
+    "problem": "Theo dõi vật tư tiêu hao sử dụng cho lịch tắm, cắt tỉa hoặc chăm sóc.",
+    "category": "Chăm sóc & thú y",
+    "permission": "care.manage",
+    "page": "cap-vat-tu-dich-vu-lam-dep.html"
+  },
+  {
+    "id": "tra-do-ca-nhan-thu-cung-luu-tru",
+    "number": 38,
+    "title": "Trả đồ cá nhân thú cưng lưu trú",
+    "problem": "Đối chiếu và bàn giao lại đồ gửi kèm khi kết thúc lưu trú.",
+    "category": "Bán hàng & bàn giao khách",
+    "permission": "services.manage",
+    "page": "tra-do-ca-nhan-thu-cung-luu-tru.html"
+  },
+  {
+    "id": "chuyen-thu-cung-den-co-so-tiep-nhan",
+    "number": 39,
+    "title": "Chuyển thú cưng đến cơ sở tiếp nhận",
+    "problem": "Lưu tình trạng và người nhận khi chuyển thú cưng sang phòng khám/cơ sở khác.",
+    "category": "Bàn giao thú cưng",
+    "permission": "health.manage",
+    "page": "chuyen-thu-cung-den-co-so-tiep-nhan.html"
+  },
+  {
+    "id": "xuat-vat-tu-ung-pho-thien-tai",
+    "number": 40,
+    "title": "Xuất vật tư ứng phó thiên tai",
+    "problem": "Theo dõi vật tư ưu tiên cho kế hoạch sơ tán và bảo vệ thú cưng.",
+    "category": "Chất lượng & kiểm soát rủi ro",
+    "permission": "inventory.manage",
+    "page": "xuat-vat-tu-ung-pho-thien-tai.html"
+  }
+]

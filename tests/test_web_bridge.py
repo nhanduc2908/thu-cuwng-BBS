@@ -121,6 +121,13 @@ def test_local_bridge_serves_the_split_project_website(tmp_path: Path):
             "TRrang chính/user_portal.html",
             "TRrang chính/petcare_management.html",
             "TRrang chính/nutrition_products_dog.html",
+            "Phiếu xuất/index.html",
+            "Phiếu xuất/phieu-xuat-hang.html",
+            "Phiếu xuất/doi-hang-loi-cho-khach.html",
+            "scripts/store_slip_form.js",
+            "scripts/store_slip_index.js",
+            "styles/store_slip.css",
+            "data/store_slips_catalog.json",
             "Trang hỗ trợ/data_explorer.html",
             "Trang hỗ trợ/admin_store_management.html",
             "Trang hỗ trợ/Module/index.html",
@@ -164,6 +171,20 @@ def test_local_bridge_serves_the_split_project_website(tmp_path: Path):
                 assert b"petcare_customer_session" not in payload
                 assert b"role-select" not in payload
                 assert b"Pepper" not in payload
+            elif path == "Phiếu xuất/phieu-xuat-hang.html":
+                assert b"/sales/orders/" in payload
+                assert b"/store/slips" in payload
+                assert b"window.print()" in payload
+                assert "không phải hóa đơn điện tử".encode("utf-8") in payload
+            elif path == "Phiếu xuất/index.html":
+                assert "40 mẫu".encode("utf-8") in payload
+            elif path == "Phiếu xuất/doi-hang-loi-cho-khach.html":
+                assert b'data-slip-type="doi-hang-loi-cho-khach"' in payload
+            elif path == "scripts/store_slip_form.js":
+                assert b"/store/slip-types/" in payload
+                assert b"/store/slips" in payload
+            elif path == "data/store_slips_catalog.json":
+                assert len(json.loads(payload)) == 40
             elif path == "Trang hỗ trợ/data_explorer.html":
                 assert b"catalog_manifest.json" in payload
                 assert "Chọn nguồn dữ liệu".encode("utf-8") in payload
@@ -314,6 +335,351 @@ def test_local_bridge_allows_same_default_account_for_desktop_and_web(tmp_path: 
         bridge.stop()
 
 
+def test_dispatch_details_require_sales_permission_and_only_return_requested_order(tmp_path: Path):
+    database_path = tmp_path / "dispatch.db"
+    database = Database(database_path)
+    admin_id = database.create_initial_admin(
+        "dispatch-admin", "Dispatch Admin", "StrongPass!2026"
+    )
+    database.create_user(
+        "dispatch-sales",
+        "Dispatch Sales",
+        "SalesPass!2026",
+        "SALES",
+        actor_id=admin_id,
+    )
+    database.create_user(
+        "dispatch-analyst",
+        "Dispatch Analyst",
+        "AnalystPass!2026",
+        "REPORT_ANALYST",
+        actor_id=admin_id,
+    )
+    database.set_actor(admin_id)
+    customer_id = database.save_customer({
+        "customer_code": "CUS-DISPATCH",
+        "name": "Nguyễn An",
+        "phone": "0900000000",
+        "email": "an@example.test",
+        "address": "Hà Nội",
+        "note": "",
+    })
+    animal_ids = []
+    order_ids = []
+    for index in range(2):
+        animal_ids.append(database.save_animal({
+            "animal_code": f"PET-DISPATCH-{index}",
+            "name": f"Milo {index}",
+            "species": "Mèo",
+            "breed": "Mèo ta",
+            "gender": "Đực",
+            "birth_date": "2025-01-10",
+            "color": "Vàng",
+            "weight": 3.5,
+            "origin": "Trong nước",
+            "purchase_price": 1_000_000,
+            "sale_price": 2_000_000,
+            "status": "AVAILABLE",
+            "health_status": "Bình thường",
+            "description": "",
+        }))
+        order_id = database.create_sales_order({
+            "order_code": f"SO-DISPATCH-{index}",
+            "customer_id": customer_id,
+            "animal_ids": [animal_ids[-1]],
+            "ordered_at": "2026-01-02",
+            "note": "",
+        })
+        order_ids.append(order_id)
+    database.add_payment(order_ids[0], {
+        "amount": 2_000_000,
+        "method": "BANK_TRANSFER",
+        "paid_at": "2026-01-03",
+        "reference": "private-reference",
+        "note": "private-payment-note",
+    })
+    database.close()
+
+    bridge = LocalAdminBridge(database_path, tmp_path / "HTML", port=0)
+    bridge.start()
+    try:
+        origin = bridge.base_url
+        dispatch_url = f"{origin}/api/sales/orders/{order_ids[0]}/dispatch"
+        anonymous = build_opener()
+        status, _, _ = _request(anonymous, dispatch_url)
+        assert status == 401
+
+        analyst = build_opener(HTTPCookieProcessor(CookieJar()))
+        status, _, _ = _request(
+            analyst,
+            f"{origin}/api/login",
+            "POST",
+            {"username": "dispatch-analyst", "password": "AnalystPass!2026"},
+        )
+        assert status == 200
+        status, _, _ = _request(analyst, dispatch_url)
+        assert status == 403
+
+        sales = build_opener(HTTPCookieProcessor(CookieJar()))
+        status, _, _ = _request(
+            sales,
+            f"{origin}/api/login",
+            "POST",
+            {"username": "dispatch-sales", "password": "SalesPass!2026"},
+        )
+        assert status == 200
+        status, _, payload = _request(sales, dispatch_url)
+        assert status == 200
+        details = json.loads(payload)
+        assert details["order"]["id"] == order_ids[0]
+        assert details["order"]["status"] == "PAID"
+        assert details["issuable"] is True
+        assert details["paid_amount"] == 2_000_000
+        assert details["balance"] == 0
+        assert [item["animal_code"] for item in details["animals"]] == ["PET-DISPATCH-0"]
+        assert "private-reference" not in payload.decode("utf-8")
+        assert "private-payment-note" not in payload.decode("utf-8")
+
+        status, _, payload = _request(
+            sales, f"{origin}/api/sales/orders/{order_ids[1]}/dispatch"
+        )
+        assert status == 200
+        unpaid = json.loads(payload)
+        assert unpaid["order"]["id"] == order_ids[1]
+        assert unpaid["issuable"] is False
+        assert unpaid["paid_amount"] == 0
+        assert [item["animal_code"] for item in unpaid["animals"]] == ["PET-DISPATCH-1"]
+
+        status, _, _ = _request(sales, f"{origin}/api/sales/orders/999999/dispatch")
+        assert status == 404
+    finally:
+        bridge.stop()
+
+
+def test_store_slip_records_are_persisted_and_permission_scoped(tmp_path: Path):
+    database_path = tmp_path / "store-slips.db"
+    database = Database(database_path)
+    admin_id = database.create_initial_admin(
+        "slip-admin", "Slip Admin", "StrongPass!2026"
+    )
+    database.create_user(
+        "slip-sales", "Slip Sales", "SalesPass!2026", "SALES", actor_id=admin_id
+    )
+    database.create_user(
+        "slip-inventory",
+        "Slip Inventory",
+        "InventoryPass!2026",
+        "INVENTORY_MANAGER",
+        actor_id=admin_id,
+    )
+    database.create_user(
+        "slip-analyst",
+        "Slip Analyst",
+        "AnalystPass!2026",
+        "REPORT_ANALYST",
+        actor_id=admin_id,
+    )
+    database.set_actor(admin_id)
+    customer_id = database.save_customer({
+        "customer_code": "CUS-SLIP",
+        "name": "Nguyễn An",
+        "phone": "0900000000",
+        "email": "an@example.test",
+        "address": "Hà Nội",
+        "note": "",
+    })
+    animal_id = database.save_animal({
+        "animal_code": "PET-SLIP-PAID",
+        "name": "Milo",
+        "species": "Mèo",
+        "breed": "Mèo ta",
+        "gender": "Đực",
+        "birth_date": "2025-01-10",
+        "color": "Vàng",
+        "weight": 3.5,
+        "origin": "Trong nước",
+        "purchase_price": 1_000_000,
+        "sale_price": 2_000_000,
+        "status": "AVAILABLE",
+        "health_status": "Bình thường",
+        "description": "",
+    })
+    order_id = database.create_sales_order({
+        "order_code": "SO-SLIP-PAID",
+        "customer_id": customer_id,
+        "animal_ids": [animal_id],
+        "ordered_at": "2026-01-02",
+        "note": "",
+    })
+    database.add_payment(order_id, {
+        "amount": 2_000_000,
+        "method": "CASH",
+        "paid_at": "2026-01-03",
+        "reference": "",
+        "note": "",
+    })
+    unpaid_animal_id = database.save_animal({
+        "animal_code": "PET-SLIP-UNPAID",
+        "name": "Luna",
+        "species": "Mèo",
+        "breed": "Mèo ta",
+        "gender": "Cái",
+        "birth_date": "2025-02-10",
+        "color": "Xám",
+        "weight": 3,
+        "origin": "Trong nước",
+        "purchase_price": 1_000_000,
+        "sale_price": 1_500_000,
+        "status": "AVAILABLE",
+        "health_status": "Bình thường",
+        "description": "",
+    })
+    unpaid_order_id = database.create_sales_order({
+        "order_code": "SO-SLIP-UNPAID",
+        "customer_id": customer_id,
+        "animal_ids": [unpaid_animal_id],
+        "ordered_at": "2026-01-02",
+        "note": "",
+    })
+    database.close()
+
+    bridge = LocalAdminBridge(database_path, tmp_path / "HTML", port=0)
+    bridge.start()
+    try:
+        origin = bridge.base_url
+        anonymous = build_opener()
+        type_url = f"{origin}/api/store/slip-types/ban-giao-don-da-thanh-toan"
+        status, _, _ = _request(anonymous, type_url)
+        assert status == 401
+
+        analyst = build_opener(HTTPCookieProcessor(CookieJar()))
+        status, _, _ = _request(
+            analyst,
+            f"{origin}/api/login",
+            "POST",
+            {"username": "slip-analyst", "password": "AnalystPass!2026"},
+        )
+        assert status == 200
+        status, _, _ = _request(analyst, type_url)
+        assert status == 403
+        status, _, _ = _request(
+            analyst,
+            f"{origin}/api/store/slips",
+            "POST",
+            {"type": "ban-giao-don-da-thanh-toan", "payload": {}},
+        )
+        assert status == 403
+
+        sales = build_opener(HTTPCookieProcessor(CookieJar()))
+        status, _, _ = _request(
+            sales,
+            f"{origin}/api/login",
+            "POST",
+            {"username": "slip-sales", "password": "SalesPass!2026"},
+        )
+        assert status == 200
+        status, _, payload = _request(sales, type_url)
+        assert status == 200
+        assert json.loads(payload)["type"]["title"] == "Bàn giao đơn khách đã thanh toán"
+
+        paid_payload = {
+            "issue_date": "2026-10-12",
+            "reference": "SO-SLIP-PAID",
+            "party": "Nguyễn An",
+            "item_code": "PET-SLIP-PAID",
+            "item_name": "Milo",
+            "quantity": 1,
+            "unit": "thú cưng",
+            "reason": "Đơn đã thanh toán đủ.",
+            "destination": "Hà Nội",
+            "receiver": "Nguyễn An",
+            "notes": "Test lưu phiếu",
+        }
+        status, _, payload = _request(
+            sales,
+            f"{origin}/api/store/slips",
+            "POST",
+            {
+                "type": "ban-giao-don-da-thanh-toan",
+                "linked_order_id": order_id,
+                "payload": paid_payload,
+            },
+        )
+        assert status == 201
+        saved = json.loads(payload)["record"]
+        assert saved["linked_order_id"] == order_id
+        assert saved["payload"]["reference"] == "SO-SLIP-PAID"
+
+        status, _, payload = _request(
+            sales,
+            f"{origin}/api/store/slips?type=ban-giao-don-da-thanh-toan",
+        )
+        assert status == 200
+        assert json.loads(payload)["records"][0]["slip_code"] == saved["code"]
+        status, _, payload = _request(sales, f"{origin}/api/store/slips/{saved['id']}")
+        assert status == 200
+        assert json.loads(payload)["record"]["payload"] == saved["payload"]
+
+        status, _, _ = _request(
+            sales,
+            f"{origin}/api/store/slips",
+            "POST",
+            {
+                "type": "ban-giao-don-da-thanh-toan",
+                "linked_order_id": unpaid_order_id,
+                "payload": paid_payload,
+            },
+        )
+        assert status == 400
+        status, _, _ = _request(
+            sales,
+            f"{origin}/api/store/slips",
+            "POST",
+            {
+                "type": "ban-giao-don-da-thanh-toan",
+                "linked_order_id": order_id,
+                "payload": {**paid_payload, "unexpected": "value"},
+            },
+        )
+        assert status == 400
+
+        inventory = build_opener(HTTPCookieProcessor(CookieJar()))
+        status, _, _ = _request(
+            inventory,
+            f"{origin}/api/login",
+            "POST",
+            {"username": "slip-inventory", "password": "InventoryPass!2026"},
+        )
+        assert status == 200
+        status, _, payload = _request(
+            inventory,
+            f"{origin}/api/store/slips",
+            "POST",
+            {
+                "type": "muon-hang-chup-anh",
+                "payload": {
+                    "issue_date": "2026-10-12",
+                    "reference": "MEDIA-001",
+                    "item_code": "FOOD-001",
+                    "item_name": "Thức ăn mẫu",
+                    "quantity": 2,
+                    "unit": "gói",
+                    "destination": "Phòng chụp",
+                    "reason": "Cho mượn chụp ảnh sản phẩm.",
+                    "receiver": "Nhân viên nội dung",
+                },
+            },
+        )
+        assert status == 201
+        inventory_slip = json.loads(payload)["record"]
+        status, _, _ = _request(
+            sales, f"{origin}/api/store/slips/{inventory_slip['id']}"
+        )
+        assert status == 403
+    finally:
+        bridge.stop()
+
+
 def test_customer_portal_registration_approval_invite_and_scoped_records(tmp_path: Path):
     database_path = tmp_path / "customer-portal.db"
     database = Database(database_path)
@@ -341,7 +707,14 @@ def test_customer_portal_registration_approval_invite_and_scoped_records(tmp_pat
         {"customer_id": customer_one, "name": "Pet One", "species": "Dog"}
     )
     database.customers.save_pet(
-        {"customer_id": customer_two, "name": "Pet Two", "species": "Cat"}
+        {
+            "customer_id": customer_two,
+            "name": "Pet Two",
+            "species": "Cat",
+            "health_status": "Cần theo dõi",
+            "body_condition": "Hơi thừa cân",
+            "activity_level": "Thấp",
+        }
     )
     database.close()
 
@@ -446,6 +819,9 @@ def test_customer_portal_registration_approval_invite_and_scoped_records(tmp_pat
         customer_two_portal = json.loads(payload)
         assert customer_two_portal["customer"]["customer_code"] == "PORTAL-002"
         assert [pet["name"] for pet in customer_two_portal["pets"]] == ["Pet Two"]
+        assert customer_two_portal["pets"][0]["health_status"] == "Cần theo dõi"
+        assert customer_two_portal["pets"][0]["body_condition"] == "Hơi thừa cân"
+        assert customer_two_portal["pets"][0]["activity_level"] == "Thấp"
 
         status, _, invite_payload = _request(
             staff,

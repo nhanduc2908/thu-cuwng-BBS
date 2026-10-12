@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#12372b">
+  <meta name="description" content="Lưu và in phiếu bàn giao theo đơn hàng đã thanh toán đủ trong hệ thống PetCare.">
+  <title>Phiếu bàn giao đơn đã thanh toán · Bông Bông Pet Care</title>
+  <style>
+    :root{color-scheme:light;--ink:#18372b;--muted:#6b7d73;--line:#dce7df;--paper:#f2f7f3;--white:#fff;--green:#176b4b;--green-dark:#104432;--gold:#c89b4b;--red:#a73535;--shadow:0 18px 50px rgba(18,55,43,.09)}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 "Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,sans-serif}
+    button,input,select,textarea{font:inherit}
+    a{color:inherit}
+    .shell{width:min(1120px,calc(100% - 32px));margin:0 auto;padding:28px 0 54px}
+    .topline{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px}
+    .brand{font-weight:850;letter-spacing:-.04em}.brand span{color:var(--green)}
+    .topline a{color:var(--green);font-size:13px;font-weight:750;text-decoration:none}
+    .hero{padding:28px;border-radius:22px;background:linear-gradient(120deg,#103629,#23714f);color:#f5fbf6;box-shadow:var(--shadow)}
+    .eyebrow{color:#d8e9ad;font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+    h1{margin:5px 0 8px;font-size:clamp(27px,4vw,40px);line-height:1.12;letter-spacing:-.045em}
+    .hero p{max-width:720px;margin:0;color:#d5e4da}
+    .panel{margin-top:18px;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--white);box-shadow:var(--shadow)}
+    .panel h2{margin:0 0 14px;font-size:20px;letter-spacing:-.025em}
+    .auth-grid,.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:end}
+    .field{display:grid;gap:6px;min-width:0}.field label{font-size:12px;font-weight:800;color:var(--muted)}
+    input,select,textarea{width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);outline:none}
+    input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(23,107,75,.12)}
+    textarea{min-height:78px;resize:vertical}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border:1px solid transparent;border-radius:10px;background:var(--green);color:#fff;font-weight:800;cursor:pointer;transition:transform .18s ease,background .18s ease,box-shadow .18s ease}
+    .btn:hover:not(:disabled){transform:translateY(-2px);background:var(--green-dark);box-shadow:0 8px 18px rgba(23,107,75,.2)}
+    .btn:disabled{opacity:.48;cursor:not-allowed}.btn.secondary{border-color:var(--line);background:#fff;color:var(--ink)}.btn.secondary:hover:not(:disabled){background:#f4f8f4;box-shadow:none}
+    .toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px}
+    .status{margin-top:14px;padding:11px 13px;border-radius:10px;background:#eef5f0;color:#315a43;font-size:13px}
+    .status.error{background:#fff0ee;color:var(--red)}.status[hidden], [hidden]{display:none!important}
+    .badge{display:inline-flex;padding:4px 9px;border-radius:999px;background:#eef4ef;color:#53665b;font-size:11px;font-weight:850}
+    .badge.paid{background:#e5f5eb;color:#176b4b}.badge.blocked{background:#fff0e5;color:#89501d}
+    .slip{display:none;margin-top:20px;padding:clamp(18px,4vw,38px);border:1px solid var(--line);border-radius:18px;background:#fff}
+    .slip.visible{display:block}
+    .slip-head{display:flex;justify-content:space-between;gap:20px;padding-bottom:20px;border-bottom:2px solid var(--ink)}
+    .store-name{font-size:22px;font-weight:900;letter-spacing:-.04em}.store-sub{color:var(--muted);font-size:12px}
+    .slip-title{text-align:right}.slip-title h2{margin:0;font-size:25px;letter-spacing:-.04em}.slip-title p{margin:3px 0;color:var(--muted);font-size:12px}
+    .info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 24px;padding:19px 0}
+    .info-line{font-size:13px}.info-line strong{color:var(--muted);font-weight:700}
+    .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+    table{width:100%;border-collapse:collapse;min-width:680px}
+    th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}
+    th{background:#f1f6f2;color:#50665a;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+    tbody tr{transition:background .16s ease}tbody tr:hover{background:#f4faf5}tbody tr:last-child td{border-bottom:0}
+    .num{text-align:right;white-space:nowrap}
+    .totals{width:min(370px,100%);margin:16px 0 0 auto}
+    .total-row{display:flex;justify-content:space-between;gap:18px;padding:6px 0;color:var(--muted);font-size:13px}
+    .total-row.grand{margin-top:4px;padding-top:12px;border-top:1px solid var(--line);color:var(--ink);font-size:17px;font-weight:900}
+    .receiver-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:19px}
+    .signatures{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:30px;text-align:center}
+    .signatures div{min-height:90px;font-size:12px;font-weight:800}.signatures span{display:block;margin-top:54px;color:var(--muted);font-weight:500}
+    .disclaimer{margin-top:18px;padding:12px 14px;border-left:3px solid var(--gold);background:#fbf7eb;color:#655936;font-size:12px}
+    .footnote{margin-top:14px;color:var(--muted);font-size:11px;text-align:center}
+    @media(max-width:700px){.shell{width:min(100% - 22px,1120px);padding-top:16px}.hero{padding:21px;border-radius:17px}.panel{padding:16px}.auth-grid,.controls{grid-template-columns:1fr}.toolbar{align-items:stretch}.toolbar .btn{flex:1}.slip-head{flex-direction:column}.slip-title{text-align:left}.info-grid,.receiver-grid,.signatures{grid-template-columns:1fr}.signatures{gap:6px}.signatures div{min-height:78px}.signatures span{margin-top:38px}}
+    @media print{@page{size:A4;margin:14mm}body{background:#fff;color:#111;font-size:12px}.shell{width:100%;padding:0}.topline,.hero,.panel,.screen-only,.status{display:none!important}.slip.visible.saved{display:block!important;margin:0;padding:0;border:0;border-radius:0;box-shadow:none}.slip-head{border-color:#222}.table-wrap{overflow:visible;border-color:#999}table{min-width:0}th,td{padding:7px 6px;border-color:#ccc;font-size:10px}th{background:#eee!important;print-color-adjust:exact}.disclaimer{print-color-adjust:exact}.signatures div{min-height:84px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="topline"><div class="brand">Bông Bông <span>Pet Care</span></div><a href="index.html">← Danh mục 40 mẫu phiếu</a></div>
+    <section class="hero">
+      <div class="eyebrow">Mẫu 01 / 40 · Bán hàng &amp; bàn giao khách</div>
+      <h1>Phiếu bàn giao đơn đã thanh toán</h1>
+      <p>Vấn đề xử lý: ngăn giao nhầm hàng hoặc giao hàng khi đơn chưa thanh toán đủ. Chọn đơn thực tế, lưu chứng từ vào SQLite rồi mới in.</p>
+    </section>
+
+    <section id="loginPanel" class="panel" aria-labelledby="loginTitle">
+      <h2 id="loginTitle">Đăng nhập nhân viên</h2>
+      <form id="loginForm" class="auth-grid">
+        <div class="field"><label for="username">Tên đăng nhập</label><input id="username" name="username" autocomplete="username" required></div>
+        <div class="field"><label for="password">Mật khẩu</label><input id="password" name="password" type="password" autocomplete="current-password" required></div>
+        <button class="btn" type="submit">Đăng nhập &amp; tải đơn hàng</button>
+      </form>
+      <div id="loginStatus" class="status" role="status" hidden></div>
+    </section>
+
+    <section id="ordersPanel" class="panel" hidden aria-labelledby="ordersTitle">
+      <h2 id="ordersTitle">Chọn đơn hàng</h2>
+      <p id="staffLabel" class="store-sub"></p>
+      <div class="controls">
+        <div class="field"><label for="orderSelect">Đơn bán hàng</label><select id="orderSelect"><option value="">Đang tải đơn hàng…</option></select></div>
+        <div class="field"><label for="dispatchDate">Ngày giao hàng</label><input id="dispatchDate" type="date"></div>
+        <button id="loadOrder" class="btn" type="button">Tạo bản xem trước</button>
+      </div>
+      <div class="toolbar">
+        <span id="orderStatus" class="badge">Chỉ đọc từ đơn hàng hiện có</span>
+        <button id="saveRecord" class="btn secondary" type="button" disabled>Lưu phiếu vào SQLite</button>
+        <button id="printButton" class="btn" type="button" disabled>In / Lưu PDF</button>
+      </div>
+      <div id="orderMessage" class="status" role="status" hidden></div>
+      <div class="screen-only" style="margin-top:16px">
+        <strong>Phiếu đã lưu gần đây</strong>
+        <ul id="savedSlips" style="display:grid;gap:8px;padding:0;list-style:none"></ul>
+      </div>
+    </section>
+
+    <article id="slip" class="slip" aria-label="Phiếu giao hàng">
+      <header class="slip-head">
+        <div><div class="store-name">Bông Bông Pet Care</div><div class="store-sub">Phiếu giao nhận hàng hóa</div></div>
+        <div class="slip-title"><h2>PHIẾU XUẤT HÀNG</h2><p>Mã đơn: <strong id="slipCode"></strong></p><p>Ngày giao: <strong id="slipDate"></strong></p></div>
+      </header>
+      <section class="info-grid">
+        <div class="info-line"><strong>Khách hàng:</strong> <span id="customerName"></span></div>
+        <div class="info-line"><strong>Mã khách hàng:</strong> <span id="customerCode"></span></div>
+        <div class="info-line"><strong>Điện thoại:</strong> <span id="customerPhone"></span></div>
+        <div class="info-line"><strong>Email:</strong> <span id="customerEmail"></span></div>
+        <div class="info-line"><strong>Địa chỉ hồ sơ:</strong> <span id="customerAddress"></span></div>
+        <div class="info-line"><strong>Trạng thái đơn:</strong> <span id="slipOrderStatus"></span></div>
+      </section>
+      <div class="table-wrap"><table>
+        <thead><tr><th>STT</th><th>Mã hàng / thú cưng</th><th>Tên hàng hóa</th><th>ĐVT</th><th class="num">SL</th><th class="num">Đơn giá</th><th class="num">Thành tiền</th></tr></thead>
+        <tbody id="itemRows"></tbody>
+      </table></div>
+      <div class="totals">
+        <div class="total-row"><span>Tổng giá trị đơn</span><strong id="totalAmount"></strong></div>
+        <div class="total-row"><span>Đã thanh toán</span><strong id="paidAmount"></strong></div>
+        <div class="total-row"><span>Còn phải thu</span><strong id="balanceAmount"></strong></div>
+        <div class="total-row grand"><span>Tình trạng thanh toán</span><strong id="paymentStatus"></strong></div>
+      </div>
+      <section class="receiver-grid">
+        <div class="field"><label for="receiverName">Người nhận hàng</label><input id="receiverName" placeholder="Nhập tên người nhận"></div>
+        <div class="field"><label for="handoverNote">Ghi chú giao nhận</label><textarea id="handoverNote" placeholder="Ghi chú tùy chọn"></textarea></div>
+      </section>
+      <div class="signatures"><div>Người giao hàng<span>(Ký và ghi rõ họ tên)</span></div><div>Khách hàng / người nhận<span>(Ký và ghi rõ họ tên)</span></div></div>
+      <div class="disclaimer">Chứng từ giao nhận được tạo từ dữ liệu đơn hàng và được lưu trong SQLite; không phải hóa đơn điện tử, hóa đơn thuế hoặc chứng từ kế toán. In phiếu không tự động ghi nhận giao dịch xuất kho.</div>
+      <div class="footnote">Cảm ơn Quý khách đã lựa chọn Bông Bông Pet Care.</div>
+    </article>
+  </main>
+  <script>
+    (() => {
+      "use strict";
+      const api = (path, options = {}) => fetch(`/api${path}`, { credentials: "same-origin", ...options }).then(async response => {
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || `Yêu cầu thất bại (${response.status}).`);
+        return data;
+      });
+      const byId = id => document.getElementById(id);
+      const money = value => new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 }).format(Number(value) || 0);
+      const safe = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+      let currentDetails = null;
+      let savedRecord = null;
+      const dateToday = new Date();
+      byId("dispatchDate").value = new Date(dateToday.getTime() - dateToday.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+
+      function setMessage(id, message, error = false) {
+        const node = byId(id);
+        node.textContent = message;
+        node.hidden = !message;
+        node.classList.toggle("error", error);
+      }
+      function renderOrders(records) {
+        const select = byId("orderSelect");
+        select.replaceChildren(new Option("— Chọn đơn bán hàng —", ""));
+        for (const order of records) {
+          const title = `${order.order_code} · ${order.customer_name} · ${money(order.total_amount)} · ${order.status}`;
+          select.add(new Option(title, order.id));
+        }
+        if (!records.length) {
+          select.replaceChildren(new Option("Chưa có đơn hàng để xem", ""));
+          setMessage("orderMessage", "Không tìm thấy đơn hàng trong hệ thống.", false);
+        }
+      }
+      async function loadOrders() {
+        if (location.protocol !== "http:") {
+          throw new Error("Hãy mở trang từ máy chủ cục bộ PetCare (http://localhost), không mở trực tiếp bằng file HTML.");
+        }
+        const session = await api("/session");
+        if (!session.authenticated) throw new Error("Đăng nhập nhân viên để tiếp tục.");
+        if (!session.permissions.includes("sales.view")) throw new Error("Tài khoản không có quyền xem đơn hàng (sales.view).");
+        if (!session.permissions.includes("sales.manage")) throw new Error("Tài khoản không có quyền lưu phiếu bán hàng (sales.manage).");
+        byId("loginPanel").hidden = true;
+        byId("ordersPanel").hidden = false;
+        byId("staffLabel").textContent = `Đang đăng nhập: ${session.user.display_name} · ${session.user.role}`;
+        const result = await api("/modules/module_12_orders/records");
+        renderOrders(result.records);
+        await loadSavedSlips();
+      }
+      function addRow(index, code, name, unit, quantity, price, lineTotal) {
+        return `<tr><td>${index}</td><td>${safe(code)}</td><td>${safe(name)}</td><td>${safe(unit)}</td><td class="num">${safe(quantity)}</td><td class="num">${money(price)}</td><td class="num">${money(lineTotal)}</td></tr>`;
+      }
+      async function previewOrder() {
+        const id = byId("orderSelect").value;
+        if (!id) throw new Error("Vui lòng chọn một đơn hàng.");
+        const data = await api(`/sales/orders/${encodeURIComponent(id)}/dispatch`);
+        currentDetails = data;
+        savedRecord = null;
+        byId("slip").classList.remove("saved");
+        const { order } = data;
+        byId("slip").classList.add("visible");
+        byId("slipCode").textContent = order.order_code;
+        byId("slipDate").textContent = byId("dispatchDate").value || "—";
+        byId("customerName").textContent = order.customer_name || "—";
+        byId("customerCode").textContent = order.customer_code || "—";
+        byId("customerPhone").textContent = order.customer_phone || "—";
+        byId("customerEmail").textContent = order.customer_email || "—";
+        byId("customerAddress").textContent = order.customer_address || "—";
+        byId("slipOrderStatus").textContent = order.status;
+        let rows = "", index = 1;
+        for (const item of data.products) rows += addRow(index++, item.item_code, item.item_name || item.item_code, item.unit, item.quantity, item.unit_price, item.line_total);
+        for (const item of data.animals) rows += addRow(index++, item.animal_code, `${item.animal_name} (${item.species})`, "con", 1, item.unit_price, item.unit_price);
+        byId("itemRows").innerHTML = rows || '<tr><td colspan="7">Đơn hàng không có dòng hàng hóa.</td></tr>';
+        byId("totalAmount").textContent = money(order.total_amount);
+        byId("paidAmount").textContent = money(data.paid_amount);
+        byId("balanceAmount").textContent = money(data.balance);
+        byId("paymentStatus").textContent = data.issuable ? "Đã thanh toán đủ" : "Chưa đủ điều kiện giao hàng";
+        byId("orderStatus").textContent = data.issuable ? "ĐÃ THANH TOÁN · ĐƯỢC LẬP PHIẾU" : `${order.status} · KHÔNG ĐƯỢC PHÉP LẬP PHIẾU`;
+        byId("orderStatus").className = `badge ${data.issuable ? "paid" : "blocked"}`;
+        byId("receiverName").value = order.customer_name || "";
+        byId("saveRecord").disabled = !data.issuable;
+        byId("printButton").disabled = true;
+        setMessage("orderMessage", data.issuable ? "Đơn đã thanh toán đủ. Lưu phiếu vào SQLite để mở khóa in." : "Đơn chưa ở trạng thái PAID. Không thể lưu hoặc in phiếu giao hàng.", !data.issuable);
+      }
+      async function loadSavedSlips() {
+        const result = await api("/store/slips?type=ban-giao-don-da-thanh-toan");
+        const list = byId("savedSlips");
+        list.replaceChildren();
+        if (!result.records.length) {
+          const empty = document.createElement("li");
+          empty.textContent = "Chưa có phiếu bàn giao nào được lưu.";
+          list.append(empty);
+          return;
+        }
+        for (const item of result.records) {
+          const row = document.createElement("li");
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "btn secondary";
+          button.textContent = `${item.slip_code} · ${item.created_at}`;
+          button.addEventListener("click", async () => {
+            try {
+              const stored = await api(`/store/slips/${item.id}`);
+              const linkedId = stored.record.linked_order_id;
+              byId("orderSelect").value = String(linkedId);
+              const detail = await api(`/sales/orders/${linkedId}/dispatch`);
+              if (!detail.issuable) throw new Error("Đơn gốc hiện không đủ điều kiện giao hàng.");
+              await previewOrder();
+              savedRecord = stored.record;
+              byId("slip").classList.add("saved");
+              byId("receiverName").value = stored.record.payload.receiver || "";
+              byId("handoverNote").value = stored.record.payload.notes || "";
+              byId("slipDate").textContent = stored.record.payload.issue_date || stored.record.created_at;
+              byId("printButton").disabled = false;
+              byId("saveRecord").disabled = true;
+              setMessage("orderMessage", `Đã mở lại phiếu ${stored.record.code} từ SQLite.`);
+            } catch (error) {
+              setMessage("orderMessage", error.message, true);
+            }
+          });
+          row.append(button);
+          list.append(row);
+        }
+      }
+      byId("loginForm").addEventListener("submit", async event => {
+        event.preventDefault();
+        setMessage("loginStatus", "");
+        try {
+          await api("/login", {
+            method: "POST",
+            headers: {"Content-Type":"application/json","X-PetCare-Request":"1"},
+            body: JSON.stringify({username: byId("username").value, password: byId("password").value})
+          });
+          byId("password").value = "";
+          await loadOrders();
+        } catch (error) { setMessage("loginStatus", error.message, true); }
+      });
+      byId("loadOrder").addEventListener("click", async () => {
+        byId("slip").classList.remove("visible");
+        byId("saveRecord").disabled = true;
+        byId("printButton").disabled = true;
+        setMessage("orderMessage", "");
+        try { await previewOrder(); } catch (error) { setMessage("orderMessage", error.message, true); }
+      });
+      byId("orderSelect").addEventListener("change", () => {
+        savedRecord = null;
+        currentDetails = null;
+        byId("slip").classList.remove("saved", "visible");
+        byId("saveRecord").disabled = true;
+        byId("printButton").disabled = true;
+      });
+      byId("saveRecord").addEventListener("click", async () => {
+        if (!currentDetails || !currentDetails.issuable || !byId("receiverName").value.trim()) {
+          setMessage("orderMessage", "Đơn phải thanh toán đủ và cần nhập người nhận hàng.", true);
+          return;
+        }
+        byId("saveRecord").disabled = true;
+        try {
+          const order = currentDetails.order;
+          const lines = [...currentDetails.products, ...currentDetails.animals];
+          const result = await api("/store/slips", {
+            method: "POST",
+            headers: {"Content-Type":"application/json","X-PetCare-Request":"1"},
+            body: JSON.stringify({
+              type: "ban-giao-don-da-thanh-toan",
+              linked_order_id: order.id,
+              payload: {
+                issue_date: byId("dispatchDate").value,
+                reference: order.order_code,
+                party: order.customer_name,
+                item_code: lines.map(line => line.item_code || line.animal_code || "").join(", ").slice(0, 2000),
+                item_name: lines.map(line => line.item_name || `${line.animal_name} (${line.species})`).join("; ").slice(0, 2000),
+                quantity: lines.reduce((sum, line) => sum + Number(line.quantity || 1), 0),
+                unit: "sản phẩm / thú cưng",
+                reason: "Bàn giao đơn hàng đã thanh toán đủ.",
+                destination: order.customer_address || "",
+                receiver: byId("receiverName").value.trim(),
+                notes: byId("handoverNote").value.trim()
+              }
+            })
+          });
+          savedRecord = result.record;
+          byId("slip").classList.add("saved");
+          byId("slipCode").textContent = `${order.order_code} · ${savedRecord.code}`;
+          byId("slipDate").textContent = byId("dispatchDate").value;
+          byId("printButton").disabled = false;
+          await loadSavedSlips();
+          setMessage("orderMessage", `Đã lưu phiếu ${savedRecord.code} vào SQLite. Có thể in hoặc lưu PDF.`);
+        } catch (error) {
+          byId("saveRecord").disabled = false;
+          setMessage("orderMessage", error.message, true);
+        }
+      });
+      for (const field of ["dispatchDate", "receiverName", "handoverNote"]) {
+        byId(field).addEventListener("input", () => {
+          if (!savedRecord) return;
+          savedRecord = null;
+          byId("slip").classList.remove("saved");
+          byId("printButton").disabled = true;
+          byId("saveRecord").disabled = !currentDetails || !currentDetails.issuable;
+          setMessage("orderMessage", "Phiếu đã thay đổi. Lưu thành hồ sơ mới trước khi in.");
+        });
+      }
+      byId("printButton").addEventListener("click", () => {
+        if (!byId("printButton").disabled && savedRecord) window.print();
+      });
+      loadOrders().catch(error => {
+        byId("ordersPanel").hidden = true;
+        byId("loginPanel").hidden = false;
+        setMessage("loginStatus", error.message, true);
+      });
+    })();
+  </script>
+  <script src="../scripts/site_navigation.js"></script>
+</body>
+</html>

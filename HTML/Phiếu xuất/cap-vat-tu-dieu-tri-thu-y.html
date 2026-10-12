@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#12372b">
+  <meta name="description" content="Ghi nhận vật tư sử dụng theo hồ sơ và chỉ định chuyên môn.">
+  <title>Cấp vật tư điều trị thú y · Phiếu xuất Bông Bông Pet Care</title>
+  <link rel="stylesheet" href="../styles/store_slip.css">
+</head>
+<body>
+  <main class="slip-shell" data-slip-type="cap-vat-tu-dieu-tri-thu-y">
+    <div class="slip-topline"><div class="slip-brand">Bông Bông <span>Pet Care</span></div><a href="index.html">← Danh mục 40 mẫu phiếu</a></div>
+    <header class="slip-hero">
+      <div id="slipCategory" class="slip-eyebrow">Phiếu vận hành cửa hàng</div>
+      <h1 id="slipTitle">Cấp vật tư điều trị thú y</h1>
+      <p id="slipDescription">Ghi nhận vật tư sử dụng theo hồ sơ và chỉ định chuyên môn.</p>
+    </header>
+    <section id="loginPanel" class="slip-panel" aria-labelledby="loginHeading">
+      <h2 id="loginHeading">Đăng nhập nhân viên</h2>
+      <form id="loginForm" class="slip-form">
+        <div class="slip-field"><label for="username">Tên đăng nhập</label><input id="username" autocomplete="username" required></div>
+        <div class="slip-field"><label for="password">Mật khẩu</label><input id="password" type="password" autocomplete="current-password" required></div>
+        <button class="slip-btn" type="submit">Đăng nhập</button>
+      </form>
+    </section>
+    <div id="slipWorkspace" hidden>
+      <section class="slip-panel screen-only">
+        <h2>Lập phiếu · Cấp vật tư điều trị thú y</h2>
+        <p id="staffName" class="slip-meta"></p>
+        <div class="slip-problem">Tình huống cần xử lý: Ghi nhận vật tư sử dụng theo hồ sơ và chỉ định chuyên môn.</div>
+        <form id="slipForm" style="margin-top:16px">
+          <div id="slipFields" class="slip-form"></div>
+          <div class="slip-actions"><button id="saveSlip" class="slip-btn" type="submit">Lưu phiếu vào SQLite</button><button id="printSlip" class="slip-btn secondary" type="button" disabled>In / Lưu PDF</button></div>
+        </form>
+      </section>
+      <section class="slip-panel screen-only">
+        <h2>Phiếu đã lưu gần đây</h2>
+        <ul id="slipHistory" class="slip-history"></ul>
+      </section>
+      <article id="slipPaper" class="slip-paper" aria-label="Phiếu vận hành đã lưu">
+        <header class="slip-paper-head"><div><div class="slip-store-name">Bông Bông Pet Care</div><div class="slip-meta">Chứng từ vận hành cửa hàng · Mẫu 30 / 40</div></div>
+          <div class="slip-paper-title"><h2 id="slipPaperTitle">Cấp vật tư điều trị thú y</h2><p>Mã phiếu: <strong id="slipPaperCode"></strong></p><p>Ngày lập: <strong id="slipPaperDate"></strong></p></div>
+        </header>
+        <section id="slipData" class="slip-data"></section>
+        <div class="slip-signatures"><div>Người lập / bàn giao<span>(Ký và ghi rõ họ tên)</span></div><div>Người nhận / phê duyệt<span>(Ký và ghi rõ họ tên)</span></div></div>
+        <div class="slip-disclaimer">Phiếu đã lưu trong SQLite để tra cứu và in lại. Đây là hồ sơ vận hành, không phải hóa đơn/chứng từ thuế và không tự động hạch toán, trừ kho, cập nhật hồ sơ thú cưng hoặc thay thế bước phê duyệt của đơn vị.</div>
+        <div class="slip-footnote">Bông Bông Pet Care · Lưu hành nội bộ</div>
+      </article>
+    </div>
+    <div id="slipStatus" class="slip-status" role="status" hidden></div>
+  </main>
+  <script src="../scripts/store_slip_form.js"></script>
+  <script src="../scripts/site_navigation.js"></script>
+</body>
+</html>

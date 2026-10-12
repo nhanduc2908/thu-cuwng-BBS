@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PetCare | Premium Pet Health Report</title>
+  <meta name="description" content="PetCare health dashboard concept for reviewing pet-health indicators, care activity, and follow-up priorities; not a veterinary diagnosis or a substitute for verified clinical records." />
   <style>
     :root {
       --bg: #edf5f0;
@@ -336,6 +337,7 @@
       margin-top: 22px;
       transition: grid-template-columns 0.25s ease;
     }
+    .dashboard-layout > * { min-width: 0; }
 
     .dashboard-layout.collapsed {
       grid-template-columns: 88px minmax(0, 1fr);
@@ -406,6 +408,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      min-width: 0;
       padding: 11px 12px;
       border-radius: 14px;
       color: var(--muted);
@@ -444,12 +447,17 @@
       font-size: 0.8rem;
       flex-shrink: 0;
     }
+    .nav-text { min-width: 0; overflow-wrap: anywhere; }
     body.dark .nav-icon { background: rgba(155,227,179,0.12); }
 
     .main {
       display: grid;
       gap: 20px;
+      min-width: 0;
     }
+    .main > *,
+    .metrics-grid > *,
+    .operations-strip > * { min-width: 0; }
 
     .top-panel,
     .section-card,
@@ -483,6 +491,8 @@
     }
 
     .top-panel-inner {
+      width: 100%;
+      min-width: 0;
       padding: 20px 22px;
       display: flex;
       justify-content: space-between;
@@ -491,11 +501,12 @@
       flex-wrap: wrap;
     }
 
-    .title-wrap h2 {
+    .title-wrap h1 {
       margin: 0;
       font-size: clamp(1.6rem, 2.5vw, 2.5rem);
       letter-spacing: -0.06em;
     }
+    .title-wrap { min-width: 0; overflow-wrap: anywhere; }
 
     .title-wrap p {
       margin: 8px 0 0;
@@ -655,6 +666,7 @@
     body.dark .metric-meta { color: var(--dark-muted); }
 
     .section-card {
+      min-width: 0;
       border-radius: 26px;
       padding: 18px;
     }
@@ -966,7 +978,10 @@
     }
 
     .table-wrap {
-      overflow: hidden;
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       border-radius: 18px;
     }
 
@@ -1105,6 +1120,18 @@
       background: rgba(155,227,179,0.05);
       color: #dffaf0;
     }
+    .report-notice {
+    padding: 13px 16px;
+    border: 1px solid rgba(215,165,80,0.4);
+    border-left: 4px solid var(--warning);
+    border-radius: 12px;
+    background: var(--gold-soft);
+    color: #624d1a;
+    font-size: .86rem;
+    }
+    .report-notice strong { display: block; margin-bottom: 3px; }
+    .report-notice p { margin: 0; }
+    body.dark .report-notice { background: rgba(215,165,80,0.1); color: #e5c87a; }
 
     @media (max-width: 1180px) {
       .dashboard-layout { grid-template-columns: 1fr; }
@@ -1129,6 +1156,7 @@
       .nav a, .nav button { flex: 1 1 auto; }
       .header-actions { width: 100%; }
       .btn { flex: 1 1 auto; }
+      .header-actions .btn { min-width: 0; white-space: normal; }
     }
 
     @media print {
@@ -1176,8 +1204,8 @@
         <section class="top-panel">
           <div class="top-panel-inner">
             <div class="title-wrap">
-              <h2>Premium pet health portfolio</h2>
-              <p>Enterprise dashboard for multi-species monitoring, clinical trends, and treatment decision support.</p>
+              <h1>Premium pet health portfolio</h1>
+              <p>Dashboard concept for reviewing care indicators, follow-up activity, and reporting priorities.</p>
             </div>
             <div class="header-actions">
               <button class="btn gold" type="button" onclick="window.print()">Export PDF</button>
@@ -1185,6 +1213,11 @@
             </div>
           </div>
         </section>
+
+        <aside class="report-notice" role="note">
+          <strong>Scope and data notice</strong>
+          <p>This is a presentation dashboard. Sample metrics and case details are illustrative and are not connected to verified veterinary records. It is not a diagnosis or treatment recommendation; use current patient records and consult a veterinarian for clinical decisions.</p>
+        </aside>
 
         <section class="metrics-grid" id="metricsGrid"></section>
 

@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Danh mục chăm sóc và combo grooming thú cưng với bảng giá tham khảo theo kích thước, công khai phạm vi và điều kiện báo giá.">
+  <meta name="theme-color" content="#12372b">
+  <title>Chăm sóc & bảng giá combo thú cưng | PetCare</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #19372c;
+      --muted: #63776d;
+      --green-950: #103229;
+      --green-800: #174737;
+      --green-700: #276b51;
+      --green-100: #e8f4ec;
+      --gold: #e9bf68;
+      --line: #dce9e1;
+      --paper: #f2f7f3;
+      --white: #fff;
+      --shadow: 0 18px 48px rgba(16, 47, 39, .08);
+      --radius: 20px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+    body { margin: 0; color: var(--ink); background: linear-gradient(180deg, #edf6f0, var(--paper) 42rem); font: 16px/1.65 "Segoe UI", Tahoma, Arial, sans-serif; }
+    a { color: inherit; }
+    button, select { font: inherit; }
+    a:focus-visible, button:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+    .shell { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    .topbar { position: sticky; top: 0; z-index: 5; border-bottom: 1px solid var(--line); background: #ffffffed; backdrop-filter: blur(14px); }
+    .top-inner { display: flex; min-height: 64px; align-items: center; justify-content: space-between; gap: 12px; }
+    .brand { display: inline-flex; align-items: center; gap: 9px; color: var(--green-950); font-weight: 850; text-decoration: none; }
+    .brand-mark { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 12px 12px 12px 4px; background: linear-gradient(135deg, #d9ee9b, #b9d96b); }
+    .nav { display: flex; flex-wrap: wrap; gap: 7px; }
+    .nav a, .button { display: inline-flex; min-height: 40px; align-items: center; justify-content: center; padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green-800); font-size: .82rem; font-weight: 750; text-decoration: none; transition: transform .18s ease, border-color .18s ease, background .18s ease; }
+    .nav a:hover, .button:hover { transform: translateY(-1px); border-color: #a8cbb4; background: #f7fbf7; }
+    .hero { position: relative; overflow: hidden; margin: 24px 0 18px; padding: clamp(25px, 5vw, 50px); border-radius: 26px; color: #f6fbf7; background: radial-gradient(circle at 88% 9%, #d9ee9b26, transparent 22rem), linear-gradient(125deg, #174b3b, #103229 70%, #183f4b); box-shadow: var(--shadow); }
+    .eyebrow { color: #dff1b4; font-size: .72rem; font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }
+    h1 { max-width: 780px; margin: 12px 0; font-size: clamp(2.1rem, 6vw, 4rem); line-height: 1.05; letter-spacing: -.055em; }
+    .hero p { max-width: 760px; margin: 0; color: #dceae1; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
+    .button.primary { border-color: #d9ee9b; background: #d9ee9b; color: var(--green-950); }
+    .button.primary:hover { background: #e8f5bd; }
+    .notice { display: grid; grid-template-columns: auto 1fr; gap: 12px; margin: 16px 0; padding: 15px 17px; border: 1px solid #efdfad; border-radius: 15px; background: #fff8e4; color: #6c5518; }
+    .notice strong { display: block; }
+    .notice p { margin: 3px 0 0; font-size: .9rem; }
+    .section { margin: 18px 0; padding: clamp(19px, 4vw, 30px); border: 1px solid var(--line); border-radius: var(--radius); background: #ffffffed; box-shadow: 0 10px 28px #102f2708; }
+    .section-head { max-width: 800px; margin-bottom: 18px; }
+    .kicker { color: var(--green-700); font-size: .7rem; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+    h2 { margin: 5px 0 8px; color: var(--green-950); font-size: clamp(1.45rem, 3vw, 2.15rem); line-height: 1.16; letter-spacing: -.04em; }
+    h3 { margin: 0; color: var(--green-950); font-size: 1.08rem; line-height: 1.3; }
+    .section-head p, .muted { color: var(--muted); }
+    .service-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .service-card { display: flex; min-width: 0; flex-direction: column; padding: 17px; border: 1px solid var(--line); border-radius: 15px; background: linear-gradient(150deg, #fff, #f6faf7); }
+    .service-card p { margin: 8px 0; color: var(--muted); font-size: .9rem; }
+    .service-card ul { margin: 0; padding-left: 19px; color: var(--muted); font-size: .86rem; }
+    .service-card li + li { margin-top: 4px; }
+    .tag { display: inline-flex; width: fit-content; margin-bottom: 9px; padding: 4px 8px; border-radius: 99px; background: var(--green-100); color: var(--green-700); font-size: .69rem; font-weight: 800; }
+    .package-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .package { display: flex; min-width: 0; flex-direction: column; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: #fff; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .package:hover { transform: translateY(-3px); border-color: #a9cbb4; box-shadow: 0 14px 28px #102f2710; }
+    .package.featured { border-color: #9abd77; background: linear-gradient(155deg, #f5faeb, #fff 70%); }
+    .package p { color: var(--muted); font-size: .9rem; }
+    .package ul { margin: 0 0 15px; padding-left: 19px; color: var(--muted); font-size: .86rem; }
+    .package li + li { margin-top: 5px; }
+    .price-from { margin-top: auto; color: var(--green-800); font-size: 1.16rem; font-weight: 900; }
+    .price-from small { color: var(--muted); font-size: .75rem; font-weight: 650; }
+    .price-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 13px; background: #fff; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; min-width: 720px; border-collapse: collapse; text-align: left; }
+    caption { padding: 12px; color: var(--muted); font-size: .8rem; text-align: left; }
+    th, td { padding: 12px 13px; border-top: 1px solid var(--line); vertical-align: top; }
+    thead th { border-top: 0; background: #f2f8f3; color: var(--green-800); font-size: .78rem; }
+    tbody th { min-width: 185px; color: var(--green-950); font-size: .84rem; }
+    td { color: var(--muted); font-size: .83rem; }
+    tbody tr:hover { background: #f8fbf8; }
+    .calculator { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 12px; padding: 16px; border: 1px solid var(--line); border-radius: 15px; background: #f8fbf8; }
+    .calculator label { display: grid; gap: 6px; color: var(--green-950); font-size: .82rem; font-weight: 750; }
+    .calculator select { min-height: 44px; width: 100%; padding: 8px 10px; border: 1px solid #cbdcd1; border-radius: 10px; background: #fff; color: var(--ink); }
+    .estimate { min-height: 66px; padding: 9px 12px; border-radius: 10px; background: var(--green-950); color: #fff; }
+    .estimate span { display: block; color: #d9e9de; font-size: .72rem; }
+    .estimate strong { display: block; margin-top: 2px; color: #e8f5bd; font-size: 1.12rem; }
+    .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; counter-reset: step; }
+    .step { padding: 14px; border: 1px solid var(--line); border-radius: 13px; background: #fff; counter-increment: step; }
+    .step::before { content: "0" counter(step); display: block; margin-bottom: 8px; color: var(--green-700); font-weight: 900; }
+    .step strong { display: block; color: var(--green-950); font-size: .9rem; }
+    .step p { margin: 5px 0 0; color: var(--muted); font-size: .82rem; }
+    .faq { display: grid; gap: 8px; }
+    .faq details { padding: 12px 14px; border: 1px solid var(--line); border-radius: 11px; background: #fff; }
+    .faq summary { color: var(--green-950); cursor: pointer; font-weight: 800; }
+    .faq p { margin: 8px 0 0; color: var(--muted); font-size: .88rem; }
+    .footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin: 24px 0 36px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .78rem; }
+    .footer a { color: var(--green-700); font-weight: 750; }
+    @media (max-width: 800px) { .service-grid, .package-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 560px) {
+      .shell { width: calc(100% - 22px); }
+      .top-inner { align-items: flex-start; flex-direction: column; padding: 9px 0; }
+      .nav { width: 100%; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 3px; }
+      .nav a { flex: 0 0 auto; }
+      .hero { margin-top: 13px; padding: 23px 19px; border-radius: 20px; }
+      .service-grid, .package-grid, .calculator, .steps { grid-template-columns: 1fr; }
+      .section { padding: 18px 15px; }
+      .notice { grid-template-columns: 1fr; }
+      .footer { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+    @media print { .topbar, .hero-actions, .calculator, .footer a { display: none !important; } body { background: #fff; } .section { break-inside: avoid; box-shadow: none; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell top-inner">
+      <a class="brand" href="index.html"><span class="brand-mark">P</span> Bông Bông Pet Care</a>
+      <nav class="nav" aria-label="Điều hướng dịch vụ">
+        <a href="#services">Dịch vụ</a>
+        <a href="#packages">Combo</a>
+        <a href="#pricing">Bảng giá</a>
+        <a href="care_consultation.html">Từ tư vấn đến chăm sóc</a>
+        <a href="workflow.html">Quy trình</a>
+        <a href="user_portal.html">Cổng khách hàng</a>
+      </nav>
+    </div>
+  </header>
+  <main class="shell">
+    <section class="hero">
+      <span class="eyebrow">Pet care · grooming · routine care</span>
+      <h1>Chăm sóc tốt bắt đầu từ một kế hoạch vừa vặn.</h1>
+      <p>Chọn dịch vụ theo loài, kích thước, bộ lông và thói quen của thú cưng. Xem các combo chăm sóc định kỳ cùng mức giá tham khảo trước khi xác nhận lịch.</p>
+      <div class="hero-actions">
+        <a class="button primary" href="#pricing">Xem bảng giá</a>
+        <a class="button" href="#packages">So sánh các combo</a>
+        <a class="button" href="care_consultation.html">Từ tư vấn đến chăm sóc</a>
+        <a class="button" href="user_portal.html">Mở cổng khách hàng</a>
+      </div>
+    </section>
+
+    <aside class="notice" role="note">
+      <span aria-hidden="true">ⓘ</span>
+      <div><strong>Bảng giá dự kiến để chủ cửa hàng xác nhận trước khi công bố.</strong>
+        <p>Đơn vị VNĐ. Các khoảng giá dưới đây là mức tham khảo mẫu, chưa phải biểu giá đã được Bông Bông Pet Care phê duyệt. Giá cuối phụ thuộc kích thước, tình trạng lông, hành vi, thời lượng, địa điểm và phạm vi dịch vụ; hãy xác nhận với cửa hàng trước khi đặt.</p>
+      </div>
+    </aside>
+
+    <section class="section" id="services" aria-labelledby="services-title">
+      <div class="section-head"><span class="kicker">Danh mục dịch vụ</span><h2 id="services-title">Chăm sóc thiết yếu, rõ phạm vi</h2>
+        <p>Các thao tác vệ sinh/grooming thông thường; không thay thế khám, chẩn đoán hay điều trị thú y.</p></div>
+      <div class="service-grid">
+        <article class="service-card"><span class="tag">Grooming</span><h3>Tắm, sấy & chải lông</h3><p>Làm sạch cơ bản và gỡ rối nhẹ phù hợp với loại lông.</p><ul><li>Trao đổi về da, dị ứng và sản phẩm cần tránh.</li><li>Thời lượng dự kiến 60–120 phút, tùy kích thước/lông.</li><li>Gỡ rối nặng hoặc lông bết cần báo giá riêng trước khi làm.</li></ul></article>
+        <article class="service-card"><span class="tag">Vệ sinh</span><h3>Cắt móng & chăm sóc bên ngoài</h3><p>Cắt/dũa móng và vệ sinh vùng tai ngoài khi thú cưng hợp tác.</p><ul><li>Không đưa dụng cụ sâu vào ống tai.</li><li>Không tự xử lý vết thương, viêm hoặc đau.</li><li>Nếu thú cưng căng thẳng, dừng và thống nhất phương án an toàn.</li></ul></article>
+        <article class="service-card"><span class="tag">Theo lịch hẹn</span><h3>Tỉa lông tạo kiểu</h3><p>Tỉa vệ sinh hoặc tạo kiểu theo trao đổi trước, ảnh tham khảo và đặc điểm bộ lông.</p><ul><li>Xác nhận độ dài và vùng cần tỉa trước khi bắt đầu.</li><li>Không cam kết giống hoàn toàn ảnh mẫu.</li><li>Thời gian và giá thay đổi theo độ dày, độ rối và hành vi.</li></ul></article>
+      </div>
+    </section>
+
+    <section class="section" id="packages" aria-labelledby="packages-title">
+      <div class="section-head"><span class="kicker">Combo chăm sóc</span><h2 id="packages-title">Chọn gói theo tần suất, không theo lời hứa quá mức</h2>
+        <p>Gói tháng dự kiến dùng trong 30 ngày, đặt lịch trước và áp dụng cho một thú cưng; chưa bao gồm dịch vụ y tế hoặc phụ phí đặc biệt.</p></div>
+      <div class="package-grid">
+        <article class="package">
+          <span class="tag">Linh hoạt · 1 lần</span><h3>Combo Sạch & Gọn</h3>
+          <p>Phù hợp nhu cầu vệ sinh định kỳ cơ bản.</p>
+          <ul><li>1 lần tắm, sấy và chải lông</li><li>Cắt/dũa móng nếu thú cưng hợp tác</li><li>Vệ sinh bên ngoài theo khả năng phù hợp</li><li>Kiểm tra nhanh tình trạng lông trước dịch vụ</li></ul>
+          <div class="price-from">180.000–650.000đ <small>/ lần*</small></div>
+        </article>
+        <article class="package featured">
+          <span class="tag">Định kỳ · 2 lần / 30 ngày</span><h3>Combo Chăm sóc đều</h3>
+          <p>Dành cho thú cưng cần lịch vệ sinh ổn định.</p>
+          <ul><li>2 lần tắm, sấy và chải lông</li><li>1 lần cắt/dũa móng trong kỳ</li><li>Nhắc lịch sử dụng combo và chăm sóc tại nhà</li><li>Đặt lịch theo khung giờ còn trống</li></ul>
+          <div class="price-from">399.000–1.400.000đ <small>/ combo*</small></div>
+        </article>
+        <article class="package">
+          <span class="tag">Grooming · 2 lần / 30 ngày</span><h3>Combo Tỉa & Chải</h3>
+          <p>Cho bộ lông cần tỉa vệ sinh/kiểu theo lịch.</p>
+          <ul><li>2 lần grooming theo kiểu đã xác nhận</li><li>Tắm, sấy và chải theo phạm vi từng lần</li><li>Tư vấn độ dài phù hợp với loại lông</li><li>Phụ phí lông rối nặng phải được duyệt trước</li></ul>
+          <div class="price-from">790.000–2.890.000đ <small>/ combo*</small></div>
+        </article>
+        <article class="package">
+          <span class="tag">Signature · 1 lần / lịch riêng</span><h3>Signature Grooming</h3>
+          <p>Buổi grooming cá nhân hóa với thời lượng dự kiến rộng hơn, ưu tiên trao đổi kiểu và nhu cầu của bộ lông.</p>
+          <ul><li>1 lần tắm, sấy, chải và tỉa theo phạm vi đã duyệt</li><li>Trao đổi kiểu trước/sau; ghi lại yêu cầu cho lần tới</li><li>Chia phiên nghỉ khi phù hợp với thú cưng</li><li>Không gồm xử lý rối nặng, thuốc hay dịch vụ y tế</li></ul>
+          <div class="price-from">690.000–2.800.000đ <small>/ lần*</small></div>
+        </article>
+        <article class="package featured">
+          <span class="tag">Premium · 4 lần / 30 ngày</span><h3>Signature Care Club</h3>
+          <p>Gói cao cấp nhất cho khách muốn duy trì lịch chăm sóc thường xuyên, có xác nhận từng buổi.</p>
+          <ul><li>2 lần grooming/tỉa theo kiểu được xác nhận</li><li>2 lần tắm, sấy và chải lông</li><li>Cắt/dũa móng tối đa 2 lần nếu phù hợp</li><li>Ghi chú yêu cầu grooming và nhắc lịch còn lại</li><li>Ưu tiên chọn khung giờ còn chỗ; không cam kết giữ chỗ tự động</li></ul>
+          <div class="price-from">1.690.000–5.990.000đ <small>/ combo*</small></div>
+        </article>
+      </div>
+      <p class="muted small">* Khoảng giá trên là dự kiến theo nhóm kích thước ở bảng bên dưới, không phải giá cố định cho mọi thú cưng.</p>
+    </section>
+
+    <section class="section" id="pricing" aria-labelledby="pricing-title">
+      <div class="section-head"><span class="kicker">Bảng giá tham khảo</span><h2 id="pricing-title">Ước tính theo kích thước thú cưng</h2>
+        <p>Kích thước chỉ là cách ước tính ban đầu; nhân viên xác nhận sau khi hỏi tình trạng lông, sức khỏe và hành vi.</p></div>
+      <div class="price-table-wrap" role="region" aria-label="Bảng giá có thể cuộn ngang trên điện thoại" tabindex="0">
+        <table>
+          <caption>Giá tham khảo bằng VNĐ; vui lòng cuộn ngang để xem đủ nhóm kích thước trên màn hình nhỏ.</caption>
+          <thead><tr><th scope="col">Dịch vụ / combo</th><th scope="col">XS · ≤5 kg</th><th scope="col">S · 5–10 kg</th><th scope="col">M · 10–20 kg</th><th scope="col">L · 20–35 kg</th><th scope="col">XL · &gt;35 kg</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Tắm, sấy & chải · 1 lần</th><td>180–250 nghìn</td><td>230–320 nghìn</td><td>320–450 nghìn</td><td>450–650 nghìn</td><td>Báo giá sau tư vấn</td></tr>
+            <tr><th scope="row">Grooming/tỉa cơ bản · 1 lần</th><td>350–500 nghìn</td><td>450–650 nghìn</td><td>650–900 nghìn</td><td>900 nghìn–1,3 triệu</td><td>Báo giá sau tư vấn</td></tr>
+            <tr><th scope="row">Combo Chăm sóc đều · 2 lần/30 ngày</th><td>399–590 nghìn</td><td>499–700 nghìn</td><td>699–980 nghìn</td><td>999 nghìn–1,4 triệu</td><td>Báo giá sau tư vấn</td></tr>
+            <tr><th scope="row">Combo Tỉa & Chải · 2 lần/30 ngày</th><td>790 nghìn–1 triệu</td><td>990 nghìn–1,49 triệu</td><td>1,45–1,99 triệu</td><td>1,99–2,89 triệu</td><td>Báo giá sau tư vấn</td></tr>
+            <tr><th scope="row">Signature Grooming · 1 lần</th><td>690–950 nghìn</td><td>890 nghìn–1,25 triệu</td><td>1,2–1,8 triệu</td><td>1,8–2,8 triệu</td><td>Báo giá sau tư vấn</td></tr>
+            <tr><th scope="row">Signature Care Club · 4 lần/30 ngày</th><td>1,69–2,39 triệu</td><td>2,19–3,09 triệu</td><td>2,99–4,19 triệu</td><td>4,19–5,99 triệu</td><td>Báo giá sau tư vấn</td></tr>
+            <tr><th scope="row">Grooming mèo · theo lịch hẹn</th><td colspan="4">Tham khảo 350–650 nghìn/lần; xác nhận theo tính khí, loại lông và khả năng hợp tác.</td><td>Báo giá sau tư vấn</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="calculator" aria-labelledby="estimate-title" style="margin-top:16px">
+        <label for="package-select">Chọn dịch vụ
+          <select id="package-select">
+            <option value="bath">Tắm, sấy & chải · 1 lần</option>
+            <option value="groom">Grooming/tỉa cơ bản · 1 lần</option>
+            <option value="monthly">Combo Chăm sóc đều · 2 lần/30 ngày</option>
+            <option value="style">Combo Tỉa & Chải · 2 lần/30 ngày</option>
+            <option value="signature">Signature Grooming · 1 lần</option>
+            <option value="club">Signature Care Club · 4 lần/30 ngày</option>
+          </select>
+        </label>
+        <label for="size-select">Nhóm kích thước
+          <select id="size-select">
+            <option value="xs">XS · đến 5 kg</option>
+            <option value="s">S · 5–10 kg</option>
+            <option value="m">M · 10–20 kg</option>
+            <option value="l">L · 20–35 kg</option>
+            <option value="xl">XL · trên 35 kg</option>
+          </select>
+        </label>
+        <div class="estimate" aria-live="polite"><span id="estimate-title">Ước tính tham khảo · chưa xác nhận</span><strong id="estimate-value">180.000–250.000đ</strong></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="included-title">
+      <div class="section-head"><span class="kicker">Điều kiện dịch vụ</span><h2 id="included-title">Minh bạch trước khi đặt lịch</h2></div>
+      <div class="service-grid">
+        <article class="service-card"><h3>Đã tính trong giá cơ bản</h3><p>Tư vấn phạm vi nhanh, chuẩn bị khu vực và dụng cụ grooming thông thường, thực hiện đúng hạng mục đã xác nhận.</p></article>
+        <article class="service-card"><h3>Có thể phát sinh sau khi duyệt</h3><p>Lông rối/bết nặng, kích thước ngoài nhóm, thời gian xử lý kéo dài, sản phẩm chuyên dụng, đưa đón hoặc yêu cầu tạo kiểu đặc biệt.</p></article>
+        <article class="service-card"><h3>Không thuộc gói grooming</h3><p>Khám và điều trị bệnh, thuốc, xét nghiệm, tiêm phòng, lưu trú qua đêm, thức ăn và dịch vụ tại nhà không được tính nếu chưa ghi rõ trong xác nhận đặt lịch.</p></article>
+      </div>
+      <p class="notice" role="note"><span aria-hidden="true">!</span><span>Nếu thú cưng có dấu hiệu đau, khó thở, tổn thương da, nhiễm ký sinh trùng nghiêm trọng hoặc lo âu mạnh, hãy báo trước; cửa hàng có thể hoãn dịch vụ và đề nghị liên hệ bác sĩ thú y.</span></p>
+    </section>
+
+    <section class="section" aria-labelledby="booking-title">
+      <div class="section-head"><span class="kicker">Quy trình đặt dịch vụ</span><h2 id="booking-title">Từ tư vấn đến chăm sóc</h2></div>
+      <div class="steps">
+        <article class="step"><strong>Gửi nhu cầu</strong><p>Chọn dịch vụ/combo, loài, cân nặng gần đúng, tình trạng lông và khung giờ mong muốn.</p></article>
+        <article class="step"><strong>Xác nhận an toàn</strong><p>Trao đổi sức khỏe, hành vi, dị ứng, chống chỉ định và khả năng hợp tác trước khi nhận lịch.</p></article>
+        <article class="step"><strong>Chốt giá & lịch</strong><p>Cửa hàng xác nhận thời lượng, hạng mục, phụ phí (nếu có) và giá cuối trước khi thực hiện.</p></article>
+        <article class="step"><strong>Thực hiện & phản hồi</strong><p>Kiểm tra kết quả cùng khách hàng; thống nhất lần tiếp theo nếu khách muốn duy trì định kỳ.</p></article>
+      </div>
+      <div class="hero-actions"><a class="button primary" href="care_consultation.html">Từ tư vấn đến chăm sóc</a><a class="button" href="user_portal.html">Tiếp tục đến cổng khách hàng</a><a class="button" href="workflow.html">Xem quy trình chăm sóc</a><a class="button" href="../Trang hỗ trợ/Module/module_14_services.html">Thông tin phân hệ dịch vụ</a></div>
+    </section>
+
+    <section class="section faq" aria-labelledby="faq-title">
+      <div class="section-head"><span class="kicker">Câu hỏi thường gặp</span><h2 id="faq-title">Trước khi chọn combo</h2></div>
+      <details><summary>Giá trong bảng có phải giá chính thức không?</summary><p>Chưa. Đây là mức tham khảo mẫu để hoàn thiện giao diện và nội dung; chủ cửa hàng cần xác nhận địa bàn, chi phí, thuế/phí, phạm vi và chính sách combo trước khi công bố.</p></details>
+      <details><summary>Thú cưng có lông rối hoặc cần chăm sóc riêng thì sao?</summary><p>Gửi mô tả và ảnh nếu thuận tiện để cửa hàng tư vấn sơ bộ. Không tự cạo sát hoặc dùng sản phẩm điều trị; mọi phụ phí phải được thông báo và khách đồng ý trước.</p></details>
+      <details><summary>Combo tháng có tự động gia hạn hoặc hoàn tiền không?</summary><p>Không mặc định. Hiệu lực, đổi lịch, vắng hẹn, bảo lưu, chuyển nhượng và hoàn tiền cần theo chính sách chính thức được cửa hàng cung cấp khi xác nhận mua.</p></details>
+    </section>
+  </main>
+  <footer class="shell footer"><span>PetCare · Nội dung và giá combo ở trạng thái tham khảo, cần cửa hàng phê duyệt.</span><span><a href="care_consultation.html">Từ tư vấn đến chăm sóc</a> · <a href="../index.html">Cổng hệ thống</a> · <a href="index.html">Trang chủ thương hiệu</a></span></footer>
+  <script>
+    (() => {
+      "use strict";
+      const prices = {
+        bath: { xs: [180, 250], s: [230, 320], m: [320, 450], l: [450, 650] },
+        groom: { xs: [350, 500], s: [450, 650], m: [650, 900], l: [900, 1300] },
+        monthly: { xs: [399, 590], s: [499, 700], m: [699, 980], l: [999, 1400] },
+        style: { xs: [790, 1000], s: [990, 1490], m: [1450, 1990], l: [1990, 2890] },
+        signature: { xs: [690, 950], s: [890, 1250], m: [1200, 1800], l: [1800, 2800] },
+        club: { xs: [1690, 2390], s: [2190, 3090], m: [2990, 4190], l: [4190, 5990] }
+      };
+      const packageSelect = document.querySelector("#package-select");
+      const sizeSelect = document.querySelector("#size-select");
+      const output = document.querySelector("#estimate-value");
+      const format = (value) => `${value.toLocaleString("vi-VN")}.000đ`;
+      const updateEstimate = () => {
+        const range = prices[packageSelect.value][sizeSelect.value];
+        output.textContent = range
+          ? `${format(range[0])}–${format(range[1])}`
+          : "Liên hệ để được tư vấn";
+      };
+      packageSelect.addEventListener("change", updateEstimate);
+      sizeSelect.addEventListener("change", updateEstimate);
+      updateEstimate();
+    })();
+  </script>
+  <script src="../scripts/site_navigation.js" defer></script>
+</body>
+</html>

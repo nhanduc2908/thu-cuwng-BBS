@@ -861,6 +861,19 @@ class Database:
                     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
                 );
 
+                CREATE TABLE IF NOT EXISTS store_slips (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    slip_code TEXT NOT NULL UNIQUE,
+                    slip_type TEXT NOT NULL,
+                    linked_order_id INTEGER REFERENCES sales_orders(id) ON DELETE RESTRICT,
+                    payload_json TEXT NOT NULL,
+                    created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE INDEX IF NOT EXISTS idx_store_slips_type_created
+                    ON store_slips(slip_type, created_at DESC);
+
                 CREATE TABLE IF NOT EXISTS reservation_deposits (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     reservation_id INTEGER NOT NULL REFERENCES reservations(id) ON DELETE RESTRICT,
@@ -1934,6 +1947,63 @@ class Database:
 
     def list_order_payments(self, order_id: int) -> list[sqlite3.Row]:
         return self.sales.list_payments(order_id)
+
+    def create_store_slip(
+        self,
+        slip_type: str,
+        payload: dict[str, Any],
+        created_by: int,
+        linked_order_id: int | None = None,
+    ) -> int:
+        slip_code = (
+            f"PX-{datetime.now().strftime('%Y%m%d')}-"
+            f"{secrets.token_hex(3).upper()}"
+        )
+        with self.connection:
+            cursor = self.connection.execute(
+                """
+                INSERT INTO store_slips
+                    (slip_code, slip_type, linked_order_id, payload_json, created_by)
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                (
+                    slip_code,
+                    slip_type,
+                    linked_order_id,
+                    json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
+                    created_by,
+                ),
+            )
+            self._audit(
+                "CREATE_STORE_SLIP",
+                "store_slip",
+                int(cursor.lastrowid),
+                f"type={slip_type}; code={slip_code}",
+            )
+        return int(cursor.lastrowid)
+
+    def get_store_slip(self, slip_id: int) -> sqlite3.Row | None:
+        return self.connection.execute(
+            """
+            SELECT id, slip_code, slip_type, linked_order_id, payload_json,
+                   created_by, created_at
+            FROM store_slips WHERE id = ?
+            """,
+            (slip_id,),
+        ).fetchone()
+
+    def list_store_slips(
+        self, slip_type: str, limit: int = 50
+    ) -> list[sqlite3.Row]:
+        return self.connection.execute(
+            """
+            SELECT id, slip_code, slip_type, linked_order_id, created_by, created_at
+            FROM store_slips
+            WHERE slip_type = ?
+            ORDER BY id DESC LIMIT ?
+            """,
+            (slip_type, limit),
+        ).fetchall()
 
     def list_reservation_deposits(
         self, reservation_id: int

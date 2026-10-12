@@ -8,7 +8,6 @@
   box-shadow: 0 5px 20px rgba(18, 55, 39, 0.07);
   color: #20382e;
   font: 13px/1.4 "Segoe UI", Arial, sans-serif;
-  backdrop-filter: blur(14px);
 }
 
 .petcare-global-header ~ .site-header,
@@ -142,6 +141,10 @@
   background: #fff;
   box-shadow: 0 22px 55px rgba(18, 55, 39, 0.2);
   color: #20382e;
+}
+
+.petcare-directory:not([open]) > .petcare-directory-panel {
+  display: none;
 }
 
 .petcare-directory-heading {
@@ -353,6 +356,87 @@
 .petcare-page-guide-intro {
   margin: 11px 0;
   color: #456153;
+}
+
+.petcare-content-analysis {
+  margin: 12px 0 16px;
+  padding: 15px;
+  border: 1px solid #dfe9e2;
+  border-left: 4px solid #1c684a;
+  border-radius: 11px;
+  background: linear-gradient(145deg, #f8fbf7, #fff);
+}
+
+.petcare-content-analysis h2 {
+  margin: 0;
+  color: #173d2d;
+  font: 800 15px/1.35 "Segoe UI", Arial, sans-serif;
+}
+
+.petcare-content-analysis-summary,
+.petcare-content-analysis-outline {
+  margin: 7px 0 0;
+  color: #50665a;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.petcare-content-analysis-note {
+  margin: 9px 0 0;
+  color: #68796f;
+  font-size: 9px;
+  line-height: 1.55;
+}
+
+.petcare-content-analysis-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.petcare-content-analysis-metrics li {
+  display: flex;
+  min-height: 48px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 7px 9px;
+  border: 1px solid #e4ece5;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.petcare-content-analysis-metrics strong {
+  color: #1c684a;
+  font-size: 15px;
+  line-height: 1.1;
+}
+
+.petcare-content-analysis-metrics span {
+  margin-top: 3px;
+  color: #64776b;
+  font-size: 9px;
+}
+
+.petcare-content-analysis-checks {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  margin: 11px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.petcare-content-analysis-checks li {
+  padding: 9px 10px;
+  border: 1px solid #e4ece5;
+  border-radius: 8px;
+  background: #fff;
+  color: #50665a;
+  font-size: 10px;
+  line-height: 1.55;
 }
 
 .petcare-page-guide-columns {
@@ -702,7 +786,8 @@
     position: fixed;
     top: 59px;
     right: 9px;
-    width: calc(100vw - 18px);
+    left: 9px;
+    width: auto;
     max-height: calc(100dvh - 72px);
     padding: 10px;
   }
@@ -733,6 +818,14 @@
   }
 
   .petcare-page-guide-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .petcare-content-analysis {
+    padding: 11px;
+  }
+
+  .petcare-content-analysis-checks {
     grid-template-columns: 1fr;
   }
 

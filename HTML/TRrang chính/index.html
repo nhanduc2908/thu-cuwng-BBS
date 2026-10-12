@@ -110,6 +110,7 @@
       display: grid;
       gap: 22px;
     }
+    .page-shell > * { min-width: 0; }
 
     /* ============================================================
        HERO
@@ -130,6 +131,20 @@
       background: radial-gradient(circle, rgba(214,240,122,0.36), transparent 62%);
       animation: float 20s ease-in-out infinite;
     }
+    .prototype-notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 15px 18px;
+      border: 1px solid #ead69c;
+      border-left: 4px solid #bd8a22;
+      border-radius: var(--radius-md);
+      background: #fff9e9;
+      color: #594714;
+      font-size: .9rem;
+    }
+    .prototype-notice strong { display: block; margin-bottom: 3px; }
+    .prototype-notice p { margin: 0; }
     @keyframes float {
       0%, 100% { transform: translate(0, 0) scale(1); }
       50% { transform: translate(-22px, 16px) scale(1.08); }
@@ -140,6 +155,7 @@
       grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.7fr);
       gap: 18px; align-items: end;
     }
+    .hero-inner > * { min-width: 0; }
     .eyebrow {
       display: inline-flex; align-items: center;
       padding: 8px 12px; border-radius: 999px;
@@ -388,6 +404,18 @@
       color: #f4c95b;
       letter-spacing: 0.08em; font-size: 1rem;
     }
+    .scenario-tag {
+      display: inline-flex;
+      margin-bottom: 9px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--green-100);
+      color: var(--green-800);
+      font-size: .67rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
     .testimonial p {
       margin: 12px 0 14px; color: var(--muted);
       font-size: 0.96rem; line-height: 1.8;
@@ -590,6 +618,8 @@
       <a class="brand" href="index.html"><span class="brand-mark">B</span> Bông Bông Pet Care</a>
       <nav class="header-nav" aria-label="Primary navigation">
         <a href="petcare_system.html">Pet Care System</a>
+        <a href="care_packages.html">Care packages &amp; pricing</a>
+        <a href="care_consultation.html">Consultation to care</a>
         <a href="../Trang hỗ trợ/chuan-dinh-duong-thu-cung-hoa-ky.html">Nutrition Standards · 4 Markets</a>
         <a href="../Trang hỗ trợ/project_master_summary.html">Master Summary</a>
         <a href="../Trang hỗ trợ/project_overview.html">Overview</a>
@@ -613,26 +643,36 @@
           <h1>Smarter pet nutrition and care platform</h1>
           <p>Pet Care SYSTEM combines nutrition catalog, service workflow, care operations and executive reporting into one premium platform for Bông Bông Pet Care. Built to support trustworthy customer experience, stronger operational control and investor-ready growth foundations.</p>
           <div class="hero-tags">
-            <span class="tag">8,000 products</span>
+            <span class="tag">8,000 demo catalog rows</span>
             <span class="tag">17 modules</span>
             <span class="tag">Premium UX</span>
           </div>
           <div class="hero-actions">
             <a class="nav-cta" href="petcare_system.html">Open landing page</a>
-            <a class="nav-cta" href="../Trang hỗ trợ/project_quote.html">Official Quote</a>
+            <a class="nav-cta" href="../Trang hỗ trợ/project_quote.html">Review project quote</a>
             <a class="nav-cta" href="user_portal.html">Cổng khách hàng</a>
+            <a class="nav-cta" href="care_packages.html">Combo chăm sóc & bảng giá tham khảo</a>
+            <a class="nav-cta" href="care_consultation.html">Từ tư vấn đến chăm sóc</a>
             <a class="nav-cta" href="../menu.html">Danh mục toàn bộ trang</a>
             <a class="nav-cta" href="../Trang hỗ trợ/chuan-dinh-duong-thu-cung-hoa-ky.html">Chuẩn dinh dưỡng 4 thị trường</a>
             <a class="nav-cta" href="../Trang hỗ trợ/bao-cao-khoa-hoc-trien-vong.html">Nghiên cứu thú y tiềm năng</a>
           </div>
         </div>
         <aside class="hero-side">
-          <div class="stat-box"><strong>4K</strong><span>Dog SKUs</span></div>
-          <div class="stat-box"><strong>4K</strong><span>Cat SKUs</span></div>
+          <div class="stat-box"><strong>4K</strong><span>Dog catalog demo rows</span></div>
+          <div class="stat-box"><strong>4K</strong><span>Cat catalog demo rows</span></div>
           <div class="stat-box"><strong>6</strong><span>Workflow pillars</span></div>
         </aside>
       </div>
     </section>
+
+    <aside class="prototype-notice" role="note" aria-label="Trạng thái dữ liệu minh họa">
+      <span aria-hidden="true">ⓘ</span>
+      <div>
+        <strong>Trang giới thiệu và dữ liệu trình diễn</strong>
+        <p>Số lượng sản phẩm, KPI, đánh giá, lời chứng thực và giá trong các thẻ giới thiệu là nội dung minh họa, chưa phải số liệu kinh doanh đã xác minh, SKU đang bán hay báo giá được duyệt. Dữ liệu vận hành chỉ được xác nhận trong ứng dụng PetCare và SQLite dùng chung.</p>
+      </div>
+    </aside>
 
     <section class="section">
       <div class="section-head">
@@ -656,16 +696,16 @@
           <div class="slide">
             <div class="slide-copy">
               <span class="slide-kicker">Operations</span>
-              <h3>Clinical efficiency</h3>
-              <p>Monitor pet health, disease support routes and care delivery in a single operational command center built for clinic teams.</p>
+              <h3>Health &amp; care coordination</h3>
+              <p>Explore how pet profiles, health references and service workflows can be presented together; clinical decisions remain with veterinary professionals.</p>
             </div>
             <div class="slide-visual">Care</div>
           </div>
           <div class="slide">
             <div class="slide-copy">
               <span class="slide-kicker">Strategy</span>
-              <h3>Board-ready reporting</h3>
-              <p>Turn business metrics and portfolio performance into crisp, executive-friendly insights for expansion and investment conversations.</p>
+              <h3>Executive reporting concept</h3>
+              <p>Review a reporting layout for business metrics and portfolio performance; replace illustrative values with approved source data before decision-making.</p>
             </div>
             <div class="slide-visual">Reports</div>
           </div>
@@ -736,7 +776,7 @@
         <div class="link-panel">
           <h3>Proposal &amp; commercial</h3>
           <ul class="link-list">
-            <li><a href="../Trang hỗ trợ/project_quote.html"><span>Official quote</span><small>Proposal</small></a></li>
+            <li><a href="../Trang hỗ trợ/project_quote.html"><span>Project quote preview</span><small>Review</small></a></li>
             <li><a href="../Trang hỗ trợ/project_invoice.html"><span>Invoice / Payment</span><small>Billing</small></a></li>
             <li><a href="../Trang hỗ trợ/slides_pitch.html"><span>Pitch deck</span><small>Pitch</small></a></li>
             <li><a href="../Trang hỗ trợ/project_slides_final.html"><span>Final deck</span><small>Final</small></a></li>
@@ -766,35 +806,23 @@
     <section class="section">
       <div class="section-head">
         <div>
-          <span class="eyebrow eyebrow-inline">Testimonials</span>
-          <h2>What stakeholders say</h2>
+          <span class="eyebrow eyebrow-inline">Example scenarios</span>
+          <h2>Illustrative stakeholder use cases</h2>
         </div>
-        <p>Validation from product, operations and management stakeholders.</p>
+        <p>Fictional examples to explain intended value; these are not customer reviews or stakeholder endorsements.</p>
       </div>
       <div class="testimonial-grid">
         <article class="testimonial">
-          <div class="stars">★★★★★</div>
-          <p>“The platform gives our team a premium, business-ready experience. It makes pet care operations feel more structured and trustworthy.”</p>
-          <div class="person">
-            <div class="avatar">L</div>
-            <div><strong>Lan Anh</strong><span>Operations Director</span></div>
-          </div>
+          <span class="scenario-tag">Illustrative scenario</span>
+          <p>A care team reviews linked pet profiles and service steps in one workspace, then confirms the actual records and responsibilities before acting.</p>
         </article>
         <article class="testimonial">
-          <div class="stars">★★★★★</div>
-          <p>“The reporting and dashboard experience is clean, useful and executive-friendly. This helps us communicate the business story clearly.”</p>
-          <div class="person">
-            <div class="avatar">M</div>
-            <div><strong>Minh Hoàng</strong><span>Business Manager</span></div>
-          </div>
+          <span class="scenario-tag">Illustrative scenario</span>
+          <p>A manager reviews a KPI dashboard with definitions, reporting periods and source data visible before sharing findings.</p>
         </article>
         <article class="testimonial">
-          <div class="stars">★★★★★</div>
-          <p>“The product architecture is practical and scalable, covering nutrition, clinic care, and service management in one connected system.”</p>
-          <div class="person">
-            <div class="avatar">N</div>
-            <div><strong>Nam Anh</strong><span>Product Lead</span></div>
-          </div>
+          <span class="scenario-tag">Illustrative scenario</span>
+          <p>A customer compares nutrition references and care services while checking product labels, availability and approved prices with the store.</p>
         </article>
       </div>
     </section>
@@ -803,9 +831,9 @@
       <div class="section-head">
         <div>
           <span class="eyebrow eyebrow-inline">KPI</span>
-          <h2>Enterprise performance overview</h2>
+          <h2>Illustrative performance dashboard</h2>
         </div>
-        <p>Operational pulse across growth, care quality and customer value.</p>
+        <p>Sample values for demonstrating layout only; not verified operating results or forecasts.</p>
       </div>
       <div class="metrics-grid">
         <div class="metric-card">

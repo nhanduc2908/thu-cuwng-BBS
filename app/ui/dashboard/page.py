@@ -1,13 +1,12 @@
 import sqlite3
 
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
 from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
     QLabel,
     QMessageBox,
     QPushButton,
+    QScrollArea,
     QTabWidget,
     QVBoxLayout,
     QWidget,
@@ -23,15 +22,21 @@ class DashboardPage(QWidget):
     def __init__(self, database: Database) -> None:
         super().__init__()
         self.database = database
-        layout = QVBoxLayout(self)
+        root_layout = QVBoxLayout(self)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QFrame.Shape.NoFrame)
+        content = QWidget()
+        layout = QVBoxLayout(content)
         layout.setContentsMargins(28, 24, 28, 24)
         layout.setSpacing(18)
 
         top_row = QHBoxLayout()
         top_row.addWidget(QLabel("Tổng quan cửa hàng", objectName="pageTitle"))
         top_row.addStretch()
-        self.header_action = QPushButton("+ Tạo báo cáo nhanh", objectName="primaryButton")
-        self.header_action.clicked.connect(self._show_quick_report)
+        self.header_action = QPushButton("↻ Làm mới tổng quan", objectName="primaryButton")
+        self.header_action.clicked.connect(self.refresh)
         top_row.addWidget(self.header_action)
         layout.addLayout(top_row)
         layout.addWidget(
@@ -41,7 +46,7 @@ class DashboardPage(QWidget):
         self.cards: dict[str, QLabel] = {}
         cards_layout = QHBoxLayout()
         for key, title, color in (
-            ("TOTAL", "Tổng động vật", "#265d50"),
+            ("TOTAL", "Tổng thú cưng", "#265d50"),
             ("AVAILABLE", "Đang bán", "#287b68"),
             ("SOLD", "Đã bán", "#5967a7"),
             ("TREATMENT", "Đang điều trị", "#bd7629"),
@@ -74,7 +79,7 @@ class DashboardPage(QWidget):
         detail_layout = QVBoxLayout(detail_box)
         detail_layout.setContentsMargins(18, 18, 18, 18)
         detail_layout.setSpacing(12)
-        detail_layout.addWidget(QLabel("Pet detail panel", objectName="pageSubtitle"))
+        detail_layout.addWidget(QLabel("Hồ sơ thú cưng nổi bật", objectName="pageSubtitle"))
 
         self.pet_header = QHBoxLayout()
         self.pet_avatar = QLabel("🐾")
@@ -96,10 +101,10 @@ class DashboardPage(QWidget):
 
         self.pet_detail_tabs = QTabWidget()
         self.pet_detail_tabs.setObjectName("petDetailTabs")
-        self.pet_detail_tabs.addTab(self._build_pet_tab_overview(), "Overview")
-        self.pet_detail_tabs.addTab(self._build_pet_tab_nutrition(), "Nutrition")
-        self.pet_detail_tabs.addTab(self._build_pet_tab_health(), "Health")
-        self.pet_detail_tabs.addTab(self._build_pet_tab_grooming(), "Grooming")
+        self.pet_detail_tabs.addTab(self._build_pet_tab_overview(), "Tổng quan")
+        self.pet_detail_tabs.addTab(self._build_pet_tab_nutrition(), "Dinh dưỡng")
+        self.pet_detail_tabs.addTab(self._build_pet_tab_health(), "Sức khỏe")
+        self.pet_detail_tabs.addTab(self._build_pet_tab_grooming(), "Chăm sóc")
         detail_layout.addWidget(self.pet_detail_tabs)
 
         content_row.addWidget(self.featured_container, 3)
@@ -124,10 +129,12 @@ class DashboardPage(QWidget):
         self.customer_overview_panel = self._build_customer_overview_panel()
         layout.addWidget(self.customer_overview_panel)
 
-        layout.addWidget(QLabel("Động vật mới cập nhật", objectName="sectionTitle"))
+        layout.addWidget(QLabel("Thú cưng mới cập nhật", objectName="sectionTitle"))
         self.table = make_table(["Mã", "Tên", "Loài", "Trạng thái", "Ngày tạo"])
         layout.addWidget(self.table)
         layout.addStretch()
+        scroll_area.setWidget(content)
+        root_layout.addWidget(scroll_area)
 
     def _build_pet_tab_overview(self) -> QWidget:
         tab = QWidget()
@@ -174,35 +181,30 @@ class DashboardPage(QWidget):
         panel = QFrame(objectName="profileCard")
         panel_layout = QVBoxLayout(panel)
         panel_layout.setContentsMargins(16, 16, 16, 16)
-        panel_layout.addWidget(QLabel("Dashboard analytics", objectName="pageSubtitle"))
-
-        figure = Figure(figsize=(4, 2.5), dpi=100)
-        axis = figure.add_subplot(111)
-        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
-        values = [55, 68, 63, 76, 81, 92]
-        axis.bar(months, values, color="#d9eadb")
-        axis.set_ylim(0, 100)
-        axis.set_axisbelow(True)
-        axis.grid(axis="y", linestyle="--", alpha=0.35)
-        axis.set_title("Service satisfaction", fontsize=9)
-        axis.set_facecolor("#fffdf9")
-        figure.patch.set_facecolor("#fffdf9")
-        canvas = FigureCanvas(figure)
-        panel_layout.addWidget(canvas)
+        panel_layout.addWidget(QLabel("Chỉ số vận hành", objectName="pageSubtitle"))
+        panel_layout.addWidget(
+            QLabel("Dữ liệu trực tiếp từ hồ sơ cửa hàng, cập nhật khi làm mới tổng quan.")
+        )
 
         insights = QWidget()
-        insight_layout = QHBoxLayout(insights)
+        insight_layout = QVBoxLayout(insights)
         insight_layout.setContentsMargins(0, 0, 0, 0)
-        for title, value, tone in (
-            ("Chăm sóc", "91%", "#2d7d42"),
-            ("Dinh dưỡng", "88%", "#5976b8"),
-            ("Khách hàng", "76%", "#9b5f17"),
+        insight_layout.setSpacing(8)
+        self.operational_values: dict[str, QLabel] = {}
+        for key, title, tone in (
+            ("available", "Thú cưng đang tìm chủ", "#2d7d42"),
+            ("treatment", "Thú cưng đang theo dõi sức khỏe", "#9b5f17"),
+            ("orders", "Đơn hàng đang xử lý", "#5976b8"),
         ):
             box = QFrame(objectName="statCard")
-            inner = QVBoxLayout(box)
-            inner.addWidget(QLabel(value, objectName="statValue"))
+            inner = QHBoxLayout(box)
+            inner.setContentsMargins(12, 8, 12, 8)
             inner.addWidget(QLabel(title))
-            box.setStyleSheet(f"{box.styleSheet()} QFrame#statCard {{ border-color: {tone}; }}")
+            inner.addStretch()
+            value = QLabel("0", objectName="statValue")
+            value.setStyleSheet(f"color: {tone}; font-size: 21px;")
+            inner.addWidget(value)
+            self.operational_values[key] = value
             insight_layout.addWidget(box)
         panel_layout.addWidget(insights)
         return panel
@@ -212,7 +214,7 @@ class DashboardPage(QWidget):
         layout = QVBoxLayout(panel)
         layout.setContentsMargins(18, 16, 18, 16)
         layout.setSpacing(10)
-        layout.addWidget(QLabel("Reminder & alerts", objectName="pageSubtitle"))
+        layout.addWidget(QLabel("Nhắc việc & cảnh báo", objectName="pageSubtitle"))
 
         self.reminder_items = QWidget()
         self.reminder_layout = QVBoxLayout(self.reminder_items)
@@ -226,7 +228,7 @@ class DashboardPage(QWidget):
         layout = QVBoxLayout(panel)
         layout.setContentsMargins(18, 16, 18, 16)
         layout.setSpacing(10)
-        layout.addWidget(QLabel("Customer overview", objectName="pageSubtitle"))
+        layout.addWidget(QLabel("Tóm tắt khách hàng", objectName="pageSubtitle"))
         self.customer_summary_value = QLabel("Đang tổng hợp khách hàng hoạt động...")
         self.customer_summary_value.setWordWrap(True)
         layout.addWidget(self.customer_summary_value)
@@ -237,7 +239,7 @@ class DashboardPage(QWidget):
         layout = QVBoxLayout(panel)
         layout.setContentsMargins(18, 16, 18, 16)
         layout.setSpacing(10)
-        layout.addWidget(QLabel("Nutrition recommendation", objectName="pageSubtitle"))
+        layout.addWidget(QLabel("Gợi ý dinh dưỡng", objectName="pageSubtitle"))
 
         self.recommendation_items = QWidget()
         self.recommendation_layout = QVBoxLayout(self.recommendation_items)
@@ -251,7 +253,7 @@ class DashboardPage(QWidget):
         layout = QVBoxLayout(panel)
         layout.setContentsMargins(18, 16, 18, 16)
         layout.setSpacing(10)
-        layout.addWidget(QLabel("Customer & service overview", objectName="pageSubtitle"))
+        layout.addWidget(QLabel("Khách hàng & dịch vụ", objectName="pageSubtitle"))
 
         self.customer_overview_label = QLabel("Chưa có dữ liệu khách hàng.")
         self.customer_overview_label.setWordWrap(True)
@@ -263,18 +265,20 @@ class DashboardPage(QWidget):
         panel = QFrame(objectName="profileCard")
         layout = QVBoxLayout(panel)
         layout.setContentsMargins(16, 16, 16, 16)
-        layout.addWidget(QLabel("Activity feed", objectName="pageSubtitle"))
-        for text, time_text in (
-            ("Milo đã hoàn thành lịch khám định kỳ", "08:40"),
-            ("Sữa dinh dưỡng mới được gợi ý cho Luna", "09:15"),
-            ("Khách hàng A. Tran đã đặt lịch tắm", "11:05"),
-            ("Duyệt lịch chải lông tuần này", "14:20"),
+        layout.addWidget(QLabel("Quy trình cần ưu tiên", objectName="pageSubtitle"))
+        for text, detail_text in (
+            ("Sức khỏe", "Kiểm tra cảnh báo và hồ sơ khám trước khi bàn giao thú cưng."),
+            ("Chăm sóc", "Rà soát lịch chăm sóc đến hạn và cập nhật kết quả thực hiện."),
+            ("Bán hàng", "Xác nhận thanh toán và người nhận trước khi giao hàng."),
+            ("Kho", "Kiểm tra tồn thực tế, số lô và hạn dùng trước khi cấp vật tư."),
         ):
             item = QFrame(objectName="statCard")
             item_layout = QVBoxLayout(item)
             item_layout.setContentsMargins(10, 10, 10, 10)
-            item_layout.addWidget(QLabel(text))
-            item_layout.addWidget(QLabel(time_text))
+            item_layout.addWidget(QLabel(text, objectName="pageSubtitle"))
+            detail = QLabel(detail_text)
+            detail.setWordWrap(True)
+            item_layout.addWidget(detail)
             layout.addWidget(item)
         return panel
 
@@ -356,7 +360,7 @@ class DashboardPage(QWidget):
             card_layout.addWidget(badge)
 
             action_layout = QHBoxLayout()
-            for action_label in ("Nutrition", "Health", "Grooming"):
+            for action_label in ("Dinh dưỡng", "Sức khỏe", "Chăm sóc"):
                 button = QPushButton(action_label)
                 button.clicked.connect(
                     lambda _, name=str(pet["name"]), action=action_label: self._show_action_for_pet(name, action)
@@ -467,6 +471,20 @@ class DashboardPage(QWidget):
         counts = self.database.dashboard_counts()
         for key, label in self.cards.items():
             label.setText(str(counts[key]))
+        self.operational_values["available"].setText(str(counts["AVAILABLE"]))
+        self.operational_values["treatment"].setText(str(counts["TREATMENT"]))
+        can_view_sales = (
+            self.database.actor_id is None
+            or self.database.has_permission(self.database.actor_id, "sales.view")
+        )
+        if can_view_sales:
+            open_orders = sum(
+                order["status"] in {"OPEN", "PARTIALLY_PAID"}
+                for order in self.database.list_sales_orders()
+            )
+            self.operational_values["orders"].setText(str(open_orders))
+        else:
+            self.operational_values["orders"].setText("—")
         self._render_featured_pets()
         self._render_reminders()
         customers = self.database.list_customers()

@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 import ipaddress
 import json
 import logging
+import math
 import mimetypes
 import os
 from pathlib import Path
@@ -23,6 +24,7 @@ from urllib.parse import parse_qs, unquote, urlsplit
 from app.database import Database
 from app.modules.auth.constants import ROLE_PERMISSIONS
 from app.modules.auth.security import hash_password, verify_password
+from app.store_slips import SLIP_TYPES
 
 
 LOGGER = logging.getLogger("pet_store.web")
@@ -354,7 +356,7 @@ class LocalAdminBridge:
                 pets = database.connection.execute(
                     """
                     SELECT id, name, species, breed_name, birth_date, sex, color,
-                           weight_kg, health_status, created_at
+                           weight_kg, body_condition, activity_level, health_status, created_at
                     FROM pet_profiles WHERE customer_id = ?
                     ORDER BY created_at DESC, id DESC
                     """,
@@ -1048,6 +1050,137 @@ class LocalAdminBridge:
                 if self._dataset_request("GET"):
                     return
 
+                slip_type_match = re.fullmatch(
+                    r"/store/slip-types/([a-z0-9-]+)", request_path
+                )
+                slip_match = re.fullmatch(r"/store/slips(?:/(\d+))?", request_path)
+                if slip_type_match or slip_match:
+                    session = self._session()
+                    if not session:
+                        self._json(HTTPStatus.UNAUTHORIZED, {"error": "Sign-in required."})
+                        return
+                    user_id = int(session["user_id"])
+                    if slip_type_match:
+                        slip_type = slip_type_match.group(1)
+                        definition = SLIP_TYPES.get(slip_type)
+                        if definition is None:
+                            self._json(HTTPStatus.NOT_FOUND, {"error": "Unknown slip type."})
+                            return
+                        if not database.has_permission(user_id, definition["permission"]):
+                            self._json(HTTPStatus.FORBIDDEN, {"error": "Insufficient permission."})
+                            return
+                        self._json(HTTPStatus.OK, {"type": definition})
+                        return
+
+                    slip_id_text = slip_match.group(1)
+                    if slip_id_text:
+                        slip = database.get_store_slip(int(slip_id_text))
+                        if slip is None:
+                            self._json(HTTPStatus.NOT_FOUND, {"error": "Slip record not found."})
+                            return
+                        definition = SLIP_TYPES.get(slip["slip_type"])
+                        if definition is None:
+                            self._json(HTTPStatus.NOT_FOUND, {"error": "Unknown slip type."})
+                            return
+                        if not database.has_permission(user_id, definition["permission"]):
+                            self._json(HTTPStatus.FORBIDDEN, {"error": "Insufficient permission."})
+                            return
+                        try:
+                            payload = json.loads(slip["payload_json"])
+                        except json.JSONDecodeError:
+                            LOGGER.exception("Stored slip %s contains invalid JSON", slip_id_text)
+                            self._json(HTTPStatus.INTERNAL_SERVER_ERROR, {"error": "Stored slip data is invalid."})
+                            return
+                        self._json(HTTPStatus.OK, {
+                            "record": {
+                                "id": slip["id"],
+                                "code": slip["slip_code"],
+                                "type": slip["slip_type"],
+                                "linked_order_id": slip["linked_order_id"],
+                                "created_at": slip["created_at"],
+                                "payload": payload,
+                            }
+                        })
+                        return
+
+                    slip_type = parse_qs(parsed.query).get("type", [""])[0]
+                    definition = SLIP_TYPES.get(slip_type)
+                    if definition is None:
+                        self._json(HTTPStatus.BAD_REQUEST, {"error": "A valid slip type is required."})
+                        return
+                    if not database.has_permission(user_id, definition["permission"]):
+                        self._json(HTTPStatus.FORBIDDEN, {"error": "Insufficient permission."})
+                        return
+                    rows = self._plain_records(database.list_store_slips(slip_type))
+                    self._json(HTTPStatus.OK, {"records": rows, "total": len(rows)})
+                    return
+
+                dispatch_match = re.fullmatch(
+                    r"/sales/orders/(\d+)/dispatch", request_path
+                )
+                if dispatch_match:
+                    session = self._session()
+                    if not session:
+                        self._json(HTTPStatus.UNAUTHORIZED, {"error": "Sign-in required."})
+                        return
+                    user_id = int(session["user_id"])
+                    if not database.has_permission(user_id, "sales.view"):
+                        self._json(HTTPStatus.FORBIDDEN, {"error": "Insufficient permission."})
+                        return
+                    order_id = int(dispatch_match.group(1))
+                    database.set_actor(user_id)
+                    try:
+                        order = database.connection.execute(
+                            """
+                            SELECT so.id, so.order_code, so.ordered_at, so.status,
+                                   so.total_amount, so.paid_at,
+                                   c.customer_code, c.name AS customer_name,
+                                   c.phone AS customer_phone, c.email AS customer_email,
+                                   c.address AS customer_address
+                            FROM sales_orders so
+                            JOIN customers c ON c.id = so.customer_id
+                            WHERE so.id = ?
+                            """,
+                            (order_id,),
+                        ).fetchone()
+                        if order is None:
+                            self._json(HTTPStatus.NOT_FOUND, {"error": "Order not found."})
+                            return
+                        products = self._plain_records(
+                            database.list_order_product_items(order_id)
+                        )
+                        animals = self._plain_records(database.list_order_items(order_id))
+                        payments = self._plain_records(
+                            database.list_order_payments(order_id)
+                        )
+                    except Exception:
+                        LOGGER.exception("Could not read dispatch details for order %s", order_id)
+                        self._json(
+                            HTTPStatus.INTERNAL_SERVER_ERROR,
+                            {"error": "Could not read order details."},
+                        )
+                        return
+                    payment_summary = [
+                        {
+                            "amount": payment["amount"],
+                            "paid_at": payment["paid_at"],
+                            "method": payment["method"],
+                        }
+                        for payment in payments
+                    ]
+                    paid_amount = sum(float(payment["amount"]) for payment in payment_summary)
+                    self._json(HTTPStatus.OK, {
+                        "order": dict(order),
+                        "products": products,
+                        "animals": animals,
+                        "payments": payment_summary,
+                        "paid_amount": paid_amount,
+                        "balance": max(float(order["total_amount"]) - paid_amount, 0),
+                        "issuable": order["status"] == "PAID",
+                        "document_type": "dispatch_slip",
+                    })
+                    return
+
                 record_match = re.fullmatch(
                     r"/modules/([a-z0-9_]+)/records", request_path
                 )
@@ -1232,6 +1365,125 @@ class LocalAdminBridge:
                     self._json(HTTPStatus.OK, {"authenticated": False}, {
                         "Set-Cookie": f"{SESSION_COOKIE}=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0"
                     })
+                    return
+
+                if request_path == "/store/slips":
+                    session = self._session()
+                    if not session:
+                        self._json(HTTPStatus.UNAUTHORIZED, {"error": "Sign-in required."})
+                        return
+                    user_id = int(session["user_id"])
+                    try:
+                        body = self._body()
+                        slip_type = body.get("type")
+                        definition = SLIP_TYPES.get(slip_type) if isinstance(slip_type, str) else None
+                        if definition is None:
+                            raise ValueError("Loại phiếu không hợp lệ.")
+                        if not database.has_permission(user_id, definition["permission"]):
+                            self._json(HTTPStatus.FORBIDDEN, {"error": "Insufficient permission."})
+                            return
+                        payload = body.get("payload")
+                        if not isinstance(payload, dict):
+                            raise ValueError("Thông tin phiếu phải là một đối tượng.")
+                        fields = definition["fields"]
+                        field_map = {field["name"]: field for field in fields}
+                        if set(payload) - set(field_map):
+                            raise ValueError("Phiếu có trường dữ liệu không được hỗ trợ.")
+                        normalized_payload: dict[str, str | float] = {}
+                        for name, field in field_map.items():
+                            value = payload.get(name, "")
+                            if not isinstance(value, (str, int, float)) or isinstance(value, bool):
+                                raise ValueError(f"Giá trị trường {field['label']} không hợp lệ.")
+                            if field["type"] == "number":
+                                if value == "":
+                                    if field.get("required"):
+                                        raise ValueError(f"Vui lòng nhập {field['label']}.")
+                                    continue
+                                try:
+                                    numeric_value = float(value)
+                                except (TypeError, ValueError) as error:
+                                    raise ValueError(f"{field['label']} phải là số.") from error
+                                if not math.isfinite(numeric_value) or numeric_value <= 0:
+                                    raise ValueError(f"{field['label']} phải lớn hơn 0.")
+                                if (
+                                    definition["category"] == "Bàn giao thú cưng"
+                                    and name == "quantity"
+                                    and not numeric_value.is_integer()
+                                ):
+                                    raise ValueError("Số lượng thú cưng phải là số nguyên.")
+                                normalized_payload[name] = numeric_value
+                            elif field["type"] == "date":
+                                text = str(value).strip()
+                                if field.get("required") and not text:
+                                    raise ValueError(f"Vui lòng nhập {field['label']}.")
+                                try:
+                                    datetime.strptime(text, "%Y-%m-%d")
+                                except ValueError as error:
+                                    raise ValueError(f"{field['label']} không hợp lệ.") from error
+                                normalized_payload[name] = text
+                            else:
+                                text = str(value).strip()
+                                if len(text) > 2000:
+                                    raise ValueError(f"{field['label']} vượt quá 2.000 ký tự.")
+                                if field.get("required") and not text:
+                                    raise ValueError(f"Vui lòng nhập {field['label']}.")
+                                normalized_payload[name] = text
+
+                        linked_order_id: int | None = None
+                        if slip_type == "ban-giao-don-da-thanh-toan":
+                            raw_order_id = body.get("linked_order_id")
+                            if isinstance(raw_order_id, bool) or not isinstance(
+                                raw_order_id, (int, str)
+                            ):
+                                raise ValueError("Cần chọn đơn hàng đã thanh toán.")
+                            try:
+                                linked_order_id = int(raw_order_id)
+                            except (TypeError, ValueError) as error:
+                                raise ValueError("Cần chọn đơn hàng đã thanh toán.") from error
+                            if linked_order_id <= 0:
+                                raise ValueError("Mã đơn hàng không hợp lệ.")
+                            order = database.connection.execute(
+                                """
+                                SELECT status, total_amount FROM sales_orders WHERE id = ?
+                                """,
+                                (linked_order_id,),
+                            ).fetchone()
+                            if order is None:
+                                raise ValueError("Không tìm thấy đơn hàng.")
+                            paid = database.connection.execute(
+                                "SELECT COALESCE(SUM(amount), 0) FROM payments WHERE order_id = ?",
+                                (linked_order_id,),
+                            ).fetchone()[0]
+                            if order["status"] != "PAID" or paid < order["total_amount"]:
+                                raise ValueError("Chỉ được lưu phiếu bàn giao cho đơn đã thanh toán đủ.")
+                        elif body.get("linked_order_id") not in (None, ""):
+                            raise ValueError("Loại phiếu này không nhận liên kết đơn bán hàng.")
+
+                        database.set_actor(user_id)
+                        slip_id = database.create_store_slip(
+                            slip_type,
+                            normalized_payload,
+                            user_id,
+                            linked_order_id,
+                        )
+                        slip = database.get_store_slip(slip_id)
+                        if slip is None:
+                            raise RuntimeError("Created slip record could not be read.")
+                        self._json(HTTPStatus.CREATED, {
+                            "record": {
+                                "id": slip_id,
+                                "code": slip["slip_code"],
+                                "type": slip_type,
+                                "linked_order_id": linked_order_id,
+                                "created_at": slip["created_at"],
+                                "payload": normalized_payload,
+                            }
+                        })
+                    except (KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
+                        self._json(HTTPStatus.BAD_REQUEST, {"error": str(error)})
+                    except Exception:
+                        LOGGER.exception("Could not save store slip")
+                        self._json(HTTPStatus.INTERNAL_SERVER_ERROR, {"error": "Could not save store slip."})
                     return
 
                 create_batch = request_path == "/imports/batches"
