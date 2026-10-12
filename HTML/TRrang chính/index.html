@@ -6,6 +6,7 @@
   <meta name="description" content="PetCare enterprise landing page for investor and executive presentation.">
   <meta name="theme-color" content="#113b2d">
   <title>PetCare | Investor Landing</title>
+  <link rel="stylesheet" href="../styles/nutrition_saved_profiles.css">
   <style>
     /* ============================================================
        DESIGN TOKENS
@@ -754,6 +755,19 @@
       </div>
     </section>
 
+    <section class="section" id="saved-nutrition">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow eyebrow-inline">Pet nutrition</span>
+          <h2>Hồ sơ dinh dưỡng đã chèn</h2>
+        </div>
+        <p>Hồ sơ theo giống và giai đoạn sống được khách hàng chọn từ thư viện tham khảo.</p>
+      </div>
+      <div class="saved-nutrition-list" data-saved-nutrition-profiles data-source="../data/pet_breed_nutrition_profiles_200.json">
+        <p class="saved-nutrition-empty">Đang tải hồ sơ đã chèn…</p>
+      </div>
+    </section>
+
     <section class="section">
       <div class="section-head">
         <div>
@@ -986,6 +1000,7 @@
       startAuto();
     })();
   </script>
+  <script src="../scripts/nutrition_saved_profiles.js" defer></script>
   <script src="../scripts/site_navigation.js" defer></script>
 </body>
 </html>

@@ -6,6 +6,7 @@
   <meta name="description" content="Cổng khách hàng PetCare: xem an toàn hồ sơ cá nhân, thú cưng, lịch hẹn, đơn hàng, đặt giữ và hội viên.">
   <meta name="theme-color" content="#123c30">
   <title>PetCare | Cổng khách hàng</title>
+  <link rel="stylesheet" href="../styles/nutrition_saved_profiles.css">
   <style>
     /* ============================================================
        DESIGN TOKENS
@@ -1175,6 +1176,7 @@
                 <a class="dashboard-action" href="care_consultation.html"><span class="dashboard-action-icon" aria-hidden="true">♡</span><span>Tư vấn &amp; quy trình chăm sóc</span></a>
                 <a class="dashboard-action" href="care_packages.html"><span class="dashboard-action-icon" aria-hidden="true">✦</span><span>Xem gói chăm sóc</span></a>
                 <a class="dashboard-action" href="nutrition_products.html"><span class="dashboard-action-icon" aria-hidden="true">♧</span><span>Khám phá dinh dưỡng</span></a>
+                <a class="dashboard-action" href="#saved-nutrition"><span class="dashboard-action-icon" aria-hidden="true">▤</span><span>Hồ sơ dinh dưỡng đã chèn</span></a>
                 <a class="dashboard-action" href="#memberships-section"><span class="dashboard-action-icon" aria-hidden="true">◇</span><span>Quyền lợi hội viên</span></a>
               </div>
               <p class="health-note">Cổng hiện hỗ trợ xem dữ liệu; đặt lịch hoặc chỉnh sửa hồ sơ cần được cửa hàng xác nhận.</p>
@@ -1188,6 +1190,15 @@
                 <strong>Đang tải lịch hẹn…</strong>
               </div>
             </article>
+          </div>
+        </section>
+
+        <section id="saved-nutrition" class="card section-card reveal">
+          <div class="section-head">
+            <div><h2>Hồ sơ dinh dưỡng đã chèn</h2><p>Tham khảo theo giống và giai đoạn sống; không thay thế tư vấn thú y.</p></div>
+          </div>
+          <div class="saved-nutrition-list" data-saved-nutrition-profiles data-source="../data/pet_breed_nutrition_profiles_200.json">
+            <p class="saved-nutrition-empty">Đang tải hồ sơ đã chèn…</p>
           </div>
         </section>
 
@@ -1923,6 +1934,7 @@
       loadPortal({ showLoading: true });
     })();
   </script>
+  <script src="../scripts/nutrition_saved_profiles.js" defer></script>
   <script src="../scripts/site_navigation.js" defer></script>
 </body>
 </html>

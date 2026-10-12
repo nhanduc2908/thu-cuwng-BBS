@@ -13,6 +13,8 @@
   const loadMore = document.getElementById("breedLoadMore");
   let visibleLimit = 24;
   let sourceReferences = {};
+  let activeBreed = null;
+  const savedProfilesKey = "petcare.saved-nutrition-profiles.v1";
 
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({
     "&": "&amp;",
@@ -62,45 +64,114 @@
     project_reference_unverified: "Thông tin tham khảo từ catalog dự án; chưa xác minh độc lập"
   })[status] || "Trạng thái dữ liệu chưa xác định";
 
-  const dossierMarkup = (breed) => {
+  const stageTableMarkup = (breed) => {
+    const stages = breed.profile.partIII_lifeStageNutrition || [];
+    return `<div class="ns-table-wrap"><table class="ns-dossier-table">
+      <thead><tr><th>Giai đoạn · độ tuổi</th><th>Năng lượng & loại thức ăn</th><th>Dưỡng chất cần lưu ý</th></tr></thead>
+      <tbody>${stages.map(({ ageBand, nutritionGuidance }) => `
+        <tr>
+          <th scope="row">${escapeHtml(nutritionGuidance.label)}<small>${escapeHtml(ageBandLabel(ageBand))}</small></th>
+          <td><strong>Năng lượng:</strong> ${escapeHtml(nutritionGuidance.energyNeed)}<br><strong>Thức ăn:</strong> ${escapeHtml(nutritionGuidance.foodType)}</td>
+          <td>${escapeHtml((nutritionGuidance.nutrientPriorities || []).join("; "))}<small>Nguyên liệu tham khảo: ${escapeHtml((nutritionGuidance.ingredientPriorities || []).join("; "))}</small></td>
+        </tr>`).join("")}</tbody>
+    </table></div>`;
+  };
+
+  const readSavedProfiles = () => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(savedProfilesKey) || "[]");
+      return Array.isArray(saved) ? saved.filter((id) => typeof id === "string") : [];
+    } catch (error) {
+      console.error("Could not read saved nutrition profiles.", error);
+      return [];
+    }
+  };
+
+  const writeSavedProfiles = (ids) => {
+    try {
+      localStorage.setItem(savedProfilesKey, JSON.stringify([...new Set(ids)]));
+      return true;
+    } catch (error) {
+      console.error("Could not save nutrition profiles.", error);
+      return false;
+    }
+  };
+
+  const ensureDossierDialog = () => {
+    let dialog = document.getElementById("nutritionDossierDialog");
+    if (dialog) return dialog;
+    dialog = document.createElement("dialog");
+    dialog.id = "nutritionDossierDialog";
+    dialog.className = "ns-dossier-dialog";
+    dialog.setAttribute("aria-labelledby", "nutritionDossierTitle");
+    dialog.innerHTML = `
+      <div class="ns-dialog-head">
+        <div><span class="ns-kicker">PetCare · Nutrition reference</span><h2 id="nutritionDossierTitle"></h2></div>
+        <button type="button" class="ns-dialog-close" aria-label="Đóng hồ sơ">×</button>
+      </div>
+      <div class="ns-dialog-content"></div>
+      <div class="ns-dialog-actions">
+        <p class="ns-dialog-status" aria-live="polite"></p>
+        <div><button type="button" class="ns-button ns-save-profile">Chèn vào Trang chính & Cổng khách hàng</button>
+          <button type="button" class="ns-button ns-dialog-close-secondary">Đóng</button></div>
+      </div>`;
+    document.body.append(dialog);
+    dialog.querySelectorAll(".ns-dialog-close, .ns-dialog-close-secondary").forEach((button) => {
+      button.addEventListener("click", () => dialog.close());
+    });
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog.querySelector(".ns-save-profile").addEventListener("click", () => {
+      if (!activeBreed) return;
+      const saved = readSavedProfiles();
+      const alreadySaved = saved.includes(activeBreed.id);
+      const next = alreadySaved ? saved.filter((id) => id !== activeBreed.id) : [...saved, activeBreed.id];
+      const feedback = dialog.querySelector(".ns-dialog-status");
+      if (!writeSavedProfiles(next)) {
+        feedback.textContent = "Không lưu được trong trình duyệt này. Hãy kiểm tra quyền lưu trữ trang web.";
+        return;
+      }
+      updateSaveButton(dialog, activeBreed);
+      feedback.textContent = alreadySaved
+        ? "Đã gỡ hồ sơ khỏi Trang chính và Cổng khách hàng."
+        : "Đã chèn hồ sơ. Mở lại Trang chính hoặc Cổng khách hàng để xem.";
+    });
+    return dialog;
+  };
+
+  const updateSaveButton = (dialog, breed) => {
+    const button = dialog.querySelector(".ns-save-profile");
+    const isSaved = readSavedProfiles().includes(breed.id);
+    button.textContent = isSaved
+      ? "Đã chèn · Gỡ khỏi Trang chính & Cổng khách hàng"
+      : "Chèn vào Trang chính & Cổng khách hàng";
+    button.classList.toggle("primary", !isSaved);
+  };
+
+  const openDossier = (breed) => {
+    activeBreed = breed;
+    const dialog = ensureDossierDialog();
     const dossier = breed.profile;
     const overview = dossier.partI_overview;
     const feeding = dossier.partIV_feedingAndIngredientChecklist;
-    const specificNotes = overview.breedSpecificFacts || [];
-    const stages = dossier.partIII_lifeStageNutrition || [];
-    const stageMarkup = stages.map(({ ageBand, nutritionGuidance, sourceIds }) => `
-      <section class="ns-dossier-stage">
-        <h5>${escapeHtml(nutritionGuidance.label)} <span>· ${escapeHtml(ageBandLabel(ageBand))}</span></h5>
-        <p><strong>Năng lượng:</strong> ${escapeHtml(nutritionGuidance.energyNeed)}</p>
-        <p><strong>Loại thức ăn:</strong> ${escapeHtml(nutritionGuidance.foodType)}</p>
-        <p><strong>Ưu tiên dinh dưỡng:</strong> ${escapeHtml((nutritionGuidance.nutrientPriorities || []).join("; "))}</p>
-        <p><strong>Nguyên liệu tham khảo:</strong> ${escapeHtml((nutritionGuidance.ingredientPriorities || []).join("; "))}</p>
-        <p class="ns-record-note">${sourceMarkup(sourceIds)}</p>
-      </section>`).join("");
-    const factsMarkup = specificNotes.map((fact) => fact.fact
-      ? `<li><strong>${escapeHtml(fact.fact)}</strong><br>${escapeHtml(fact.feedingImplication || "")}</li>`
-      : `<li>${escapeHtml(fact.note || "Chưa có dữ kiện riêng của giống được xác minh.")}</li>`
-    ).join("");
-    const supplementNote = breed.verificationStatus === "supplemental_name_only_unverified"
-      ? '<p class="ns-record-note"><strong>Chỉ mục bổ sung chưa xác minh:</strong> hiện chỉ có tên giống và loài; không có dữ liệu mô tả riêng.</p>'
-      : "";
-
-    return `<details class="ns-dossier">
-      <summary>Xem hồ sơ dinh dưỡng theo giai đoạn</summary>
-      ${supplementNote}
-      <p><strong>Nguyên tắc:</strong> ${escapeHtml(dossier.partII_nutritionPrinciples.rule)}</p>
-      <p><strong>Năng lượng:</strong> ${escapeHtml(feeding.dailyCalories.reason)} ${escapeHtml(feeding.dailyCalories.method)}</p>
-      <h4>Giai đoạn sống</h4>
-      ${stageMarkup}
-      <h4>Dưỡng chất cần đối chiếu</h4>
-      ${listMarkup(feeding.importantNutrientSources)}
-      <h4>Lưu ý riêng theo giống</h4>
-      <ul>${factsMarkup}</ul>
-      <h4>Checklist chọn thức ăn</h4>
-      ${listMarkup(feeding.checklist)}
-      <p><strong>Kết luận:</strong> ${escapeHtml(dossier.partVI_conclusion)}</p>
-      <p class="ns-record-note"><strong>Nguồn:</strong> ${sourceMarkup(dossier.sources)}</p>
-    </details>`;
+    const facts = overview.breedSpecificFacts || [];
+    const factsMarkup = facts.length
+      ? `<ul>${facts.map((fact) => `<li>${escapeHtml(fact.fact || fact.note)} ${escapeHtml(fact.feedingImplication || "")}</li>`).join("")}</ul>`
+      : "<p>Chưa có dữ kiện riêng theo giống được xác minh.</p>";
+    dialog.querySelector("#nutritionDossierTitle").textContent = `Dinh dưỡng theo giai đoạn · ${breed.name}`;
+    dialog.querySelector(".ns-dialog-content").innerHTML = `
+      <p class="ns-dialog-lead">${escapeHtml(dossier.partII_nutritionPrinciples.rule)}</p>
+      ${stageTableMarkup(breed)}
+      <div class="ns-dialog-columns">
+        <section><h3>Dưỡng chất cần đối chiếu</h3>${listMarkup(feeding.importantNutrientSources)}</section>
+        <section><h3>Lưu ý riêng theo giống</h3>${factsMarkup}</section>
+      </div>
+      <p class="ns-record-note"><strong>Nguồn tham khảo:</strong> ${sourceMarkup(dossier.sources)}</p>
+      <p class="ns-record-note">Không có khẩu phần kcal riêng theo giống. Kiểm tra nhãn của đúng sản phẩm, điều chỉnh theo thể trạng và hỏi bác sĩ thú y khi thú cưng có bệnh lý.</p>`;
+    dialog.querySelector(".ns-dialog-status").textContent = "";
+    updateSaveButton(dialog, breed);
+    if (!dialog.open) dialog.showModal();
   };
 
   const render = (breeds) => {
@@ -159,7 +230,7 @@
         <p class="ns-record-note"><strong>Trạng thái dữ kiện:</strong> ${escapeHtml(factStatusLabel(overview.breedFactStatus))}${overview.breedFactSourceIds?.length ? `<br><strong>Nguồn giống:</strong> ${sourceMarkup(overview.breedFactSourceIds)}` : ""}</p>
         <p><strong>Khung chọn khẩu phần:</strong> đối chiếu giai đoạn sống, thể trạng và tuyên bố dinh dưỡng cho ${escapeHtml(species.toLocaleLowerCase("vi"))}; không có ngưỡng AAFCO/FEDIAF riêng cho tên giống này.</p>
         ${conflictNote}
-        ${dossierMarkup(breed)}
+        <button class="ns-button ns-open-dossier" type="button" data-profile-id="${escapeHtml(breed.id)}">Xem hồ sơ dinh dưỡng theo giai đoạn</button>
       </article>`;
     }).join("");
   };
@@ -194,6 +265,12 @@
         + sizes.map((size) => `<option value="${escapeHtml(size)}">${escapeHtml(size)}</option>`).join("");
       status.textContent = `${breeds.length} hồ sơ giống · khung dinh dưỡng theo giai đoạn; ${data.summary.profilesWithBreedSpecificSourceFacts} hồ sơ có một số dữ kiện giống kèm nguồn, các trường khác giữ trạng thái riêng.`;
       render(breeds);
+      list.addEventListener("click", (event) => {
+        const button = event.target.closest(".ns-open-dossier");
+        if (!button) return;
+        const selected = breeds.find((breed) => breed.id === button.dataset.profileId);
+        if (selected) openDossier(selected);
+      });
       query.addEventListener("input", () => { visibleLimit = 24; render(breeds); });
       sizeFilter.addEventListener("change", () => { visibleLimit = 24; render(breeds); });
       loadMore.addEventListener("click", () => { visibleLimit += 24; render(breeds); });

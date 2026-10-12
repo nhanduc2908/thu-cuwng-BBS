@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "title": "Danh mục 40 chỉ tiêu dinh dưỡng chó mèo",
+  "status": "reference_fields_not_breed_specific_thresholds",
+  "notice": "Danh mục này xác định các chỉ tiêu cần kiểm tra; không phải công thức khẩu phần hay bảng ngưỡng định lượng theo giống. Đối chiếu hồ sơ dinh dưỡng hiện hành theo loài, giai đoạn, năng lượng và thị trường; không tự điền số thiếu.",
+  "stages": {
+    "growth": {
+      "label": "Tăng trưởng",
+      "dog": "Chọn tuyên bố thức ăn cho tăng trưởng phù hợp; tốc độ trưởng thành phụ thuộc kích thước và cá thể. Với chó lớn/khổng lồ, xác nhận công thức ghi rõ phù hợp tăng trưởng chó lớn; không thúc tăng cân.",
+      "cat": "Chọn thức ăn hoàn chỉnh cho mèo con/tăng trưởng; duy trì đến khi đạt trưởng thành thể chất, thường khoảng 12 tháng nhưng cần cá thể hóa.",
+      "senior": false
+    },
+    "adult": {
+      "label": "Trưởng thành",
+      "dog": "Dùng hồ sơ duy trì trưởng thành; điều chỉnh năng lượng theo thể trạng, triệt sản, hoạt động và sức khỏe. Chỉ chuyển khỏi công thức tăng trưởng khi cá thể đã trưởng thành.",
+      "cat": "Dùng hồ sơ duy trì trưởng thành; theo dõi cân nặng và thể trạng, nhất là sau triệt sản hoặc khi giảm hoạt động.",
+      "senior": false
+    },
+    "senior": {
+      "label": "Cao tuổi",
+      "dog": "AAFCO/FEDIAF không đặt một bộ ngưỡng dinh dưỡng riêng phổ quát cho mọi chó cao tuổi. Không tự giảm protein hay hạn chế khoáng; đánh giá thể trạng, bệnh lý và xét nghiệm cùng bác sĩ thú y.",
+      "cat": "Không có một bộ ngưỡng dinh dưỡng senior áp dụng cho mọi mèo. Bắt đầu rà soát sức khỏe định kỳ; chỉ điều chỉnh phospho, protein, năng lượng hoặc độ ẩm theo chẩn đoán và tư vấn thú y.",
+      "senior": true
+    }
+  },
+  "groups": [
+    {"id":"energy_macros","label":"Năng lượng và thành phần phân tích"},
+    {"id":"fatty_acids","label":"Acid béo"},
+    {"id":"minerals","label":"Khoáng chất"},
+    {"id":"vitamins","label":"Vitamin và chất dinh dưỡng liên quan"},
+    {"id":"amino_acids","label":"Acid amin"}
+  ],
+  "parameters": [
+    {"id":"metabolizable_energy","group":"energy_macros","label":"Năng lượng chuyển hóa (ME)","unit":"kcal/kg; kcal/100 g; kcal/khẩu phần","role":"Nền tảng quy đổi mật độ và lượng ăn; không suy ra kcal/ngày từ tên giống.","speciesNote":"Dùng năng lượng do nhà sản xuất công bố hoặc phương pháp tính phù hợp; thức ăn khô/ướt khác mật độ."},
+    {"id":"crude_protein","group":"energy_macros","label":"Protein thô","unit":"% nguyên trạng; % chất khô; g/1.000 kcal","role":"Đánh giá cùng cơ sở năng lượng, khả năng tiêu hóa và chất lượng amino acid; không chỉ dựa vào phần trăm trên nhãn.","speciesNote":"Nhu cầu và hồ sơ chó/mèo khác nhau; mèo có nhu cầu sinh lý đặc thù, dùng tiêu chuẩn đúng loài."},
+    {"id":"crude_fat","group":"energy_macros","label":"Béo thô","unit":"% hoặc g theo cơ sở công bố","role":"Nguồn năng lượng và acid béo; theo dõi khẩu phần cùng cân nặng và độ ngon miệng.","speciesNote":"Giá trị cao/thấp không tự xác định thức ăn tốt hơn; so trên cùng cơ sở và giai đoạn."},
+    {"id":"crude_fiber","group":"energy_macros","label":"Xơ thô","unit":"% nguyên trạng hoặc chất khô","role":"Chỉ số phân tích thô, không đại diện toàn bộ chất xơ lên men/không lên men.","speciesNote":"Hàm lượng phù hợp tùy công thức, tiêu hóa và mục tiêu lâm sàng; không phải ngưỡng tối ưu cho từng giống."},
+    {"id":"moisture","group":"energy_macros","label":"Độ ẩm","unit":"%","role":"Cần để so sánh nguyên trạng với chất khô và hiểu đóng góp nước từ thức ăn.","speciesNote":"Thức ăn ướt thường có độ ẩm cao hơn; luôn duy trì nước sạch, đặc biệt nếu thú cưng có bệnh."},
+    {"id":"crude_ash","group":"energy_macros","label":"Tro thô / tổng khoáng","unit":"%","role":"Ước lượng tổng phần khoáng sau đốt; không cho biết riêng từng khoáng hay khả năng hấp thu.","speciesNote":"Không dùng chỉ số này thay cho phân tích calcium, phosphorus, sodium hoặc hồ sơ thận."},
+    {"id":"carbohydrate_nfe","group":"energy_macros","label":"Carbohydrate ước tính (NFE)","unit":"%; nêu rõ nguyên trạng/chất khô","role":"Thường được ước tính từ các thành phần phân tích, không mặc nhiên là giá trị đo trực tiếp trên nhãn.","speciesNote":"Ghi rõ phương pháp tính và độ ẩm; không suy ra khả năng phù hợp chỉ từ tỷ lệ carbohydrate."},
+    {"id":"linoleic_acid","group":"fatty_acids","label":"Acid linoleic (LA, omega-6)","unit":"% năng lượng; g/1.000 kcal; %","role":"Acid béo thiết yếu; đọc đúng cơ sở năng lượng và giai đoạn sống.","speciesNote":"Có trong hồ sơ acid béo thiết yếu của chó và mèo; đối chiếu đúng bảng chuẩn và chú thích."},
+    {"id":"alpha_linolenic_acid","group":"fatty_acids","label":"Acid alpha-linolenic (ALA, omega-3)","unit":"% năng lượng hoặc g/1.000 kcal","role":"Acid béo omega-3 thiết yếu; phân biệt ALA với EPA/DHA.","speciesNote":"Không coi các acid béo omega-3 là có thể hoán đổi cho nhau."},
+    {"id":"arachidonic_acid","group":"fatty_acids","label":"Acid arachidonic (ARA)","unit":"% năng lượng hoặc g/1.000 kcal","role":"Acid béo omega-6 cần được đánh giá theo loài và hồ sơ công thức.","speciesNote":"Mèo có đặc điểm chuyển hóa acid béo khác chó; đối chiếu yêu cầu đúng loài."},
+    {"id":"epa_dha","group":"fatty_acids","label":"EPA + DHA","unit":"mg/100 g; g/1.000 kcal; %","role":"Hai acid béo chuỗi dài; không suy ra hàm lượng chỉ từ tên nguyên liệu như dầu cá.","speciesNote":"Vai trò và lượng bổ sung phụ thuộc sản phẩm, mục tiêu và tình trạng sức khỏe; hỏi bác sĩ thú y khi điều trị."},
+    {"id":"calcium","group":"minerals","label":"Calcium (Ca)","unit":"% chất khô; g/1.000 kcal","role":"Cần đánh giá cùng phosphorus, năng lượng và giai đoạn; tránh bổ sung đơn lẻ vào thức ăn hoàn chỉnh.","speciesNote":"Tăng trưởng chó lớn cần lựa chọn công thức phù hợp; không tạo ngưỡng riêng theo tên giống."},
+    {"id":"phosphorus","group":"minerals","label":"Phosphorus (P)","unit":"% chất khô; g/1.000 kcal","role":"Đọc cùng calcium và cơ sở năng lượng; không tự hạn chế ở thú cưng khỏe mạnh.","speciesNote":"Điều chỉnh trong bệnh thận phải theo chẩn đoán, xét nghiệm và bác sĩ thú y."},
+    {"id":"calcium_phosphorus_ratio","group":"minerals","label":"Tỷ lệ Ca:P","unit":"tỷ lệ theo khối lượng","role":"Tính từ giá trị calcium và phosphorus tương thích cùng cơ sở; tỷ lệ đúng không thay thế việc kiểm tra từng mức.","speciesNote":"Đặc biệt cần kiểm soát khẩu phần hoàn chỉnh trong tăng trưởng; tránh thêm khoáng ngoài công thức."},
+    {"id":"potassium","group":"minerals","label":"Potassium (K)","unit":"% chất khô; g/1.000 kcal; mg","role":"Khoáng điện giải; kiểm tra giá trị công bố và dạng cơ sở tính.","speciesNote":"Bệnh thận, tiêu hóa hoặc thuốc có thể làm thay đổi mục tiêu; không tự bổ sung."},
+    {"id":"sodium","group":"minerals","label":"Sodium (Na)","unit":"% chất khô; g/1.000 kcal; mg","role":"Khoáng điện giải; đánh giá trong tổng khẩu phần và chỉ định y khoa.","speciesNote":"Không tự áp dụng chế độ hạn chế muối cho bệnh tim/thận nếu chưa có chỉ định."},
+    {"id":"chloride","group":"minerals","label":"Chloride (Cl)","unit":"% chất khô; g/1.000 kcal","role":"Khoáng điện giải; thường cần xem cùng sodium và potassium.","speciesNote":"Đối chiếu hồ sơ đầy đủ của đúng loài và không diễn giải riêng lẻ."},
+    {"id":"magnesium","group":"minerals","label":"Magnesium (Mg)","unit":"% chất khô; g/1.000 kcal; mg","role":"Khoáng thiết yếu; một chỉ số đơn lẻ không dự đoán được nguy cơ sỏi/đường tiết niệu.","speciesNote":"Bệnh tiết niệu cần đánh giá toàn khẩu phần, nước, nước tiểu và chẩn đoán thú y."},
+    {"id":"iron","group":"minerals","label":"Iron (Fe)","unit":"mg/kg; mg/1.000 kcal","role":"Vi khoáng; phân biệt lượng tổng với sinh khả dụng và hồ sơ hoàn chỉnh.","speciesNote":"Không bổ sung sắt nếu không có chỉ định chuyên môn."},
+    {"id":"copper","group":"minerals","label":"Copper (Cu)","unit":"mg/kg; mg/1.000 kcal","role":"Vi khoáng cần đối chiếu hồ sơ chuẩn, dạng hóa học và lượng trong khẩu phần.","speciesNote":"Một số bệnh lý cần điều chỉnh đồng; chỉ làm theo chẩn đoán và tư vấn thú y."},
+    {"id":"zinc","group":"minerals","label":"Zinc (Zn)","unit":"mg/kg; mg/1.000 kcal","role":"Vi khoáng; kiểm tra đơn vị, cơ sở năng lượng và khả năng hấp thu.","speciesNote":"Không suy ra đủ/thiếu kẽm chỉ từ thứ tự thành phần hoặc một dạng nguyên liệu."},
+    {"id":"manganese","group":"minerals","label":"Manganese (Mn)","unit":"mg/kg; mg/1.000 kcal","role":"Vi khoáng; dùng công thức hoàn chỉnh và đối chiếu hồ sơ theo giai đoạn.","speciesNote":"Không bổ sung khoáng riêng khi chưa rà soát tổng khẩu phần."},
+    {"id":"iodine","group":"minerals","label":"Iodine (I)","unit":"mg/kg; µg/1.000 kcal","role":"Vi khoáng cần cân bằng; cả thiếu và bổ sung quá mức đều đáng quan tâm.","speciesNote":"Bệnh tuyến giáp cần bác sĩ thú y đánh giá; không tự thay đổi iodine trong khẩu phần."},
+    {"id":"selenium","group":"minerals","label":"Selenium (Se)","unit":"mg/kg; µg/1.000 kcal","role":"Vi khoáng thiết yếu với khoảng an toàn phụ thuộc nguồn và tổng lượng.","speciesNote":"Tránh tự bổ sung; đối chiếu giới hạn trong tài liệu chuẩn hiện hành."},
+    {"id":"vitamin_a","group":"vitamins","label":"Vitamin A","unit":"IU/kg; IU/1.000 kcal; µg","role":"Vitamin tan trong dầu; phân biệt retinol hoạt tính với tiền vitamin A từ thực vật.","speciesNote":"Chó và mèo khác khả năng chuyển hóa tiền vitamin; cần đúng loài."},
+    {"id":"vitamin_d","group":"vitamins","label":"Vitamin D","unit":"IU/kg; IU/1.000 kcal; µg","role":"Vitamin tan trong dầu, cần cân bằng và đối chiếu giới hạn tối đa nếu có.","speciesNote":"Không tự bổ sung vitamin D; dùng nguồn định lượng đáng tin cậy."},
+    {"id":"vitamin_e","group":"vitamins","label":"Vitamin E","unit":"IU/kg; mg/kg; mg/1.000 kcal","role":"Chất chống oxy hóa dinh dưỡng; quy đổi IU và mg phụ thuộc dạng vitamin.","speciesNote":"Đánh giá cùng acid béo và công thức; không quy đổi đơn vị nếu chưa rõ dạng."},
+    {"id":"vitamin_k","group":"vitamins","label":"Vitamin K","unit":"mg/kg; µg/1.000 kcal","role":"Kiểm tra yêu cầu/nguồn theo hồ sơ và công thức; không suy ra từ nhãn tóm tắt.","speciesNote":"Thuốc chống đông, bệnh gan hoặc rối loạn đông máu cần hướng dẫn thú y."},
+    {"id":"thiamine_b1","group":"vitamins","label":"Thiamine (Vitamin B1)","unit":"mg/kg; mg/1.000 kcal","role":"Vitamin tan trong nước; độ ổn định khi chế biến/bảo quản có thể liên quan.","speciesNote":"Mèo cần khẩu phần hoàn chỉnh riêng cho mèo; tránh cho ăn khẩu phần tự chế thiếu cân bằng."},
+    {"id":"riboflavin_b2","group":"vitamins","label":"Riboflavin (Vitamin B2)","unit":"mg/kg; mg/1.000 kcal","role":"Vitamin nhóm B; đối chiếu ngưỡng theo loài và giai đoạn.","speciesNote":"Không thay một dưỡng chất riêng cho tuyên bố thức ăn hoàn chỉnh."},
+    {"id":"niacin_b3","group":"vitamins","label":"Niacin (Vitamin B3)","unit":"mg/kg; mg/1.000 kcal","role":"Vitamin nhóm B; yêu cầu và khả năng tổng hợp khác nhau theo loài.","speciesNote":"Mèo có đặc điểm chuyển hóa niacin khác chó; dùng hồ sơ đúng loài."},
+    {"id":"pantothenic_acid_b5","group":"vitamins","label":"Pantothenic acid (Vitamin B5)","unit":"mg/kg; mg/1.000 kcal","role":"Vitamin nhóm B; cần kiểm tra giá trị trên cơ sở phù hợp.","speciesNote":"Ưu tiên thức ăn hoàn chỉnh phù hợp giai đoạn thay vì tự thêm vitamin."},
+    {"id":"pyridoxine_b6","group":"vitamins","label":"Pyridoxine (Vitamin B6)","unit":"mg/kg; mg/1.000 kcal","role":"Vitamin nhóm B; đối chiếu với hồ sơ dinh dưỡng hiện hành.","speciesNote":"Nhu cầu phụ thuộc loài, năng lượng và công thức."},
+    {"id":"folate_b9","group":"vitamins","label":"Folate (Vitamin B9)","unit":"mg/kg; µg/1.000 kcal","role":"Vitamin nhóm B; kiểm tra dạng và đơn vị được công bố.","speciesNote":"Sinh sản/cho bú là trạng thái riêng; không thể thay bằng ba nhóm tuổi thông thường."},
+    {"id":"vitamin_b12","group":"vitamins","label":"Cobalamin (Vitamin B12)","unit":"µg/kg; µg/1.000 kcal","role":"Vitamin nhóm B; nồng độ máu và hấp thu có thể cần đánh giá lâm sàng.","speciesNote":"Bệnh tiêu hóa/tuỵ hoặc thiếu hụt nghi ngờ cần bác sĩ thú y xét nghiệm."},
+    {"id":"choline","group":"vitamins","label":"Choline","unit":"mg/kg; mg/1.000 kcal","role":"Dưỡng chất thiết yếu liên quan chuyển hóa; thường được xem cùng hồ sơ hoàn chỉnh.","speciesNote":"Đối chiếu dạng, đơn vị và mức theo đúng loài."},
+    {"id":"arginine","group":"amino_acids","label":"Arginine","unit":"% chất khô; g/1.000 kcal","role":"Acid amin thiết yếu; kiểm tra hồ sơ amino acid thay vì chỉ crude protein.","speciesNote":"Đặc biệt quan trọng trong khẩu phần mèo; không dùng khẩu phần chó cho mèo."},
+    {"id":"taurine","group":"amino_acids","label":"Taurine","unit":"% chất khô; mg/1.000 kcal","role":"Acid amin/sulfonic acid; ghi rõ dạng và phương pháp đo.","speciesNote":"Thiết yếu với mèo; chó không có cùng yêu cầu khẩu phần tối thiểu phổ quát, nhưng một số cá thể cần đánh giá thú y."},
+    {"id":"methionine_cystine","group":"amino_acids","label":"Methionine + cystine","unit":"% chất khô; g/1.000 kcal","role":"Tổng acid amin chứa lưu huỳnh; xem cùng cystine và lượng protein hữu dụng.","speciesNote":"Đối chiếu hồ sơ amino acid theo loài/giai đoạn; không cộng số từ các cơ sở khác nhau."},
+    {"id":"lysine","group":"amino_acids","label":"Lysine","unit":"% chất khô; g/1.000 kcal","role":"Acid amin thiết yếu; tỷ lệ protein thô không xác nhận riêng lysine đầy đủ.","speciesNote":"Đánh giá chất lượng protein và công thức hoàn chỉnh theo đúng loài."},
+    {"id":"tryptophan","group":"amino_acids","label":"Tryptophan","unit":"% chất khô; g/1.000 kcal","role":"Acid amin thiết yếu; đối chiếu trong hồ sơ amino acid, không suy từ nguyên liệu đơn lẻ.","speciesNote":"Nhu cầu được quy định theo loài/giai đoạn và cơ sở năng lượng phù hợp."}
+  ],
+  "sources": [
+    {"label":"AAFCO · Understanding Pet Food","url":"https://www.aafco.org/consumers/understanding-pet-food/"},
+    {"label":"AAFCO · Reading Pet Food Labels","url":"https://www.aafco.org/consumers/understanding-pet-food/reading-labels/"},
+    {"label":"FEDIAF · Nutritional Guidelines","url":"https://europeanpetfood.org/self-regulation/nutritional-guidelines/"},
+    {"label":"AAHA/AAFP · 2021 Feline Life Stage Guidelines","url":"https://www.aaha.org/resources/2021-aaha-aafp-feline-life-stage-guidelines/"}
+  ]
+}

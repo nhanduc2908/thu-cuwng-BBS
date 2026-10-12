@@ -7,12 +7,13 @@
   <meta name="description" content="Tra cứu hồ sơ giống mèo trong catalog PetCare và nguyên tắc áp dụng hướng dẫn dinh dưỡng AAFCO/FEDIAF theo loài và giai đoạn sống.">
   <title>Tra cứu dinh dưỡng theo giống mèo | PetCare</title>
   <link rel="stylesheet" href="../styles/nutrition_standards.css">
+  <link rel="stylesheet" href="../styles/nutrition_saved_profiles.css">
 </head>
 <body>
   <header class="ns-topbar"><div class="ns-shell ns-top-inner">
     <a class="ns-brand" href="nutrition-standards.html"><span class="ns-mark">P</span><span>PetCare · Dinh dưỡng chuẩn</span></a>
     <nav class="ns-nav" aria-label="Bộ hướng dẫn dinh dưỡng">
-      <a href="nutrition-standards.html">Tổng quan</a><a href="aafco-guide.html">Hoa Kỳ · AAFCO</a><a href="fediaf-europe-guide.html">Châu Âu · FEDIAF</a><a href="dog-breed-standards.html">Giống chó</a><a href="cat-breed-standards.html" aria-current="page">Giống mèo</a><a href="../index.html">Cổng hệ thống</a>
+      <a href="nutrition-standards.html">Tổng quan</a><a href="aafco-guide.html">Hoa Kỳ · AAFCO</a><a href="fediaf-europe-guide.html">Châu Âu · FEDIAF</a><a href="dog-breed-standards.html">Giống chó</a><a href="cat-breed-standards.html" aria-current="page">Giống mèo</a><a href="nutrient-reference-40.html">40 chỉ tiêu</a><a href="../index.html">Cổng hệ thống</a>
     </nav>
   </div></header>
   <main class="ns-shell">
@@ -39,9 +40,17 @@
       <div class="ns-breed-grid" id="breedResults" aria-live="polite"></div>
       <button class="ns-button" id="breedLoadMore" type="button" hidden>Hiển thị thêm giống</button>
     </section>
+    <section class="ns-panel" aria-labelledby="saved-cat-nutrition-title">
+      <h2 id="saved-cat-nutrition-title">Hồ sơ dinh dưỡng đã chèn</h2>
+      <p class="ns-muted">Các hồ sơ bạn chèn sẽ xuất hiện trên Trang chính và Cổng khách hàng của PetCare.</p>
+      <div class="saved-nutrition-list" data-saved-nutrition-profiles data-source="../data/pet_breed_nutrition_profiles_200.json">
+        <p class="saved-nutrition-empty">Đang tải hồ sơ đã chèn…</p>
+      </div>
+    </section>
     <section class="ns-panel"><h2>Kiểm tra sản phẩm</h2><p>Đọc tuyên bố đầy đủ dinh dưỡng và giai đoạn sống trên đúng nhãn. So sánh mức dinh dưỡng chỉ khi cơ sở tính/đơn vị tương thích; bệnh thận, tiết niệu, dị ứng, béo phì hoặc điều trị cần được bác sĩ thú y hướng dẫn.</p><p><a class="ns-button primary" href="aafco-guide.html">Đọc hướng dẫn AAFCO</a> <a class="ns-button" href="fediaf-europe-guide.html">Đọc hướng dẫn FEDIAF</a></p></section>
     <footer class="ns-footer"><a href="nutrition-standards.html">← Tổng quan</a> · Hồ sơ tham khảo, không phải chỉ định thức ăn hoặc tư vấn thú y.</footer>
   </main>
   <script src="../scripts/nutrition_standards.js" defer></script>
+  <script src="../scripts/nutrition_saved_profiles.js" defer></script>
 </body>
 </html>

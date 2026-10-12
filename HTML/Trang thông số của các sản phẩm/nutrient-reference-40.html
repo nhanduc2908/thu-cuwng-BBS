@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#103a2c">
+  <meta name="description" content="Tra cứu 40 chỉ tiêu dinh dưỡng theo giống chó mèo và ba giai đoạn sống, có chú giải nguồn và giới hạn dữ liệu.">
+  <title>40 chỉ tiêu dinh dưỡng theo giống | PetCare</title>
+  <link rel="stylesheet" href="../styles/nutrition_standards.css">
+  <link rel="stylesheet" href="../styles/nutrition_parameters_40.css">
+</head>
+<body>
+  <header class="ns-topbar"><div class="ns-shell ns-top-inner">
+    <a class="ns-brand" href="nutrition-standards.html"><span class="ns-mark">P</span><span>PetCare · Dinh dưỡng chuẩn</span></a>
+    <nav class="ns-nav" aria-label="Bộ hướng dẫn dinh dưỡng">
+      <a href="nutrition-standards.html">Tổng quan</a>
+      <a href="aafco-guide.html">Hoa Kỳ · AAFCO</a>
+      <a href="fediaf-europe-guide.html">Châu Âu · FEDIAF</a>
+      <a href="dog-breed-standards.html">Giống chó</a>
+      <a href="cat-breed-standards.html">Giống mèo</a>
+      <a href="nutrient-reference-40.html" aria-current="page">40 chỉ tiêu</a>
+      <a href="../index.html">Cổng hệ thống</a>
+    </nav>
+  </div></header>
+  <main class="ns-shell" id="nutrient-reference">
+    <section class="ns-hero">
+      <span class="ns-kicker">Breed nutrition · 40 reference fields</span>
+      <h1>40 chỉ tiêu dinh dưỡng theo giống và giai đoạn sống</h1>
+      <p>Chọn một trong 200 hồ sơ chó mèo để xem 40 chỉ tiêu cần đối chiếu trong ba giai đoạn: tăng trưởng, trưởng thành và cao tuổi. Hồ sơ giống giúp tra cứu đúng loài và bối cảnh; không tạo ra ngưỡng dinh dưỡng riêng theo tên giống.</p>
+      <div class="ns-badges">
+        <span class="ns-badge"><strong id="profileTotal">—</strong> hồ sơ giống</span>
+        <span class="ns-badge"><strong id="parameterTotal">—</strong> chỉ tiêu</span>
+        <span class="ns-badge">3 giai đoạn tham khảo</span>
+      </div>
+    </section>
+
+    <aside class="ns-alert">
+      <strong>Không có bảng AAFCO/FEDIAF với 40 ngưỡng riêng cho từng giống.</strong>
+      Danh sách dưới đây là các chỉ tiêu cần kiểm tra, không phải mức số được xác minh cho giống đang chọn. Hãy dùng phiên bản hướng dẫn hiện hành đúng loài, giai đoạn, thị trường và cơ sở năng lượng; không suy ra khẩu phần từ cân nặng giống.
+    </aside>
+
+    <section class="ns-panel" aria-labelledby="breed-picker-title">
+      <h2 id="breed-picker-title">Chọn giống để xem hồ sơ</h2>
+      <div class="ns-parameter-controls">
+        <label for="speciesSelect">Loài
+          <select id="speciesSelect">
+            <option value="">Đang tải danh mục…</option>
+          </select>
+        </label>
+        <label for="breedSearch">Tìm giống
+          <input id="breedSearch" type="search" placeholder="Nhập tên giống…" autocomplete="off">
+        </label>
+        <label for="breedSelect">Hồ sơ giống
+          <select id="breedSelect" disabled><option value="">Chọn loài trước</option></select>
+        </label>
+      </div>
+      <p class="ns-muted" id="breedStatus" role="status" aria-live="polite">Đang tải danh mục giống và 40 chỉ tiêu…</p>
+      <div class="ns-selected-breed" id="selectedBreed" hidden></div>
+    </section>
+
+    <section class="ns-panel" aria-labelledby="life-stage-title">
+      <div class="ns-stage-heading">
+        <div><h2 id="life-stage-title">Khung theo giai đoạn sống</h2>
+          <p class="ns-muted">Chọn một giai đoạn để xem hướng dẫn và toàn bộ 40 trường đối chiếu.</p>
+        </div>
+        <div class="ns-stage-tabs" role="group" aria-label="Chọn giai đoạn sống">
+          <button type="button" data-stage="growth" aria-pressed="true">Tăng trưởng</button>
+          <button type="button" data-stage="adult" aria-pressed="false">Trưởng thành</button>
+          <button type="button" data-stage="senior" aria-pressed="false">Cao tuổi</button>
+        </div>
+      </div>
+      <article class="ns-stage-summary" id="stageSummary" aria-live="polite"></article>
+      <p class="ns-parameter-count" id="parameterCount" aria-live="polite"></p>
+      <div class="ns-parameter-table-wrap">
+        <table class="ns-parameter-table">
+          <thead><tr>
+            <th scope="col">#</th>
+            <th scope="col">Chỉ tiêu · đơn vị</th>
+            <th scope="col">Ý nghĩa / cách đọc</th>
+            <th scope="col">Lưu ý theo loài</th>
+            <th scope="col">Giai đoạn đang chọn</th>
+            <th scope="col">Giá trị số</th>
+          </tr></thead>
+          <tbody id="parameterRows"><tr><td colspan="6">Đang tải dữ liệu…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="ns-panel">
+      <h2>Cách dùng bảng này</h2>
+      <ol class="ns-steps">
+        <li><strong>Kiểm tra tuyên bố đầy đủ dinh dưỡng:</strong> sản phẩm phải phù hợp chó/mèo và giai đoạn sống. Dữ liệu nhãn thường không công bố đủ toàn bộ 40 chỉ tiêu.</li>
+        <li><strong>Đồng nhất đơn vị và cơ sở tính:</strong> không so nguyên trạng với chất khô hoặc trên 1.000 kcal nếu chưa quy đổi từ dữ liệu nhãn đáng tin cậy.</li>
+        <li><strong>Cá thể hóa:</strong> điều chỉnh lượng ăn theo thể trạng, năng lượng, vận động, tình trạng sinh sản và bệnh lý; dùng bác sĩ thú y khi có chỉ định điều trị.</li>
+        <li><strong>Không tự bổ sung:</strong> vitamin, khoáng chất, taurine hoặc calcium riêng có thể làm mất cân bằng khẩu phần hoàn chỉnh.</li>
+      </ol>
+      <p class="ns-muted">“Cao tuổi” là nhóm theo dõi lâm sàng, không phải một hồ sơ định lượng độc lập được AAFCO/FEDIAF quy định chung. Không mặc định giảm protein hoặc hạn chế phosphorus ở thú cưng khỏe mạnh.</p>
+    </section>
+
+    <section class="ns-panel">
+      <h2>Nguồn đối chiếu</h2>
+      <ul class="ns-sources" id="referenceSources"></ul>
+      <p class="ns-muted">Trang này không sao chép bảng ngưỡng số từ ấn phẩm tiêu chuẩn. Hãy xác nhận phiên bản mới nhất, chú thích, điều kiện năng lượng và giới hạn pháp lý trực tiếp tại nguồn trước khi dùng để đánh giá công thức hoặc sản phẩm.</p>
+    </section>
+    <footer class="ns-footer"><a href="nutrition-standards.html">← Tổng quan dinh dưỡng</a> · Hồ sơ tham khảo, không thay thế tư vấn bác sĩ thú y.</footer>
+  </main>
+  <script src="../scripts/nutrition_parameters_40.js" defer></script>
+</body>
+</html>
