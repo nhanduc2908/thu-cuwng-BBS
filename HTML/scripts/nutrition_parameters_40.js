@@ -42,6 +42,7 @@
       return `${band.fromYears}–dưới ${band.toYearsExclusive} tuổi`;
     }
     if (Number.isFinite(band.fromYearsExclusive)) return `Trên ${band.fromYearsExclusive} tuổi`;
+    if (Number.isFinite(band.fromMonthsApprox)) return `Khoảng từ ${band.fromMonthsApprox} tháng`;
     return "Theo độ trưởng thành và cá thể";
   };
 
@@ -50,7 +51,7 @@
     const expectedId = breed.speciesLabel === "Chó"
       ? { growth: "dog_growth", adult: "dog_adult_maintenance", senior: "dog_senior_individualized" }[stage]
       : { growth: "cat_growth", adult: "cat_young_adult", senior: "cat_senior" }[stage];
-    return profileStages.find((item) => item.id === expectedId) || null;
+    return profileStages.find((item) => item.nutritionGuidance?.id === expectedId) || null;
   };
 
   const stageNote = (parameter, species, stage) => {
@@ -173,6 +174,8 @@
     breedSelect.disabled = matches.length === 0;
     if (currentBreed && matches.some((breed) => breed.id === currentBreed.id)) {
       breedSelect.value = currentBreed.id;
+      renderBreedCard(currentBreed);
+      renderStage();
     } else if (matches.length) {
       breedSelect.value = matches[0].id;
       currentBreed = matches[0];
@@ -240,7 +243,12 @@
     if (!firstSpecies || !catalogue.profiles.length) {
       throw new Error("Danh mục không có hồ sơ giống để hiển thị.");
     }
-    speciesSelect.value = firstSpecies;
+    const parameters = new URLSearchParams(window.location.search);
+    const requestedBreed = catalogue.profiles.find((profile) => profile.id === parameters.get("breed"));
+    const requestedStage = parameters.get("stage");
+    if (requestedStage && reference.stages[requestedStage]) currentStage = requestedStage;
+    currentBreed = requestedBreed || null;
+    speciesSelect.value = requestedBreed?.speciesLabel || firstSpecies;
     renderBreedOptions();
     breedStatus.textContent = `${catalogue.profiles.length} hồ sơ · ${reference.parameters.length} chỉ tiêu · ${stageOrder.length} giai đoạn.`;
   };

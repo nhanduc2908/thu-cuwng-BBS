@@ -231,6 +231,7 @@
         <p><strong>Khung chọn khẩu phần:</strong> đối chiếu giai đoạn sống, thể trạng và tuyên bố dinh dưỡng cho ${escapeHtml(species.toLocaleLowerCase("vi"))}; không có ngưỡng AAFCO/FEDIAF riêng cho tên giống này.</p>
         ${conflictNote}
         <button class="ns-button ns-open-dossier" type="button" data-profile-id="${escapeHtml(breed.id)}">Xem hồ sơ dinh dưỡng theo giai đoạn</button>
+        <a class="ns-button" href="nutrient-reference-40.html?breed=${encodeURIComponent(breed.id)}&amp;stage=growth">40 chỉ tiêu · 3 giai đoạn</a>
       </article>`;
     }).join("");
   };

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#176344">
+  <meta name="description" content="Giỏ hàng trải nghiệm Bông Bông Pet Care.">
+  <title>Giỏ hàng | Bông Bông Pet Care</title>
+  <link rel="stylesheet" href="styles/store.css">
+  <script src="scripts/store.js" defer></script>
+</head>
+<body data-page="cart">
+  <header id="store-header" class="site-header"></header>
+  <main class="container">
+    <p class="breadcrumbs"><a href="index.html">Trang chủ</a> / Giỏ hàng</p>
+    <h1 class="page-title">Giỏ hàng yêu cầu</h1>
+    <p class="page-lead">Giỏ hàng chỉ được lưu trong trình duyệt hiện tại, không đồng bộ với cửa hàng hoặc thiết bị khác.</p>
+    <div class="cart-layout">
+      <section><div class="cart-list" data-cart-list aria-live="polite"></div></section>
+      <aside class="summary-panel">
+        <h2>Tóm tắt</h2>
+        <div class="summary-line"><span>Số lượng</span><strong data-cart-items>0</strong></div>
+        <div class="summary-line total"><span>Tạm tính mẫu</span><strong data-cart-total>0 ₫</strong></div>
+        <p class="checkout-disclaimer">Chưa gồm vận chuyển. Giá mẫu cần xác nhận; thức ăn chưa có giá.</p>
+        <a class="button" data-checkout-link href="thanh-toan.html" hidden>Tiếp tục tạo yêu cầu</a>
+        <p><a class="text-link" href="san-pham.html">← Tiếp tục xem sản phẩm</a></p>
+      </aside>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><div><strong>BÔNG BÔNG PET CARE</strong><p>Không thu tiền trên trang trải nghiệm.</p></div><p>Đơn thật cần được tạo qua kênh cửa hàng đã xác nhận.</p></div></footer>
+  <div id="store-toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

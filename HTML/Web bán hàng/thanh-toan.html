@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#176344">
+  <meta name="description" content="Tạo bản nháp yêu cầu mua hàng trong trình duyệt.">
+  <title>Tạo yêu cầu | Bông Bông Pet Care</title>
+  <link rel="stylesheet" href="styles/store.css">
+  <script src="scripts/store.js" defer></script>
+</head>
+<body data-page="checkout">
+  <header id="store-header" class="site-header"></header>
+  <main class="container">
+    <p class="breadcrumbs"><a href="index.html">Trang chủ</a> / <a href="gio-hang.html">Giỏ hàng</a> / Tạo yêu cầu</p>
+    <h1 class="page-title">Thông tin yêu cầu</h1>
+    <p class="page-lead">Tạo bản nháp để xem lại ngay trên thiết bị này. Chưa có dữ liệu nào được gửi đến Bông Bông.</p>
+    <div class="notice"><strong>Không phải thanh toán:</strong> biểu mẫu không gọi máy chủ, không gửi tin nhắn và không thu thập thông tin. Họ tên/số điện thoại bạn nhập sẽ chỉ được lưu trong localStorage của trình duyệt này.</div>
+    <div class="checkout-layout">
+      <form class="checkout-form panel" data-checkout-form>
+        <label>Họ và tên<input class="field" name="name" autocomplete="name" required maxlength="100"></label>
+        <label>Số điện thoại<input class="field" name="phone" type="tel" autocomplete="tel" required maxlength="30"></label>
+        <label>Địa chỉ dự kiến<input class="field" name="address" autocomplete="street-address" maxlength="240"></label>
+        <label>Ghi chú<textarea class="field" name="note" maxlength="500"></textarea></label>
+        <button class="button" type="submit">Lưu bản nháp yêu cầu</button>
+        <a class="text-link" href="gio-hang.html">Quay lại giỏ hàng</a>
+      </form>
+      <aside class="summary-panel" data-checkout-summary aria-live="polite"><div class="empty-state">Đang tải giỏ hàng…</div></aside>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><div><strong>BÔNG BÔNG PET CARE</strong><p>Bản trải nghiệm catalog.</p></div><p>Chưa tích hợp thanh toán, vận chuyển hoặc hệ thống nhận đơn.</p></div></footer>
+  <div id="store-toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

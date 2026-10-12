@@ -25,6 +25,7 @@ from app.database import Database
 from app.modules.auth.constants import ROLE_PERMISSIONS
 from app.modules.auth.security import hash_password, verify_password
 from app.store_slips import SLIP_TYPES
+from app.storefront_catalog import build_storefront_catalog
 
 
 LOGGER = logging.getLogger("pet_store.web")
@@ -1029,6 +1030,19 @@ class LocalAdminBridge:
                 request_path = self._normalized_path()
 
                 if self._customer_request("GET"):
+                    return
+
+                if request_path == "/storefront/catalog":
+                    try:
+                        payload = build_storefront_catalog(database.connection)
+                    except Exception:
+                        LOGGER.exception("Could not read storefront product catalog")
+                        self._json(
+                            HTTPStatus.INTERNAL_SERVER_ERROR,
+                            {"error": "Could not read the product catalog."},
+                        )
+                        return
+                    self._json(HTTPStatus.OK, payload)
                     return
 
                 if request_path == "/session":

@@ -33,7 +33,10 @@ class InventoryRepository:
             ).append(profile)
 
         items = self.connection.execute(
-            "SELECT * FROM inventory_items WHERE is_demo = 1"
+            """
+            SELECT * FROM inventory_items
+            WHERE is_demo = 1 AND item_code NOT LIKE 'DEMO-BREED-%'
+            """
         ).fetchall()
         matched = 0
         with self.connection:
