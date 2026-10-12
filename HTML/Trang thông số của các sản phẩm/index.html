@@ -39,10 +39,16 @@
       <strong>Chuẩn dữ liệu an toàn</strong>
       Chỉ điền giá trị tìm được trên nhãn hoặc tài liệu chính thức của nhà sản xuất/đơn vị được ủy quyền. Thành phần, khẩu phần, giống, độ tuổi và công dụng chưa có nguồn sẽ được ghi rõ là chưa xác minh; không suy đoán số dinh dưỡng. Thuốc thú y không phải hướng dẫn tự điều trị.
     </div>
+    <div class="spec-notice" role="note">
+      <strong>JSON sản phẩm · 70 trường · giống liên quan · thành phần cần lưu ý</strong>
+      Tệp JSON sản phẩm hiện tổng hợp 4 hồ sơ tham khảo đã có (2 sản phẩm chó, 2 sản phẩm mèo), 200 hồ sơ giống và 9 nhóm hướng dẫn giai đoạn sống. Có thêm tệp hồ sơ dinh dưỡng riêng cho 200 giống; 4 mục bổ sung chỉ có tên/loài chưa xác minh. Mức năng lượng là định tính; dùng nhãn SKU và theo dõi thể trạng để xác định lượng ăn. Đây chưa phải danh mục đầy đủ thị trường; nhiều thông số và dị nguyên chưa được công bố/xác minh. Thành phần có trong nhãn không đồng nghĩa với chẩn đoán dị ứng.
+    </div>
     <section class="spec-panel" aria-label="Bộ lọc sản phẩm">
       <div class="brand-actions">
         <a class="spec-button primary" href="thuong-hieu.html">Duyệt thương hiệu & dòng sản phẩm theo quốc gia</a>
-        <span>Danh sách tham khảo theo đầu vào người dùng; cần xác minh trước khi dùng làm dữ liệu hàng hóa.</span>
+        <a class="spec-button" href="../data/pet_food_breed_allergen_catalog.json" download="pet_food_breed_allergen_catalog.json">Tải JSON sản phẩm & giống</a>
+        <a class="spec-button" href="../data/pet_breed_nutrition_profiles_200.json" download="pet_breed_nutrition_profiles_200.json">Tải 200 hồ sơ dinh dưỡng giống</a>
+        <span>Chỉ hồ sơ tham khảo có nguồn được ghi nhận; xem trạng thái từng trường trong tệp JSON.</span>
       </div>
       <div class="spec-controls">
         <label>Tìm tên, thương hiệu, công dụng

@@ -55,6 +55,8 @@
       "entries": [
         {"file": "product_spec_fields.json", "label": "Chuẩn 70 trường thông số sản phẩm", "arrayPath": "groups"},
         {"file": "pet_product_specs.json", "label": "Hồ sơ sản phẩm tham khảo chó mèo", "arrayPath": "products"},
+        {"file": "pet_food_breed_allergen_catalog.json", "label": "JSON thức ăn · 70 trường · tuổi, năng lượng, loại thức ăn, giống và thành phần cần lưu ý · dữ liệu một phần", "arrayPath": "products", "classification": "partial_source_backed_reference"},
+        {"file": "pet_breed_nutrition_profiles_200.json", "label": "200 hồ sơ dinh dưỡng giống chó mèo · giai đoạn sống, khẩu phần, dưỡng chất, nguồn và giới hạn xác minh", "arrayPath": "profiles", "classification": "cautionary_reference"},
         {"file": "pet_food_brands_global.json", "label": "Danh mục thương hiệu thức ăn toàn cầu · đầu vào người dùng, chưa xác minh", "arrayPath": "sections"}
       ]
     }

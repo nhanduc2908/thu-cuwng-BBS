@@ -12,6 +12,7 @@
   const status = document.getElementById("breedStatus");
   const loadMore = document.getElementById("breedLoadMore");
   let visibleLimit = 24;
+  let sourceReferences = {};
 
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({
     "&": "&amp;",
@@ -20,6 +21,79 @@
     '"': "&quot;",
     "'": "&#39;"
   })[character]);
+
+  const ageBandLabel = (band) => {
+    if (!band) return "Theo hướng dẫn chung của loài";
+    if (band.fromAge) return band.fromAge;
+    if (Number.isFinite(band.fromMonths) && Number.isFinite(band.toMonthsApprox)) {
+      return `${band.fromMonths}–khoảng ${band.toMonthsApprox} tháng`;
+    }
+    if (Number.isFinite(band.fromMonthsApprox)) return `Khoảng từ ${band.fromMonthsApprox} tháng`;
+    if (Number.isFinite(band.fromMonths) && Number.isFinite(band.toMonthsExclusive)) {
+      return `${band.fromMonths}–dưới ${band.toMonthsExclusive} tháng`;
+    }
+    if (Number.isFinite(band.fromYears) && Number.isFinite(band.toYearsExclusive)) {
+      return `${band.fromYears}–dưới ${band.toYearsExclusive} tuổi`;
+    }
+    if (Number.isFinite(band.fromYears) && Number.isFinite(band.toYearsInclusive)) {
+      return `${band.fromYears}–${band.toYearsInclusive} tuổi`;
+    }
+    if (Number.isFinite(band.fromYearsExclusive)) return `Trên ${band.fromYearsExclusive} tuổi`;
+    if (Number.isFinite(band.fromMonths)) return `Từ ${band.fromMonths} tháng`;
+    return "Theo cá thể và bác sĩ thú y";
+  };
+
+  const listMarkup = (items) => Array.isArray(items) && items.length
+    ? `<ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`
+    : "";
+
+  const sourceMarkup = (ids) => (ids || []).map((id) => {
+    const source = sourceReferences[id];
+    return source
+      ? `<a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.label)}</a>`
+      : "";
+  }).filter(Boolean).join(" · ");
+
+  const dossierMarkup = (breed) => {
+    const dossier = breed.profile;
+    const overview = dossier.partI_overview;
+    const feeding = dossier.partIV_feedingAndIngredientChecklist;
+    const specificNotes = overview.breedSpecificFacts || [];
+    const stages = dossier.partIII_lifeStageNutrition || [];
+    const stageMarkup = stages.map(({ ageBand, nutritionGuidance, sourceIds }) => `
+      <section class="ns-dossier-stage">
+        <h5>${escapeHtml(nutritionGuidance.label)} <span>· ${escapeHtml(ageBandLabel(ageBand))}</span></h5>
+        <p><strong>Năng lượng:</strong> ${escapeHtml(nutritionGuidance.energyNeed)}</p>
+        <p><strong>Loại thức ăn:</strong> ${escapeHtml(nutritionGuidance.foodType)}</p>
+        <p><strong>Ưu tiên dinh dưỡng:</strong> ${escapeHtml((nutritionGuidance.nutrientPriorities || []).join("; "))}</p>
+        <p><strong>Nguyên liệu tham khảo:</strong> ${escapeHtml((nutritionGuidance.ingredientPriorities || []).join("; "))}</p>
+        <p class="ns-record-note">${sourceMarkup(sourceIds)}</p>
+      </section>`).join("");
+    const factsMarkup = specificNotes.map((fact) => fact.fact
+      ? `<li><strong>${escapeHtml(fact.fact)}</strong><br>${escapeHtml(fact.feedingImplication || "")}</li>`
+      : `<li>${escapeHtml(fact.note || "Chưa có dữ kiện riêng của giống được xác minh.")}</li>`
+    ).join("");
+    const supplementNote = breed.verificationStatus === "supplemental_name_only_unverified"
+      ? '<p class="ns-record-note"><strong>Chỉ mục bổ sung chưa xác minh:</strong> hiện chỉ có tên giống và loài; không có dữ liệu mô tả riêng.</p>'
+      : "";
+
+    return `<details class="ns-dossier">
+      <summary>Xem hồ sơ dinh dưỡng theo giai đoạn</summary>
+      ${supplementNote}
+      <p><strong>Nguyên tắc:</strong> ${escapeHtml(dossier.partII_nutritionPrinciples.rule)}</p>
+      <p><strong>Năng lượng:</strong> ${escapeHtml(feeding.dailyCalories.reason)} ${escapeHtml(feeding.dailyCalories.method)}</p>
+      <h4>Giai đoạn sống</h4>
+      ${stageMarkup}
+      <h4>Dưỡng chất cần đối chiếu</h4>
+      ${listMarkup(feeding.importantNutrientSources)}
+      <h4>Lưu ý riêng theo giống</h4>
+      <ul>${factsMarkup}</ul>
+      <h4>Checklist chọn thức ăn</h4>
+      ${listMarkup(feeding.checklist)}
+      <p><strong>Kết luận:</strong> ${escapeHtml(dossier.partVI_conclusion)}</p>
+      <p class="ns-record-note"><strong>Nguồn:</strong> ${sourceMarkup(dossier.sources)}</p>
+    </details>`;
+  };
 
   const render = (breeds) => {
     const searchTerm = query.value.trim().toLocaleLowerCase("vi");
@@ -42,6 +116,7 @@
       const disagreements = breed.conflicts || {};
       const weightConflict = disagreements.adult_weight_kg;
       const sizeConflict = disagreements.size;
+      const overview = breed.profile.partI_overview;
       const conflictLabels = {
         size: "Kích thước",
         adult_weight_kg: "Cân nặng trưởng thành (kg)",
@@ -49,13 +124,16 @@
         origin_region: "Vùng xuất xứ",
         climate: "Khí hậu",
         suitable_environment: "Môi trường phù hợp",
+        suitable_home: "Môi trường sống gợi ý",
         lifespan_years: "Tuổi thọ",
-        exercise_level: "Mức vận động"
+        exercise_level: "Mức vận động",
+        heat_tolerance: "Khả năng chịu nóng",
+        cold_tolerance: "Khả năng chịu lạnh"
       };
       const weight = weightConflict
         ? `Hồ sơ dự án có nhiều giá trị: ${escapeHtml(weightConflict.join(" / "))} kg`
-        : (breed.adult_weight_kg ? `${escapeHtml(breed.adult_weight_kg)} kg` : "Chưa có dữ liệu");
-      const size = sizeConflict ? sizeConflict.join(" / ") : (breed.size || "Chưa phân loại");
+        : (overview.adultWeightKg ? `${escapeHtml(overview.adultWeightKg)} kg` : "Chưa có dữ liệu");
+      const size = sizeConflict ? sizeConflict.join(" / ") : (overview.size || "Chưa phân loại");
       const conflictNote = Object.keys(disagreements).length
         ? `<p class="ns-record-note">Sai khác giữa các bản ghi trùng tên: ${Object.entries(disagreements).map(([field, values]) => `${escapeHtml(conflictLabels[field] || field)}: ${escapeHtml(values.join(" / "))}`).join("; ")}. Các giá trị chưa được xác minh là biến thể giống.</p>`
         : "";
@@ -64,21 +142,36 @@
         <div class="latin">${escapeHtml(breed.breed_name_en || "")}</div>
         <div class="ns-tags"><span class="ns-tag">${escapeHtml(size)}</span><span class="ns-tag">${escapeHtml(species)}</span></div>
         <p><strong>Cân nặng trưởng thành tham khảo:</strong> ${weight}</p>
-        <p><strong>Xuất xứ trong catalog:</strong> ${escapeHtml([breed.origin_region, breed.origin_country].filter(Boolean).join(", ") || "Chưa có dữ liệu")}</p>
-        <p><strong>Hoạt động:</strong> ${escapeHtml(breed.exercise_level || "Chưa có dữ liệu")} · <strong>Tuổi thọ:</strong> ${escapeHtml(breed.lifespan_years || "Chưa có dữ liệu")}</p>
+        <p><strong>Xuất xứ trong catalog:</strong> ${escapeHtml([overview.originRegion, overview.originCountry].filter(Boolean).join(", ") || "Chưa có dữ liệu")}</p>
+        <p><strong>Hoạt động:</strong> ${escapeHtml(breed.exercise_level || "Chưa có dữ liệu")} · <strong>Tuổi thọ:</strong> ${escapeHtml(overview.lifespanYears || "Chưa có dữ liệu")}</p>
         <p><strong>Khung chọn khẩu phần:</strong> đối chiếu giai đoạn sống, thể trạng và tuyên bố dinh dưỡng cho ${escapeHtml(species.toLocaleLowerCase("vi"))}; không có ngưỡng AAFCO/FEDIAF riêng cho tên giống này.</p>
         ${conflictNote}
+        ${dossierMarkup(breed)}
       </article>`;
     }).join("");
   };
 
-  fetch("../data/nutrition_breed_profiles.json")
+  fetch("../data/pet_breed_nutrition_profiles_200.json")
     .then((response) => {
       if (!response.ok) throw new Error(`Không tải được danh mục giống (${response.status})`);
       return response.json();
     })
     .then((data) => {
-      const breeds = data.breeds.filter((breed) => breed.species === species);
+      sourceReferences = Object.fromEntries((data.sourceReferences || []).map((source) => [source.id, source]));
+      const breeds = data.profiles
+        .filter((breed) => breed.speciesLabel === species)
+        .map((breed) => ({
+          ...breed,
+          breed_name: breed.name,
+          breed_name_en: breed.nameEn,
+          origin_country: breed.profile.partI_overview.originCountry,
+          origin_region: breed.profile.partI_overview.originRegion,
+          size: breed.profile.partI_overview.size,
+          adult_weight_kg: breed.profile.partI_overview.adultWeightKg,
+          lifespan_years: breed.profile.partI_overview.lifespanYears,
+          exercise_level: breed.profile.partI_overview.exerciseLevel,
+          conflicts: breed.profile.partI_overview.conflicts || {}
+        }));
       if (!breeds.length) throw new Error(`Danh mục không có hồ sơ cho loài: ${species}`);
       const totalBadge = document.getElementById(species === "Chó" ? "dogTotal" : "catTotal");
       if (totalBadge) totalBadge.textContent = String(breeds.length);
@@ -86,7 +179,7 @@
         .sort((a, b) => a.localeCompare(b, "vi"));
       sizeFilter.innerHTML = '<option value="">Tất cả kích thước</option>'
         + sizes.map((size) => `<option value="${escapeHtml(size)}">${escapeHtml(size)}</option>`).join("");
-      status.textContent = `${breeds.length} tên giống duy nhất · ${data.source_record_count} dòng nguồn, đã gộp bản ghi trùng tên và giữ cảnh báo sai khác.`;
+      status.textContent = `${breeds.length} hồ sơ giống · khung dinh dưỡng theo giai đoạn và nguồn tham khảo; ${data.summary.supplementalNameOnlyCount} mục bổ sung chỉ có tên/loài, dữ liệu giống chưa xác minh độc lập.`;
       render(breeds);
       query.addEventListener("input", () => { visibleLimit = 24; render(breeds); });
       sizeFilter.addEventListener("change", () => { visibleLimit = 24; render(breeds); });

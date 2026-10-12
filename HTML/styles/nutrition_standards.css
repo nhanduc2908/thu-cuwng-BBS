@@ -71,6 +71,15 @@ button, input, select { color: inherit; font: inherit; }
 .ns-tag { padding: 3px 8px; border-radius: 999px; background: #edf5ed; color: #365e49; font-size: 11px; font-weight: 750; }
 .ns-breed p { margin: 5px 0; font-size: 13px; }
 .ns-record-note { color: #785d22; font-size: 12px !important; }
+.ns-dossier { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
+.ns-dossier summary { color: var(--green); cursor: pointer; font-size: 13px; font-weight: 800; }
+.ns-dossier h4 { margin: 14px 0 6px; font-size: 13px; }
+.ns-dossier ul { margin: 5px 0; padding-left: 19px; font-size: 12px; }
+.ns-dossier-stage { margin: 8px 0; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: #f8fbf7; }
+.ns-dossier-stage h5 { margin: 0 0 6px; font-size: 12px; }
+.ns-dossier-stage h5 span { color: var(--muted); font-weight: 600; }
+.ns-dossier-stage p { font-size: 12px; }
+.ns-dossier a { color: var(--green); text-decoration: underline; text-underline-offset: 2px; }
 .ns-empty { grid-column: 1 / -1; padding: 24px; border: 1px dashed var(--line); border-radius: 14px; color: var(--muted); text-align: center; }
 .ns-footer { padding: 24px 0 34px; color: var(--muted); font-size: 12px; }
 .ns-footer a { color: var(--green); text-decoration: underline; text-underline-offset: 2px; }
