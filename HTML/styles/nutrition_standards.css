@@ -1,0 +1,98 @@
+:root {
+  color-scheme: light;
+  --ink: #18352a;
+  --muted: #64776c;
+  --green: #176547;
+  --green-dark: #0e3b2c;
+  --lime: #d9ef9b;
+  --paper: #f3f7f2;
+  --surface: #fff;
+  --line: #dce7dd;
+  --gold: #c39442;
+  --shadow: 0 14px 38px rgba(17, 51, 38, .08);
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-size: 15px; line-height: 1.65; }
+a { color: inherit; text-decoration: none; }
+button, input, select { color: inherit; font: inherit; }
+.ns-shell { width: min(1160px, calc(100% - 36px)); margin: auto; }
+.ns-topbar { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.92); backdrop-filter: blur(14px); }
+.ns-top-inner { display: flex; min-height: 66px; align-items: center; justify-content: space-between; gap: 16px; }
+.ns-brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 850; letter-spacing: -.03em; }
+.ns-mark { display: grid; width: 37px; height: 37px; place-items: center; border-radius: 12px 12px 12px 4px; background: linear-gradient(140deg, var(--green-dark), var(--green)); color: var(--lime); }
+.ns-nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+.ns-nav a, .ns-button { display: inline-flex; min-height: 40px; align-items: center; justify-content: center; padding: 7px 13px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font-size: 13px; font-weight: 750; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease; }
+.ns-nav a:hover, .ns-button:hover { transform: translateY(-2px); border-color: #8ab39a; box-shadow: 0 8px 20px rgba(17, 51, 38, .1); }
+.ns-button.primary { border-color: var(--green); background: var(--green); color: white; }
+.ns-hero { position: relative; overflow: hidden; margin: 22px 0 16px; padding: clamp(26px, 5vw, 54px); border-radius: 26px; background: linear-gradient(120deg, #0e3226, #176547 76%, #397b4f); color: #f3f8f1; box-shadow: var(--shadow); }
+.ns-hero::after { position: absolute; right: -85px; bottom: -210px; width: 400px; height: 400px; border: 1px solid rgba(226,244,182,.2); border-radius: 50%; box-shadow: 0 0 0 34px rgba(226,244,182,.04), 0 0 0 70px rgba(226,244,182,.035); content: ""; }
+.ns-kicker { color: var(--lime); font-size: 11px; font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }
+.ns-hero h1 { position: relative; z-index: 1; max-width: 800px; margin: 8px 0 10px; font-size: clamp(30px, 5vw, 52px); letter-spacing: -.055em; line-height: 1.08; }
+.ns-hero p { position: relative; z-index: 1; max-width: 770px; margin: 0; color: #d8e7dc; }
+.ns-badges { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 9px; margin-top: 22px; }
+.ns-badge { padding: 7px 12px; border: 1px solid rgba(255,255,255,.19); border-radius: 999px; background: rgba(255,255,255,.09); font-size: 12px; }
+.ns-badge strong { color: var(--lime); }
+.ns-panel { margin: 14px 0; padding: clamp(18px, 3vw, 28px); border: 1px solid var(--line); border-radius: 20px; background: var(--surface); box-shadow: var(--shadow); }
+.ns-panel h2 { margin: 0 0 7px; font-size: clamp(20px, 3vw, 27px); letter-spacing: -.035em; line-height: 1.2; }
+.ns-panel h3 { margin: 0 0 6px; font-size: 17px; line-height: 1.3; }
+.ns-panel p { margin: 7px 0; }
+.ns-muted { color: var(--muted); }
+.ns-alert { margin: 14px 0; padding: 16px 18px; border: 1px solid #ead9ad; border-left: 4px solid var(--gold); border-radius: 14px; background: #fffaf0; }
+.ns-alert strong { display: block; margin-bottom: 4px; }
+.ns-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+.ns-card { min-width: 0; padding: 19px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease; animation: ns-rise .45s both; }
+.ns-card:hover { transform: translateY(-4px); border-color: #a6c4ad; box-shadow: 0 15px 28px rgba(17, 51, 38, .1); }
+.ns-card p:last-child { margin-bottom: 0; }
+.ns-card-link { display: inline-flex; margin-top: 10px; color: var(--green); font-weight: 800; }
+.ns-stat-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; margin-top: 15px; }
+.ns-stat { padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: #f8fbf7; }
+.ns-stat strong { display: block; color: var(--green); font-size: 24px; letter-spacing: -.04em; line-height: 1.1; }
+.ns-stat span { color: var(--muted); font-size: 12px; }
+.ns-steps { display: grid; gap: 10px; padding: 0; list-style: none; counter-reset: steps; }
+.ns-steps li { position: relative; min-height: 42px; padding: 9px 12px 9px 48px; border: 1px solid var(--line); border-radius: 12px; counter-increment: steps; }
+.ns-steps li::before { position: absolute; top: 8px; left: 10px; display: grid; width: 25px; height: 25px; place-items: center; border-radius: 50%; background: #e6f2e8; color: var(--green); content: counter(steps); font-size: 12px; font-weight: 850; }
+.ns-sources { display: grid; gap: 8px; margin: 10px 0 0; padding-left: 20px; }
+.ns-sources a { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }
+.ns-controls { display: grid; grid-template-columns: minmax(0, 1fr) minmax(180px, .38fr); gap: 10px; margin: 14px 0; }
+.ns-controls label { display: grid; gap: 5px; color: var(--muted); font-size: 12px; font-weight: 750; }
+.ns-controls input, .ns-controls select { width: 100%; min-height: 46px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); outline: none; }
+.ns-controls input:focus, .ns-controls select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(23,101,71,.12); }
+.ns-results-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 12px 1px; }
+.ns-count { flex: none; color: var(--green); font-size: 13px; font-weight: 850; }
+.ns-breed-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.ns-breed { padding: 15px; border: 1px solid var(--line); border-radius: 14px; background: #fff; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; animation: ns-rise .35s both; }
+.ns-breed:hover { transform: translateY(-3px); border-color: #a6c4ad; box-shadow: 0 10px 22px rgba(17, 51, 38, .09); }
+.ns-breed h3 { margin: 0; font-size: 16px; }
+.ns-breed .latin { color: var(--muted); font-size: 12px; }
+.ns-tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 9px 0; }
+.ns-tag { padding: 3px 8px; border-radius: 999px; background: #edf5ed; color: #365e49; font-size: 11px; font-weight: 750; }
+.ns-breed p { margin: 5px 0; font-size: 13px; }
+.ns-record-note { color: #785d22; font-size: 12px !important; }
+.ns-empty { grid-column: 1 / -1; padding: 24px; border: 1px dashed var(--line); border-radius: 14px; color: var(--muted); text-align: center; }
+.ns-footer { padding: 24px 0 34px; color: var(--muted); font-size: 12px; }
+.ns-footer a { color: var(--green); text-decoration: underline; text-underline-offset: 2px; }
+
+@keyframes ns-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 800px) {
+  .ns-grid, .ns-breed-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  body { font-size: 14px; }
+  .ns-shell { width: min(100% - 22px, 1160px); }
+  .ns-top-inner { min-height: 58px; align-items: flex-start; flex-direction: column; padding: 10px 0; }
+  .ns-nav { justify-content: flex-start; width: 100%; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 2px; }
+  .ns-nav a { flex: none; min-height: 36px; font-size: 12px; }
+  .ns-hero { margin-top: 12px; padding: 25px 20px; border-radius: 20px; }
+  .ns-hero h1 { font-size: clamp(29px, 10vw, 42px); }
+  .ns-panel { padding: 17px 14px; border-radius: 16px; }
+  .ns-grid, .ns-breed-grid, .ns-stat-row { grid-template-columns: 1fr; }
+  .ns-controls { grid-template-columns: 1fr; }
+  .ns-results-head { align-items: flex-start; flex-direction: column; gap: 3px; }
+  .ns-card, .ns-breed { padding: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

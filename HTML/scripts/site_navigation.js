@@ -31,6 +31,11 @@
         ["Chuẩn dinh dưỡng · Hoa Kỳ, EU, Trung Quốc, Việt Nam", "Trang hỗ trợ/chuan-dinh-duong-thu-cung-hoa-ky.html"],
         ["Nghiên cứu khoa học tiềm năng · chờ xác thực", "Trang hỗ trợ/bao-cao-khoa-hoc-trien-vong.html"],
         ["Thông số sản phẩm chó mèo · 70 trường", "Trang thông số của các sản phẩm/index.html"],
+        ["Bộ hướng dẫn AAFCO & FEDIAF · giống chó mèo", "Trang thông số của các sản phẩm/nutrition-standards.html"],
+        ["Hoa Kỳ · Hướng dẫn đọc nhãn AAFCO/FDA", "Trang thông số của các sản phẩm/aafco-guide.html"],
+        ["Châu Âu · Hướng dẫn FEDIAF & pháp lý EU", "Trang thông số của các sản phẩm/fediaf-europe-guide.html"],
+        ["Tra cứu dinh dưỡng theo giống chó", "Trang thông số của các sản phẩm/dog-breed-standards.html"],
+        ["Tra cứu dinh dưỡng theo giống mèo", "Trang thông số của các sản phẩm/cat-breed-standards.html"],
         ["Thương hiệu thức ăn chó mèo toàn cầu", "Trang thông số của các sản phẩm/thuong-hieu.html"],
         ["Quy trình chăm sóc", "TRrang chính/workflow.html"]
       ]
@@ -305,7 +310,7 @@
           ]
         },
         {
-          match: /chuan-dinh-duong|nutrition_products|thuong-hieu|product_showcase/,
+          match: /chuan-dinh-duong|nutrition_products|nutrition-standards|aafco-guide|fediaf|breed-standards|thuong-hieu|product_showcase/,
           title: "Dinh dưỡng, sản phẩm và quy chuẩn",
           summary: "Đánh giá theo SKU, thị trường và tuyên bố ghi trên nhãn; không suy ra chứng nhận hoặc profile dinh dưỡng từ tên thương hiệu hay giống.",
           checks: [

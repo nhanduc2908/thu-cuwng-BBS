@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#103a2c">
+  <meta name="description" content="Tra cứu hồ sơ giống mèo trong catalog PetCare và nguyên tắc áp dụng hướng dẫn dinh dưỡng AAFCO/FEDIAF theo loài và giai đoạn sống.">
+  <title>Tra cứu dinh dưỡng theo giống mèo | PetCare</title>
+  <link rel="stylesheet" href="../styles/nutrition_standards.css">
+</head>
+<body>
+  <header class="ns-topbar"><div class="ns-shell ns-top-inner">
+    <a class="ns-brand" href="nutrition-standards.html"><span class="ns-mark">P</span><span>PetCare · Dinh dưỡng chuẩn</span></a>
+    <nav class="ns-nav" aria-label="Bộ hướng dẫn dinh dưỡng">
+      <a href="nutrition-standards.html">Tổng quan</a><a href="aafco-guide.html">Hoa Kỳ · AAFCO</a><a href="fediaf-europe-guide.html">Châu Âu · FEDIAF</a><a href="dog-breed-standards.html">Giống chó</a><a href="cat-breed-standards.html" aria-current="page">Giống mèo</a><a href="../index.html">Cổng hệ thống</a>
+    </nav>
+  </div></header>
+  <main class="ns-shell">
+    <section class="ns-hero">
+      <span class="ns-kicker">Feline · breed index</span>
+      <h1>Hồ sơ giống mèo và khung chọn khẩu phần</h1>
+      <p>Tìm các tên mèo trong catalog dự án. Hồ sơ giống không thay thế đánh giá tuổi, thể trạng, bệnh lý hoặc giai đoạn sinh sản; mọi tuyên bố dinh dưỡng phải phù hợp cho mèo.</p>
+      <div class="ns-badges"><span class="ns-badge"><strong id="catTotal">—</strong> tên mèo duy nhất</span><span class="ns-badge">AAFCO · Hoa Kỳ</span><span class="ns-badge">FEDIAF · tham chiếu châu Âu</span></div>
+    </section>
+    <aside class="ns-alert"><strong>Không tồn tại bảng AAFCO/FEDIAF riêng cho từng tên giống mèo.</strong> Chọn sản phẩm có tuyên bố phù hợp với mèo và giai đoạn sống. Cân nặng ghi trong catalog không phải mục tiêu cơ thể, ngưỡng dinh dưỡng hay chỉ định khẩu phần.</aside>
+    <section class="ns-panel" data-breed-page="Mèo">
+      <h2>Tra cứu hồ sơ mèo</h2>
+      <p class="ns-muted">Cân nặng và kích thước là dữ liệu mô tả ghi trong dự án; bản ghi trùng tên có sai khác sẽ được nêu rõ thay vì âm thầm chọn một con số.</p>
+      <div class="ns-controls">
+        <label for="breedSearch">Tìm tên giống hoặc xuất xứ
+          <input id="breedSearch" type="search" placeholder="Ví dụ: Maine Coon, Anh..." autocomplete="off">
+        </label>
+        <label for="sizeFilter">Nhóm kích thước trong catalog
+          <select id="sizeFilter"><option value="">Đang tải...</option></select>
+        </label>
+      </div>
+      <div class="ns-results-head"><p id="breedStatus" aria-live="polite">Đang tải danh mục...</p><span class="ns-count" id="breedCount" aria-live="polite"></span></div>
+      <div class="ns-breed-grid" id="breedResults" aria-live="polite"></div>
+      <button class="ns-button" id="breedLoadMore" type="button" hidden>Hiển thị thêm giống</button>
+    </section>
+    <section class="ns-panel"><h2>Kiểm tra sản phẩm</h2><p>Đọc tuyên bố đầy đủ dinh dưỡng và giai đoạn sống trên đúng nhãn. So sánh mức dinh dưỡng chỉ khi cơ sở tính/đơn vị tương thích; bệnh thận, tiết niệu, dị ứng, béo phì hoặc điều trị cần được bác sĩ thú y hướng dẫn.</p><p><a class="ns-button primary" href="aafco-guide.html">Đọc hướng dẫn AAFCO</a> <a class="ns-button" href="fediaf-europe-guide.html">Đọc hướng dẫn FEDIAF</a></p></section>
+    <footer class="ns-footer"><a href="nutrition-standards.html">← Tổng quan</a> · Hồ sơ tham khảo, không phải chỉ định thức ăn hoặc tư vấn thú y.</footer>
+  </main>
+  <script src="../scripts/nutrition_standards.js" defer></script>
+</body>
+</html>
