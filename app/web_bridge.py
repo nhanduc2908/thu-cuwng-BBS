@@ -740,7 +740,18 @@ class LocalAdminBridge:
                 if module_id == "module_11_reservations":
                     return self._plain_records(database.list_reservations())
                 if module_id == "module_12_orders":
-                    return self._plain_records(database.list_sales_orders())
+                    sales_orders = [
+                        {"record_type": "SALES_ORDER", **record}
+                        for record in self._plain_records(database.list_sales_orders())
+                    ]
+                    storefront_requests = []
+                    for request in self._plain_records(
+                        database.list_storefront_order_requests()
+                    ):
+                        request["record_type"] = "STOREFRONT_REQUEST"
+                        request["items"] = json.loads(request.pop("items_json"))
+                        storefront_requests.append(request)
+                    return storefront_requests + sales_orders
                 if module_id == "module_13_memberships":
                     return self._plain_records(database.list_memberships())
                 if module_id == "module_14_services":
@@ -1045,20 +1056,78 @@ class LocalAdminBridge:
                     self._json(HTTPStatus.OK, payload)
                     return
 
+                storefront_request_match = re.fullmatch(
+                    r"/storefront/order-requests/([A-Z0-9-]{1,40})",
+                    request_path,
+                )
+                if storefront_request_match:
+                    request_code = storefront_request_match.group(1)
+                    request = database.connection.execute(
+                        """
+                        SELECT r.request_code, r.status, so.order_code AS sales_order_code,
+                               so.status AS sales_order_status,
+                               so.total_amount AS sales_order_total,
+                               so.inventory_fulfilled_at
+                        FROM storefront_order_requests r
+                        LEFT JOIN sales_orders so ON so.id = r.sales_order_id
+                        WHERE r.request_code = ?
+                        """,
+                        (request_code,),
+                    ).fetchone()
+                    if request is None:
+                        self._json(
+                            HTTPStatus.NOT_FOUND,
+                            {"error": "Không tìm thấy yêu cầu."},
+                        )
+                        return
+                    self._json(HTTPStatus.OK, {
+                        "requestCode": request["request_code"],
+                        "status": request["status"],
+                        "salesOrderCode": request["sales_order_code"],
+                        "salesOrderStatus": request["sales_order_status"],
+                        "salesOrderTotal": request["sales_order_total"],
+                        "inventoryFulfilled": (
+                            request["inventory_fulfilled_at"] is not None
+                        ),
+                    })
+                    return
+
                 if request_path == "/session":
                     session = self._session()
                     if not session:
                         self._json(HTTPStatus.UNAUTHORIZED, {"authenticated": False})
                         return
+                    user_id = int(session["user_id"])
+                    permissions = set(ROLE_PERMISSIONS.get(session["role"], ()))
+                    if database.has_permission(user_id, "sales.approve"):
+                        permissions.add("sales.approve")
                     self._json(HTTPStatus.OK, {
                         "authenticated": True,
                         "user": {
                             key: session[key]
                             for key in ("user_id", "username", "display_name", "role")
                         },
-                        "permissions": sorted(ROLE_PERMISSIONS.get(session["role"], ())),
+                        "permissions": sorted(permissions),
                         "must_change_password": bool(session.get("must_change_password", False)),
                     })
+                    return
+
+                if request_path == "/sales/approval-requests":
+                    session = self._session()
+                    if not session:
+                        self._json(HTTPStatus.UNAUTHORIZED, {"error": "Sign-in required."})
+                        return
+                    user_id = int(session["user_id"])
+                    if not database.has_permission(user_id, "sales.view"):
+                        self._json(HTTPStatus.FORBIDDEN, {"error": "Insufficient permission."})
+                        return
+                    database.set_actor(user_id)
+                    records = []
+                    for row in database.list_sales_approval_requests():
+                        record = dict(row)
+                        record["payload"] = json.loads(record.pop("payload_json"))
+                        records.append(record)
+                    self._json(HTTPStatus.OK, {"requests": records, "total": len(records)})
                     return
 
                 if self._dataset_request("GET"):
@@ -1318,7 +1387,150 @@ class LocalAdminBridge:
                 request_path = self._normalized_path()
                 if self._customer_request("POST"):
                     return
+                decision_match = re.fullmatch(
+                    r"/sales/approval-requests/(\d+)/decision", request_path
+                )
+                if request_path == "/sales/actions" or decision_match:
+                    session = self._session()
+                    if not session:
+                        self._json(HTTPStatus.UNAUTHORIZED, {"error": "Sign-in required."})
+                        return
+                    database.set_actor(int(session["user_id"]))
+                    try:
+                        body = self._body()
+                        if decision_match:
+                            decision = body.get("decision")
+                            if decision not in {"approve", "reject"}:
+                                raise ValueError("Decision must be approve or reject.")
+                            result = database.review_sales_approval_request(
+                                int(decision_match.group(1)),
+                                decision == "approve",
+                                str(body.get("note", "")),
+                            )
+                            self._json(HTTPStatus.OK, {
+                                "status": decision.upper(),
+                                "result": result,
+                            })
+                        else:
+                            action_type = body.get("actionType")
+                            payload = body.get("payload")
+                            if not isinstance(action_type, str) or not isinstance(payload, dict):
+                                raise ValueError("A sales action and payload are required.")
+                            result = database.submit_sales_action(action_type, payload)
+                            self._json(
+                                HTTPStatus.CREATED
+                                if result["status"] == "PENDING"
+                                else HTTPStatus.OK,
+                                result,
+                            )
+                    except PermissionError as error:
+                        self._json(HTTPStatus.FORBIDDEN, {"error": str(error)})
+                    except (TypeError, ValueError, json.JSONDecodeError) as error:
+                        self._json(HTTPStatus.BAD_REQUEST, {"error": str(error)})
+                    except Exception:
+                        LOGGER.exception("Could not process sales approval request")
+                        self._json(
+                            HTTPStatus.INTERNAL_SERVER_ERROR,
+                            {"error": "Could not process sales action."},
+                        )
+                    return
                 if self._dataset_request("POST"):
+                    return
+                if request_path == "/storefront/order-requests":
+                    try:
+                        body = self._body()
+                        name = body.get("name")
+                        phone = body.get("phone")
+                        address = body.get("address", "")
+                        note = body.get("note", "")
+                        raw_items = body.get("items")
+                        client_request_id = body.get("clientRequestId")
+                        if body.get("consent") is not True:
+                            raise ValueError("Cần đồng ý gửi thông tin đến cửa hàng.")
+                        if (
+                            not isinstance(client_request_id, str)
+                            or not re.fullmatch(
+                                r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-"
+                                r"[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-"
+                                r"[0-9a-fA-F]{12}",
+                                client_request_id,
+                            )
+                        ):
+                            raise ValueError("Mã gửi đơn không hợp lệ; hãy tải lại trang.")
+                        if not isinstance(name, str) or not name.strip() or len(name.strip()) > 100:
+                            raise ValueError("Vui lòng nhập họ tên (tối đa 100 ký tự).")
+                        if not isinstance(phone, str) or not phone.strip() or len(phone.strip()) > 30:
+                            raise ValueError("Vui lòng nhập số điện thoại (tối đa 30 ký tự).")
+                        if len(re.sub(r"\D", "", phone)) < 7:
+                            raise ValueError("Số điện thoại cần có ít nhất 7 chữ số.")
+                        if not isinstance(address, str) or len(address.strip()) > 240:
+                            raise ValueError("Địa chỉ không được vượt quá 240 ký tự.")
+                        if not isinstance(note, str) or len(note.strip()) > 500:
+                            raise ValueError("Ghi chú không được vượt quá 500 ký tự.")
+                        if not isinstance(raw_items, list) or not 1 <= len(raw_items) <= 50:
+                            raise ValueError("Yêu cầu phải có từ 1 đến 50 sản phẩm.")
+
+                        items = []
+                        seen_codes: set[str] = set()
+                        for entry in raw_items:
+                            if not isinstance(entry, dict):
+                                raise ValueError("Danh sách sản phẩm không hợp lệ.")
+                            item_code = entry.get("id")
+                            quantity = entry.get("quantity")
+                            if (
+                                not isinstance(item_code, str)
+                                or not item_code.strip()
+                                or len(item_code.strip()) > 100
+                            ):
+                                raise ValueError("Mã sản phẩm không hợp lệ.")
+                            item_code = item_code.strip()
+                            if item_code in seen_codes:
+                                raise ValueError("Không được lặp sản phẩm trong yêu cầu.")
+                            seen_codes.add(item_code)
+                            if (
+                                isinstance(quantity, bool)
+                                or not isinstance(quantity, int)
+                                or not 1 <= quantity <= 99
+                            ):
+                                raise ValueError("Số lượng mỗi sản phẩm phải từ 1 đến 99.")
+                            items.append({
+                                "item_code": item_code,
+                                "quantity": quantity,
+                            })
+
+                        request_code = (
+                            f"BBR-{datetime.now(timezone.utc):%Y%m%d}-"
+                            f"{secrets.token_hex(4).upper()}"
+                        )
+                        order = database.create_storefront_sales_order({
+                            "request_code": request_code,
+                            "client_request_id": client_request_id.lower(),
+                            "customer_name": name.strip(),
+                            "customer_phone": phone.strip(),
+                            "address": address.strip(),
+                            "note": note.strip(),
+                            "items": items,
+                        })
+                        self._json(HTTPStatus.CREATED, {
+                            "id": order["request_id"],
+                            "requestCode": order["request_code"],
+                            "status": "ORDER_CREATED",
+                            "salesOrderCode": order["sales_order_code"],
+                            "salesOrderStatus": order["sales_order_status"],
+                            "salesOrderTotal": order["sales_order_total"],
+                            "inventoryFulfilled": True,
+                            "message": (
+                                "Đơn đã được tạo và xuất kho; đơn đang chờ thanh toán."
+                            ),
+                        })
+                    except (TypeError, ValueError, json.JSONDecodeError) as error:
+                        self._json(HTTPStatus.BAD_REQUEST, {"error": str(error)})
+                    except Exception:
+                        LOGGER.exception("Could not save storefront order request")
+                        self._json(
+                            HTTPStatus.INTERNAL_SERVER_ERROR,
+                            {"error": "Không thể lưu yêu cầu. Vui lòng thử lại sau."},
+                        )
                     return
                 if request_path == "/login":
                     try:

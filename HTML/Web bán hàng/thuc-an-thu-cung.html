@@ -20,12 +20,20 @@
       <input id="catalog-search" type="search" placeholder="Tìm tên sản phẩm hoặc thương hiệu" aria-label="Tìm thức ăn">
       <select id="catalog-category" aria-label="Lọc theo nhóm hàng"><option value="">Mọi nhóm hàng</option></select>
       <select id="catalog-species" aria-label="Lọc theo loài"><option value="">Mọi loài</option><option value="DOG">Chó</option><option value="CAT">Mèo</option></select>
+      <select id="catalog-sort" aria-label="Sắp xếp sản phẩm">
+        <option value="popular">Xu hướng 30 ngày</option>
+        <option value="price-asc">Giá thấp đến cao</option>
+        <option value="price-desc">Giá cao đến thấp</option>
+        <option value="stock">Còn hàng trước</option>
+        <option value="name">Tên A–Z</option>
+      </select>
     </div>
+    <p class="sort-status" data-sort-status role="status"></p>
     <p class="product-meta" data-product-count aria-live="polite"></p>
     <div class="product-grid" data-product-grid></div>
     <section class="section panel"><h2>Tra cứu tiêu chuẩn dinh dưỡng</h2><p>Tham khảo các trang hướng dẫn AAFCO/FEDIAF và bảng chỉ tiêu theo giống trong dự án.</p><a class="button" href="../Trang thông số của các sản phẩm/index.html">Mở thư viện thông số sản phẩm</a></section>
   </main>
-  <footer class="site-footer"><div class="container footer-inner"><div><strong>BÔNG BÔNG PET CARE</strong><p>Hồ sơ tham khảo không thay thế hướng dẫn thú y.</p></div><p>Giá và tình trạng bán hàng chưa được kết nối.</p></div></footer>
+  <footer class="site-footer"><div class="container footer-inner"><div><strong>BÔNG BÔNG PET CARE</strong><p>Hồ sơ tham khảo không thay thế hướng dẫn thú y.</p></div><p>Giá lấy từ catalog; cửa hàng xác nhận khi tiếp nhận yêu cầu.</p></div></footer>
   <div id="store-toast" class="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>

@@ -47,6 +47,144 @@ PYTHON_PAGE_TARGETS = {
     ),
 }
 
+PYTHON_ROUTE_INDEX = {
+    "platform": 0,
+    "access": 1,
+    "dashboard": 2,
+    "animals": 3,
+    "pet_detail": 4,
+    "store": 5,
+    "suppliers": 6,
+    "imports": 7,
+    "health": 8,
+    "care": 9,
+    "customers": 10,
+    "customer_insights": 11,
+    "reservations": 12,
+    "sales": 13,
+    "inventory": 14,
+    "reports": 15,
+    "operations": 16,
+    "memberships": 17,
+    "services": 18,
+    "data_catalog": 19,
+    "web_catalog": 20,
+    "customer_portal": 21,
+}
+
+PYTHON_ROUTE_COVERAGE = (
+    (
+        "platform", "Nền tảng & dữ liệu",
+        "Trang hỗ trợ/admin_store_management.html", "Một phần",
+        "Quản trị kết nối SQLite; các thẻ tổng quan vẫn là nội dung tham khảo.",
+    ),
+    (
+        "access", "Tài khoản & nhật ký",
+        "Trang hỗ trợ/admin_store_management.html", "Một phần",
+        "Có đăng nhập và xem dữ liệu theo quyền; quản lý tài khoản/audit chưa tương đương đầy đủ.",
+    ),
+    (
+        "dashboard", "Tổng quan",
+        "Trang hỗ trợ/admin_store_management.html", "Một phần",
+        "Bảng tổng quan HTML còn mẫu; không thay dashboard động của Python.",
+    ),
+    (
+        "animals", "Hồ sơ thú cưng",
+        "Trang hỗ trợ/Module/module_04_pets.html", "Tham khảo",
+        "Trang module là tài liệu; admin HTML chỉ xem bản ghi, chưa thay CRUD hồ sơ.",
+    ),
+    (
+        "pet_detail", "Chi tiết thú cưng",
+        "Trang hỗ trợ/pet_health_report.html", "Chưa tương đương",
+        "Báo cáo HTML không tải hồ sơ thú cưng đang chọn từ SQLite.",
+    ),
+    (
+        "store", "Chuồng trại",
+        "Trang hỗ trợ/Module/module_05_housing.html", "Tham khảo",
+        "Tài liệu sức chứa; chưa thay thao tác quản lý chuồng trong Python.",
+    ),
+    (
+        "suppliers", "Nhà cung cấp",
+        "Trang hỗ trợ/Module/module_06_suppliers.html", "Tham khảo",
+        "Tài liệu module; admin HTML chưa có CRUD nhà cung cấp.",
+    ),
+    (
+        "imports", "Nhập & kiểm tra",
+        "Trang hỗ trợ/admin_store_management.html", "Một phần",
+        "HTML có luồng lưu phiếu nhập/tiếp nhận; các nghiệp vụ kiểm tra còn dùng Python.",
+    ),
+    (
+        "health", "Sức khỏe",
+        "Trang hỗ trợ/Module/module_08_health.html", "Tham khảo",
+        "Tài liệu quy trình; chưa thay CRUD hồ sơ sức khỏe.",
+    ),
+    (
+        "care", "Chăm sóc",
+        "Trang hỗ trợ/Module/module_09_care.html", "Tham khảo",
+        "Tài liệu checklist; chưa thay cập nhật công việc chăm sóc.",
+    ),
+    (
+        "customers", "Khách hàng",
+        "Trang hỗ trợ/Module/module_10_customers.html", "Tham khảo",
+        "Tài liệu module; admin HTML chỉ đọc dữ liệu khách hàng.",
+    ),
+    (
+        "customer_insights", "Khách hàng & dịch vụ",
+        "Trang hỗ trợ/report_kpi_board.html", "Chưa tương đương",
+        "Bảng KPI HTML là nội dung tham khảo, không thay phân tích SQLite.",
+    ),
+    (
+        "reservations", "Đặt trước & giữ chỗ",
+        "Trang hỗ trợ/Module/module_11_reservations.html", "Tham khảo",
+        "Tài liệu quy trình; chưa thay đặt cọc, hoàn cọc và chuyển trạng thái.",
+    ),
+    (
+        "sales", "Đơn hàng & thanh toán",
+        "Trang hỗ trợ/admin_store_management.html", "Một phần",
+        "Admin xem đơn và yêu cầu website; chưa thay tạo đơn, ghi thanh toán hoặc xử lý tồn.",
+    ),
+    (
+        "inventory", "Kho thức ăn & thuốc",
+        "Web bán hàng/san-pham.html", "Một phần",
+        "Website tra cứu catalog; không thay quản lý mặt hàng, lô và biến động kho.",
+    ),
+    (
+        "reports", "Báo cáo",
+        "Trang hỗ trợ/data_explorer.html", "Một phần",
+        "Tra cứu/xuất dữ liệu đã chuẩn bị; chưa thay báo cáo vận hành trực tiếp.",
+    ),
+    (
+        "operations", "Cảnh báo & sao lưu",
+        "Trang hỗ trợ/operations_snapshot.html", "Tham khảo",
+        "Ảnh chụp vận hành; chưa thay cảnh báo và sao lưu thực.",
+    ),
+    (
+        "memberships", "Hội viên & hóa đơn",
+        "Trang hỗ trợ/Module/module_13_memberships.html", "Tham khảo",
+        "Tài liệu module; chưa thay quản lý gói, hội viên và hóa đơn.",
+    ),
+    (
+        "services", "Dịch vụ & lịch hẹn",
+        "Trang hỗ trợ/Module/module_14_services.html", "Tham khảo",
+        "Tài liệu module; chưa thay điều phối lịch hẹn.",
+    ),
+    (
+        "data_catalog", "Danh mục JSON & nhập SQLite",
+        "Trang hỗ trợ/data_explorer.html", "Một phần",
+        "Xem/xuất dữ liệu; thao tác nhập SQLite vẫn cần quyền và luồng quản trị.",
+    ),
+    (
+        "web_catalog", "Bản đồ trang HTML & Python",
+        "Trang hỗ trợ/Module/index.html", "Tham khảo",
+        "Thư viện tài liệu không tự đối chiếu toàn bộ route Python.",
+    ),
+    (
+        "customer_portal", "Tài khoản portal khách hàng",
+        "TRrang chính/user_portal.html", "Một phần",
+        "Có portal khách hàng; quản trị tài khoản/liên kết vẫn cần màn Python.",
+    ),
+)
+
 REFERENCE_PAGES = {
     "admin_store_management.html": (
         "HTML quản trị kết nối SQLite cục bộ; Python có các màn hình CRUD chuyên biệt."
@@ -79,9 +217,9 @@ class WebCatalogPage(QWidget):
         layout.setContentsMargins(28, 24, 28, 24)
         layout.addWidget(QLabel("Bản đồ trang HTML & Python", objectName="pageTitle"))
         description = QLabel(
-            "Danh mục quét từ thư mục HTML của dự án. Trang phân hệ có màn hình Python "
-            "tương ứng được đánh dấu để mở nhanh; tài liệu, trang giới thiệu và demo "
-            "không được xem là chức năng CRUD."
+            "Danh mục quét từ thư mục HTML của dự án và đối chiếu với 22 màn hình Python. "
+            "Bảng độ phủ nêu trang HTML gần nhất cùng giới hạn thay thế; tài liệu, trang "
+            "giới thiệu và demo không được xem là chức năng CRUD."
         )
         description.setWordWrap(True)
         layout.addWidget(description)
@@ -93,6 +231,13 @@ class WebCatalogPage(QWidget):
             ["Trang HTML", "Nhóm", "Phân loại / giới hạn", "Python tương ứng", "Mở"]
         )
         layout.addWidget(self.table, 1)
+        layout.addWidget(
+            QLabel("Độ phủ HTML cho các màn hình Python", objectName="pageSubtitle")
+        )
+        self.coverage_table = make_table(
+            ["Màn hình Python", "HTML phù hợp nhất", "Mức thay thế", "Giới hạn", "Mở"]
+        )
+        layout.addWidget(self.coverage_table, 1)
         self.refresh()
 
     def refresh(self, *_: object) -> None:
@@ -179,7 +324,39 @@ class WebCatalogPage(QWidget):
                 )
                 action_layout.addWidget(python_button)
             self.table.setCellWidget(row_index, 4, actions)
+        self.coverage_table.setRowCount(len(PYTHON_ROUTE_COVERAGE))
+        for row_index, (route, label, html_path, coverage, limitation) in enumerate(
+            PYTHON_ROUTE_COVERAGE
+        ):
+            values = (label, html_path, coverage, limitation)
+            for column, value in enumerate(values):
+                self.coverage_table.setItem(
+                    row_index, column, QTableWidgetItem(value)
+                )
+            actions = QWidget()
+            action_layout = QHBoxLayout(actions)
+            action_layout.setContentsMargins(3, 2, 3, 2)
+            html_button = QPushButton("Mở HTML")
+            html_button.setEnabled((HTML_ROOT / html_path).is_file())
+            html_button.clicked.connect(
+                lambda _checked=False, page_path=html_path: self.open_html(
+                    "/" + page_path
+                )
+            )
+            action_layout.addWidget(html_button)
+            if route in self.available_routes:
+                python_button = QPushButton("Mở Python")
+                python_button.clicked.connect(
+                    lambda _checked=False, route_name=route: self.open_python(
+                        route_name, PYTHON_ROUTE_INDEX[route_name]
+                    )
+                )
+                action_layout.addWidget(python_button)
+            else:
+                action_layout.addWidget(QLabel("Không đủ quyền"))
+            self.coverage_table.setCellWidget(row_index, 4, actions)
         self.summary.setText(
             f"{len(self.page_rows)} trang HTML · "
-            f"{sum(bool(row['route']) for row in self.page_rows)} trang có lối tắt Python"
+            f"{sum(bool(row['route']) for row in self.page_rows)} trang có lối tắt Python · "
+            f"{len(PYTHON_ROUTE_COVERAGE)} màn hình Python đã đối chiếu"
         )

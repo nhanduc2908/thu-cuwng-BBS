@@ -1,5 +1,6 @@
 import math
 import sqlite3
+from contextlib import nullcontext
 from datetime import date
 from typing import Any
 
@@ -9,6 +10,9 @@ from app.modules.sales.constants import PAYMENT_METHODS
 class SalesRepository:
     def __init__(self, connection: sqlite3.Connection) -> None:
         self.connection = connection
+
+    def _transaction(self):
+        return self.connection if not self.connection.in_transaction else nullcontext()
 
     def list_reservations(self) -> list[sqlite3.Row]:
         return self.connection.execute(
@@ -72,7 +76,7 @@ class SalesRepository:
         deposit = float(values.get("deposit", 0))
         if deposit < 0:
             raise ValueError("Tiền đặt cọc không thể âm.")
-        with self.connection:
+        with self._transaction():
             customer = self.connection.execute(
                 "SELECT id FROM customers WHERE id = ?",
                 (values["customer_id"],),
@@ -133,7 +137,7 @@ class SalesRepository:
     def release_reservation(self, reservation_id: int, status: str = "RELEASED") -> None:
         if status not in {"RELEASED", "EXPIRED"}:
             raise ValueError("Trạng thái giải phóng chỗ không hợp lệ.")
-        with self.connection:
+        with self._transaction():
             reservation = self.connection.execute(
                 """
                 SELECT animal_id, status FROM reservations WHERE id = ?
@@ -231,7 +235,8 @@ class SalesRepository:
                              FROM sales_product_items pi
                              JOIN sales_orders o ON o.id = pi.order_id
                              WHERE pi.item_id = i.id
-                               AND o.status IN ('OPEN', 'PARTIALLY_PAID')), 0) AS reserved
+                               AND o.status IN ('OPEN', 'PARTIALLY_PAID')
+                               AND o.inventory_fulfilled_at IS NULL), 0) AS reserved
             FROM inventory_items i
             LEFT JOIN inventory_batches b ON b.item_id = i.id
             WHERE i.is_active = 1 AND i.retail_price > 0
@@ -284,7 +289,8 @@ class SalesRepository:
                                  FROM sales_product_items pi
                                  JOIN sales_orders o ON o.id = pi.order_id
                                  WHERE pi.item_id = ci.item_id
-                                   AND o.status IN ('OPEN', 'PARTIALLY_PAID')), 0) AS reserved
+                                   AND o.status IN ('OPEN', 'PARTIALLY_PAID')
+                                   AND o.inventory_fulfilled_at IS NULL), 0) AS reserved
                 FROM product_combo_items ci
                 JOIN inventory_items i ON i.id = ci.item_id
                 LEFT JOIN inventory_batches b ON b.item_id = i.id
@@ -340,7 +346,8 @@ class SalesRepository:
         except ValueError as error:
             raise ValueError("Ngày bán không hợp lệ.") from error
 
-        with self.connection:
+        transaction = self.connection if not self.connection.in_transaction else nullcontext()
+        with transaction:
             customer = self.connection.execute(
                 "SELECT id FROM customers WHERE id = ?", (values["customer_id"],)
             ).fetchone()
@@ -528,7 +535,9 @@ class SalesRepository:
         return round(min(promo_price, discounted_member_price), 2)
 
     def _ensure_available_product_stock(
-        self, product_quantities: dict[int, float]
+        self,
+        product_quantities: dict[int, float],
+        exclude_order_id: int | None = None,
     ) -> None:
         for item_id, quantity in product_quantities.items():
             item = self.connection.execute(
@@ -553,9 +562,12 @@ class SalesRepository:
                     SELECT COALESCE(SUM(pi.quantity), 0)
                     FROM sales_product_items pi
                     JOIN sales_orders o ON o.id = pi.order_id
-                    WHERE pi.item_id = ? AND o.status IN ('OPEN', 'PARTIALLY_PAID')
+                    WHERE pi.item_id = ?
+                      AND o.status IN ('OPEN', 'PARTIALLY_PAID')
+                      AND o.inventory_fulfilled_at IS NULL
+                      AND (? IS NULL OR o.id != ?)
                     """,
-                    (item_id,),
+                    (item_id, exclude_order_id, exclude_order_id),
                 ).fetchone()[0]
             )
             available = max(0, float(item["usable"]) - reserved)
@@ -565,7 +577,19 @@ class SalesRepository:
                     f"(còn {available:g})."
                 )
 
-    def _fulfill_product_order(self, order_id: int) -> None:
+    def _fulfill_product_order(
+        self,
+        order_id: int,
+        movement_note: str = "Bán sản phẩm; thanh toán đủ",
+    ) -> None:
+        order = self.connection.execute(
+            "SELECT inventory_fulfilled_at FROM sales_orders WHERE id = ?",
+            (order_id,),
+        ).fetchone()
+        if order is None:
+            raise ValueError("Không tìm thấy đơn hàng.")
+        if order["inventory_fulfilled_at"] is not None:
+            return
         lines = self.connection.execute(
             """
             SELECT pi.item_id, pi.quantity, o.order_code, o.ordered_at, pi.item_name
@@ -581,7 +605,7 @@ class SalesRepository:
             requirements[int(line["item_id"])] = (
                 requirements.get(int(line["item_id"]), 0) + float(line["quantity"])
             )
-        self._ensure_available_product_stock(requirements)
+        self._ensure_available_product_stock(requirements, exclude_order_id=order_id)
         for item_id, quantity in requirements.items():
             batches = self.connection.execute(
                 """
@@ -609,15 +633,38 @@ class SalesRepository:
                     INSERT INTO inventory_movements
                         (item_id, batch_id, movement_type, quantity, occurred_on,
                          reference, note)
-                    SELECT ?, ?, 'OUT', ?, o.ordered_at, o.order_code,
-                           'Bán sản phẩm; thanh toán đủ'
+                    SELECT ?, ?, 'OUT', ?, o.ordered_at, o.order_code, ?
                     FROM sales_orders o WHERE o.id = ?
                     """,
-                    (item_id, batch["id"], taken, order_id),
+                    (item_id, batch["id"], taken, movement_note, order_id),
                 )
                 remaining = round(remaining - taken, 6)
             if remaining > 0:
                 raise ValueError("Tồn kho thay đổi; không thể hoàn tất xuất sản phẩm.")
+            self.connection.execute(
+                """
+                UPDATE sales_orders SET inventory_fulfilled_at = CURRENT_TIMESTAMP
+                WHERE id = ? AND inventory_fulfilled_at IS NULL
+                """,
+                (order_id,),
+            )
+
+    def fulfill_unpaid_product_order(self, order_id: int) -> None:
+        transaction = self.connection if not self.connection.in_transaction else nullcontext()
+        with transaction:
+            order = self.connection.execute(
+                "SELECT status FROM sales_orders WHERE id = ?", (order_id,)
+            ).fetchone()
+            if order is None:
+                raise ValueError("Không tìm thấy đơn hàng.")
+            if order["status"] != "OPEN":
+                raise ValueError("Chỉ được xuất kho ngay cho đơn chưa thanh toán.")
+            self._fulfill_product_order(
+                order_id,
+                movement_note=(
+                    "Xuất kho tự động từ cửa hàng trực tuyến; đơn chưa thanh toán"
+                ),
+            )
 
     def list_order_items(self, order_id: int) -> list[sqlite3.Row]:
         return self.connection.execute(
@@ -637,7 +684,7 @@ class SalesRepository:
         animal_ids = list(dict.fromkeys(values["animal_ids"]))
         if not animal_ids:
             raise ValueError("Đơn hàng phải có ít nhất một động vật.")
-        with self.connection:
+        with self._transaction():
             customer = self.connection.execute(
                 "SELECT id FROM customers WHERE id = ?",
                 (values["customer_id"],),
@@ -769,7 +816,7 @@ class SalesRepository:
         method = values["method"]
         if method not in PAYMENT_METHODS:
             raise ValueError("Phương thức thanh toán không hợp lệ.")
-        with self.connection:
+        with self._transaction():
             order = self.connection.execute(
                 "SELECT total_amount, status FROM sales_orders WHERE id = ?",
                 (order_id,),
@@ -822,9 +869,13 @@ class SalesRepository:
             return int(cursor.lastrowid)
 
     def cancel_unpaid_order(self, order_id: int) -> None:
-        with self.connection:
+        with self._transaction():
             order = self.connection.execute(
-                "SELECT status FROM sales_orders WHERE id = ?", (order_id,)
+                """
+                SELECT status, order_code, inventory_fulfilled_at
+                FROM sales_orders WHERE id = ?
+                """,
+                (order_id,),
             ).fetchone()
             if order is None:
                 raise ValueError("Không tìm thấy đơn hàng.")
@@ -832,6 +883,44 @@ class SalesRepository:
                 raise ValueError(
                     "Chỉ hủy được đơn chưa thanh toán; đơn đã có thanh toán cần xử lý hoàn tiền."
                 )
+            if order["inventory_fulfilled_at"] is not None:
+                movements = self.connection.execute(
+                    """
+                    SELECT item_id, batch_id, quantity
+                    FROM inventory_movements
+                    WHERE movement_type = 'OUT' AND reference = ?
+                    ORDER BY id
+                    """,
+                    (order["order_code"],),
+                ).fetchall()
+                if not movements:
+                    raise ValueError(
+                        "Không tìm thấy bút toán xuất kho để hoàn lại đơn."
+                    )
+                for movement in movements:
+                    self.connection.execute(
+                        """
+                        UPDATE inventory_batches
+                        SET quantity_remaining = quantity_remaining + ?
+                        WHERE id = ?
+                        """,
+                        (movement["quantity"], movement["batch_id"]),
+                    )
+                    self.connection.execute(
+                        """
+                        INSERT INTO inventory_movements
+                            (item_id, batch_id, movement_type, quantity, occurred_on,
+                             reference, note)
+                        VALUES (?, ?, 'IN', ?, date('now', 'localtime'), ?,
+                                'Hoàn tồn từ đơn trực tuyến đã hủy')
+                        """,
+                        (
+                            movement["item_id"],
+                            movement["batch_id"],
+                            movement["quantity"],
+                            order["order_code"],
+                        ),
+                    )
             self.connection.execute(
                 "UPDATE sales_orders SET status = 'CANCELLED' WHERE id = ?",
                 (order_id,),
@@ -870,7 +959,7 @@ class SalesRepository:
             raise ValueError("Số tiền hoàn cọc phải lớn hơn 0.")
         if values["method"] not in PAYMENT_METHODS:
             raise ValueError("Phương thức hoàn tiền không hợp lệ.")
-        with self.connection:
+        with self._transaction():
             reservation = self.connection.execute(
                 """
                 SELECT status FROM reservations WHERE id = ?

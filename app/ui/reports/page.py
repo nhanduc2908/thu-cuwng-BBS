@@ -119,6 +119,10 @@ class ReportsPage(QWidget):
         self._report_type_changed()
         self.refresh_report()
 
+    def _has_permission(self, permission: str) -> bool:
+        actor_id = self.database.actor_id
+        return actor_id is None or self.database.has_permission(actor_id, permission)
+
     def _report_type_changed(self, *_: object) -> None:
         is_inventory = self.report_type.currentData() == "inventory"
         self.start_date.setEnabled(not is_inventory)
@@ -129,6 +133,16 @@ class ReportsPage(QWidget):
 
     def refresh_report(self) -> None:
         report_type = self.report_type.currentData()
+        if report_type == "customer_summary" and not all(
+            self._has_permission(permission)
+            for permission in ("sales.view", "services.view", "health.view")
+        ):
+            QMessageBox.warning(
+                self,
+                "Không đủ quyền",
+                "Báo cáo khách hàng cần quyền bán hàng, dịch vụ và sức khỏe.",
+            )
+            return
         start_date = self.start_date.date().toString("yyyy-MM-dd")
         end_date = self.end_date.date().toString("yyyy-MM-dd")
         try:

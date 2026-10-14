@@ -23,7 +23,6 @@ from PySide6.QtWidgets import (
 
 from app.database import Database
 from app.modules.nutrition.recommendation_engine import recommend_foods_for_pet
-from app.modules.nutrition.repository import FoodNutritionRepository
 from app.ui.common import make_table, set_cell
 
 
@@ -33,6 +32,10 @@ class PetDetailPage(QWidget):
         self.database = database
         self._build_ui()
         self.refresh()
+
+    def _has_permission(self, permission: str) -> bool:
+        actor_id = self.database.actor_id
+        return actor_id is None or self.database.has_permission(actor_id, permission)
 
     def _build_ui(self) -> None:
         layout = QVBoxLayout(self)
@@ -197,6 +200,15 @@ class PetDetailPage(QWidget):
         return tab
 
     def refresh(self) -> None:
+        if not self._has_permission("sales.view"):
+            self.breadcrumb.setText(
+                "Chi tiết hồ sơ khách hàng cần quyền xem bán hàng."
+            )
+            self.customer_filter.clear()
+            self.pet_filter.clear()
+            self.export_button.setEnabled(False)
+            return
+        self.export_button.setEnabled(self._has_permission("health.view"))
         customers = self.database.list_customers()
         self.customer_filter.clear()
         self.customer_filter.addItem("Tất cả khách hàng", None)
@@ -252,14 +264,56 @@ class PetDetailPage(QWidget):
         self.meta_values["Tuổi"].setText(str(pet["birth_date"]) or "Chưa xác định")
         self.meta_values["Hoạt động"].setText(str(pet["activity_level"]) or "Trung bình")
 
-        care_tasks = [item for item in self.database.list_care_tasks() if int(item["animal_id"]) == int(pet["id"])]
-        health_records = [item for item in self.database.list_health_records() if int(item["animal_id"]) == int(pet["id"])]
-        appointments = [item for item in self.database.list_service_appointments() if str(item["pet_name"]).casefold() == str(pet["name"]).casefold()]
+        care_records = (
+            self.database.list_care_tasks()
+            if self._has_permission("care.view")
+            else []
+        )
+        health_records_all = (
+            self.database.list_health_records()
+            if self._has_permission("health.view")
+            else []
+        )
+        appointments_all = (
+            self.database.list_service_appointments()
+            if self._has_permission("services.view")
+            else []
+        )
+        care_tasks = [
+            item
+            for item in care_records
+            if int(item["animal_id"]) == int(pet["id"])
+        ]
+        health_records = [
+            item
+            for item in health_records_all
+            if int(item["animal_id"]) == int(pet["id"])
+        ]
+        appointments = [
+            item
+            for item in appointments_all
+            if str(item["pet_name"]).casefold()
+            == str(pet["name"]).casefold()
+        ]
 
         self.summary_labels["Health status"].setText(health_status)
-        self.summary_labels["Care tasks"].setText(str(len(care_tasks)))
-        self.summary_labels["Appointments"].setText(str(len(appointments)))
-        self.summary_labels["Activity score"].setText(str(min(100, 45 + len(care_tasks) * 10 + len(appointments) * 8)))
+        self.summary_labels["Care tasks"].setText(
+            str(len(care_tasks))
+            if self._has_permission("care.view")
+            else "Không được cấp quyền xem"
+        )
+        self.summary_labels["Appointments"].setText(
+            str(len(appointments))
+            if self._has_permission("services.view")
+            else "Không được cấp quyền xem"
+        )
+        activity_score = (
+            min(100, 45 + len(care_tasks) * 10 + len(appointments) * 8)
+            if self._has_permission("care.view")
+            and self._has_permission("services.view")
+            else "—"
+        )
+        self.summary_labels["Activity score"].setText(str(activity_score))
 
         self.breadcrumb.setText(f"Trang chủ / Khách hàng / {customer['name'] if customer else 'Khách hàng'} / {pet['name']}")
 
@@ -271,7 +325,10 @@ class PetDetailPage(QWidget):
         )
         self._render_nutrition_recommendations(pet)
         self.health_summary.setText(
-            f"Tình trạng sức khỏe: {health_status}. Hồ sơ gần đây: {len(health_records)} lần thăm khám | Theo dõi định kỳ và chú ý trạng thái {pet['body_condition'] or 'Bình thường'}."
+            f"Tình trạng sức khỏe: {health_status}. "
+            f"Hồ sơ gần đây: {len(health_records) if self._has_permission('health.view') else 'Không được cấp quyền xem'} "
+            f"{'lần thăm khám' if self._has_permission('health.view') else ''} | "
+            f"Theo dõi định kỳ và chú ý trạng thái {pet['body_condition'] or 'Bình thường'}."
         )
         self.grooming_summary.setText(
             f"Chăm sóc cơ bản: chải lông, vệ sinh tai/mắt, kiểm tra da. Mức độ chăm sóc gần đây: {len(care_tasks)}task(s) | Môi trường sống: {pet['environment_type'] or 'Trong nhà'}"
@@ -360,7 +417,12 @@ class PetDetailPage(QWidget):
             "health_condition": pet["health_status"] or "HEALTHY",
             "allergies": pet["allergies"] or "",
         }
-        foods = FoodNutritionRepository(self.database.connection).list_foods_for_species(species, limit=20)
+        if not self._has_permission("inventory.view"):
+            self.nutrition_list_layout.addWidget(
+                QLabel("Gợi ý sản phẩm cần quyền xem kho.")
+            )
+            return
+        foods = self.database.list_nutrition_foods_for_species(species, limit=20)
         recommendations = recommend_foods_for_pet(profile, foods, limit=3)
         if not recommendations:
             label = QLabel("Chưa có dữ liệu thức ăn phù hợp cho thú cưng này.")
@@ -424,6 +486,8 @@ class PetDetailPage(QWidget):
             self._pet_changed()
 
     def export_health_report(self) -> None:
+        if not self._has_permission("health.view"):
+            return
         pet_id = self.pet_filter.currentData()
         if pet_id is None:
             return

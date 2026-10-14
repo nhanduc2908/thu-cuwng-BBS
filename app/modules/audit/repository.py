@@ -1,4 +1,5 @@
 import sqlite3
+from contextlib import nullcontext
 from typing import Any
 
 
@@ -14,7 +15,8 @@ class AuditRepository:
         entity_id: int | None = None,
         details: str = "",
     ) -> int:
-        with self.connection:
+        transaction = self.connection if not self.connection.in_transaction else nullcontext()
+        with transaction:
             cursor = self.connection.execute(
                 """
                 INSERT INTO audit_logs

@@ -136,6 +136,13 @@ class OperationsPage(QWidget):
         return self.database.path.parent / "backups"
 
     def _refresh_backup_location(self) -> None:
+        if getattr(self.database, "is_remote", False):
+            self.backup_location.setText(
+                "Bản sao lưu của cơ sở dữ liệu trung tâm được quản lý trên máy chủ."
+            )
+            self.choose_directory_button.setVisible(False)
+            self.backup_button.setVisible(False)
+            return
         self.backup_location.setText(
             f"Thư mục sao lưu: {self._default_backup_directory()}"
         )

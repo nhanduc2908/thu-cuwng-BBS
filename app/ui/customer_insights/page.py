@@ -25,6 +25,10 @@ class CustomerPetServiceDashboardPage(QWidget):
         self._build_ui()
         self.refresh()
 
+    def _has_permission(self, permission: str) -> bool:
+        actor_id = self.database.actor_id
+        return actor_id is None or self.database.has_permission(actor_id, permission)
+
     def _build_ui(self) -> None:
         layout = QVBoxLayout(self)
         layout.setContentsMargins(28, 24, 28, 24)
@@ -136,13 +140,25 @@ class CustomerPetServiceDashboardPage(QWidget):
     def refresh(self) -> None:
         customers = self.database.list_customers()
         pets = self.database.customers.list_pets()
-        appointments = self.database.list_service_appointments()
+        appointments = (
+            self.database.list_service_appointments()
+            if self._has_permission("services.view")
+            else []
+        )
 
         self.cards["customers"].setText(str(len(customers)))
         self.cards["pets"].setText(str(len(pets)))
-        self.cards["appointments"].setText(str(len(appointments)))
+        self.cards["appointments"].setText(
+            str(len(appointments))
+            if self._has_permission("services.view")
+            else "—"
+        )
         total = sum(float(item["total_price"] or 0) for item in appointments)
-        self.cards["revenue"].setText(f"{total:,.0f} ₫")
+        self.cards["revenue"].setText(
+            f"{total:,.0f} ₫"
+            if self._has_permission("services.view")
+            else "—"
+        )
 
         self.customer_table.setRowCount(len(customers))
         for row, customer in enumerate(customers):
@@ -180,7 +196,15 @@ class CustomerPetServiceDashboardPage(QWidget):
         self.customer_note.setText(str(customer["note"]) or "-")
 
         pets = self.database.customers.list_pets(selected_id)
-        appointments = [item for item in self.database.list_service_appointments() if int(item["customer_id"]) == int(selected_id)]
+        appointments = (
+            [
+                item
+                for item in self.database.list_service_appointments()
+                if int(item["customer_id"]) == int(selected_id)
+            ]
+            if self._has_permission("services.view")
+            else []
+        )
         self.pet_table.setRowCount(len(pets))
         for row, pet in enumerate(pets):
             recent_appointment = next(
@@ -286,13 +310,32 @@ class CustomerPetServiceDashboardPage(QWidget):
     def _render_campaign_overview(self) -> None:
         customers = self.database.list_customers()
         pets = self.database.customers.list_pets()
-        appointments = self.database.list_service_appointments()
-        health_records = self.database.list_health_records()
+        appointments = (
+            self.database.list_service_appointments()
+            if self._has_permission("services.view")
+            else []
+        )
+        health_records = (
+            self.database.list_health_records()
+            if self._has_permission("health.view")
+            else []
+        )
 
         active_customers = len(customers)
         active_pets = len(pets)
-        appointment_rate = round((len(appointments) / (active_customers or 1)) * 100, 1)
-        care_health_index = round((len(health_records) / max(1, len(pets))) * 100, 1)
+        appointment_rate = (
+            round((len(appointments) / (active_customers or 1)) * 100, 1)
+            if self._has_permission("services.view")
+            else "—"
+        )
+        care_health_index = (
+            f"{round((len(health_records) / max(1, len(pets))) * 100, 1)}%"
+            if self._has_permission("health.view")
+            else "Không được cấp quyền"
+        )
         self.kpi_label.setText(
-            f"Campaign overview: {active_customers} khách hàng, {active_pets} thú cưng, {len(appointments)} lịch hẹn, tỷ lệ đặt lịch {appointment_rate}%, chỉ số chăm sóc sức khỏe {care_health_index}%."
+            f"Campaign overview: {active_customers} khách hàng, {active_pets} thú cưng, "
+            f"{len(appointments) if self._has_permission('services.view') else '—'} lịch hẹn, "
+            f"tỷ lệ đặt lịch {appointment_rate}%, "
+            f"chỉ số chăm sóc sức khỏe {care_health_index}."
         )

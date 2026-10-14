@@ -31,11 +31,18 @@ def test_web_catalog_lists_pages_and_marks_python_equivalents(
     page = web_catalog.WebCatalogPage(
         opened_html.append,
         lambda route, index: opened_python.append((route, index)),
-        {"animals", "data_catalog", "customer_portal"},
+        {
+            "animals", "pet_detail", "customer_insights",
+            "data_catalog", "customer_portal",
+        },
     )
 
     assert page.table.rowCount() == 3
-    assert page.summary.text() == "3 trang HTML · 3 trang có lối tắt Python"
+    assert page.summary.text() == (
+        "3 trang HTML · 3 trang có lối tắt Python · "
+        "22 màn hình Python đã đối chiếu"
+    )
+    assert page.coverage_table.rowCount() == 22
     rows_by_path = {
         page.table.item(row, 0).text(): row
         for row in range(page.table.rowCount())
@@ -56,6 +63,25 @@ def test_web_catalog_lists_pages_and_marks_python_equivalents(
     assert [button.text() for button in portal_buttons] == ["Mở HTML", "Mở Python"]
     portal_buttons[1].click()
     assert opened_python[-1] == ("customer_portal", 21)
+
+    coverage_rows = {
+        page.coverage_table.item(row, 0).text(): row
+        for row in range(page.coverage_table.rowCount())
+    }
+    detail_row = coverage_rows["Chi tiết thú cưng"]
+    assert page.coverage_table.item(detail_row, 1).text() == (
+        "Trang hỗ trợ/pet_health_report.html"
+    )
+    assert page.coverage_table.item(detail_row, 2).text() == "Chưa tương đương"
+    detail_buttons = page.coverage_table.cellWidget(detail_row, 4).findChildren(
+        QPushButton
+    )
+    assert [button.text() for button in detail_buttons] == ["Mở HTML", "Mở Python"]
+    detail_buttons[1].click()
+    assert opened_python[-1] == ("pet_detail", 4)
+
+    insights_row = coverage_rows["Khách hàng & dịch vụ"]
+    assert page.coverage_table.item(insights_row, 2).text() == "Chưa tương đương"
 
 
 def test_web_catalog_hides_python_shortcut_without_view_permission(

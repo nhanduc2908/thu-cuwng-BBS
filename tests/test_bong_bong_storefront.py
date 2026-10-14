@@ -75,14 +75,70 @@ def test_store_catalog_snapshot_contains_the_full_synced_application_inventory()
     assert all(row["proposed_price_vnd"] == "15000" for row in breed_prices)
 
 
-def test_store_order_flow_is_local_only_and_has_required_contact_fields():
+def test_store_order_flow_submits_with_consent_and_is_not_a_local_draft():
     checkout = (STORE / "thanh-toan.html").read_text(encoding="utf-8")
+    styles = (STORE / "styles" / "store.css").read_text(encoding="utf-8")
     script = (STORE / "scripts" / "store.js").read_text(encoding="utf-8")
     assert 'name="name"' in checkout and 'name="phone"' in checkout
-    assert "local_request_only" in script
+    assert 'name="consent"' in checkout
+    assert "lưu trong SQLite" in checkout
+    assert "/api/storefront/order-requests" in script
+    assert "local_request_only" not in script
+    assert "ORDER_PREFIX" not in script
     assert "fetch(" in script
-    assert "method: \"POST\"" not in script
-    assert "bong-bong-store-order-v1:" in script
+    assert 'method: "POST"' in script
+    assert "/api/storefront/order-requests/${encodeURIComponent(code)}" in script
+    assert ".checkout-form[hidden] { display: none; }" in styles
+    assert "Đang tải bản nháp" not in (STORE / "dat-hang-thanh-cong.html").read_text(encoding="utf-8")
+    assert "bản nháp lưu trên thiết bị" not in (STORE / "index.html").read_text(encoding="utf-8")
+    assert "localStorage.setItem(`${ORDER_PREFIX}" not in script
+    assert "salesOrderCode" in script and "salesOrderStatus" in script
+
+
+def test_homepage_explains_recent_popularity_and_request_signals():
+    homepage = (STORE / "index.html").read_text(encoding="utf-8")
+    script = (STORE / "scripts" / "store.js").read_text(encoding="utf-8")
+    assert 'data-recommendation-grid' in homepage
+    assert "số lượng bán (45%)" in homepage
+    assert "không tính là doanh số" in homepage
+    assert "function renderRecommendations()" in script
+    assert "popularity30d.score > 0" in script
+    assert "Snapshot tĩnh chưa có thống kê bán hàng" in script
+
+
+def test_product_catalogs_offer_consistent_sorting_and_empty_trend_explanation():
+    script = (STORE / "scripts" / "store.js").read_text(encoding="utf-8")
+    pages = [
+        "san-pham.html",
+        "thuc-an-thu-cung.html",
+        "phu-kien-thiet-bi.html",
+    ]
+    for page_name in pages:
+        page = (STORE / page_name).read_text(encoding="utf-8")
+        assert 'id="catalog-sort"' in page
+        assert 'value="popular">Xu hướng 30 ngày' in page
+        assert 'value="price-asc">Giá thấp đến cao' in page
+        assert 'value="price-desc">Giá cao đến thấp' in page
+        assert 'value="stock">Còn hàng trước' in page
+        assert 'data-sort-status role="status"' in page
+    assert "function compareProducts(first, second, sortBy)" in script
+    assert '["catalog-search", "catalog-category", "catalog-species", "catalog-sort"]' in script
+    assert "danh sách xu hướng đang hiển thị theo tên" in script
+
+
+def test_storefront_requires_verified_stock_and_exposes_order_status_lookup():
+    checkout = (STORE / "thanh-toan.html").read_text(encoding="utf-8")
+    confirmation = (STORE / "dat-hang-thanh-cong.html").read_text(encoding="utf-8")
+    script = (STORE / "scripts" / "store.js").read_text(encoding="utf-8")
+    assert "còn ít nhất 5 sản phẩm khả dụng" in checkout
+    assert "tạo đơn bán chưa thanh toán" in checkout
+    assert "ghi nhận xuất kho ngay" in checkout
+    assert 'data-order-lookup' in confirmation
+    assert "salesOrderStatus" in script
+    assert "inventoryFulfilled" in script
+    assert "function orderButton(product)" in script
+    assert "Hết hàng (còn dưới 5)" in script
+    assert "product.usableQuantity >= 5 && !product.is_demo && product.price != null" in script
 
 
 def test_product_details_show_only_catalog_facts_and_mark_missing_fields():
@@ -94,6 +150,9 @@ def test_product_details_show_only_catalog_facts_and_mark_missing_fields():
     assert "Catalog chính thức theo xác nhận quản trị viên" in script
     assert "ownerConfirmedOfficial" in script
     assert "function formatLifeStage" in script
+    assert 'const displaySku = (value) => String(value ?? "").replace(/^DEMO-/i, "")' in script
+    assert 'if (key === "item_code" || key === "combo_code") return displaySku(value)' in script
+    assert '["Mã hàng", displaySku(product.item_code || product.combo_code || product.id)]' in script
     assert "Giá niêm yết · đã gồm VAT 10%" in script
     assert "Giá dữ liệu demo · cần xác nhận" not in script
     assert "Dữ liệu demo · cần cửa hàng xác nhận" not in script

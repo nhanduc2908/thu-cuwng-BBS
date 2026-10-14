@@ -20,6 +20,12 @@ from PySide6.QtWidgets import (
 from app.database import Database
 from app.project_share import ProjectShareServer
 from app.ui.animals.page import AnimalsPage
+from app.ui.admin_home_page import (
+    ADMIN_FUNCTION_GROUPS,
+    HOME_ROUTE,
+    AdminHomePage,
+    routes_for_permissions,
+)
 from app.ui.care.page import CarePage
 from app.ui.dashboard.page import DashboardPage
 from app.ui.health.page import HealthPage
@@ -47,6 +53,32 @@ from app.ui.customer_portal.page import CustomerPortalPage
 from app.ui.project_share_dialog import ProjectShareDialog
 
 
+class _UnavailablePage(QWidget):
+    def __init__(self, message: str) -> None:
+        super().__init__()
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(28, 24, 28, 24)
+        label = QLabel(message)
+        label.setWordWrap(True)
+        layout.addWidget(label)
+        layout.addStretch(1)
+
+    def refresh(self, *_: object) -> None:
+        return
+
+    def set_manage_enabled(self, _enabled: bool) -> None:
+        return
+
+    def set_settings_enabled(self, _enabled: bool) -> None:
+        return
+
+    def set_import_enabled(self, _enabled: bool) -> None:
+        return
+
+    def set_access(self, *_: bool) -> None:
+        return
+
+
 class MainWindow(QMainWindow):
     def __init__(
         self,
@@ -70,6 +102,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Bông Bông Pet Care · Quản trị cửa hàng")
         self.resize(1360, 860)
         self.setMinimumSize(980, 640)
+        self.remote_mode = bool(getattr(database, "is_remote", False))
 
         container = QWidget()
         root = QHBoxLayout(container)
@@ -84,12 +117,18 @@ class MainWindow(QMainWindow):
         brand.setObjectName("brand")
         sidebar_layout.addWidget(brand)
         sidebar_layout.addWidget(
-            QLabel("PET CARE · QUẢN TRỊ CỬA HÀNG", objectName="sideCaption")
+            QLabel("PET CARE · KHU VỰC NỘI BỘ", objectName="sideCaption")
         )
         sidebar_layout.addSpacing(18)
 
         self.pages = QStackedWidget()
-        self.platform = PlatformPage(database)
+        self.platform = (
+            _UnavailablePage(
+                "Thông tin nền tảng và đường dẫn SQLite chỉ có trong chế độ cục bộ."
+            )
+            if self.remote_mode
+            else PlatformPage(database)
+        )
         self.access = AccessPage(
             database,
             self.current_user,
@@ -100,68 +139,99 @@ class MainWindow(QMainWindow):
             self.show_audit_log,
         )
         self.dashboard = DashboardPage(database)
-        self.animals = AnimalsPage(database, self.refresh_dashboard)
-        self.pet_detail = PetDetailPage(database)
-        self.store = StorePage(database)
-        self.suppliers = SuppliersPage(database)
-        self.imports = ImportsPage(database, focused_section="imports")
-        self.health = HealthPage(database)
-        self.care = CarePage(database)
-        self.customers = CustomersPage(database)
-        self.customer_insights = CustomerPetServiceDashboardPage(database)
-        self.reservations = ReservationsPage(database)
-        self.sales = SalesPage(database, focused_section="sales")
-        self.inventory = InventoryPage(database)
-        self.reports = ReportsPage(database)
-        self.operations = OperationsPage(database)
-        self.memberships = MembershipPage(
-            database, self._has_permission("membership.manage")
+        self.animals = self._page(
+            "animals.view", lambda: AnimalsPage(database, self.refresh_dashboard)
         )
-        self.services = ServicesPage(
-            database,
-            self._has_permission("services.manage"),
-            self._has_permission("services.catalog.manage"),
+        self.pet_detail = self._page(
+            "animals.view", lambda: PetDetailPage(database)
         )
-        self.data_catalog = DataCatalogPage(
-            database, self._has_permission("settings.manage")
+        self.store = self._page("store.view", lambda: StorePage(database))
+        self.suppliers = self._page(
+            "imports.view", lambda: SuppliersPage(database)
+        )
+        self.imports = self._page(
+            "imports.view",
+            lambda: ImportsPage(database, focused_section="imports"),
+        )
+        self.health = self._page("health.view", lambda: HealthPage(database))
+        self.care = self._page("care.view", lambda: CarePage(database))
+        self.customers = self._page(
+            "sales.view", lambda: CustomersPage(database)
+        )
+        self.customer_insights = self._page(
+            "sales.view", lambda: CustomerPetServiceDashboardPage(database)
+        )
+        self.reservations = self._page(
+            "sales.view", lambda: ReservationsPage(database)
+        )
+        self.sales = self._page(
+            "sales.view", lambda: SalesPage(database, focused_section="sales")
+        )
+        self.inventory = self._page(
+            "inventory.view", lambda: InventoryPage(database)
+        )
+        self.reports = self._page(
+            "reports.view", lambda: ReportsPage(database)
+        )
+        self.operations = self._page(
+            ("notifications.view", "settings.manage"),
+            lambda: OperationsPage(database),
+        )
+        self.memberships = self._page(
+            "membership.view",
+            lambda: MembershipPage(
+                database, self._has_permission("membership.manage")
+            ),
+        )
+        self.services = self._page(
+            "services.view",
+            lambda: ServicesPage(
+                database,
+                self._has_permission("services.manage"),
+                self._has_permission("services.catalog.manage"),
+            ),
+        )
+        self.data_catalog = (
+            _UnavailablePage(
+                "Nhập dữ liệu từ thư mục máy tính chỉ có trong chế độ cục bộ."
+            )
+            if self.remote_mode
+            else DataCatalogPage(
+                database, self._has_permission("settings.manage")
+            )
         )
         self.customer_portal = CustomerPortalPage(
             database,
             self.current_user.get("id") is not None
             and self._has_permission("sales.manage"),
         )
-        available_routes = {
-            "platform": "dashboard.view",
-            "access": "access.view",
-            "dashboard": "dashboard.view",
-            "animals": "animals.view",
-            "store": "store.view",
-            "suppliers": "imports.view",
-            "imports": "imports.view",
-            "health": "health.view",
-            "care": "care.view",
-            "customers": "sales.view",
-            "reservations": "sales.view",
-            "sales": "sales.view",
-            "memberships": "membership.view",
-            "services": "services.view",
-            "inventory": "inventory.view",
-            "reports": "reports.view",
-            "operations": "notifications.view",
-            "data_catalog": "reports.view",
-            "customer_portal": "sales.manage",
+        route_permissions = {
+            permission
+            for _group, _description, routes in ADMIN_FUNCTION_GROUPS
+            for _route, _label, _index, permission, _hint in routes
         }
+        granted_permissions = {
+            permission
+            for permission in route_permissions | {"users.manage", "audit.view"}
+            if self._has_permission(permission)
+        }
+        self.available_admin_routes = routes_for_permissions(granted_permissions)
         available_python_routes = {
             route
-            for route, permission in available_routes.items()
-            if route != "access" and self._has_permission(permission)
+            for route in self.available_admin_routes
+            if route not in {"access", HOME_ROUTE[0]}
         }
-        if self._has_permission("users.manage") or self._has_permission("audit.view"):
-            available_python_routes.add("access")
         self.web_catalog = WebCatalogPage(
             self.open_web_page,
             self.navigate_route,
             available_python_routes,
+        )
+        self.admin_home = AdminHomePage(
+            ROLE_LABELS.get(
+                self.current_user["role"], self.current_user["role"]
+            ),
+            self.available_admin_routes,
+            self.navigate_route,
         )
         for page in (
             self.platform,
@@ -186,33 +256,18 @@ class MainWindow(QMainWindow):
             self.data_catalog,
             self.web_catalog,
             self.customer_portal,
+            self.admin_home,
         ):
             self.pages.addWidget(page)
 
-        navigation = (
-            ("HỆ THỐNG", "platform", "Nền tảng & dữ liệu", 0, "dashboard.view"),
-            ("HỆ THỐNG", "access", "Tài khoản & nhật ký", 1, "access.view"),
-            ("HỆ THỐNG", "data_catalog", "Danh mục JSON & nhập SQLite", 19, "reports.view"),
-            ("HỆ THỐNG", "web_catalog", "Bản đồ trang HTML & Python", 20, "dashboard.view"),
-            ("HỆ THỐNG", "customer_portal", "Tài khoản portal khách hàng", 21, "sales.manage"),
-            ("TỔNG QUAN", "dashboard", "Tổng quan", 2, "dashboard.view"),
-            ("HỒ SƠ & CHĂM SÓC", "animals", "Hồ sơ thú cưng", 3, "animals.view"),
-            ("HỒ SƠ & CHĂM SÓC", "pet_detail", "Chi tiết thú cưng", 4, "animals.view"),
-            ("HỒ SƠ & CHĂM SÓC", "store", "Chuồng trại", 5, "store.view"),
-            ("HỒ SƠ & CHĂM SÓC", "health", "Sức khỏe", 8, "health.view"),
-            ("HỒ SƠ & CHĂM SÓC", "care", "Chăm sóc", 9, "care.view"),
-            ("NHẬP HÀNG", "suppliers", "Nhà cung cấp", 6, "imports.view"),
-            ("NHẬP HÀNG", "imports", "Nhập & kiểm tra", 7, "imports.view"),
-            ("KHÁCH HÀNG & BÁN HÀNG", "customers", "Hồ sơ khách hàng", 10, "sales.view"),
-            ("KHÁCH HÀNG & BÁN HÀNG", "customer_insights", "Khách hàng & dịch vụ", 11, "sales.view"),
-            ("KHÁCH HÀNG & BÁN HÀNG", "reservations", "Đặt trước & giữ chỗ", 12, "sales.view"),
-            ("KHÁCH HÀNG & BÁN HÀNG", "sales", "Đơn hàng & thanh toán", 13, "sales.view"),
-            ("KHÁCH HÀNG & BÁN HÀNG", "memberships", "Hội viên & bill", 17, "membership.view"),
-            ("KHÁCH HÀNG & BÁN HÀNG", "services", "Dịch vụ & lịch hẹn", 18, "services.view"),
-            ("VẬT TƯ & PHÂN TÍCH", "inventory", "Kho thức ăn & thuốc", 14, "inventory.view"),
-            ("VẬT TƯ & PHÂN TÍCH", "reports", "Báo cáo", 15, "reports.view"),
-            ("VẬT TƯ & PHÂN TÍCH", "operations", "Cảnh báo & sao lưu", 16, "notifications.view"),
-        )
+        navigation = [
+            ("KHU VỰC NỘI BỘ", *HOME_ROUTE),
+            *(
+                (group, route, label, index, permission)
+                for group, _description, routes in ADMIN_FUNCTION_GROUPS
+                for route, label, index, permission, _hint in routes
+            ),
+        ]
 
         navigation_scroll = QScrollArea()
         navigation_scroll.setWidgetResizable(True)
@@ -265,9 +320,12 @@ class MainWindow(QMainWindow):
         password_button.setObjectName("navButton")
         password_button.clicked.connect(self.change_password)
         sidebar_layout.addWidget(password_button)
-        sidebar_layout.addWidget(
-            QLabel("Không gian vận hành nội bộ\nDữ liệu lưu trong SQLite", objectName="sideFooter")
+        storage_caption = (
+            "Không gian vận hành nội bộ\nDữ liệu đồng bộ qua API trung tâm"
+            if self.remote_mode
+            else "Không gian vận hành nội bộ\nDữ liệu lưu trong SQLite"
         )
+        sidebar_layout.addWidget(QLabel(storage_caption, objectName="sideFooter"))
         root.addWidget(sidebar)
         content = QWidget()
         content_layout = QVBoxLayout(content)
@@ -288,10 +346,26 @@ class MainWindow(QMainWindow):
             lambda: self.open_web_page("/index.html")
         )
         topbar_layout.addWidget(self.website_button)
+        self.storefront_button = QPushButton("Mở cửa hàng")
+        self.storefront_button.setObjectName("storefrontButton")
+        self.storefront_button.setToolTip(
+            "Mở trang bán hàng dùng catalog SQLite của ứng dụng"
+        )
+        self.storefront_button.setEnabled(self.web_base_url is not None)
+        self.storefront_button.clicked.connect(
+            lambda: self.open_web_page("/Web bán hàng/index.html")
+        )
+        topbar_layout.addWidget(self.storefront_button)
         self.admin_web_button = QPushButton("Quản trị web")
         self.admin_web_button.setObjectName("adminWebButton")
-        self.admin_web_button.setToolTip("Mở giao diện quản trị HTML kết nối SQLite")
-        self.admin_web_button.setEnabled(self.web_base_url is not None)
+        self.admin_web_button.setToolTip(
+            "Giao diện quản trị HTML chỉ được hỗ trợ khi desktop dùng SQLite cục bộ"
+            if self.remote_mode
+            else "Mở giao diện quản trị HTML kết nối SQLite"
+        )
+        self.admin_web_button.setEnabled(
+            self.web_base_url is not None and not self.remote_mode
+        )
         self.admin_web_button.clicked.connect(
             lambda: self.open_web_page("/Trang hỗ trợ/admin_store_management.html")
         )
@@ -331,7 +405,10 @@ class MainWindow(QMainWindow):
             #sideFooter { color: #d0e1d6; padding: 10px 8px; border-top: 1px solid #315343; }
             #appTopbar { background: #fff; border-bottom: 1px solid #dfe8e1; }
             #topbarBrand { color: #527261; font-size: 10px; font-weight: 800; letter-spacing: 1px; }
-            #topbarUser { color: #20382e; font-weight: 700; }
+            #topbarUser {
+                color: #20382e; font-family: "Segoe UI"; font-size: 12px;
+                font-weight: 600;
+            }
             QPushButton#navButton {
                 background: transparent; color: #e4eee7; text-align: left;
                 border: 0; border-radius: 8px; padding: 10px 12px;
@@ -343,6 +420,17 @@ class MainWindow(QMainWindow):
             QLabel#pageTitle { font-size: 26px; font-weight: 800; color: #173d2c; }
             QLabel#pageSubtitle { font-size: 15px; font-weight: 800; color: #24563d; }
             QLabel#sectionTitle { font-size: 17px; font-weight: 750; margin-top: 14px; color: #24563d; }
+            QFrame#adminFunctionCard {
+                background: #fff; border: 1px solid #dfe9e1; border-radius: 14px;
+            }
+            QPushButton#adminFunctionAction {
+                background: #f8fbf8; color: #20382e; text-align: left;
+                border: 1px solid #dfe9e1; border-radius: 10px;
+                padding: 10px 12px; font-weight: 750;
+            }
+            QPushButton#adminFunctionAction:hover {
+                background: #edf6ef; border-color: #9fc6aa;
+            }
             QFrame#statCard, QWidget#profileCard, QFrame#profileCard {
                 background: #fff; border: 1px solid #dfe9e1; border-radius: 12px;
             }
@@ -385,7 +473,7 @@ class MainWindow(QMainWindow):
         )
         self.dashboard.refresh()
         self._configure_page_permissions()
-        self.navigate_route("dashboard", 2)
+        self.navigate_route(HOME_ROUTE[0], HOME_ROUTE[2])
 
     def _has_permission(self, permission: str) -> bool:
         user_id = self.current_user.get("id")
@@ -393,13 +481,28 @@ class MainWindow(QMainWindow):
             return True
         return self.database.has_permission(user_id, permission)
 
+    def _page(
+        self,
+        permissions: str | tuple[str, ...],
+        create_page: Any,
+    ) -> QWidget:
+        if not self.remote_mode:
+            return create_page()
+        required = (permissions,) if isinstance(permissions, str) else permissions
+        if any(self._has_permission(permission) for permission in required):
+            return create_page()
+        return _UnavailablePage("Bạn không có quyền truy cập chức năng này.")
+
     def _configure_page_permissions(self) -> None:
         self.animals.set_manage_enabled(self._has_permission("animals.manage"))
         self.health.set_manage_enabled(self._has_permission("health.manage"))
         self.care.set_manage_enabled(self._has_permission("care.manage"))
         self.store.set_manage_enabled(self._has_permission("store.manage"))
         self.imports.set_manage_enabled(self._has_permission("imports.manage"))
-        self.sales.set_manage_enabled(self._has_permission("sales.manage"))
+        sales_manage = self._has_permission("sales.manage")
+        sales_request = self._has_permission("sales.request")
+        sales_approve = self._has_permission("sales.approve")
+        self.sales.set_access(sales_manage, sales_request, sales_approve)
         self.inventory.set_manage_enabled(
             self._has_permission("inventory.manage")
         )
@@ -408,8 +511,8 @@ class MainWindow(QMainWindow):
             self._has_permission("membership.manage")
         )
         self.suppliers.set_manage_enabled(self._has_permission("imports.manage"))
-        self.customers.set_manage_enabled(self._has_permission("sales.manage"))
-        self.reservations.set_manage_enabled(self._has_permission("sales.manage"))
+        self.customers.set_access(sales_manage, sales_request, sales_approve)
+        self.reservations.set_access(sales_manage, sales_request, sales_approve)
         self.data_catalog.set_import_enabled(self._has_permission("settings.manage"))
         self.customer_portal.set_manage_enabled(
             self.current_user.get("id") is not None

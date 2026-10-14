@@ -32,6 +32,37 @@
         <div class="category-grid" data-category-grid></div>
       </section>
 
+      <section class="section api-connection" id="api-connection" aria-labelledby="api-connection-title">
+        <div class="api-connection-card">
+          <div>
+            <span class="eyebrow">Một hệ thống · mọi thiết bị</span>
+            <h2 id="api-connection-title">Kết nối PetCare Central</h2>
+            <p data-api-status>Đang kiểm tra cấu hình kết nối...</p>
+          </div>
+          <form data-api-settings>
+            <label for="central-api-url">Địa chỉ Central API (HTTPS)</label>
+            <div class="api-connection-controls">
+              <input id="central-api-url" name="api-url" type="url" inputmode="url" autocomplete="url" placeholder="https://petcare.example.com" aria-describedby="api-connection-help">
+              <button class="button" type="submit">Kết nối</button>
+              <button class="button-secondary" type="button" data-api-clear>Xóa</button>
+            </div>
+            <small id="api-connection-help">Dùng cùng địa chỉ API đã cấu hình cho desktop và ứng dụng Android/iOS. Máy chủ phải cho phép origin của website trong PETCARE_WEB_ORIGINS.</small>
+          </form>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="recommendations-title">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Gợi ý khách hàng · xu hướng cửa hàng</span>
+            <h2 id="recommendations-title">Sản phẩm được quan tâm</h2>
+            <p>Xếp hạng 30 ngày: số lượng bán (45%), đơn đã thanh toán (30%), doanh thu (15%); yêu cầu mua là tín hiệu riêng (10%), không tính là doanh số. Combo không có số lượng bán riêng trong dữ liệu nên xếp hạng theo các tín hiệu còn đo được.</p>
+          </div>
+          <a class="text-link" href="san-pham.html">Xem toàn bộ →</a>
+        </div>
+        <div class="product-grid" data-recommendation-grid></div>
+      </section>
+
       <section class="section" aria-labelledby="featured-title">
         <div class="section-head">
           <div><span class="eyebrow">Gợi ý khám phá</span><h2 id="featured-title">Sản phẩm nổi bật</h2><p>Sản phẩm và trạng thái hiện lấy từ kho ứng dụng PetCare.</p></div>
@@ -42,8 +73,8 @@
 
       <section class="trust-strip" aria-label="Thông tin cửa hàng">
         <article class="trust-item"><strong>Đồng bộ catalog</strong><p>Khi mở từ ứng dụng, trang đọc trực tiếp SQLite; hosting tĩnh dùng snapshot JSON gần nhất.</p></article>
-        <article class="trust-item"><strong>Giá và tồn theo ứng dụng</strong><p>Mặt hàng demo và số lượng khả dụng được ghi nhãn; giỏ hàng không giữ tồn.</p></article>
-        <article class="trust-item"><strong>Không thu tiền trực tuyến</strong><p>Giỏ hàng hiện chỉ tạo bản nháp lưu trên thiết bị của bạn.</p></article>
+        <article class="trust-item"><strong>Giá và tồn theo ứng dụng</strong><p>Chỉ sản phẩm đã xác minh, có giá và còn ít nhất 5 đơn vị khả dụng mới nhận đặt; mặt hàng dưới ngưỡng được ngừng bán tự động.</p></article>
+        <article class="trust-item"><strong>Đơn hàng chờ thanh toán</strong><p>Đặt hàng tạo đơn bán và xuất kho ngay; trạng thái thanh toán vẫn chờ đến khi cửa hàng ghi nhận.</p></article>
       </section>
     </div>
   </main>

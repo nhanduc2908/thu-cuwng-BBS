@@ -14,8 +14,11 @@ from PySide6.QtWidgets import (
 
 from app.database import Database
 from app.modules.nutrition.recommendation_engine import recommend_foods_for_pet
-from app.modules.nutrition.repository import FoodNutritionRepository
 from app.ui.common import STATUS_LABELS, make_table, set_cell
+
+
+def display_animal_code(animal_code: str) -> str:
+    return animal_code.removeprefix("DEMO-")
 
 
 class DashboardPage(QWidget):
@@ -135,6 +138,10 @@ class DashboardPage(QWidget):
         layout.addStretch()
         scroll_area.setWidget(content)
         root_layout.addWidget(scroll_area)
+
+    def _has_permission(self, permission: str) -> bool:
+        actor_id = self.database.actor_id
+        return actor_id is None or self.database.has_permission(actor_id, permission)
 
     def _build_pet_tab_overview(self) -> QWidget:
         tab = QWidget()
@@ -312,6 +319,12 @@ class DashboardPage(QWidget):
             if widget is not None:
                 widget.deleteLater()
 
+        if not self._has_permission("sales.view"):
+            self.featured_pets_layout.addWidget(
+                QLabel("Hồ sơ khách hàng chỉ hiển thị với quyền bán hàng.")
+            )
+            return
+
         pets = self.database.customers.list_pets()
         featured = sorted(
             pets,
@@ -384,25 +397,49 @@ class DashboardPage(QWidget):
         )
         self.pet_avatar.setText("🐶" if pet["species"].lower().startswith("chó") else "🐱")
 
-        care_tasks = self.database.list_care_tasks()
+        care_tasks = (
+            self.database.list_care_tasks()
+            if self._has_permission("care.view")
+            else []
+        )
         related_care = [task for task in care_tasks if int(task["animal_id"]) == int(pet["id"])][:3]
         care_text = ", ".join(
             f"{task['title']} ({task['scheduled_at'][:10]})" for task in related_care
-        ) if related_care else "Chưa có lịch chăm sóc gần đây"
+        ) if related_care else (
+            "Không được cấp quyền xem"
+            if not self._has_permission("care.view")
+            else "Chưa có lịch chăm sóc gần đây"
+        )
 
-        health_records = self.database.list_health_records()
+        health_records = (
+            self.database.list_health_records()
+            if self._has_permission("health.view")
+            else []
+        )
         related_health = [record for record in health_records if int(record["animal_id"]) == int(pet["id"])][:3]
         health_text = ", ".join(
             f"{record['health_status']} ({record['examination_date']})" for record in related_health
-        ) if related_health else "Chưa có hồ sơ sức khỏe gần đây"
+        ) if related_health else (
+            "Không được cấp quyền xem"
+            if not self._has_permission("health.view")
+            else "Chưa có hồ sơ sức khỏe gần đây"
+        )
 
-        appointments = self.database.list_service_appointments()
+        appointments = (
+            self.database.list_service_appointments()
+            if self._has_permission("services.view")
+            else []
+        )
         related_appointments = [
             appointment for appointment in appointments if appointment["pet_name"].casefold() == str(pet["name"]).casefold()
         ][:3]
         appointment_text = ", ".join(
             f"{appointment['status']} ({appointment['scheduled_at'][:10]})" for appointment in related_appointments
-        ) if related_appointments else "Chưa có lịch dịch vụ"
+        ) if related_appointments else (
+            "Không được cấp quyền xem"
+            if not self._has_permission("services.view")
+            else "Chưa có lịch dịch vụ"
+        )
 
         self.overview_meta.setText(
             f"Giống: {breed} | Sinh nhật: {pet['birth_date'] or 'Chưa xác định'} | Cân nặng: {weight} kg | Môi trường: {pet['environment_type']}"
@@ -450,8 +487,12 @@ class DashboardPage(QWidget):
             "health_condition": pet["health_status"] or "HEALTHY",
             "allergies": pet["allergies"] or "",
         }
-        repo = FoodNutritionRepository(self.database.connection)
-        foods = repo.list_foods_for_species(species, limit=30)
+        if not self._has_permission("inventory.view"):
+            self.recommendation_layout.addWidget(
+                QLabel("Gợi ý sản phẩm cần quyền xem kho.")
+            )
+            return
+        foods = self.database.list_nutrition_foods_for_species(species, limit=30)
         recommendations = recommend_foods_for_pet(profile, foods, limit=3)
 
         if not recommendations:
@@ -487,20 +528,39 @@ class DashboardPage(QWidget):
             self.operational_values["orders"].setText("—")
         self._render_featured_pets()
         self._render_reminders()
-        customers = self.database.list_customers()
-        pets = self.database.customers.list_pets()
-        appointments = self.database.list_service_appointments()
-        customer_summary = (
-            f"Khách hàng hoạt động: {len(customers)} | Thú cưng đang chăm sóc: {len(pets)} | "
-            f"Lịch hẹn trong hệ thống: {len(appointments)} | "
-            f"Doanh thu: {sum(float(item['total_price'] or 0) for item in appointments):,.0f} ₫"
+        summary_parts: list[str] = []
+        if self._has_permission("sales.view"):
+            customers = self.database.list_customers()
+            pets = self.database.customers.list_pets()
+            summary_parts.extend(
+                (
+                    f"Khách hàng hoạt động: {len(customers)}",
+                    f"Thú cưng đang chăm sóc: {len(pets)}",
+                )
+            )
+        if self._has_permission("services.view"):
+            appointments = self.database.list_service_appointments()
+            summary_parts.extend(
+                (
+                    f"Lịch hẹn trong hệ thống: {len(appointments)}",
+                    "Doanh thu dịch vụ: "
+                    f"{sum(float(item['total_price'] or 0) for item in appointments):,.0f} ₫",
+                )
+            )
+        customer_summary = " | ".join(summary_parts) or (
+            "Không có dữ liệu ngoài phạm vi quyền được cấp."
         )
         self.customer_overview_label.setText(customer_summary)
         self.customer_summary_value.setText(customer_summary)
         animals = self.database.recent_animals()
         self.table.setRowCount(len(animals))
         for row_number, animal in enumerate(animals):
-            set_cell(self.table, row_number, 0, animal["animal_code"])
+            set_cell(
+                self.table,
+                row_number,
+                0,
+                display_animal_code(animal["animal_code"]),
+            )
             set_cell(self.table, row_number, 1, animal["name"])
             set_cell(self.table, row_number, 2, animal["species"])
             set_cell(self.table, row_number, 3, STATUS_LABELS[animal["status"]])
@@ -513,6 +573,11 @@ class DashboardPage(QWidget):
             if widget is not None:
                 widget.deleteLater()
 
+        if not self._has_permission("notifications.view"):
+            self.reminder_layout.addWidget(
+                QLabel("Nhắc nhở vận hành cần quyền xem thông báo.")
+            )
+            return
         alerts = self.database.list_operational_alerts()[:5]
         if not alerts:
             placeholder = QLabel("Không có nhắc nhở/alert nào trong thời gian gần đây.")

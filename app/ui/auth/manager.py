@@ -31,7 +31,7 @@ class UserManagementDialog(QDialog):
         self.resize(760, 460)
         layout = QVBoxLayout(self)
         self.table = make_table(
-            ["Tên đăng nhập", "Tên hiển thị", "Vai trò", "Trạng thái"]
+            ["Tên đăng nhập", "Tên hiển thị", "Vai trò", "Trạng thái", "Trưởng ca"]
         )
         self.table.currentCellChanged.connect(self._selection_changed)
         layout.addWidget(self.table)
@@ -46,10 +46,13 @@ class UserManagementDialog(QDialog):
         self.save_role_button.clicked.connect(self.save_role)
         self.toggle_button = QPushButton("Khóa tài khoản")
         self.toggle_button.clicked.connect(self.toggle_active)
+        self.sales_approver_button = QPushButton("Cấp quyền trưởng ca")
+        self.sales_approver_button.clicked.connect(self.toggle_sales_approver)
         for widget in (
             self.role,
             self.save_role_button,
             self.toggle_button,
+            self.sales_approver_button,
             self.create_button,
         ):
             toolbar.addWidget(widget)
@@ -80,6 +83,12 @@ class UserManagementDialog(QDialog):
                 3,
                 "Đang hoạt động" if user["is_active"] else "Đã khóa",
             )
+            set_cell(
+                self.table,
+                row,
+                4,
+                "Được duyệt" if user["sales_approver"] else "—",
+            )
         if selected_row >= 0:
             self.table.selectRow(selected_row)
         elif users:
@@ -100,6 +109,7 @@ class UserManagementDialog(QDialog):
         self.role.setEnabled(enabled)
         self.save_role_button.setEnabled(enabled)
         self.toggle_button.setEnabled(enabled)
+        self.sales_approver_button.setEnabled(False)
         if row >= 0:
             users = self.database.list_users()
             selected = next(
@@ -111,6 +121,16 @@ class UserManagementDialog(QDialog):
                     "Khóa tài khoản"
                     if selected["is_active"]
                     else "Mở khóa tài khoản"
+                )
+                self.sales_approver_button.setText(
+                    "Thu quyền trưởng ca"
+                    if selected["sales_approver"]
+                    else "Cấp quyền trưởng ca"
+                )
+                self.sales_approver_button.setEnabled(
+                    enabled
+                    and selected["role"] == "SALES"
+                    and bool(selected["is_active"])
                 )
                 if selected["id"] == self.actor_id:
                     self.toggle_button.setEnabled(False)
@@ -168,6 +188,25 @@ class UserManagementDialog(QDialog):
                 user_id, not bool(selected["is_active"]), self.actor_id
             )
         except (sqlite3.Error, ValueError) as error:
+            self._show_error(error)
+            return
+        self.refresh()
+
+    def toggle_sales_approver(self) -> None:
+        user_id = self.selected_user_id()
+        if user_id is None:
+            return
+        selected = next(
+            (user for user in self.database.list_users() if user["id"] == user_id),
+            None,
+        )
+        if selected is None or selected["role"] != "SALES":
+            return
+        try:
+            self.database.set_sales_approver(
+                user_id, not bool(selected["sales_approver"]), self.actor_id
+            )
+        except (sqlite3.Error, ValueError, PermissionError) as error:
             self._show_error(error)
             return
         self.refresh()

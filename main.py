@@ -26,6 +26,8 @@ except ModuleNotFoundError as error:
 
 from app.database import Database
 from app.project_share import ProjectShareServer
+from app.remote_database import RemoteDatabase, RemoteDatabaseError
+from app.remote_storefront_bridge import RemoteStorefrontBridge
 from app.web_bridge import LocalAdminBridge
 from app.ui.auth.dialogs import ChangePasswordDialog, LoginDialog
 from app.ui.main_window import MainWindow
@@ -120,6 +122,50 @@ def authenticate_user(database: Database) -> dict[str, object] | None:
         )
 
 
+def authenticate_remote_user(
+    database: RemoteDatabase,
+) -> dict[str, object] | None:
+    while True:
+        dialog = LoginDialog()
+        if dialog.exec() != LoginDialog.DialogCode.Accepted:
+            return None
+
+        username, password = dialog.credentials()
+        try:
+            user = database.login(username, password)
+        except PermissionError:
+            QMessageBox.warning(
+                None,
+                "Đăng nhập thất bại",
+                "Tên đăng nhập hoặc mật khẩu không đúng, hoặc tài khoản đã bị khóa.",
+            )
+            continue
+        except RemoteDatabaseError as error:
+            QMessageBox.warning(
+                None,
+                "Không kết nối được dịch vụ",
+                f"Không thể đăng nhập vào API trung tâm:\n{error}",
+            )
+            continue
+
+        if user["must_change_password"]:
+            change_dialog = ChangePasswordDialog(required=True)
+            if change_dialog.exec() != ChangePasswordDialog.DialogCode.Accepted:
+                return None
+            current_password, new_password = change_dialog.values()
+            try:
+                database.change_password(
+                    int(user["id"]), current_password, new_password, int(user["id"])
+                )
+            except (PermissionError, RemoteDatabaseError) as error:
+                QMessageBox.warning(
+                    None, "Không thể đổi mật khẩu", str(error)
+                )
+                continue
+            user["must_change_password"] = False
+        return user
+
+
 def show_startup_error(error: Exception) -> None:
     LOGGER.error(
         "Không thể khởi động ứng dụng",
@@ -170,65 +216,102 @@ def main(arguments: Sequence[str] | None = None) -> int:
         return 0
 
     application = create_application(arguments)
-    database: Database | None = None
-    web_bridge: LocalAdminBridge | None = None
+    database: Database | RemoteDatabase | None = None
+    web_bridge: LocalAdminBridge | RemoteStorefrontBridge | None = None
     project_share_server: ProjectShareServer | None = None
 
     try:
-        path = database_path()
-        LOGGER.info("Khởi động %s; SQLite: %s", APP_NAME, path)
-        database = Database(path)
-        created_accounts, account_conflicts = database.seed_default_role_accounts()
-        if created_accounts:
-            LOGGER.warning(
-                "Provisioned %d default role accounts. Change shared/default "
-                "passwords before allowing access from other devices.",
-                len(created_accounts),
-            )
-        if account_conflicts:
-            QMessageBox.warning(
-                None,
-                "Tài khoản mặc định bị trùng vai trò",
-                "Không ghi đè các tài khoản hiện có. Kiểm tra tên đăng nhập sau "
-                "để cấp đúng vai trò: "
-                + ", ".join(account_conflicts),
-            )
-        if not setup_first_admin(database):
-            database.close()
-            return 0
-
-        current_user = authenticate_user(database)
+        api_url = os.environ.get("PETCARE_API_URL", "").strip()
+        remote_mode = bool(api_url)
+        path: Path | None = None
+        if remote_mode:
+            LOGGER.info("Khởi động %s; API trung tâm đã được cấu hình.", APP_NAME)
+            database = RemoteDatabase(api_url)
+            current_user = authenticate_remote_user(database)
+        else:
+            path = database_path()
+            LOGGER.info("Khởi động %s; SQLite: %s", APP_NAME, path)
+            database = Database(path)
+            created_accounts, account_conflicts = database.seed_default_role_accounts()
+            if created_accounts:
+                LOGGER.warning(
+                    "Provisioned %d default role accounts. Change shared/default "
+                    "passwords before allowing access from other devices.",
+                    len(created_accounts),
+                )
+            if account_conflicts:
+                QMessageBox.warning(
+                    None,
+                    "Tài khoản mặc định bị trùng vai trò",
+                    "Không ghi đè các tài khoản hiện có. Kiểm tra tên đăng nhập sau "
+                    "để cấp đúng vai trò: "
+                    + ", ".join(account_conflicts),
+                )
+            if not setup_first_admin(database):
+                database.close()
+                return 0
+            current_user = authenticate_user(database)
         if current_user is None:
             database.close()
             return 0
 
         user_id = int(current_user["id"])
         database.set_actor(user_id)
-        database.record_audit(user_id, "LOGIN", "user", user_id)
-
-        web_bridge = LocalAdminBridge(path, Path(__file__).resolve().parent / "HTML")
-        try:
-            bridge_url = web_bridge.start()
-            LOGGER.info(
-                "Admin HTML + SQLite read-only bridge: %s/Trang hỗ trợ/admin_store_management.html",
-                bridge_url,
+        html_root = Path(__file__).resolve().parent / "HTML"
+        if remote_mode:
+            assert isinstance(database, RemoteDatabase)
+            web_bridge = RemoteStorefrontBridge(database.base_url, html_root)
+            try:
+                bridge_url = web_bridge.start()
+                LOGGER.info(
+                    "Central API storefront: %s/Web%%20b%%C3%%A1n%%20h%%C3%%A0ng/index.html",
+                    bridge_url,
+                )
+            except (OSError, RuntimeError, TimeoutError) as error:
+                LOGGER.warning(
+                    "Could not start the central storefront bridge: %s", error
+                )
+                QMessageBox.warning(
+                    None,
+                    "Cửa hàng chưa sẵn sàng",
+                    "Desktop vẫn kết nối Central API, nhưng chưa thể mở cửa hàng HTML."
+                    f"\n\nChi tiết: {error}",
+                )
+                web_bridge = None
+        else:
+            database.record_audit(user_id, "LOGIN", "user", user_id)
+            assert path is not None
+            web_bridge = LocalAdminBridge(
+                path,
+                html_root,
             )
-        except (OSError, TimeoutError) as error:
-            LOGGER.warning("Không khởi động được cầu nối admin HTML: %s", error)
-            QMessageBox.warning(
-                None,
-                "Admin web chưa sẵn sàng",
-                "Ứng dụng desktop vẫn hoạt động, nhưng giao diện HTML không thể kết nối SQLite. "
-                f"\n\nChi tiết: {error}",
-            )
-            web_bridge = None
-
+            try:
+                bridge_url = web_bridge.start()
+                LOGGER.info(
+                    "Admin HTML + SQLite read-only bridge: %s/Trang hỗ trợ/admin_store_management.html",
+                    bridge_url,
+                )
+                LOGGER.info(
+                    "SQLite storefront: %s",
+                    f"{bridge_url}/Web%20b%C3%A1n%20h%C3%A0ng/index.html",
+                )
+            except (OSError, TimeoutError) as error:
+                LOGGER.warning("Không khởi động được cầu nối admin HTML: %s", error)
+                QMessageBox.warning(
+                    None,
+                    "Admin web chưa sẵn sàng",
+                    "Ứng dụng desktop vẫn hoạt động, nhưng giao diện HTML không thể kết nối SQLite. "
+                    f"\n\nChi tiết: {error}",
+                )
+                web_bridge = None
         window = MainWindow(
             database,
             current_user,
             web_base_url=web_bridge.base_url if web_bridge is not None else None,
-            project_share_server=ProjectShareServer(
-                path, Path(__file__).resolve().parent
+            project_share_server=(
+                ProjectShareServer(path, Path(__file__).resolve().parent)
+                if path is not None
+                else None
             ),
         )
         project_share_server = window.project_share_server

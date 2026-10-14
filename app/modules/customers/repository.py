@@ -1,4 +1,5 @@
 import sqlite3
+from contextlib import nullcontext
 from typing import Any
 
 
@@ -46,7 +47,8 @@ class CustomerRepository:
             str(values.get("address", "")).strip(),
             str(values.get("note", "")).strip(),
         )
-        with self.connection:
+        transaction = self.connection if not self.connection.in_transaction else nullcontext()
+        with transaction:
             if customer_id is None:
                 cursor = self.connection.execute(
                     """

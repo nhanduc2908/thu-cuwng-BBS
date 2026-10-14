@@ -78,13 +78,13 @@ GROUP_LABELS = {
 
 
 _DEFINITIONS = [
-    ("ban-giao-don-da-thanh-toan", "Bàn giao đơn khách đã thanh toán", "Ngăn giao nhầm hoặc giao hàng khi đơn chưa trả đủ.", "customer", "sales.manage"),
-    ("giao-hang-con-thieu", "Giao một phần đơn hàng", "Ghi nhận phần hàng giao trước và phần còn thiếu để tránh thất lạc công nợ hàng.", "customer", "sales.manage"),
-    ("doi-hang-loi-cho-khach", "Đổi hàng lỗi cho khách", "Kiểm soát hàng thay thế sau khi xác minh lỗi sản phẩm.", "customer", "sales.manage"),
-    ("cap-hang-bao-hanh", "Cấp hàng bảo hành", "Theo dõi vật tư hoặc sản phẩm xuất phục vụ bảo hành.", "customer", "sales.manage"),
-    ("gui-mau-thu-san-pham", "Gửi mẫu thử sản phẩm", "Quản lý mẫu trải nghiệm gửi khách và tránh thất thoát hàng mẫu.", "customer", "sales.manage"),
-    ("tang-qua-khuyen-mai", "Xuất quà khuyến mãi", "Theo dõi quà tặng theo chương trình và đối tượng nhận.", "customer", "sales.manage"),
-    ("cho-khach-muon-hang-demo", "Cho khách mượn hàng demo", "Quản lý hàng cho mượn và thời hạn hoàn trả.", "customer", "sales.manage"),
+    ("ban-giao-don-da-thanh-toan", "Bàn giao đơn khách đã thanh toán", "Ngăn giao nhầm hoặc giao hàng khi đơn chưa trả đủ.", "customer", "sales.fulfill"),
+    ("giao-hang-con-thieu", "Giao một phần đơn hàng", "Ghi nhận phần hàng giao trước và phần còn thiếu để tránh thất lạc công nợ hàng.", "customer", "sales.fulfill"),
+    ("doi-hang-loi-cho-khach", "Đổi hàng lỗi cho khách", "Kiểm soát hàng thay thế sau khi xác minh lỗi sản phẩm.", "customer", "sales.fulfill"),
+    ("cap-hang-bao-hanh", "Cấp hàng bảo hành", "Theo dõi vật tư hoặc sản phẩm xuất phục vụ bảo hành.", "customer", "sales.fulfill"),
+    ("gui-mau-thu-san-pham", "Gửi mẫu thử sản phẩm", "Quản lý mẫu trải nghiệm gửi khách và tránh thất thoát hàng mẫu.", "customer", "sales.fulfill"),
+    ("tang-qua-khuyen-mai", "Xuất quà khuyến mãi", "Theo dõi quà tặng theo chương trình và đối tượng nhận.", "customer", "sales.fulfill"),
+    ("cho-khach-muon-hang-demo", "Cho khách mượn hàng demo", "Quản lý hàng cho mượn và thời hạn hoàn trả.", "customer", "sales.fulfill"),
     ("muon-hang-chup-anh", "Mượn hàng chụp ảnh nội dung", "Theo dõi sản phẩm rời kho để chụp ảnh, quay video hoặc đăng nội dung.", "inventory", "inventory.manage"),
     ("cap-hang-trung-bay", "Cấp hàng trưng bày", "Ghi nhận hàng chuyển khỏi khu lưu kho sang quầy trưng bày.", "inventory", "inventory.manage"),
     ("chuyen-hang-giua-cua-hang", "Chuyển hàng giữa cửa hàng", "Xác định điểm đi, điểm đến và người chịu trách nhiệm hàng luân chuyển.", "inventory", "inventory.manage"),

@@ -2,6 +2,7 @@ from pathlib import Path
 from datetime import datetime, timedelta, timezone
 import hashlib
 import json
+import math
 import secrets
 import sqlite3
 from typing import Any
@@ -47,13 +48,14 @@ from app.modules.services.repository import ServicesRepository
 
 
 class Database:
-    def __init__(self, path: str | Path) -> None:
+    def __init__(self, path: str | Path, *, initialize: bool = True) -> None:
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.connection = sqlite3.connect(self.path)
         self.connection.row_factory = sqlite3.Row
         self.connection.execute("PRAGMA foreign_keys = ON")
-        self._create_tables()
+        if initialize:
+            self._create_tables()
         self.auth = AuthRepository(self.connection)
         self.audit = AuditRepository(self.connection)
         self.animals = AnimalRepository(self.connection)
@@ -72,12 +74,13 @@ class Database:
         self.services = ServicesRepository(self.connection, self.memberships)
         self.reports = ReportRepository(self.connection)
         self.notifications = NotificationRepository(self.connection)
-        self._seed_health_catalogs()
-        self.breeds.seed_default_catalog()
-        self.inventory.seed_catalog()
-        self.inventory.seed_feeding_profiles()
-        self.services.seed_catalog()
         self.actor_id: int | None = None
+        if initialize:
+            self._seed_health_catalogs()
+            self.breeds.seed_default_catalog()
+            self.inventory.seed_catalog()
+            self.inventory.seed_feeding_profiles()
+            self.services.seed_catalog()
 
     def _seed_health_catalogs(self) -> None:
         default_diseases = [
@@ -380,7 +383,9 @@ class Database:
                     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     password_changed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     must_change_password INTEGER NOT NULL DEFAULT 0
-                        CHECK (must_change_password IN (0, 1))
+                        CHECK (must_change_password IN (0, 1)),
+                    sales_approver INTEGER NOT NULL DEFAULT 0
+                        CHECK (sales_approver IN (0, 1))
                 );
 
                 CREATE TABLE IF NOT EXISTS audit_logs (
@@ -837,7 +842,8 @@ class Database:
                     total_amount REAL NOT NULL DEFAULT 0 CHECK (total_amount >= 0),
                     note TEXT NOT NULL DEFAULT '',
                     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                    paid_at TEXT
+                    paid_at TEXT,
+                    inventory_fulfilled_at TEXT
                 );
 
                 CREATE TABLE IF NOT EXISTS order_items (
@@ -860,6 +866,24 @@ class Database:
                     note TEXT NOT NULL DEFAULT '',
                     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
                 );
+
+                CREATE TABLE IF NOT EXISTS sales_approval_requests (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    request_code TEXT NOT NULL UNIQUE,
+                    requester_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
+                    action_type TEXT NOT NULL,
+                    payload_json TEXT NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'PENDING'
+                        CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED')),
+                    requested_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    reviewed_by INTEGER REFERENCES users(id) ON DELETE RESTRICT,
+                    reviewed_at TEXT,
+                    decision_note TEXT NOT NULL DEFAULT '',
+                    result_json TEXT
+                );
+
+                CREATE INDEX IF NOT EXISTS idx_sales_approval_queue
+                    ON sales_approval_requests(status, requested_at DESC, id DESC);
 
                 CREATE TABLE IF NOT EXISTS store_slips (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -1011,6 +1035,24 @@ class Database:
                     line_total REAL NOT NULL CHECK (line_total >= 0),
                     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
                 );
+
+                CREATE TABLE IF NOT EXISTS storefront_order_requests (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    request_code TEXT NOT NULL UNIQUE,
+                    customer_name TEXT NOT NULL,
+                    customer_phone TEXT NOT NULL,
+                    address TEXT NOT NULL DEFAULT '',
+                    note TEXT NOT NULL DEFAULT '',
+                    items_json TEXT NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'NEW'
+                        CHECK (status IN ('NEW', 'CONTACTED', 'CLOSED')),
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    sales_order_id INTEGER REFERENCES sales_orders(id) ON DELETE RESTRICT,
+                    client_request_id TEXT
+                );
+
+                CREATE INDEX IF NOT EXISTS idx_storefront_order_requests_created
+                    ON storefront_order_requests(created_at DESC, id DESC);
 
                 CREATE TABLE IF NOT EXISTS inventory_batches (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -1211,6 +1253,62 @@ class Database:
                 self.connection.execute(
                     "ALTER TABLE customer_portal_accounts ADD COLUMN reviewed_at TEXT"
                 )
+            sales_order_columns = {
+                row["name"]
+                for row in self.connection.execute(
+                    "PRAGMA table_info(sales_orders)"
+                )
+            }
+            if "inventory_fulfilled_at" not in sales_order_columns:
+                self.connection.execute(
+                    "ALTER TABLE sales_orders ADD COLUMN inventory_fulfilled_at TEXT"
+                )
+            inventory_item_columns = {
+                row["name"]
+                for row in self.connection.execute(
+                    "PRAGMA table_info(inventory_items)"
+                )
+            }
+            if "storefront_auto_inactive" not in inventory_item_columns:
+                self.connection.execute(
+                    "ALTER TABLE inventory_items ADD COLUMN "
+                    "storefront_auto_inactive INTEGER NOT NULL DEFAULT 0"
+                )
+            combo_columns = {
+                row["name"]
+                for row in self.connection.execute(
+                    "PRAGMA table_info(product_combos)"
+                )
+            }
+            if "storefront_auto_inactive" not in combo_columns:
+                self.connection.execute(
+                    "ALTER TABLE product_combos ADD COLUMN "
+                    "storefront_auto_inactive INTEGER NOT NULL DEFAULT 0"
+                )
+            storefront_request_columns = {
+                row["name"]
+                for row in self.connection.execute(
+                    "PRAGMA table_info(storefront_order_requests)"
+                )
+            }
+            if "sales_order_id" not in storefront_request_columns:
+                self.connection.execute(
+                    "ALTER TABLE storefront_order_requests "
+                    "ADD COLUMN sales_order_id INTEGER "
+                    "REFERENCES sales_orders(id) ON DELETE RESTRICT"
+                )
+            if "client_request_id" not in storefront_request_columns:
+                self.connection.execute(
+                    "ALTER TABLE storefront_order_requests "
+                    "ADD COLUMN client_request_id TEXT"
+                )
+            self.connection.execute(
+                """
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_storefront_request_idempotency
+                ON storefront_order_requests(client_request_id)
+                WHERE client_request_id IS NOT NULL
+                """
+            )
 
             self.connection.executescript(
                 """
@@ -1231,7 +1329,19 @@ class Database:
         self._migrate_inventory_catalog()
         self._migrate_service_memberships()
         self._migrate_authentication()
+        self._migrate_sales_approver()
         self._migrate_user_roles()
+
+    def _migrate_sales_approver(self) -> None:
+        columns = {
+            row["name"] for row in self.connection.execute("PRAGMA table_info(users)")
+        }
+        if "sales_approver" not in columns:
+            with self.connection:
+                self.connection.execute(
+                    "ALTER TABLE users ADD COLUMN sales_approver INTEGER NOT NULL "
+                    "DEFAULT 0 CHECK (sales_approver IN (0, 1))"
+                )
 
     def _migrate_user_roles(self) -> None:
         table = self.connection.execute(
@@ -1260,7 +1370,9 @@ class Database:
                     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     password_changed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     must_change_password INTEGER NOT NULL DEFAULT 0
-                        CHECK (must_change_password IN (0, 1))
+                        CHECK (must_change_password IN (0, 1)),
+                    sales_approver INTEGER NOT NULL DEFAULT 0
+                        CHECK (sales_approver IN (0, 1))
                 )
                 """
             )
@@ -1269,10 +1381,10 @@ class Database:
                 INSERT INTO users_role_migration
                     (id, username, display_name, password_salt, password_hash,
                      role, is_active, created_at, password_changed_at,
-                     must_change_password)
+                     must_change_password, sales_approver)
                 SELECT id, username, display_name, password_salt, password_hash,
                        role, is_active, created_at, password_changed_at,
-                       must_change_password
+                       must_change_password, sales_approver
                 FROM users
                 """
             )
@@ -1717,6 +1829,12 @@ class Database:
     def get_customer(self, customer_id: int) -> sqlite3.Row | None:
         return self.customers.get_customer(customer_id)
 
+    def list_pets(self, customer_id: int | None = None) -> list[sqlite3.Row]:
+        return self.customers.list_pets(customer_id)
+
+    def get_pet(self, pet_id: int) -> sqlite3.Row | None:
+        return self.customers.get_pet(pet_id)
+
     def save_customer(
         self, values: dict[str, Any], customer_id: int | None = None
     ) -> int:
@@ -1912,6 +2030,396 @@ class Database:
     def list_sales_orders(self) -> list[sqlite3.Row]:
         return self.sales.list_orders()
 
+    def create_storefront_order_request(self, values: dict[str, Any]) -> int:
+        with self.connection:
+            cursor = self.connection.execute(
+                """
+                INSERT INTO storefront_order_requests
+                    (request_code, customer_name, customer_phone, address, note, items_json)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    values["request_code"],
+                    values["customer_name"],
+                    values["customer_phone"],
+                    values.get("address", ""),
+                    values.get("note", ""),
+                    values["items_json"],
+                ),
+            )
+            return int(cursor.lastrowid)
+
+    def list_storefront_order_requests(self) -> list[sqlite3.Row]:
+        return self.connection.execute(
+            """
+            SELECT r.id, r.request_code, r.customer_name, r.customer_phone, r.address,
+                   r.note, r.items_json, r.status, r.created_at, r.sales_order_id,
+                   so.order_code AS sales_order_code, so.status AS sales_order_status,
+                   so.total_amount AS sales_order_total,
+                   so.inventory_fulfilled_at
+            FROM storefront_order_requests r
+            LEFT JOIN sales_orders so ON so.id = r.sales_order_id
+            ORDER BY r.created_at DESC, r.id DESC
+            """
+        ).fetchall()
+
+    def create_storefront_sales_order(self, values: dict[str, Any]) -> dict[str, Any]:
+        """Create an unpaid storefront sale and immediately issue its stock."""
+        request_code = str(values["request_code"]).strip()
+        client_request_id = str(values.get("client_request_id", "")).strip()
+        customer_name = str(values["customer_name"]).strip()
+        customer_phone = str(values["customer_phone"]).strip()
+        items = values["items"]
+        if (
+            not request_code
+            or not client_request_id
+            or not customer_name
+            or not customer_phone
+        ):
+            raise ValueError("Thiếu thông tin yêu cầu đặt hàng.")
+        if not isinstance(items, list) or not items:
+            raise ValueError("Yêu cầu phải có ít nhất một sản phẩm.")
+
+        self.connection.execute("BEGIN IMMEDIATE")
+        with self.connection:
+            existing = self.connection.execute(
+                """
+                SELECT r.id AS request_id, r.request_code, r.customer_phone, r.items_json,
+                       r.sales_order_id, so.order_code, so.status, so.total_amount
+                FROM storefront_order_requests r
+                JOIN sales_orders so ON so.id = r.sales_order_id
+                WHERE r.client_request_id = ?
+                """,
+                (client_request_id,),
+            ).fetchone()
+            if existing is not None:
+                existing_items = json.loads(existing["items_json"])
+                request_signature = [
+                    (item["item_code"], item["quantity"]) for item in items
+                ]
+                existing_signature = [
+                    (item["item_code"], item["quantity"]) for item in existing_items
+                ]
+                def normalized_phone(value: str) -> str:
+                    return "".join(
+                        character for character in value if character.isdigit()
+                    )
+
+                if (
+                    normalized_phone(existing["customer_phone"])
+                    != normalized_phone(customer_phone)
+                    or existing_signature != request_signature
+                ):
+                    raise ValueError(
+                        "Mã gửi trùng lặp đã được dùng cho yêu cầu khác."
+                    )
+                return {
+                    "request_id": int(existing["request_id"]),
+                    "request_code": existing["request_code"],
+                    "sales_order_id": int(existing["sales_order_id"]),
+                    "sales_order_code": existing["order_code"],
+                    "sales_order_status": existing["status"],
+                    "sales_order_total": float(existing["total_amount"]),
+                }
+
+            product_lines: list[dict[str, Any]] = []
+            combo_lines: list[dict[str, Any]] = []
+            normalized_items: list[dict[str, Any]] = []
+
+            def available_item_quantity(item_id: int) -> float:
+                row = self.connection.execute(
+                    """
+                    SELECT COALESCE(SUM(CASE
+                               WHEN b.expiry_date IS NULL
+                                 OR b.expiry_date >= date('now', 'localtime')
+                               THEN b.quantity_remaining ELSE 0 END), 0)
+                           - COALESCE((
+                               SELECT SUM(pi.quantity)
+                               FROM sales_product_items pi
+                               JOIN sales_orders so ON so.id = pi.order_id
+                               WHERE pi.item_id = i.id
+                                 AND so.status IN ('OPEN', 'PARTIALLY_PAID')
+                                 AND so.inventory_fulfilled_at IS NULL
+                           ), 0) AS available
+                    FROM inventory_items i
+                    LEFT JOIN inventory_batches b ON b.item_id = i.id
+                    WHERE i.id = ? AND i.is_active = 1
+                    GROUP BY i.id
+                    """,
+                    (item_id,),
+                ).fetchone()
+                return float(row["available"] or 0) if row else 0.0
+
+            for item in items:
+                item_code = item["item_code"]
+                quantity = item["quantity"]
+                product = self.connection.execute(
+                    """
+                    SELECT id, name, is_demo, retail_price
+                    FROM inventory_items
+                    WHERE item_code = ? AND is_active = 1
+                    """,
+                    (item_code,),
+                ).fetchone()
+                if product is not None:
+                    if product["is_demo"] or float(product["retail_price"] or 0) <= 0:
+                        raise ValueError(
+                            f"{product['name']} chưa được xác minh hoặc chưa có giá; "
+                            "không thể tạo đơn bán tự động."
+                        )
+                    if available_item_quantity(int(product["id"])) < 5:
+                        raise ValueError(
+                            f"{product['name']} còn dưới 5 sản phẩm khả dụng; "
+                            "đã được chuyển sang hết hàng."
+                        )
+                    product_lines.append(
+                        {"item_id": product["id"], "quantity": quantity}
+                    )
+                    normalized_items.append(
+                        {
+                            "item_code": item_code,
+                            "name": product["name"],
+                            "quantity": quantity,
+                        }
+                    )
+                    continue
+
+                combo = self.connection.execute(
+                    """
+                    SELECT id, name, is_demo, sale_price
+                    FROM product_combos
+                    WHERE combo_code = ? AND is_active = 1
+                    """,
+                    (item_code,),
+                ).fetchone()
+                if combo is None:
+                    raise ValueError(f"Sản phẩm {item_code} không còn trong catalog.")
+                if combo["is_demo"] or float(combo["sale_price"] or 0) <= 0:
+                    raise ValueError(
+                        f"{combo['name']} chưa được xác minh hoặc chưa có giá; "
+                        "không thể tạo đơn bán tự động."
+                    )
+                components = self.connection.execute(
+                    """
+                    SELECT ci.item_id, ci.quantity
+                    FROM product_combo_items ci
+                    JOIN inventory_items i ON i.id = ci.item_id AND i.is_active = 1
+                    WHERE ci.combo_id = ?
+                    """,
+                    (combo["id"],),
+                ).fetchall()
+                if not components:
+                    raise ValueError(f"{combo['name']} chưa có thành phần khả dụng.")
+                combo_available = min(
+                    (
+                        available_item_quantity(int(component["item_id"]))
+                        / float(component["quantity"])
+                        for component in components
+                        if float(component["quantity"]) > 0
+                    ),
+                    default=0,
+                )
+                if len(components) != self.connection.execute(
+                    "SELECT COUNT(*) FROM product_combo_items WHERE combo_id = ?",
+                    (combo["id"],),
+                ).fetchone()[0] or combo_available < 5:
+                    raise ValueError(
+                        f"{combo['name']} còn dưới 5 combo khả dụng; "
+                        "đã được chuyển sang hết hàng."
+                    )
+                combo_lines.append({"combo_id": combo["id"], "quantity": quantity})
+                normalized_items.append(
+                    {
+                        "item_code": item_code,
+                        "name": combo["name"],
+                        "quantity": quantity,
+                    }
+                )
+
+            digits_only_phone = "".join(
+                character for character in customer_phone if character.isdigit()
+            )
+            customer = next(
+                (
+                    row
+                    for row in self.connection.execute(
+                        "SELECT id, phone FROM customers WHERE phone <> '' ORDER BY id"
+                    ).fetchall()
+                    if "".join(
+                        character for character in row["phone"] if character.isdigit()
+                    ) == digits_only_phone
+                ),
+                None,
+            )
+            if customer is None:
+                customer_id = self.customers.save_customer(
+                    {
+                        "customer_code": f"WEB-{secrets.token_hex(5).upper()}",
+                        "name": customer_name,
+                        "phone": customer_phone,
+                        "address": values.get("address", ""),
+                        "note": f"Tạo từ cửa hàng trực tuyến; yêu cầu {request_code}.",
+                    }
+                )
+            else:
+                customer_id = int(customer["id"])
+
+            order_id = self.sales.create_product_order(
+                {
+                    "order_code": f"WEB-{request_code}",
+                    "customer_id": customer_id,
+                    "ordered_at": datetime.now().date().isoformat(),
+                    "note": (
+                        f"Đặt từ cửa hàng trực tuyến; chưa thanh toán; "
+                        f"mã yêu cầu {request_code}."
+                    ),
+                    "product_lines": product_lines,
+                    "combo_lines": combo_lines,
+                }
+            )
+            self.sales.fulfill_unpaid_product_order(order_id)
+            self._deactivate_storefront_items_below_threshold(order_id)
+
+            request_cursor = self.connection.execute(
+                """
+                INSERT INTO storefront_order_requests
+                    (request_code, customer_name, customer_phone, address, note,
+                     items_json, sales_order_id, client_request_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    request_code,
+                    customer_name,
+                    customer_phone,
+                    values.get("address", ""),
+                    values.get("note", ""),
+                    json.dumps(normalized_items, ensure_ascii=False),
+                    order_id,
+                    client_request_id,
+                ),
+            )
+            self.audit.record(
+                None,
+                "STOREFRONT_AUTO_ORDER",
+                "sales_order",
+                order_id,
+                f"request_code={request_code}; customer_id={customer_id}",
+            )
+            self.audit.record(
+                None,
+                "STOREFRONT_ORDER_REQUEST",
+                "storefront_order_request",
+                int(request_cursor.lastrowid),
+                f"request_code={request_code}; sales_order_id={order_id}",
+            )
+            order = self.connection.execute(
+                "SELECT order_code, status, total_amount FROM sales_orders WHERE id = ?",
+                (order_id,),
+            ).fetchone()
+            return {
+                "request_id": int(request_cursor.lastrowid),
+                "request_code": request_code,
+                "sales_order_id": order_id,
+                "sales_order_code": order["order_code"],
+                "sales_order_status": order["status"],
+                "sales_order_total": float(order["total_amount"]),
+            }
+
+    def _deactivate_storefront_items_below_threshold(self, order_id: int) -> None:
+        item_ids = [
+            row["item_id"]
+            for row in self.connection.execute(
+                """
+                SELECT DISTINCT item_id FROM sales_product_items
+                WHERE order_id = ?
+                """,
+                (order_id,),
+            ).fetchall()
+        ]
+        for item_id in item_ids:
+            remaining = self.connection.execute(
+                """
+                SELECT COALESCE(SUM(CASE
+                           WHEN b.expiry_date IS NULL
+                             OR b.expiry_date >= date('now', 'localtime')
+                           THEN b.quantity_remaining ELSE 0 END), 0)
+                       - COALESCE((
+                           SELECT SUM(pi.quantity)
+                           FROM sales_product_items pi
+                           JOIN sales_orders so ON so.id = pi.order_id
+                           WHERE pi.item_id = i.id
+                             AND so.status IN ('OPEN', 'PARTIALLY_PAID')
+                             AND so.inventory_fulfilled_at IS NULL
+                       ), 0) AS available
+                FROM inventory_items i
+                LEFT JOIN inventory_batches b ON b.item_id = i.id
+                WHERE i.id = ?
+                GROUP BY i.id
+                """,
+                (item_id,),
+            ).fetchone()["available"]
+            if float(remaining or 0) < 5:
+                self.connection.execute(
+                    """
+                    UPDATE inventory_items
+                    SET is_active = 0, storefront_auto_inactive = 1
+                    WHERE id = ? AND is_active = 1
+                    """,
+                    (item_id,),
+                )
+
+        combo_ids = {
+            row["combo_id"]
+            for row in self.connection.execute(
+                """
+                SELECT DISTINCT combo_id FROM sales_product_items
+                WHERE order_id = ? AND combo_id IS NOT NULL
+                """,
+                (order_id,),
+            ).fetchall()
+        }
+        for combo_id in combo_ids:
+            components = self.connection.execute(
+                """
+                SELECT ci.quantity,
+                       COALESCE(SUM(CASE
+                           WHEN b.expiry_date IS NULL
+                             OR b.expiry_date >= date('now', 'localtime')
+                           THEN b.quantity_remaining ELSE 0 END), 0)
+                       - COALESCE((
+                           SELECT SUM(pi.quantity)
+                           FROM sales_product_items pi
+                           JOIN sales_orders so ON so.id = pi.order_id
+                           WHERE pi.item_id = i.id
+                             AND so.status IN ('OPEN', 'PARTIALLY_PAID')
+                             AND so.inventory_fulfilled_at IS NULL
+                       ), 0) AS available
+                FROM product_combo_items ci
+                JOIN inventory_items i ON i.id = ci.item_id
+                LEFT JOIN inventory_batches b ON b.item_id = i.id
+                WHERE ci.combo_id = ?
+                GROUP BY ci.item_id
+                """,
+                (combo_id,),
+            ).fetchall()
+            combo_available = min(
+                (
+                    float(component["available"]) / float(component["quantity"])
+                    for component in components
+                    if float(component["quantity"]) > 0
+                ),
+                default=0,
+            )
+            if combo_available < 5:
+                self.connection.execute(
+                    """
+                    UPDATE product_combos
+                    SET is_active = 0, storefront_auto_inactive = 1
+                    WHERE id = ? AND is_active = 1
+                    """,
+                    (combo_id,),
+                )
+
     def list_order_items(self, order_id: int) -> list[sqlite3.Row]:
         return self.sales.list_order_items(order_id)
 
@@ -1940,9 +2448,364 @@ class Database:
         )
         return result
 
+    SALES_APPROVAL_LIMIT = 15_000_000
+    SALES_APPROVAL_ACTIONS = frozenset(
+        {
+            "save_customer",
+            "create_reservation",
+            "release_reservation",
+            "refund_reservation_deposit",
+            "create_sales_order",
+            "create_product_sales_order",
+            "add_payment",
+            "cancel_sales_order",
+        }
+    )
+
+    def submit_sales_action(
+        self, action_type: str, payload: dict[str, Any]
+    ) -> dict[str, Any]:
+        if action_type not in self.SALES_APPROVAL_ACTIONS:
+            raise ValueError("Thao tác bán hàng không hợp lệ.")
+        if not isinstance(payload, dict):
+            raise ValueError("Dữ liệu thao tác bán hàng không hợp lệ.")
+        serialized = json.dumps(payload, ensure_ascii=False, allow_nan=False)
+        if self.actor_id is None:
+            raise PermissionError("Cần đăng nhập để thực hiện thao tác bán hàng.")
+        self._validate_sales_action_payload(action_type, payload)
+
+        if self.has_permission(self.actor_id, "sales.manage"):
+            result = self._apply_sales_action(action_type, payload)
+            return {"status": "APPLIED", "result": result}
+
+        self._require_staff_permission("sales.request")
+        amount = self._sales_action_amount(action_type, payload)
+        if (
+            action_type in {"cancel_sales_order", "refund_reservation_deposit"}
+            and amount <= self.SALES_APPROVAL_LIMIT
+        ):
+            result = self._apply_sales_action(action_type, payload)
+            return {"status": "APPLIED", "result": result}
+
+        request_code = f"APR-{datetime.now(timezone.utc):%Y%m%d}-{secrets.token_hex(4).upper()}"
+        with self.connection:
+            cursor = self.connection.execute(
+                """
+                INSERT INTO sales_approval_requests
+                    (request_code, requester_id, action_type, payload_json)
+                VALUES (?, ?, ?, ?)
+                """,
+                (request_code, self.actor_id, action_type, serialized),
+            )
+            request_id = int(cursor.lastrowid)
+            self._audit(
+                "REQUEST_SALES_APPROVAL",
+                "sales_approval_request",
+                request_id,
+                f"request_code={request_code}; action={action_type}",
+            )
+        return {
+            "status": "PENDING",
+            "request_id": request_id,
+            "request_code": request_code,
+        }
+
+    def _validate_sales_action_payload(
+        self, action_type: str, payload: dict[str, Any]
+    ) -> None:
+        def positive_id(value: Any, label: str) -> int:
+            try:
+                result = int(value)
+            except (TypeError, ValueError) as error:
+                raise ValueError(f"{label} không hợp lệ.") from error
+            if result <= 0:
+                raise ValueError(f"{label} không hợp lệ.")
+            return result
+
+        if action_type == "save_customer":
+            values = payload.get("values")
+            if not isinstance(values, dict):
+                raise ValueError("Thông tin khách hàng không hợp lệ.")
+            if not str(values.get("customer_code", "")).strip() or not str(
+                values.get("name", "")
+            ).strip():
+                raise ValueError("Mã khách hàng và họ tên là bắt buộc.")
+            if payload.get("customer_id") is not None:
+                positive_id(payload["customer_id"], "Mã khách hàng")
+            return
+
+        if action_type in {
+            "create_reservation",
+            "refund_reservation_deposit",
+            "release_reservation",
+        }:
+            if action_type == "create_reservation":
+                values = payload.get("values")
+                if not isinstance(values, dict):
+                    raise ValueError("Thông tin giữ chỗ không hợp lệ.")
+                positive_id(values.get("customer_id"), "Mã khách hàng")
+                positive_id(values.get("animal_id"), "Mã thú cưng")
+                deposit = float(values.get("deposit", 0))
+                if not math.isfinite(deposit) or deposit < 0:
+                    raise ValueError("Tiền đặt cọc không hợp lệ.")
+                return
+            reservation_id = positive_id(
+                payload.get("reservation_id"), "Mã lượt giữ chỗ"
+            )
+            reservation = self.connection.execute(
+                "SELECT status FROM reservations WHERE id = ?", (reservation_id,)
+            ).fetchone()
+            if reservation is None or reservation["status"] != "ACTIVE":
+                raise ValueError("Lượt giữ chỗ không còn hoạt động.")
+            if action_type == "refund_reservation_deposit":
+                values = payload.get("values")
+                if not isinstance(values, dict):
+                    raise ValueError("Thông tin hoàn cọc không hợp lệ.")
+                amount = float(values.get("amount", 0))
+                if not math.isfinite(amount) or amount <= 0:
+                    raise ValueError("Số tiền hoàn cọc phải lớn hơn 0.")
+                if amount > self.get_reservation_balance(reservation_id):
+                    raise ValueError("Số tiền vượt quá cọc chưa hoàn.")
+            return
+
+        if action_type in {"create_sales_order", "create_product_sales_order"}:
+            values = payload.get("values")
+            if not isinstance(values, dict):
+                raise ValueError("Thông tin đơn hàng không hợp lệ.")
+            if not str(values.get("order_code", "")).strip():
+                raise ValueError("Mã đơn hàng là bắt buộc.")
+            positive_id(values.get("customer_id"), "Mã khách hàng")
+            if action_type == "create_sales_order":
+                if not isinstance(values.get("animal_ids"), list) or not values[
+                    "animal_ids"
+                ]:
+                    raise ValueError("Đơn hàng phải có ít nhất một thú cưng.")
+            elif not any(
+                values.get(key)
+                for key in ("product_lines", "combo_lines")
+            ):
+                raise ValueError("Đơn hàng phải có sản phẩm hoặc combo.")
+            return
+
+        if action_type == "add_payment":
+            positive_id(payload.get("order_id"), "Mã đơn hàng")
+            values = payload.get("values")
+            if not isinstance(values, dict):
+                raise ValueError("Thông tin thanh toán không hợp lệ.")
+            amount = float(values.get("amount", 0))
+            if not math.isfinite(amount) or amount <= 0:
+                raise ValueError("Số tiền thanh toán phải lớn hơn 0.")
+            if not isinstance(values.get("method"), str):
+                raise ValueError("Phương thức thanh toán không hợp lệ.")
+            return
+
+        if action_type == "cancel_sales_order":
+            self._sales_action_amount(action_type, payload)
+
+    def _sales_action_amount(
+        self, action_type: str, payload: dict[str, Any]
+    ) -> float:
+        if action_type == "refund_reservation_deposit":
+            try:
+                amount = float(payload["values"]["amount"])
+            except (KeyError, TypeError, ValueError) as error:
+                raise ValueError("Số tiền hoàn cọc không hợp lệ.") from error
+            if not math.isfinite(amount) or amount <= 0:
+                raise ValueError("Số tiền hoàn cọc phải lớn hơn 0.")
+            return amount
+        if action_type == "cancel_sales_order":
+            try:
+                order_id = int(payload["order_id"])
+            except (KeyError, TypeError, ValueError) as error:
+                raise ValueError("Đơn hàng không hợp lệ.") from error
+            order = self.connection.execute(
+                "SELECT total_amount, status FROM sales_orders WHERE id = ?",
+                (order_id,),
+            ).fetchone()
+            if order is None:
+                raise ValueError("Không tìm thấy đơn hàng.")
+            if order["status"] != "OPEN":
+                raise ValueError("Chỉ đơn chưa thanh toán mới được hủy.")
+            return float(order["total_amount"])
+        return 0.0
+
+    def _apply_sales_action(
+        self, action_type: str, payload: dict[str, Any]
+    ) -> int | None:
+        if action_type == "save_customer":
+            values = payload["values"]
+            customer_id = payload.get("customer_id")
+            result = self.customers.save_customer(values, customer_id)
+            self._audit(
+                "UPDATE" if customer_id is not None else "CREATE",
+                "customer",
+                result,
+            )
+            return result
+        if action_type == "create_reservation":
+            values = payload["values"]
+            result = self.sales.create_reservation(values)
+            self._audit(
+                "RESERVE",
+                "animal",
+                values["animal_id"],
+                f"reservation_id={result}; customer_id={values['customer_id']}",
+            )
+            return result
+        if action_type == "release_reservation":
+            reservation_id = int(payload["reservation_id"])
+            self.sales.release_reservation(reservation_id)
+            self._audit("RELEASE_RESERVATION", "reservation", reservation_id)
+            return None
+        if action_type == "refund_reservation_deposit":
+            reservation_id = int(payload["reservation_id"])
+            values = payload["values"]
+            result = self.sales.refund_reservation_deposit(reservation_id, values)
+            self._audit(
+                "REFUND_DEPOSIT",
+                "reservation",
+                reservation_id,
+                f"amount={values['amount']}; method={values['method']}",
+            )
+            return result
+        if action_type == "create_sales_order":
+            values = payload["values"]
+            result = self.sales.create_order(values)
+            self._audit(
+                "CREATE_ORDER",
+                "sales_order",
+                result,
+                f"customer_id={values['customer_id']}; animals={values['animal_ids']}",
+            )
+            return result
+        if action_type == "create_product_sales_order":
+            values = payload["values"]
+            result = self.sales.create_product_order(values)
+            self._audit(
+                "CREATE_PRODUCT_ORDER",
+                "sales_order",
+                result,
+                f"customer_id={values['customer_id']}; "
+                f"products={len(values.get('product_lines', []))}; "
+                f"combos={len(values.get('combo_lines', []))}",
+            )
+            return result
+        if action_type == "add_payment":
+            order_id = int(payload["order_id"])
+            values = payload["values"]
+            result = self.sales.add_payment(order_id, values)
+            self._audit(
+                "PAYMENT",
+                "sales_order",
+                order_id,
+                f"amount={values['amount']}; method={values['method']}",
+            )
+            return result
+        if action_type == "cancel_sales_order":
+            order_id = int(payload["order_id"])
+            item_ids = [
+                row["item_id"]
+                for row in self.connection.execute(
+                    "SELECT DISTINCT item_id FROM sales_product_items WHERE order_id = ?",
+                    (order_id,),
+                ).fetchall()
+            ]
+            self.sales.cancel_unpaid_order(order_id)
+            self.inventory.reactivate_storefront_stock(item_ids)
+            self._audit("CANCEL_ORDER", "sales_order", order_id)
+            return None
+        raise ValueError("Thao tác bán hàng không hợp lệ.")
+
+    def list_sales_approval_requests(self) -> list[sqlite3.Row]:
+        self._require_permission("sales.view")
+        approver = bool(
+            self.actor_id is not None
+            and self.has_permission(self.actor_id, "sales.approve")
+        )
+        requester_filter = "" if approver else "AND r.requester_id = ?"
+        parameters: tuple[Any, ...] = () if approver else (self.actor_id,)
+        return self.connection.execute(
+            f"""
+            SELECT r.id, r.request_code, r.requester_id, u.display_name AS requester,
+                   r.action_type, r.payload_json, r.status, r.requested_at,
+                   r.reviewed_by, reviewer.display_name AS reviewer,
+                   r.reviewed_at, r.decision_note
+            FROM sales_approval_requests r
+            JOIN users u ON u.id = r.requester_id
+            LEFT JOIN users reviewer ON reviewer.id = r.reviewed_by
+            WHERE 1 = 1 {requester_filter}
+            ORDER BY CASE WHEN r.status = 'PENDING' THEN 0 ELSE 1 END,
+                     r.requested_at DESC, r.id DESC
+            """,
+            parameters,
+        ).fetchall()
+
+    def review_sales_approval_request(
+        self, request_id: int, approve: bool, note: str = ""
+    ) -> int | None:
+        self._require_staff_permission("sales.approve")
+        if self.actor_id is None:
+            raise PermissionError("Cần đăng nhập để duyệt yêu cầu.")
+        self.connection.execute("BEGIN IMMEDIATE")
+        try:
+            request = self.connection.execute(
+                """
+                SELECT requester_id, action_type, payload_json, status
+                FROM sales_approval_requests WHERE id = ?
+                """,
+                (request_id,),
+            ).fetchone()
+            if request is None:
+                raise ValueError("Không tìm thấy yêu cầu duyệt.")
+            if request["status"] != "PENDING":
+                raise ValueError("Yêu cầu này đã được xử lý.")
+            if int(request["requester_id"]) == self.actor_id:
+                raise ValueError("Không thể tự duyệt yêu cầu do chính mình tạo.")
+            if approve:
+                payload = json.loads(request["payload_json"])
+                result = self._apply_sales_action(request["action_type"], payload)
+                status = "APPROVED"
+            else:
+                result = None
+                status = "REJECTED"
+            self.connection.execute(
+                """
+                UPDATE sales_approval_requests
+                SET status = ?, reviewed_by = ?, reviewed_at = CURRENT_TIMESTAMP,
+                    decision_note = ?, result_json = ?
+                WHERE id = ? AND status = 'PENDING'
+                """,
+                (
+                    status,
+                    self.actor_id,
+                    note.strip()[:500],
+                    json.dumps({"result": result}, ensure_ascii=False),
+                    request_id,
+                ),
+            )
+            self._audit(
+                "APPROVE_SALES_REQUEST" if approve else "REJECT_SALES_REQUEST",
+                "sales_approval_request",
+                request_id,
+                f"action={request['action_type']}",
+            )
+            self.connection.commit()
+            return result
+        except BaseException:
+            self.connection.rollback()
+            raise
+
     def cancel_sales_order(self, order_id: int) -> None:
         self._require_permission("sales.manage")
+        item_ids = [
+            row["item_id"]
+            for row in self.connection.execute(
+                "SELECT DISTINCT item_id FROM sales_product_items WHERE order_id = ?",
+                (order_id,),
+            ).fetchall()
+        ]
         self.sales.cancel_unpaid_order(order_id)
+        self.inventory.reactivate_storefront_stock(item_ids)
         self._audit("CANCEL_ORDER", "sales_order", order_id)
 
     def list_order_payments(self, order_id: int) -> list[sqlite3.Row]:
@@ -2256,6 +3119,16 @@ class Database:
         self._require_permission("inventory.view")
         return self.recommendations.list_animal_product_preferences(animal_id)
 
+    def list_nutrition_foods_for_species(
+        self, species: str, limit: int | None = None
+    ) -> list[dict[str, Any]]:
+        self._require_permission("inventory.view")
+        from app.modules.nutrition.repository import FoodNutritionRepository
+
+        return FoodNutritionRepository(self.connection).list_foods_for_species(
+            species, limit
+        )
+
     def save_animal_product_preference(
         self,
         animal_id: int,
@@ -2436,6 +3309,19 @@ class Database:
             "user",
             user_id,
             f"role={role}",
+        )
+
+    def set_sales_approver(
+        self, user_id: int, enabled: bool, actor_id: int | None = None
+    ) -> None:
+        self._require_permission("users.manage")
+        acting_user_id = actor_id if actor_id is not None else self.actor_id
+        self.auth.set_sales_approver(user_id, enabled)
+        self.audit.record(
+            acting_user_id,
+            "ENABLE_SALES_APPROVER" if enabled else "DISABLE_SALES_APPROVER",
+            "user",
+            user_id,
         )
 
     def set_user_active(

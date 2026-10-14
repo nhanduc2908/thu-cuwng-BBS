@@ -1,10 +1,10 @@
 ﻿# PetCare — Pet Store Management System
 
-PetCare is a Windows desktop application for managing a pet store business using Python, PySide6, and SQLite. The solution runs locally on a single machine without requiring a separate backend, web login service, or external AI provider. It is designed to support daily store operations such as animal intake, care tracking, customer management, inventory, sales, memberships, service scheduling, recommendations, and operational reporting.
+PetCare is a Windows desktop application for managing a pet store business using Python, PySide6, and SQLite. Standalone mode runs locally without a separate backend; an optional containerized central API lets multiple desktop clients use the same database and identity service. It is designed to support daily store operations such as animal intake, care tracking, customer management, inventory, sales, memberships, service scheduling, recommendations, and operational reporting.
 
 ## Overview
 
-This project is a local-first business management system for a pet store and service center. It consolidates core operational workflows into one desktop application while keeping data in an embedded SQLite database. The design favors simplicity, local privacy, and independence from cloud infrastructure, making it suitable for small to medium-sized stores that need a reliable operational tool without a full SaaS installation.
+This project is a business management system for a pet store and service center. It consolidates core operational workflows into one desktop application, using either an embedded SQLite database in standalone mode or the documented central API deployment for shared access.
 
 The application includes:
 
@@ -46,8 +46,14 @@ The application includes:
 - Customer-specific membership pricing logic
 - Inventory reservation for pending or partially paid orders
 - Combo stock deduction rules and release of reserved inventory on cancellation
+- Approval workflow for customer, reservation, order, and payment changes submitted by sales associates, customer support, caregivers, service coordinators, and inventory managers
+- Managers and administrators can approve requests; an administrator can designate an active SALES account as a sales-shift approver. Requesters cannot approve their own changes.
+- Low-risk order cancellations and deposit refunds up to and including 15,000,000 VND may be completed by the submitting employee. Higher-value cancellations or refunds require approval.
+- Approval decisions and the underlying sales changes are recorded together in the audit trail. The desktop sales area and local bridge expose the same approval queue.
 
-The HTML storefront is available at `HTML/Web bán hàng/index.html`. When served by the desktop application's local bridge, it reads active inventory, available quantities, product attributes, and combos directly from SQLite through a read-only catalog endpoint. A privacy-filtered JSON snapshot supports static hosting and can be refreshed with `.\.venv\Scripts\python.exe scripts\sync_storefront_catalog.py` (optional `--database` and `--output`). The export omits supplier data, batch identifiers, purchase costs, and customer records. Product detail pages group only attributes recorded in the catalog and label missing fields as unavailable; demo records remain visibly unverified. Checkout only saves a browser-local draft and does not reserve stock, take payment, or send a real order.
+The HTML storefront is available at `HTML/Web bán hàng/index.html`. In standalone mode, use **Mở cửa hàng** in the desktop app to serve it from the local bridge and SQLite database. In Central API mode, the same button serves the HTML locally and proxies storefront catalog and checkout requests to the shared API. Both modes provide live catalog, prices, available quantities, product attributes, and a 30-day popularity ranking. That ranking compares log-scaled sales quantity (45%), paid-order count (30%), revenue (15%), and storefront-request count (10%). If a measure is unavailable (combo sales do not store combo-unit quantity), the remaining available weights are normalized; combo rankings use paid-order count and revenue rather than estimated units. Only fully paid orders count as sales; storefront-request signals remain separate and never become sales. Product, food, and accessory catalog pages can sort by 30-day trend, price, available stock, or name; when there is no 30-day activity, the catalog explains that trend sorting falls back to name. A privacy-filtered JSON snapshot supports static hosting and can be refreshed with `.\.venv\Scripts\python.exe scripts\sync_storefront_catalog.py` (optional `--database` and `--output`); snapshots produced by this command include the same aggregate metrics. The export omits supplier data, batch identifiers, purchase costs, and customer records. Product detail pages group only attributes recorded in the catalog and label missing fields as unavailable; demo records remain visibly unverified.
+
+Live storefront checkout requires consent and only accepts non-demo products with a price and at least five available units (five available combos for a combo item). Submission atomically creates an OPEN, unpaid sales order, reuses the customer by normalized phone or creates a customer record, writes inventory OUT movements immediately, and links the reference request to the sales order. The order does not become PAID: staff still record payment through the sales workflow. Items whose available stock drops below five are automatically deactivated from storefront sale and may be reactivated by receiving stock once at least five units are available; items manually deactivated by staff are not auto-reactivated. Cancelling an unpaid, already-fulfilled order restores the exact batches and reactivates only items previously deactivated automatically when the available quantity returns to five. Public order lookup by the high-entropy reference code returns only order status, amount, and whether inventory was issued; it does not expose customer details. Static hosting without a Central API URL can only browse its snapshot; when configured for the Central API, the storefront can submit orders to the shared database. The storefront remains a public checkout and does not sign in as a staff account.
 
 To add the 10,000 breed-tagged demo SKUs to the current local app database, first preview with `.\.venv\Scripts\python.exe scripts\seed_breed_demo_products.py`, then apply with `.\.venv\Scripts\python.exe scripts\seed_breed_demo_products.py --apply`. The import backs up SQLite before writing and is safe to rerun. It creates, for each of the 200 breed references, three unverified life-stage food placeholders, plus 4,700 supplement and 4,700 care placeholders overall. All are demo-only, unpriced, and have no stock. It does not add medicines or claim a breed-specific treatment. Refresh the static storefront afterward with `.\.venv\Scripts\python.exe scripts\sync_storefront_catalog.py`.
 
@@ -136,7 +142,7 @@ The user is required to change the password immediately after the first successf
 
 ## HTML Website Integration
 
-The desktop application serves the complete `HTML` folder through its local web bridge. After signing in, use **Mở website** in the top bar to open the central project hub, or **Quản trị web** to open the HTML admin workspace. The project hub links to the branded website, the new PetCare Enterprise Console, supporting project materials, and the full module library. The pages are organized into two folders:
+The desktop application serves the complete `HTML` folder through its local web bridge. After signing in, use **Mở cửa hàng** to open the live SQLite-backed storefront, **Mở website** to open the central project hub, or **Quản trị web** to open the HTML admin workspace. The project hub links to the branded website, the new PetCare Enterprise Console, supporting project materials, and the full module library. The pages are organized into two folders:
 
 - `HTML/TRrang chính/` contains the public-facing homepage, customer portal, product and nutrition pages, workflow, and `petcare_management.html` operations console.
 - `HTML/Trang hỗ trợ/` contains project proposals, reports, admin and demo screens, and the 17-module library under `Module/`.
@@ -148,6 +154,8 @@ The desktop application serves the complete `HTML` folder through its local web 
 Every HTML page loads `HTML/scripts/site_navigation.js`, which supplies the same responsive PetCare header, grouped searchable directory with direct links to the HTML pages, a collapsible page guide with usage steps and checks, and the back/home shortcuts.
 
 The Python sidebar's **Bản đồ trang HTML & Python** scans the HTML tree, labels navigation, reference, demo and interactive module pages, and opens eligible HTML or Python pages directly. All 17 module reference pages have corresponding Python operational screens; the HTML module pages describe workflows and are not CRUD replacements. The HTML data explorer has a Python catalog counterpart. Nutrition pages remain product/reference guides rather than full replacements for inventory operations. The HTML admin workspace is a partial browser alternative; use the typed Python screens for complete operational workflows.
+
+The desktop application opens an internal **Trung tâm chức năng** for staff accounts. Its work areas group animal care, receiving and inventory, sales and services, and reporting/administration. The home screen and sidebar show only destinations allowed by the signed-in staff member's existing permissions; customer portal users do not sign in to this admin workspace.
 
 ### Shared staff login accounts
 
@@ -193,7 +201,7 @@ The 17 module detail pages and the Enterprise Console include a permission-check
 
 Use the **Mở website** button in the desktop application or the displayed local-bridge link; `file://` pages cannot authenticate or perform writes. Informational pages, aggregate modules, audit history, and system reports remain read-only. Dataset JSON is synthetic/demo content, not real customer or animal records.
 
-This workspace provides generic prepared-dataset record management, not domain-specific CRUD for live animals, customers, health records, care tasks, or inventory. Live application SQLite data is read-only here; real operational changes must use the desktop application until typed web operations are provided.
+This workspace provides generic prepared-dataset record management, not domain-specific CRUD for live animals, customers, health records, care tasks, or inventory. The storefront request queue is the exception: it writes only contact details and requested SKU/quantities, separate from sales orders and inventory. Other live application SQLite data is read-only here; operational changes must use the desktop application until typed web operations are provided. In the desktop **Bản đồ trang HTML & Python** screen, the second table maps all 22 Python screens to the nearest HTML page and states whether that page is a partial interface, reference only, or not equivalent.
 
 The bridge listens only on `127.0.0.1`; its SQLite APIs require web authentication and enforce the same role permissions as the desktop application. If the bridge cannot start, the desktop modules remain available, while the web buttons are disabled.
 
@@ -350,13 +358,29 @@ The application includes demo seed data for a retail pet catalog, including:
 
 Sample data includes roughly 20 product groups and about 600 demo SKUs, along with eight example combos. The seed catalog is designed to help the store review and tune the product structure before live deployment. Brand names, barcodes, product photos, and detailed composition metadata are not inferred automatically and may need to be completed manually inside the application.
 
+## Central API Deployment
+
+The desktop can use a central SQLite-backed API instead of opening a local database. The API applies a server-side method allowlist, checks the signed-in user's role for each request, and never accepts SQL from clients. It is a starting point for shared desktop/mobile data; do not expose the container directly to the public Internet.
+
+1. Set `PETCARE_JWT_SECRET` to a random secret of at least 32 bytes and set a unique `PETCARE_BOOTSTRAP_ADMIN_USERNAME` and `PETCARE_BOOTSTRAP_ADMIN_PASSWORD` for the first start.
+2. Set `PETCARE_TRUSTED_HOSTS` to the API host names accepted by the deployment.
+3. For a browser-hosted storefront, set `PETCARE_WEB_ORIGINS` to a comma-separated list of exact HTTPS origins (scheme, host, and optional port; no paths or wildcard). Leave it empty if the storefront is served by the desktop bridge or browsers do not call the API directly.
+4. Run `docker compose -f docker-compose.api.yml up --build -d`. The named `petcare-data` volume persists the central database.
+5. After the initial administrator is created, remove the two bootstrap credential variables from the deployment environment. Keep the JWT secret stable while sessions are active.
+6. Terminate TLS at a trusted reverse proxy and allow only that proxy to reach port 8000. Configure the proxy's host name to match `PETCARE_TRUSTED_HOSTS`.
+7. On desktop, set `PETCARE_API_URL` to the HTTPS API base URL before starting `main.py`. The desktop storefront bridge serves HTML on loopback and proxies its catalog and checkout requests to that Central API; the HTML admin workspace remains local-SQLite-only.
+8. On mobile, enter the same HTTPS API base URL on the app's sign-in screen and build/run the Expo application. A browser-hosted storefront can use the API URL in its connection panel; its hosting origin must be listed in `PETCARE_WEB_ORIGINS`. Do not expose the desktop loopback bridge as a public service.
+
+The API intentionally disables interactive documentation, uses short-lived signed access tokens, rate-limits login attempts, and records login and business changes in the existing audit log. Container backups and restore procedures must be configured by the deployment operator; the local file-picker backup and JSON-to-SQLite import tools are not available in remote mode.
+
 ## Operational Security Guidance
 
-- Keep the local machine secured and restrict access to the SQLite data folder
-- Use a strong password for the admin account after first login
-- Regularly back up the database and intake file store
-- Restrict user permissions according to staff responsibilities
-- Treat the software as an internal operations system, not a public-facing commerce platform
+- Keep the local machine secured and restrict access to local SQLite files when using standalone mode
+- Use a unique, strong administrator password and rotate deployment secrets securely
+- Back up the central database volume and test restores before production use
+- Restrict user permissions according to staff responsibilities; API permissions are rechecked server-side
+- Keep the central API behind HTTPS and a trusted reverse proxy; do not publish port 8000 directly
+- Treat the storefront bridge and project-sharing server as local-only features
 
 ## License and Usage
 
@@ -364,4 +388,4 @@ This project is intended for internal business management and operational use. I
 
 ## Summary
 
-PetCare is a desktop-first management platform for pet stores and service businesses. It combines transactional operations, customer records, inventory tracking, service scheduling, and operational reporting into a single local application. It is especially useful for stores that want a privacy-friendly, offline-capable, and self-contained business system without requiring a cloud-hosted backend.
+PetCare is a desktop-first management platform for pet stores and service businesses. It combines transactional operations, customer records, inventory tracking, service scheduling, and operational reporting into one application, with either standalone SQLite storage or a central API-backed data source for shared desktop access.

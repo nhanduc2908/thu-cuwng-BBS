@@ -2,7 +2,8 @@
   "use strict";
 
   const CART_KEY = "bong-bong-store-cart-v1";
-  const ORDER_PREFIX = "bong-bong-store-order-v1:";
+  const CHECKOUT_REQUEST_KEY = "bong-bong-store-checkout-request-id-v1";
+  const API_URL_KEY = "petcare.central-api-url.v1";
   const PRODUCT_PAGE_SIZE = 48;
   const money = new Intl.NumberFormat("vi-VN", {
     style: "currency",
@@ -18,14 +19,18 @@
     ["Tất cả sản phẩm", "san-pham.html"],
     ["Thức ăn", "thuc-an-thu-cung.html"],
     ["Phụ kiện & thiết bị", "phu-kien-thiet-bi.html"],
+    ["Kiểm tra đơn", "dat-hang-thanh-cong.html"],
+    ["Kết nối hệ thống", "index.html#api-connection"],
   ];
   let products = [];
   let visibleLimit = PRODUCT_PAGE_SIZE;
   let toastTimer;
+  let catalogSourceType = "";
 
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
   })[character]);
+  const displaySku = (value) => String(value ?? "").replace(/^DEMO-/i, "");
 
   function showToast(message) {
     const toast = document.getElementById("store-toast");
@@ -49,6 +54,82 @@
   function saveCart(cart) {
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
     updateCartCount();
+  }
+
+  function getApiBaseUrl() {
+    const queryUrl = new URLSearchParams(location.search).get("api");
+    if (queryUrl) {
+      const normalized = validateApiBaseUrl(queryUrl);
+      localStorage.setItem(API_URL_KEY, normalized);
+      return normalized;
+    }
+    return localStorage.getItem(API_URL_KEY) || "";
+  }
+
+  function validateApiBaseUrl(value) {
+    let url;
+    try {
+      url = new URL(value.trim());
+    } catch {
+      throw new Error("Nhập URL Central API hợp lệ, bao gồm https://.");
+    }
+    const localHttp = url.protocol === "http:"
+      && ["localhost", "127.0.0.1", "::1"].includes(url.hostname);
+    if ((!localHttp && url.protocol !== "https:") || !url.hostname
+      || url.username || url.password || url.search || url.hash) {
+      throw new Error("Central API phải dùng HTTPS và không chứa thông tin đăng nhập hoặc tham số URL.");
+    }
+    return url.origin + url.pathname.replace(/\/+$/, "");
+  }
+
+  function apiUrl(path) {
+    return `${getApiBaseUrl()}${path}`;
+  }
+
+  function bindApiSettings() {
+    const form = document.querySelector("[data-api-settings]");
+    if (!form) return;
+    const input = form.querySelector("[name='api-url']");
+    const status = form.querySelector("[data-api-status]");
+    const savedUrl = getApiBaseUrl();
+    if (input) input.value = savedUrl;
+    if (status) {
+      status.textContent = savedUrl
+        ? "Đã cấu hình Central API. Catalog và đơn hàng dùng chung dữ liệu với desktop/mobile."
+        : "Chưa cấu hình Central API. Trang chỉ dùng bridge cục bộ hoặc snapshot catalog.";
+    }
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      try {
+        const value = String(input?.value || "").trim();
+        if (!value) {
+          localStorage.removeItem(API_URL_KEY);
+        } else {
+          localStorage.setItem(API_URL_KEY, validateApiBaseUrl(value));
+        }
+        showToast(value ? "Đã lưu địa chỉ Central API." : "Đã xóa cấu hình Central API.");
+        window.location.reload();
+      } catch (error) {
+        if (status) status.textContent = error.message;
+        showToast(error.message);
+      }
+    });
+    form.querySelector("[data-api-clear]")?.addEventListener("click", () => {
+      localStorage.removeItem(API_URL_KEY);
+      window.location.reload();
+    });
+  }
+
+  function getCheckoutRequestId() {
+    let requestId = localStorage.getItem(CHECKOUT_REQUEST_KEY);
+    if (!requestId) {
+      if (!window.crypto?.randomUUID) {
+        throw new Error("Trình duyệt không hỗ trợ mã hóa an toàn để gửi đơn.");
+      }
+      requestId = window.crypto.randomUUID();
+      localStorage.setItem(CHECKOUT_REQUEST_KEY, requestId);
+    }
+    return requestId;
   }
 
   function updateCartCount() {
@@ -167,6 +248,14 @@
       stockQuantity: Number(item.stock_quantity || 0),
       usableQuantity: usable,
       components: item.components || [],
+      popularity30d: {
+        soldQuantity: Number(item.popularity_30d?.sold_quantity || 0),
+        paidOrderCount: Number(item.popularity_30d?.paid_order_count || 0),
+        revenue: Number(item.popularity_30d?.revenue || 0),
+        requestCount: Number(item.popularity_30d?.request_count || 0),
+        requestedQuantity: Number(item.popularity_30d?.requested_quantity || 0),
+        score: Number(item.popularity_30d?.score || 0),
+      },
       summary: item.description || item.purpose || "Thông tin từ catalog SQLite PetCare.",
       ownerConfirmedOfficial,
       status: ownerConfirmedOfficial
@@ -187,11 +276,16 @@
   async function loadProducts() {
     let catalog;
     let liveError;
+    const centralApi = getApiBaseUrl();
     try {
-      const response = await fetch("/api/storefront/catalog", { cache: "no-store" });
-      if (!response.ok) throw new Error(`Bridge trả về HTTP ${response.status}.`);
+      const response = await fetch(apiUrl("/api/storefront/catalog"), { cache: "no-store" });
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        throw new Error(payload.detail || payload.error || `Central API trả về HTTP ${response.status}.`);
+      }
       catalog = validateCatalog(await response.json());
     } catch (error) {
+      if (centralApi) throw error;
       liveError = error;
       const snapshotResponse = await fetch("data/store_catalog.json", { cache: "no-store" });
       if (!snapshotResponse.ok) {
@@ -202,6 +296,7 @@
       catalog.liveSyncError = error.message;
     }
 
+    catalogSourceType = catalog.sourceType || "";
     products = [
       ...catalog.products.map((item) => normalizeProduct(item)),
       ...catalog.combos.map((item) => normalizeProduct(item, "combo")),
@@ -209,23 +304,91 @@
     return { catalog, liveError };
   }
 
-  function productCard(product) {
+  function productCard(product, showPopularity = false) {
     const href = `chi-tiet-san-pham.html?id=${encodeURIComponent(product.id)}`;
-    const stockLabel = product.usableQuantity > 0
+    const stockLabel = product.usableQuantity >= 5
       ? `Còn ${product.usableQuantity} ${product.unit || "đơn vị"}`
-      : "Chưa có tồn khả dụng";
-    const buttonLabel = product.usableQuantity > 0 ? "Thêm vào giỏ" : "Yêu cầu xác nhận";
+      : "Hết hàng (còn dưới 5)";
+    const canOrder = canSubmitOrder(product);
+    const popularity = product.popularity30d;
+    const popularityLabel = popularity.paidOrderCount > 0
+      ? "Bán gần đây"
+      : "Được yêu cầu";
+    const soldQuantityLabel = product.type === "combo"
+      ? ""
+      : `${popularity.soldQuantity} đã bán · `;
+    const popularityDetail = popularity.paidOrderCount > 0
+      ? `${soldQuantityLabel}${popularity.paidOrderCount} đơn đã thanh toán`
+      : `${popularity.requestCount} lượt yêu cầu · không tính là doanh số`;
     return `<article class="product-card fade-in">
       <a class="product-art" href="${href}" aria-label="Xem ${escapeHtml(product.name)}"><span class="art-icon" aria-hidden="true">${productIcon(product)}</span></a>
       <div class="product-info">
         <span class="product-tag">${escapeHtml(product.category)}</span>
+        ${showPopularity ? `<span class="popularity-badge">${popularityLabel}</span><small class="popularity-detail">${escapeHtml(popularityDetail)}</small>` : ""}
         <small class="product-status">${escapeHtml(product.status)}</small>
         <h3><a href="${href}">${escapeHtml(product.name)}</a></h3>
         <div class="product-meta">${escapeHtml(product.speciesLabel)} · ${escapeHtml(product.stage)} · ${escapeHtml(stockLabel)}</div>
         <div class="product-price">${formatPrice(product)}</div>
-        <div class="product-actions"><button class="button" type="button" data-add="${escapeHtml(product.id)}">${buttonLabel}</button><a class="button-secondary" href="${href}" aria-label="Chi tiết ${escapeHtml(product.name)}">Chi tiết</a></div>
+        <div class="product-actions">${orderButton(product)}<a class="button-secondary" href="${href}" aria-label="Chi tiết ${escapeHtml(product.name)}">Chi tiết</a></div>
       </div>
     </article>`;
+  }
+
+  function canSubmitOrder(product) {
+    return product.usableQuantity >= 5 && !product.is_demo && product.price != null;
+  }
+
+  function orderButton(product) {
+    const enabled = canSubmitOrder(product);
+    const label = enabled
+      ? "Thêm vào giỏ yêu cầu"
+      : product.usableQuantity < 5
+        ? "Hết hàng (còn dưới 5)"
+        : product.is_demo
+          ? "Chưa xác minh"
+          : "Chưa có giá";
+    return `<button class="button" type="button" ${enabled ? `data-add="${escapeHtml(product.id)}"` : "disabled"}>${label}</button>`;
+  }
+
+  function comparePopularity(first, second) {
+    return second.popularity30d.score - first.popularity30d.score
+      || second.popularity30d.soldQuantity - first.popularity30d.soldQuantity
+      || second.popularity30d.paidOrderCount - first.popularity30d.paidOrderCount
+      || second.popularity30d.requestCount - first.popularity30d.requestCount
+      || first.name.localeCompare(second.name, "vi");
+  }
+
+  function compareProducts(first, second, sortBy) {
+    if (sortBy === "price-asc" || sortBy === "price-desc") {
+      if (first.price == null && second.price != null) return 1;
+      if (first.price != null && second.price == null) return -1;
+      if (first.price != null && second.price != null) {
+        const priceOrder = first.price - second.price;
+        if (priceOrder) return sortBy === "price-asc" ? priceOrder : -priceOrder;
+      }
+    } else if (sortBy === "stock") {
+      const stockOrder = second.usableQuantity - first.usableQuantity;
+      if (stockOrder) return stockOrder;
+    } else if (sortBy === "popular") {
+      const popularityOrder = comparePopularity(first, second);
+      if (popularityOrder) return popularityOrder;
+    }
+    return first.name.localeCompare(second.name, "vi");
+  }
+
+  function renderRecommendations() {
+    const root = document.querySelector("[data-recommendation-grid]");
+    if (!root) return;
+    const ranked = products
+      .filter((product) => product.popularity30d.score > 0)
+      .sort(comparePopularity);
+    if (!ranked.length) {
+      root.innerHTML = catalogSourceType === "sqlite_snapshot"
+        ? '<div class="empty-state">Snapshot tĩnh chưa có thống kê bán hàng. Mở cửa hàng từ ứng dụng PetCare để đồng bộ xu hướng giao dịch gần nhất.</div>'
+        : '<div class="empty-state">Chưa có giao dịch đã thanh toán hoặc yêu cầu mua trong 30 ngày gần đây để xếp hạng. Bạn có thể khám phá các sản phẩm nổi bật bên dưới.</div>';
+      return;
+    }
+    root.innerHTML = ranked.slice(0, 8).map((product) => productCard(product, true)).join("");
   }
 
   function renderProductList() {
@@ -235,6 +398,7 @@
     const query = document.getElementById("catalog-search")?.value.trim().toLocaleLowerCase("vi") || "";
     const category = document.getElementById("catalog-category")?.value || "";
     const species = document.getElementById("catalog-species")?.value || "";
+    const sortBy = document.getElementById("catalog-sort")?.value || "popular";
     const featuredIds = new Set(products.slice(0, 8).map((product) => product.id));
     const visible = products.filter((product) => {
       const isFood = product.type === "food";
@@ -245,16 +409,24 @@
       const queryMatch = `${product.name} ${product.brand} ${product.category} ${product.speciesLabel} ${product.summary} ${product.item_code || ""}`.toLocaleLowerCase("vi").includes(query);
       return contextMatch && queryMatch && (!category || product.category === category) && matchesSpecies(product, species);
     });
-    const featured = mode === "featured" ? visible.slice(0, 8) : visible.slice(0, visibleLimit);
-    const moreButton = mode !== "featured" && visible.length > visibleLimit
-      ? `<button class="button" type="button" data-load-more>Xem thêm ${Math.min(PRODUCT_PAGE_SIZE, visible.length - visibleLimit)} sản phẩm</button>`
+    const sorted = mode === "featured" ? visible : visible.sort((first, second) => compareProducts(first, second, sortBy));
+    const page = mode === "featured" ? sorted.slice(0, 8) : sorted.slice(0, visibleLimit);
+    const moreButton = mode !== "featured" && sorted.length > visibleLimit
+      ? `<button class="button" type="button" data-load-more>Xem thêm ${Math.min(PRODUCT_PAGE_SIZE, sorted.length - visibleLimit)} sản phẩm</button>`
       : "";
-    root.innerHTML = (featured.map(productCard).join("") || '<div class="empty-state">Không tìm thấy sản phẩm phù hợp với bộ lọc.</div>') + moreButton;
+    root.innerHTML = (page.map(productCard).join("") || '<div class="empty-state">Không tìm thấy sản phẩm phù hợp với bộ lọc.</div>') + moreButton;
+    const sortStatus = document.querySelector("[data-sort-status]");
+    if (sortStatus) {
+      const hasPopularity = products.some((product) => product.popularity30d.score > 0);
+      sortStatus.textContent = sortBy === "popular" && !hasPopularity
+        ? "Chưa có dữ liệu bán hàng hoặc yêu cầu trong 30 ngày gần đây; danh sách xu hướng đang hiển thị theo tên."
+        : "";
+    }
     const count = document.querySelector("[data-product-count]");
     if (count) {
       count.textContent = mode === "featured"
-        ? `Đang xem ${visible.length} sản phẩm`
-        : `Đang xem ${Math.min(visible.length, visibleLimit)} trên ${visible.length} sản phẩm`;
+        ? `Đang xem ${sorted.length} sản phẩm`
+        : `Đang xem ${Math.min(sorted.length, visibleLimit)} trên ${sorted.length} sản phẩm`;
     }
   }
 
@@ -347,6 +519,7 @@
   function detailValue(product, key) {
     const value = product[key];
     if (value == null || value === "") return "Chưa được cung cấp trong catalog";
+    if (key === "item_code" || key === "combo_code") return displaySku(value);
     if (key === "target_species") return formatSpecies(value);
     if (key === "age_unit") {
       return { MONTH: "Tháng", YEAR: "Năm", LABEL: "Theo nhãn" }[value] || String(value);
@@ -443,7 +616,7 @@
     const facts = [
       ["Loài", product.speciesLabel],
       ["Nhóm tuổi / giai đoạn", product.stage],
-      ["Mã hàng", product.id],
+      ["Mã hàng", displaySku(product.item_code || product.combo_code || product.id)],
       ["Tồn khả dụng", detailValue(product, "usable_quantity")],
     ];
     const productDetails = detailSection("Thông tin sản phẩm", identityFields, product);
@@ -467,7 +640,7 @@
         ${nutritionDetails}
         ${commerceDetails}
         ${comboDetails}
-        <button class="button" type="button" data-add="${escapeHtml(product.id)}">Thêm vào giỏ yêu cầu</button>
+        ${orderButton(product)}
       </div>
     </div>`;
   }
@@ -496,63 +669,128 @@
   function bindCheckout() {
     const form = document.querySelector("[data-checkout-form]");
     if (!form) return;
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
       const cart = getCart();
       if (!cart.length) { showToast("Giỏ hàng đang trống."); return; }
       const data = new FormData(form);
-      const orderCode = `BB-${new Date().toISOString().slice(0, 10).replaceAll("-", "")}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
-      const request = {
-        code: orderCode,
-        createdAt: new Date().toISOString(),
-        customer: {
-          name: String(data.get("name") || "").trim(),
-          phone: String(data.get("phone") || "").trim(),
-          address: String(data.get("address") || "").trim(),
-          note: String(data.get("note") || "").trim(),
-        },
-        items: cart,
-        status: "local_request_only",
-      };
-      if (!request.customer.name || !request.customer.phone) {
+      const name = String(data.get("name") || "").trim();
+      const phone = String(data.get("phone") || "").trim();
+      if (!name || !phone) {
         showToast("Vui lòng nhập họ tên và số điện thoại.");
         return;
       }
-      localStorage.setItem(`${ORDER_PREFIX}${orderCode}`, JSON.stringify(request));
-      localStorage.setItem("bong-bong-store-last-order-v1", orderCode);
-      localStorage.removeItem(CART_KEY);
-      location.href = `dat-hang-thanh-cong.html?code=${encodeURIComponent(orderCode)}`;
+      if (!data.get("consent")) {
+        showToast("Vui lòng đồng ý gửi thông tin đến cửa hàng.");
+        return;
+      }
+      const submitButton = form.querySelector('[type="submit"]');
+      if (submitButton) submitButton.disabled = true;
+      try {
+        const response = await fetch(apiUrl("/api/storefront/order-requests"), {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-PetCare-Request": "1",
+          },
+          body: JSON.stringify({
+            name,
+            phone,
+            address: String(data.get("address") || "").trim(),
+            note: String(data.get("note") || "").trim(),
+            consent: true,
+            clientRequestId: getCheckoutRequestId(),
+            items: cart,
+          }),
+        });
+        let result;
+        try {
+          result = await response.json();
+        } catch {
+          throw new Error("Không nhận được phản hồi từ bridge ứng dụng; yêu cầu chưa được lưu.");
+        }
+        if (!response.ok) {
+          throw new Error(result.detail || result.error || "Không thể gửi yêu cầu đến cửa hàng.");
+        }
+        if (!result.requestCode) {
+          throw new Error("Bridge không trả mã yêu cầu; vui lòng kiểm tra lại trước khi gửi tiếp.");
+        }
+        localStorage.removeItem(CART_KEY);
+        localStorage.removeItem(CHECKOUT_REQUEST_KEY);
+        location.href = `dat-hang-thanh-cong.html?code=${encodeURIComponent(result.requestCode)}`;
+      } catch (error) {
+        console.error("Storefront request could not be submitted.", error);
+        showToast(error.message || "Không thể gửi yêu cầu. Giỏ hàng vẫn được giữ.");
+      } finally {
+        if (submitButton) submitButton.disabled = false;
+      }
     });
   }
 
-  function renderConfirmation() {
+  async function renderConfirmation() {
     const root = document.querySelector("[data-order-confirmation]");
     if (!root) return;
-    const code = new URLSearchParams(location.search).get("code")
-      || localStorage.getItem("bong-bong-store-last-order-v1");
-    if (!code) {
-      root.innerHTML = '<div class="empty-state"><h1>Chưa có yêu cầu đặt hàng</h1><p>Hãy chọn sản phẩm và gửi yêu cầu báo giá trước.</p><a class="button" href="san-pham.html">Xem sản phẩm</a></div>';
+    const form = document.querySelector("[data-order-lookup]");
+    const codeInput = form?.querySelector('[name="code"]');
+    const queryCode = new URLSearchParams(location.search).get("code") || "";
+    if (codeInput) codeInput.value = queryCode;
+    form?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const code = String(new FormData(form).get("code") || "").trim().toUpperCase();
+      if (codeInput) codeInput.value = code;
+      await lookupStoreOrder(code, root);
+    });
+    if (queryCode) {
+      await lookupStoreOrder(queryCode.toUpperCase(), root);
+    } else {
+      root.innerHTML = '<div class="empty-state">Nhập mã tham chiếu để kiểm tra trạng thái đơn hàng.</div>';
+    }
+  }
+
+  async function lookupStoreOrder(code, root) {
+    root.innerHTML = '<div class="empty-state" role="status">Đang kiểm tra đơn hàng…</div>';
+    let result;
+    try {
+      const response = await fetch(
+        apiUrl(`/api/storefront/order-requests/${encodeURIComponent(code)}`),
+        { cache: "no-store" },
+      );
+      result = await response.json();
+      if (!response.ok || result.requestCode !== code) {
+        root.innerHTML = '<div class="empty-state" role="alert"><h2>Không tìm thấy đơn hàng</h2><p>Mã tham chiếu không khớp với đơn đã lưu.</p></div>';
+        return;
+      }
+    } catch (error) {
+      console.error("Storefront order lookup could not be verified.", error);
+      root.innerHTML = '<div class="empty-state" role="alert"><h2>Chưa kiểm tra được đơn hàng</h2><p>Không kết nối được với bridge cửa hàng. Hãy mở trang qua ứng dụng để tra cứu.</p></div>';
       return;
     }
-    const raw = localStorage.getItem(`${ORDER_PREFIX}${code}`);
-    if (!raw) {
-      root.innerHTML = '<div class="empty-state"><h1>Không tìm thấy yêu cầu</h1><p>Yêu cầu chỉ được lưu trong trình duyệt đã tạo; dữ liệu trình duyệt có thể đã bị xóa.</p><a class="button" href="index.html">Về cửa hàng</a></div>';
-      return;
-    }
-    const order = JSON.parse(raw);
+    const orderStatusLabels = {
+      OPEN: "Chờ thanh toán",
+      PARTIALLY_PAID: "Đã thanh toán một phần",
+      PAID: "Đã thanh toán",
+      CANCELLED: "Đã hủy",
+    };
+    const hasSalesOrder = Boolean(result.salesOrderCode);
     root.innerHTML = `<div class="success-card">
       <span class="success-icon" aria-hidden="true">✓</span>
-      <span class="eyebrow">Yêu cầu được lưu trên thiết bị</span>
-      <h1>Đã tạo bản nháp yêu cầu</h1>
-      <p>Mã tham chiếu <strong>${escapeHtml(order.code)}</strong></p>
-      <p>Đây chưa phải đơn hàng gửi đến cửa hàng. Không có thanh toán hoặc thông báo nào được gửi; thông tin chỉ nằm trong bộ nhớ trình duyệt này.</p>
-      <p>Người nhận: ${escapeHtml(order.customer.name)} · ${escapeHtml(order.customer.phone)}</p>
+      <span class="eyebrow">${hasSalesOrder ? "Đơn hàng cửa hàng đã được ghi nhận" : "Yêu cầu cửa hàng"}</span>
+      <h1>${hasSalesOrder ? "Đã tạo đơn bán" : "Yêu cầu chưa liên kết đơn bán"}</h1>
+      <p>Mã tham chiếu: <strong>${escapeHtml(code)}</strong></p>
+      ${hasSalesOrder
+        ? `<p>Mã đơn bán: <strong>${escapeHtml(result.salesOrderCode)}</strong></p>
+          <p>Trạng thái: <strong>${escapeHtml(orderStatusLabels[result.salesOrderStatus] || "Đang kiểm tra")}</strong>
+            · ${money.format(Number(result.salesOrderTotal || 0))}</p>
+          <p>${result.inventoryFulfilled
+            ? "Kho đã xuất sản phẩm ngay khi tạo đơn. Đơn chưa được thanh toán; vui lòng liên hệ cửa hàng để hoàn tất thanh toán."
+            : "Đơn chưa ghi nhận xuất kho. Vui lòng liên hệ cửa hàng để kiểm tra trạng thái."}</p>`
+        : "<p>Yêu cầu này được lưu trước khi cửa hàng tự động tạo đơn bán. Chưa có đơn bán hoặc bút toán xuất kho được liên kết.</p>"}
       <a class="button" href="san-pham.html">Tiếp tục xem sản phẩm</a>
     </div>`;
   }
 
   function bindFilters() {
-    ["catalog-search", "catalog-category", "catalog-species"].forEach((id) => {
+    ["catalog-search", "catalog-category", "catalog-species", "catalog-sort"].forEach((id) => {
       const filter = document.getElementById(id);
       const resetAndRender = () => {
         visibleLimit = PRODUCT_PAGE_SIZE;
@@ -566,16 +804,18 @@
   async function init() {
     renderHeader();
     renderCategories();
+    bindApiSettings();
     try {
       await loadProducts();
       populateFilters();
       updateCartCount();
+      renderRecommendations();
       renderProductList();
       bindAddButtons();
       renderDetail();
       renderCart();
       renderCheckout();
-      renderConfirmation();
+      await renderConfirmation();
       bindFilters();
       bindCheckout();
     } catch (error) {

@@ -1,5 +1,22 @@
 from app.database import Database
+from app.modules.auth.constants import ROLE_PERMISSIONS
 from app.web_bridge import LocalAdminBridge
+
+
+def test_sales_request_permissions_are_narrowly_scoped_by_role():
+    request_roles = {
+        "SALES",
+        "CUSTOMER_SUPPORT",
+        "CAREGIVER",
+        "SERVICE_COORDINATOR",
+        "INVENTORY_MANAGER",
+    }
+    for role in request_roles:
+        permissions = ROLE_PERMISSIONS[role]
+        assert {"sales.view", "sales.request"} <= permissions
+        assert "sales.manage" not in permissions
+    assert {"sales.manage", "sales.approve"} <= ROLE_PERMISSIONS["MANAGER"]
+    assert "sales.fulfill" in ROLE_PERMISSIONS["SALES"]
 
 
 def test_default_role_accounts_are_seeded_once_without_resetting_passwords(tmp_path):

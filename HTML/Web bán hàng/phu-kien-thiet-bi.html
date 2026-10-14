@@ -20,11 +20,19 @@
       <input id="catalog-search" type="search" placeholder="Tìm phụ kiện hoặc nhóm hàng" aria-label="Tìm phụ kiện">
       <select id="catalog-category" aria-label="Lọc theo nhóm hàng"><option value="">Mọi nhóm hàng</option></select>
       <select id="catalog-species" aria-label="Lọc theo loài"><option value="">Mọi loài</option><option value="Chó, Mèo">Chó & mèo</option><option value="Chó">Chó</option><option value="Mèo">Mèo</option><option value="Cá">Cá</option><option value="Bò sát">Bò sát</option><option value="Hamster, Thỏ">Hamster & thỏ</option></select>
+      <select id="catalog-sort" aria-label="Sắp xếp sản phẩm">
+        <option value="popular">Xu hướng 30 ngày</option>
+        <option value="price-asc">Giá thấp đến cao</option>
+        <option value="price-desc">Giá cao đến thấp</option>
+        <option value="stock">Còn hàng trước</option>
+        <option value="name">Tên A–Z</option>
+      </select>
     </div>
+    <p class="sort-status" data-sort-status role="status"></p>
     <p class="product-meta" data-product-count aria-live="polite"></p>
     <div class="product-grid" data-product-grid></div>
   </main>
-  <footer class="site-footer"><div class="container footer-inner"><div><strong>BÔNG BÔNG PET CARE</strong><p><a href="san-pham.html">Xem toàn bộ danh mục</a></p></div><p>Giá hiển thị chỉ dành cho trải nghiệm mẫu.</p></div></footer>
+  <footer class="site-footer"><div class="container footer-inner"><div><strong>BÔNG BÔNG PET CARE</strong><p><a href="san-pham.html">Xem toàn bộ danh mục</a></p></div><p>Giá lấy từ catalog; cửa hàng xác nhận khi tiếp nhận yêu cầu.</p></div></footer>
   <div id="store-toast" class="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>

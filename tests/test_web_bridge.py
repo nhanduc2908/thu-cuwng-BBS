@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+from datetime import date
 from http.cookiejar import CookieJar
 import json
 from pathlib import Path
@@ -1059,5 +1060,361 @@ def test_local_bridge_enforces_role_permissions(tmp_path: Path):
             },
         )
         assert status == 403
+    finally:
+        bridge.stop()
+
+
+def test_storefront_checkout_creates_unpaid_sale_and_fulfills_stock_atomically(
+    tmp_path: Path,
+):
+    database_path = tmp_path / "storefront-requests.db"
+    _create_admin_and_supplier(database_path)
+    database = Database(database_path)
+    with database.connection:
+        database.connection.execute(
+            """
+            INSERT INTO inventory_items
+                (item_code, name, category, unit, is_demo, retail_price, is_active)
+            VALUES ('WEB-REQUEST-ITEM', 'Request item', 'SUPPLIES', 'cái', 1, 0, 1)
+            """
+        )
+    database.close()
+
+    bridge = LocalAdminBridge(database_path, tmp_path, port=0)
+    bridge.start()
+    try:
+        origin = bridge.base_url
+        anonymous = build_opener()
+        status, _, payload = _request(
+            anonymous, f"{origin}/api/modules/module_12_orders/records"
+        )
+        assert status == 401
+
+        request_body = {
+            "name": "Nguyễn An",
+            "phone": "0901-234-567",
+            "address": "Quận 1",
+            "note": "Xin cửa hàng tư vấn",
+            "consent": True,
+            "clientRequestId": "f457c6a1-f563-45d7-85c2-08d750eb4782",
+            "items": [{"id": "WEB-REQUEST-ITEM", "quantity": 2}],
+        }
+        status, _, payload = _request(
+            anonymous,
+            f"{origin}/api/storefront/order-requests",
+            "POST",
+            {**request_body, "consent": False},
+        )
+        assert status == 400
+
+        status, _, payload = _request(
+            anonymous,
+            f"{origin}/api/storefront/order-requests",
+            "POST",
+            request_body,
+        )
+        assert status == 400
+        assert "chưa được xác minh" in json.loads(payload)["error"]
+
+        database = Database(database_path)
+        with database.connection:
+            database.connection.execute(
+                """
+                UPDATE inventory_items SET is_demo = 0, retail_price = 100
+                WHERE item_code = 'WEB-REQUEST-ITEM'
+                """
+            )
+            item_id = database.connection.execute(
+                "SELECT id FROM inventory_items WHERE item_code = 'WEB-REQUEST-ITEM'"
+            ).fetchone()["id"]
+            database.connection.execute(
+                """
+                INSERT INTO inventory_batches
+                    (item_id, batch_code, quantity_remaining, unit_cost)
+                VALUES (?, 'WEB-TEST-BATCH', 6, 30)
+                """,
+                (item_id,),
+            )
+        database.close()
+
+        status, _, payload = _request(
+            anonymous,
+            f"{origin}/api/storefront/order-requests",
+            "POST",
+            {
+                **request_body,
+                "items": [{"id": "WEB-REQUEST-ITEM", "quantity": 99}],
+            },
+        )
+        assert status == 400
+        database = Database(database_path)
+        assert database.connection.execute(
+            "SELECT COUNT(*) FROM sales_orders"
+        ).fetchone()[0] == 0
+        assert database.connection.execute(
+            "SELECT COUNT(*) FROM customers"
+        ).fetchone()[0] == 0
+        assert database.connection.execute(
+            "SELECT COUNT(*) FROM storefront_order_requests"
+        ).fetchone()[0] == 0
+        assert database.connection.execute(
+            """
+            SELECT quantity_remaining FROM inventory_batches
+            WHERE batch_code = 'WEB-TEST-BATCH'
+            """
+        ).fetchone()["quantity_remaining"] == 6
+        database.close()
+
+        status, _, payload = _request(
+            anonymous,
+            f"{origin}/api/storefront/order-requests",
+            "POST",
+            request_body,
+        )
+        assert status == 201
+        confirmation = json.loads(payload)
+        assert confirmation["requestCode"].startswith("BBR-")
+        assert confirmation["status"] == "ORDER_CREATED"
+        assert confirmation["salesOrderStatus"] == "OPEN"
+        assert confirmation["inventoryFulfilled"] is True
+        status, _, retry_payload = _request(
+            anonymous,
+            f"{origin}/api/storefront/order-requests",
+            "POST",
+            request_body,
+        )
+        assert status == 201
+        assert json.loads(retry_payload)["requestCode"] == confirmation["requestCode"]
+        status, _, payload = _request(
+            anonymous,
+            f"{origin}/api/storefront/order-requests",
+            "POST",
+            {**request_body, "phone": "0909-999-999"},
+        )
+        assert status == 400
+        assert "đã được dùng cho yêu cầu khác" in json.loads(payload)["error"]
+
+        status, _, payload = _request(
+            anonymous,
+            f"{origin}/api/storefront/order-requests/{confirmation['requestCode']}",
+        )
+        assert status == 200
+        lookup = json.loads(payload)
+        assert lookup == {
+            "requestCode": confirmation["requestCode"],
+            "status": "NEW",
+            "salesOrderCode": confirmation["salesOrderCode"],
+            "salesOrderStatus": "OPEN",
+            "salesOrderTotal": 200.0,
+            "inventoryFulfilled": True,
+        }
+        status, _, _ = _request(
+            anonymous,
+            f"{origin}/api/storefront/order-requests/BBR-20990101-NOTREAL",
+        )
+        assert status == 404
+
+        database = Database(database_path)
+        assert database.connection.execute("SELECT COUNT(*) FROM sales_orders").fetchone()[0] == 1
+        assert database.connection.execute("SELECT COUNT(*) FROM customers").fetchone()[0] == 1
+        assert database.connection.execute(
+            "SELECT status, inventory_fulfilled_at FROM sales_orders"
+        ).fetchone()["status"] == "OPEN"
+        batch = database.connection.execute(
+            "SELECT quantity_remaining FROM inventory_batches WHERE batch_code = 'WEB-TEST-BATCH'"
+        ).fetchone()
+        assert batch["quantity_remaining"] == 4
+        product = database.connection.execute(
+            """
+            SELECT is_active, storefront_auto_inactive
+            FROM inventory_items WHERE item_code = 'WEB-REQUEST-ITEM'
+            """
+        ).fetchone()
+        assert product["is_active"] == 0
+        assert product["storefront_auto_inactive"] == 1
+        assert database.connection.execute(
+            "SELECT COUNT(*) FROM storefront_order_requests"
+        ).fetchone()[0] == 1
+
+        staff = build_opener(HTTPCookieProcessor(CookieJar()))
+        status, _, _ = _request(
+            staff,
+            f"{origin}/api/login",
+            "POST",
+            {"username": "bridge-admin", "password": "StrongPass!2026"},
+        )
+        assert status == 200
+        status, _, payload = _request(
+            staff, f"{origin}/api/modules/module_12_orders/records"
+        )
+        assert status == 200
+        records = json.loads(payload)["records"]
+        request = next(
+            row for row in records if row["record_type"] == "STOREFRONT_REQUEST"
+        )
+        assert request["request_code"] == confirmation["requestCode"]
+        assert request["customer_name"] == "Nguyễn An"
+        assert request["customer_phone"] == "0901-234-567"
+        assert request["items"] == [{
+            "item_code": "WEB-REQUEST-ITEM",
+            "name": "Request item",
+            "quantity": 2,
+        }]
+        assert request["sales_order_code"] == confirmation["salesOrderCode"]
+        assert request["sales_order_status"] == "OPEN"
+        database.cancel_sales_order(request["sales_order_id"])
+        restored = database.connection.execute(
+            """
+            SELECT i.is_active, i.storefront_auto_inactive, b.quantity_remaining
+            FROM inventory_items i
+            JOIN inventory_batches b ON b.item_id = i.id
+            WHERE i.item_code = 'WEB-REQUEST-ITEM'
+            """
+        ).fetchone()
+        assert restored["is_active"] == 1
+        assert restored["storefront_auto_inactive"] == 0
+        assert restored["quantity_remaining"] == 6
+
+        paid_order = database.create_storefront_sales_order({
+            "request_code": "BBR-20261013-PAYTEST",
+            "client_request_id": "c158fa6c-8fc6-4264-a6a1-aa8a6adfb516",
+            "customer_name": "Nguyễn An",
+            "customer_phone": "0901-234-567",
+            "items": [{
+                "item_code": "WEB-REQUEST-ITEM",
+                "name": "Request item",
+                "quantity": 1,
+            }],
+        })
+        assert paid_order["sales_order_status"] == "OPEN"
+        assert database.connection.execute(
+            "SELECT COUNT(*) FROM customers"
+        ).fetchone()[0] == 1
+        assert database.connection.execute(
+            """
+            SELECT quantity_remaining FROM inventory_batches
+            WHERE batch_code = 'WEB-TEST-BATCH'
+            """
+        ).fetchone()["quantity_remaining"] == 5
+        database.add_payment(
+            paid_order["sales_order_id"],
+            {
+                "amount": 100,
+                "method": "CASH",
+                "paid_at": date.today().isoformat(),
+            },
+        )
+        assert database.connection.execute(
+            """
+            SELECT status FROM sales_orders WHERE id = ?
+            """,
+            (paid_order["sales_order_id"],),
+        ).fetchone()["status"] == "PAID"
+        assert database.connection.execute(
+            """
+            SELECT quantity_remaining FROM inventory_batches
+            WHERE batch_code = 'WEB-TEST-BATCH'
+            """
+        ).fetchone()["quantity_remaining"] == 5
+        database.close()
+    finally:
+        bridge.stop()
+
+
+def test_web_sales_actions_require_approval_and_manager_can_review(tmp_path: Path):
+    database_path = tmp_path / "sales-approval-bridge.db"
+    _create_admin_and_supplier(database_path)
+    database = Database(database_path)
+    manager_id = database.auth.create_user(
+        "approval-manager",
+        "Approval Manager",
+        "ManagerPass!2026",
+        "MANAGER",
+    )
+    sales_id = database.auth.create_user(
+        "approval-sales",
+        "Approval Sales",
+        "SalesPass!2026",
+        "SALES",
+    )
+    database.close()
+
+    bridge = LocalAdminBridge(database_path, tmp_path, port=0)
+    bridge.start()
+    try:
+        origin = bridge.base_url
+        sales = build_opener(HTTPCookieProcessor(CookieJar()))
+        status, _, _ = _request(
+            sales,
+            f"{origin}/api/login",
+            "POST",
+            {"username": "approval-sales", "password": "SalesPass!2026"},
+        )
+        assert status == 200
+
+        status, _, response = _request(
+            sales,
+            f"{origin}/api/sales/actions",
+            "POST",
+            {
+                "actionType": "save_customer",
+                "payload": {
+                    "values": {
+                        "customer_code": "CUS-APPROVAL",
+                        "name": "Approval Customer",
+                        "phone": "0900000011",
+                        "email": "",
+                        "address": "",
+                        "note": "",
+                    }
+                },
+            },
+        )
+        assert status == 201
+        request = json.loads(response)
+        assert request["status"] == "PENDING"
+
+        status, _, response = _request(
+            sales, f"{origin}/api/sales/approval-requests"
+        )
+        assert status == 200
+        listed = json.loads(response)["requests"]
+        assert listed[0]["request_code"] == request["request_code"]
+        assert listed[0]["payload"]["values"]["name"] == "Approval Customer"
+
+        status, _, _ = _request(
+            sales,
+            f"{origin}/api/sales/approval-requests/{request['request_id']}/decision",
+            "POST",
+            {"decision": "approve"},
+        )
+        assert status == 403
+
+        manager = build_opener(HTTPCookieProcessor(CookieJar()))
+        status, _, _ = _request(
+            manager,
+            f"{origin}/api/login",
+            "POST",
+            {"username": "approval-manager", "password": "ManagerPass!2026"},
+        )
+        assert status == 200
+        status, _, response = _request(
+            manager,
+            f"{origin}/api/sales/approval-requests/{request['request_id']}/decision",
+            "POST",
+            {"decision": "approve", "note": "Đã xác minh hồ sơ"},
+        )
+        assert status == 200
+        assert json.loads(response)["status"] == "APPROVE"
+
+        database = Database(database_path)
+        assert database.connection.execute(
+            "SELECT name FROM customers WHERE customer_code = 'CUS-APPROVAL'"
+        ).fetchone()["name"] == "Approval Customer"
+        assert database.connection.execute(
+            "SELECT status FROM sales_approval_requests WHERE id = ?",
+            (request["request_id"],),
+        ).fetchone()["status"] == "APPROVED"
+        database.close()
     finally:
         bridge.stop()

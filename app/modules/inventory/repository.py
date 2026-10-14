@@ -1,4 +1,5 @@
 import sqlite3
+from contextlib import nullcontext
 from datetime import date, datetime, timedelta
 import math
 from typing import Any
@@ -920,10 +921,15 @@ class InventoryRepository:
                 raise ValueError("Không thể nhập lô đã hết hạn.")
         with self.connection:
             item = self.connection.execute(
-                "SELECT id FROM inventory_items WHERE id = ? AND is_active = 1",
+                """
+                SELECT id, is_active, storefront_auto_inactive
+                FROM inventory_items WHERE id = ?
+                """,
                 (item_id,),
             ).fetchone()
-            if item is None:
+            if item is None or (
+                not item["is_active"] and not item["storefront_auto_inactive"]
+            ):
                 raise ValueError("Không tìm thấy vật tư đang hoạt động.")
             cursor = self.connection.execute(
                 """
@@ -949,7 +955,112 @@ class InventoryRepository:
                     str(values.get("note", "")).strip(),
                 ),
             )
+            self._reactivate_storefront_stock([item_id])
             return batch_id
+
+    def reactivate_storefront_stock(self, item_ids: list[int]) -> None:
+        transaction = (
+            self.connection
+            if not self.connection.in_transaction
+            else nullcontext()
+        )
+        with transaction:
+            self._reactivate_storefront_stock(item_ids)
+
+    def _reactivate_storefront_stock(self, item_ids: list[int]) -> None:
+        for item_id in set(item_ids):
+            item = self.connection.execute(
+                """
+                SELECT i.is_active, i.storefront_auto_inactive,
+                       COALESCE(SUM(CASE
+                           WHEN b.expiry_date IS NULL
+                             OR b.expiry_date >= date('now', 'localtime')
+                           THEN b.quantity_remaining ELSE 0 END), 0)
+                       - COALESCE((
+                           SELECT SUM(pi.quantity)
+                           FROM sales_product_items pi
+                           JOIN sales_orders so ON so.id = pi.order_id
+                           WHERE pi.item_id = i.id
+                             AND so.status IN ('OPEN', 'PARTIALLY_PAID')
+                             AND so.inventory_fulfilled_at IS NULL
+                       ), 0) AS available
+                FROM inventory_items i
+                LEFT JOIN inventory_batches b ON b.item_id = i.id
+                WHERE i.id = ?
+                GROUP BY i.id
+                """,
+                (item_id,),
+            ).fetchone()
+            if (
+                item is not None
+                and item["storefront_auto_inactive"]
+                and float(item["available"] or 0) >= 5
+            ):
+                self.connection.execute(
+                    """
+                    UPDATE inventory_items
+                    SET is_active = 1, storefront_auto_inactive = 0
+                    WHERE id = ? AND storefront_auto_inactive = 1
+                    """,
+                    (item_id,),
+                )
+
+            combo_rows = self.connection.execute(
+                """
+                SELECT DISTINCT c.id
+                FROM product_combos c
+                JOIN product_combo_items ci ON ci.combo_id = c.id
+                WHERE ci.item_id = ? AND c.storefront_auto_inactive = 1
+                """,
+                (item_id,),
+            ).fetchall()
+            for combo_row in combo_rows:
+                components = self.connection.execute(
+                    """
+                    SELECT ci.quantity,
+                           COALESCE(SUM(CASE
+                               WHEN b.expiry_date IS NULL
+                                 OR b.expiry_date >= date('now', 'localtime')
+                               THEN b.quantity_remaining ELSE 0 END), 0)
+                           - COALESCE((
+                               SELECT SUM(pi.quantity)
+                               FROM sales_product_items pi
+                               JOIN sales_orders so ON so.id = pi.order_id
+                               WHERE pi.item_id = i.id
+                                 AND so.status IN ('OPEN', 'PARTIALLY_PAID')
+                                 AND so.inventory_fulfilled_at IS NULL
+                           ), 0) AS available,
+                           i.is_active
+                    FROM product_combo_items ci
+                    JOIN inventory_items i ON i.id = ci.item_id
+                    LEFT JOIN inventory_batches b ON b.item_id = i.id
+                    WHERE ci.combo_id = ?
+                    GROUP BY ci.item_id
+                    """,
+                    (combo_row["id"],),
+                ).fetchall()
+                combo_available = min(
+                    (
+                        float(component["available"]) / float(component["quantity"])
+                        for component in components
+                        if component["is_active"]
+                        and float(component["quantity"]) > 0
+                    ),
+                    default=0,
+                )
+                if (
+                    len(components) > 0
+                    and all(component["is_active"] for component in components)
+                    and combo_available >= 5
+                ):
+                    self.connection.execute(
+                        """
+                        UPDATE product_combos
+                        SET is_active = 1, storefront_auto_inactive = 0
+                        WHERE id = ? AND storefront_auto_inactive = 1
+                        """,
+                        (combo_row["id"],),
+                    )
 
     def consume_stock(self, item_id: int, values: dict[str, Any]) -> list[int]:
         quantity = float(values.get("quantity", 0))

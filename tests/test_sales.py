@@ -183,3 +183,206 @@ def test_order_creation_rolls_back_all_animals_on_invalid_item(database):
 
     assert database.get_animal(animal_id)["status"] == "AVAILABLE"
     assert database.list_sales_orders() == []
+
+
+def test_lower_sales_roles_submit_for_manager_approval_and_cannot_self_approve(
+    database,
+):
+    admin_id = database.create_initial_admin(
+        "admin", "Administrator", "AdminPass!2026"
+    )
+    database.set_actor(admin_id)
+    manager_id = database.auth.create_user(
+        "manager", "Manager", "ManagerPass!2026", "MANAGER"
+    )
+    sales_id = database.auth.create_user(
+        "sales", "Sales Associate", "SalesPass!2026", "SALES"
+    )
+    customer_id = create_customer(database)
+    animal_id = create_animal(database)
+    order_id = database.create_sales_order(order_values(customer_id, [animal_id]))
+
+    assert database.has_permission(sales_id, "sales.request")
+    assert not database.has_permission(sales_id, "sales.manage")
+    database.set_actor(sales_id)
+    with pytest.raises(PermissionError):
+        database.add_payment(
+            order_id,
+            {
+                "amount": 2_000_000,
+                "method": "CASH",
+                "paid_at": "2026-01-03",
+            },
+        )
+
+    submitted = database.submit_sales_action(
+        "add_payment",
+        {
+            "order_id": order_id,
+            "values": {
+                "amount": 2_000_000,
+                "method": "CASH",
+                "paid_at": "2026-01-03",
+            },
+        },
+    )
+    assert submitted["status"] == "PENDING"
+    assert database.get_order_balance(order_id) == 2_000_000
+    with pytest.raises(PermissionError, match="sales.approve"):
+        database.review_sales_approval_request(submitted["request_id"], True)
+
+    database.set_actor(manager_id)
+    database.review_sales_approval_request(submitted["request_id"], True)
+    assert database.get_order_balance(order_id) == 0
+    assert database.list_sales_approval_requests()[0]["status"] == "APPROVED"
+
+
+def test_low_roles_cancel_only_up_to_fifteen_million_without_approval(database):
+    admin_id = database.create_initial_admin(
+        "admin", "Administrator", "AdminPass!2026"
+    )
+    database.set_actor(admin_id)
+    manager_id = database.auth.create_user(
+        "manager", "Manager", "ManagerPass!2026", "MANAGER"
+    )
+    support_id = database.auth.create_user(
+        "support", "Customer Support", "SupportPass!2026", "CUSTOMER_SUPPORT"
+    )
+    customer_id = create_customer(database)
+    small_animal_id = create_animal(database, "PET-SMALL", price=15_000_000)
+    large_animal_id = create_animal(database, "PET-LARGE", price=15_000_001)
+    small_order_id = database.create_sales_order(
+        order_values(customer_id, [small_animal_id], "SO-SMALL")
+    )
+    large_order_id = database.create_sales_order(
+        order_values(customer_id, [large_animal_id], "SO-LARGE")
+    )
+
+    database.set_actor(support_id)
+    small_result = database.submit_sales_action(
+        "cancel_sales_order", {"order_id": small_order_id}
+    )
+    assert small_result["status"] == "APPLIED"
+    assert database.connection.execute(
+        "SELECT status FROM sales_orders WHERE id = ?", (small_order_id,)
+    ).fetchone()["status"] == "CANCELLED"
+
+    large_result = database.submit_sales_action(
+        "cancel_sales_order", {"order_id": large_order_id}
+    )
+    assert large_result["status"] == "PENDING"
+    assert database.connection.execute(
+        "SELECT status FROM sales_orders WHERE id = ?", (large_order_id,)
+    ).fetchone()["status"] == "OPEN"
+
+    database.set_actor(manager_id)
+    database.review_sales_approval_request(large_result["request_id"], True)
+    assert database.connection.execute(
+        "SELECT status FROM sales_orders WHERE id = ?", (large_order_id,)
+    ).fetchone()["status"] == "CANCELLED"
+
+
+def test_designated_sales_lead_can_approve_but_not_self_approve(database):
+    admin_id = database.create_initial_admin(
+        "admin", "Administrator", "AdminPass!2026"
+    )
+    database.set_actor(admin_id)
+    lead_id = database.auth.create_user(
+        "lead", "Sales Lead", "LeadPass!2026", "SALES"
+    )
+    requester_id = database.auth.create_user(
+        "requester", "Sales Associate", "SalesPass!2026", "SALES"
+    )
+    customer_id = create_customer(database)
+    animal_id = create_animal(database)
+    order_id = database.create_sales_order(order_values(customer_id, [animal_id]))
+    database.set_sales_approver(lead_id, True, admin_id)
+    assert database.has_permission(lead_id, "sales.approve")
+
+    database.set_actor(requester_id)
+    request = database.submit_sales_action(
+        "add_payment",
+        {
+            "order_id": order_id,
+            "values": {
+                "amount": 2_000_000,
+                "method": "CASH",
+                "paid_at": "2026-01-03",
+            },
+        },
+    )
+    database.set_actor(lead_id)
+    database.review_sales_approval_request(request["request_id"], True)
+    assert database.get_order_balance(order_id) == 0
+
+    self_request = database.submit_sales_action(
+        "save_customer",
+        {
+            "values": {
+                "customer_code": "CUS-SELF",
+                "name": "Self request",
+                "phone": "0911111111",
+                "email": "",
+                "address": "",
+                "note": "",
+            }
+        },
+    )
+    with pytest.raises(ValueError, match="Không thể tự duyệt"):
+        database.review_sales_approval_request(self_request["request_id"], True)
+
+
+def test_refunds_at_fifteen_million_are_direct_but_larger_refunds_need_approval(
+    database,
+):
+    admin_id = database.create_initial_admin(
+        "admin", "Administrator", "AdminPass!2026"
+    )
+    database.set_actor(admin_id)
+    manager_id = database.auth.create_user(
+        "manager", "Manager", "ManagerPass!2026", "MANAGER"
+    )
+    support_id = database.auth.create_user(
+        "support", "Customer Support", "SupportPass!2026", "CUSTOMER_SUPPORT"
+    )
+    customer_id = create_customer(database)
+    low_animal_id = create_animal(database, "PET-REFUND-LOW", price=20_000_000)
+    high_animal_id = create_animal(database, "PET-REFUND-HIGH", price=20_000_000)
+    low_reservation = database.create_reservation(
+        reservation_values(customer_id, low_animal_id, 15_000_000)
+    )
+    high_reservation = database.create_reservation(
+        reservation_values(customer_id, high_animal_id, 15_000_001)
+    )
+
+    database.set_actor(support_id)
+    direct = database.submit_sales_action(
+        "refund_reservation_deposit",
+        {
+            "reservation_id": low_reservation,
+            "values": {
+                "amount": 15_000_000,
+                "method": "CASH",
+                "refunded_at": "2026-10-13",
+            },
+        },
+    )
+    assert direct["status"] == "APPLIED"
+    assert database.get_reservation_balance(low_reservation) == 0
+
+    pending = database.submit_sales_action(
+        "refund_reservation_deposit",
+        {
+            "reservation_id": high_reservation,
+            "values": {
+                "amount": 15_000_001,
+                "method": "BANK_TRANSFER",
+                "refunded_at": "2026-10-13",
+            },
+        },
+    )
+    assert pending["status"] == "PENDING"
+    assert database.get_reservation_balance(high_reservation) == 15_000_001
+    database.set_actor(manager_id)
+    database.review_sales_approval_request(pending["request_id"], True)
+    assert database.get_reservation_balance(high_reservation) == 0

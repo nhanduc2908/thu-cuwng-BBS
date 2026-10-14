@@ -1,4 +1,5 @@
 import sqlite3
+import json
 from typing import Any
 
 from PySide6.QtCore import Qt
@@ -7,6 +8,7 @@ from PySide6.QtWidgets import (
     QGridLayout,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QMessageBox,
     QPushButton,
     QTabWidget,
@@ -38,6 +40,8 @@ class SalesPage(QWidget):
         super().__init__()
         self.database = database
         self.manage_enabled = True
+        self.request_enabled = True
+        self.approve_enabled = False
         layout = QVBoxLayout(self)
         layout.setContentsMargins(28, 24, 28, 24)
         page_titles = {
@@ -53,9 +57,11 @@ class SalesPage(QWidget):
         self.customers_tab = self._build_customers_tab()
         self.reservations_tab = self._build_reservations_tab()
         self.orders_tab = self._build_orders_tab()
+        self.approvals_tab = self._build_approvals_tab()
         self.tabs.addTab(self.customers_tab, "Khách hàng")
         self.tabs.addTab(self.reservations_tab, "Đặt trước")
         self.tabs.addTab(self.orders_tab, "Đơn hàng & thanh toán")
+        self.tabs.addTab(self.approvals_tab, "Duyệt bán hàng")
         if focused_section is not None:
             section_indexes = {"customers": 0, "reservations": 1, "sales": 2}
             section_index = section_indexes.get(focused_section)
@@ -268,11 +274,62 @@ class SalesPage(QWidget):
         layout.addWidget(self.payments_table, 2)
         return page
 
+    def _build_approvals_tab(self) -> QWidget:
+        page = QWidget()
+        layout = QVBoxLayout(page)
+        layout.addWidget(
+            QLabel(
+                "Nhân viên gửi yêu cầu để quản lý hoặc trưởng ca bán hàng duyệt. "
+                "Người tạo yêu cầu không thể tự duyệt."
+            )
+        )
+        self.approvals_table = make_table(
+            [
+                "Mã yêu cầu",
+                "Người gửi",
+                "Thao tác",
+                "Chi tiết",
+                "Trạng thái",
+                "Thời điểm",
+            ]
+        )
+        self.approvals_table.currentCellChanged.connect(
+            self._approval_selection_changed
+        )
+        layout.addWidget(self.approvals_table)
+        buttons = QHBoxLayout()
+        self.approval_note = QLineEdit()
+        self.approval_note.setPlaceholderText("Ghi chú quyết định (không bắt buộc)")
+        buttons.addWidget(self.approval_note, 1)
+        buttons.addStretch()
+        self.refresh_approvals_button = QPushButton("Tải lại")
+        self.refresh_approvals_button.clicked.connect(
+            self.refresh_approval_requests
+        )
+        self.reject_approval_button = QPushButton("Từ chối")
+        self.reject_approval_button.clicked.connect(
+            lambda: self.review_selected_approval(False)
+        )
+        self.approve_button = QPushButton("Duyệt yêu cầu", objectName="primaryButton")
+        self.approve_button.clicked.connect(
+            lambda: self.review_selected_approval(True)
+        )
+        buttons.addWidget(self.refresh_approvals_button)
+        buttons.addWidget(self.reject_approval_button)
+        buttons.addWidget(self.approve_button)
+        layout.addLayout(buttons)
+        return page
+
     def set_manage_enabled(self, enabled: bool) -> None:
-        self.manage_enabled = enabled
+        self.set_access(enabled, enabled, enabled)
+
+    def set_access(self, manage: bool, request: bool, approve: bool) -> None:
+        self.manage_enabled = manage
+        self.request_enabled = request
+        self.approve_enabled = approve
+        can_submit = manage or request
         for button in (
             self.add_customer_button,
-            self.edit_customer_button,
             self.reserve_button,
             self.refund_button,
             self.release_button,
@@ -281,12 +338,26 @@ class SalesPage(QWidget):
             self.payment_button,
             self.cancel_order_button,
         ):
-            button.setVisible(enabled)
+            button.setVisible(can_submit)
+        self.edit_customer_button.setVisible(can_submit)
+        self.tabs.setTabVisible(
+            self.tabs.indexOf(self.approvals_tab), request or approve
+        )
+        self.reject_approval_button.setVisible(approve)
+        self.approve_button.setVisible(approve)
+        self.approval_note.setVisible(approve)
+        self.refresh_approvals_button.setVisible(request or approve)
+        self.refresh_approval_requests()
+        self._customer_selection_changed()
+        self._reservation_selection_changed()
+        self._order_selection_changed()
+        self._approval_selection_changed()
 
     def refresh(self) -> None:
         self.refresh_customers()
         self.refresh_reservations()
         self.refresh_orders()
+        self.refresh_approval_requests()
 
     @staticmethod
     def _selected_id(table: Any) -> int | None:
@@ -411,9 +482,157 @@ class SalesPage(QWidget):
             self.orders_table.selectRow(0)
         self._order_selection_changed()
 
+    def refresh_approval_requests(self) -> None:
+        if not hasattr(self, "approvals_table"):
+            return
+        try:
+            requests = self.database.list_sales_approval_requests()
+        except PermissionError:
+            self.approvals_table.setRowCount(0)
+            return
+        selected_id = self._selected_id(self.approvals_table)
+        selected_row = -1
+        labels = {
+            "save_customer": "Hồ sơ khách hàng",
+            "create_reservation": "Tạo lượt giữ chỗ",
+            "release_reservation": "Giải phóng chỗ",
+            "refund_reservation_deposit": "Hoàn tiền cọc",
+            "create_sales_order": "Tạo đơn bán",
+            "create_product_sales_order": "Bán sản phẩm / combo",
+            "add_payment": "Ghi nhận thanh toán",
+            "cancel_sales_order": "Hủy đơn",
+        }
+        self.approvals_table.setRowCount(len(requests))
+        for row, request in enumerate(requests):
+            payload = json.loads(request["payload_json"])
+            values = payload.get("values", {})
+            action_type = request["action_type"]
+            if action_type == "save_customer":
+                details = f"{values.get('name', '')} · {values.get('phone', '')}"
+            elif action_type == "create_reservation":
+                details = (
+                    f"Khách #{values.get('customer_id')} · "
+                    f"thú cưng #{values.get('animal_id')} · "
+                    f"cọc {float(values.get('deposit', 0)):,.0f} ₫"
+                )
+            elif action_type == "release_reservation":
+                details = f"Lượt giữ chỗ #{payload.get('reservation_id')}"
+            elif action_type == "refund_reservation_deposit":
+                details = (
+                    f"Lượt giữ chỗ #{payload.get('reservation_id')} · "
+                    f"hoàn {float(values.get('amount', 0)):,.0f} ₫"
+                )
+            elif action_type == "create_sales_order":
+                details = (
+                    f"{values.get('order_code', '')} · khách #{values.get('customer_id')} · "
+                    f"{len(values.get('animal_ids', []))} thú cưng"
+                )
+            elif action_type == "create_product_sales_order":
+                details = (
+                    f"{values.get('order_code', '')} · khách #{values.get('customer_id')} · "
+                    f"{len(values.get('product_lines', []))} SKU / "
+                    f"{len(values.get('combo_lines', []))} combo"
+                )
+            elif action_type == "add_payment":
+                details = (
+                    f"Đơn #{payload.get('order_id')} · "
+                    f"{float(values.get('amount', 0)):,.0f} ₫ · "
+                    f"{values.get('method', '')}"
+                )
+            else:
+                order = next(
+                    (
+                        item
+                        for item in self.database.list_sales_orders()
+                        if item["id"] == payload.get("order_id")
+                    ),
+                    None,
+                )
+                details = (
+                    f"{order['order_code']} · {order['customer_name']} · "
+                    f"{float(order['total_amount']):,.0f} ₫"
+                    if order
+                    else f"Đơn #{payload.get('order_id')}"
+                )
+            set_cell(self.approvals_table, row, 0, request["request_code"])
+            self.approvals_table.item(row, 0).setData(
+                Qt.ItemDataRole.UserRole, request["id"]
+            )
+            if request["id"] == selected_id:
+                selected_row = row
+            set_cell(self.approvals_table, row, 1, request["requester"])
+            set_cell(
+                self.approvals_table,
+                row,
+                2,
+                labels.get(action_type, action_type),
+            )
+            set_cell(self.approvals_table, row, 3, details)
+            set_cell(self.approvals_table, row, 4, request["status"])
+            set_cell(self.approvals_table, row, 5, request["requested_at"])
+        if selected_row >= 0:
+            self.approvals_table.selectRow(selected_row)
+        elif requests:
+            self.approvals_table.selectRow(0)
+        self._approval_selection_changed()
+
+    def _approval_selection_changed(self, *_: Any) -> None:
+        request_id = self._selected_id(self.approvals_table)
+        if request_id is None:
+            self.approve_button.setEnabled(False)
+            self.reject_approval_button.setEnabled(False)
+            return
+        request = next(
+            (
+                item for item in self.database.list_sales_approval_requests()
+                if item["id"] == request_id
+            ),
+            None,
+        )
+        can_review = bool(
+            self.approve_enabled
+            and request is not None
+            and request["status"] == "PENDING"
+            and request["requester_id"] != self.database.actor_id
+        )
+        self.approve_button.setEnabled(can_review)
+        self.reject_approval_button.setEnabled(can_review)
+
+    def review_selected_approval(self, approve: bool) -> None:
+        request_id = self._selected_id(self.approvals_table)
+        if request_id is None:
+            return
+        try:
+            self.database.review_sales_approval_request(
+                request_id, approve, self.approval_note.text()
+            )
+        except (sqlite3.Error, ValueError, PermissionError) as error:
+            self._show_error(error)
+            return
+        self.approval_note.clear()
+        self.refresh()
+
+    def _submit_sales_action(
+        self, action_type: str, payload: dict[str, Any]
+    ) -> bool:
+        try:
+            result = self.database.submit_sales_action(action_type, payload)
+        except (sqlite3.Error, ValueError, PermissionError) as error:
+            self._show_error(error)
+            return False
+        if result["status"] == "PENDING":
+            QMessageBox.information(
+                self,
+                "Đã gửi yêu cầu duyệt",
+                f"Yêu cầu {result['request_code']} đang chờ quản lý hoặc trưởng ca duyệt.",
+            )
+        self.refresh()
+        return True
+
     def _customer_selection_changed(self, *_: Any) -> None:
         self.edit_customer_button.setEnabled(
-            self.manage_enabled and self.selected_customer_id() is not None
+            (self.manage_enabled or self.request_enabled)
+            and self.selected_customer_id() is not None
         )
         customer_id = self.selected_customer_id()
         if customer_id is None:
@@ -525,9 +744,10 @@ class SalesPage(QWidget):
             None,
         )
         active = bool(reservation and reservation["status"] == "ACTIVE")
-        self.release_button.setEnabled(self.manage_enabled and active)
+        can_submit = self.manage_enabled or self.request_enabled
+        self.release_button.setEnabled(can_submit and active)
         self.refund_button.setEnabled(
-            self.manage_enabled
+            can_submit
             and active
             and self.database.get_reservation_balance(reservation_id) > 0
             if reservation_id is not None
@@ -541,12 +761,14 @@ class SalesPage(QWidget):
         self.order_items_table.setRowCount(0)
         self.payments_table.setRowCount(0)
         self.payment_button.setEnabled(
-            self.manage_enabled
+            (self.manage_enabled or self.request_enabled)
             and order is not None
             and order["status"] in {"OPEN", "PARTIALLY_PAID"}
         )
         self.cancel_order_button.setEnabled(
-            self.manage_enabled and order is not None and order["status"] == "OPEN"
+            (self.manage_enabled or self.request_enabled)
+            and order is not None
+            and order["status"] == "OPEN"
         )
         if order_id is None:
             return
@@ -608,12 +830,9 @@ class SalesPage(QWidget):
     def _save_customer(
         self, values: dict[str, Any], customer_id: int | None = None
     ) -> None:
-        try:
-            self.database.save_customer(values, customer_id)
-        except (sqlite3.Error, ValueError) as error:
-            self._show_error(error)
-            return
-        self.refresh_customers()
+        self._submit_sales_action(
+            "save_customer", {"values": values, "customer_id": customer_id}
+        )
 
     def create_reservation(self) -> None:
         customers = self.database.list_customers()
@@ -636,13 +855,9 @@ class SalesPage(QWidget):
         dialog = ReservationDialog(self, customers, animals)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
-        try:
-            self.database.create_reservation(dialog.values())
-        except (sqlite3.Error, ValueError) as error:
-            self._show_error(error)
-            return
-        self.refresh_reservations()
-        self.refresh_orders()
+        self._submit_sales_action(
+            "create_reservation", {"values": dialog.values()}
+        )
 
     def release_reservation(self) -> None:
         reservation_id = self.selected_reservation_id()
@@ -656,12 +871,9 @@ class SalesPage(QWidget):
         )
         if answer != QMessageBox.StandardButton.Yes:
             return
-        try:
-            self.database.release_reservation(reservation_id)
-        except (sqlite3.Error, ValueError) as error:
-            self._show_error(error)
-            return
-        self.refresh_reservations()
+        self._submit_sales_action(
+            "release_reservation", {"reservation_id": reservation_id}
+        )
 
     def refund_deposit(self) -> None:
         reservation_id = self.selected_reservation_id()
@@ -681,14 +893,10 @@ class SalesPage(QWidget):
         )
         if answer != QMessageBox.StandardButton.Yes:
             return
-        try:
-            self.database.refund_reservation_deposit(
-                reservation_id, dialog.values()
-            )
-        except (sqlite3.Error, ValueError) as error:
-            self._show_error(error)
-            return
-        self.refresh_reservations()
+        self._submit_sales_action(
+            "refund_reservation_deposit",
+            {"reservation_id": reservation_id, "values": dialog.values()},
+        )
 
     def create_order(self) -> None:
         customers = self.database.list_customers()
@@ -707,12 +915,9 @@ class SalesPage(QWidget):
         dialog = SalesOrderDialog(self, customers, animals)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
-        try:
-            self.database.create_sales_order(dialog.values())
-        except (sqlite3.Error, ValueError) as error:
-            self._show_error(error)
-            return
-        self.refresh_orders()
+        self._submit_sales_action(
+            "create_sales_order", {"values": dialog.values()}
+        )
 
     def create_product_order(self) -> None:
         customers = self.database.list_customers()
@@ -725,13 +930,9 @@ class SalesPage(QWidget):
         dialog = ProductSalesOrderDialog(self, self.database, customers)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
-        try:
-            self.database.create_product_sales_order(dialog.values())
-        except (sqlite3.Error, ValueError, PermissionError) as error:
-            self._show_error(error)
-            return
-        self.refresh_orders()
-        self.refresh_reservations()
+        self._submit_sales_action(
+            "create_product_sales_order", {"values": dialog.values()}
+        )
 
     def add_payment(self) -> None:
         order_id = self.selected_order_id()
@@ -747,13 +948,9 @@ class SalesPage(QWidget):
         dialog = PaymentDialog(self, balance)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
-        try:
-            self.database.add_payment(order_id, dialog.values())
-        except (sqlite3.Error, ValueError) as error:
-            self._show_error(error)
-            return
-        self.refresh_orders()
-        self.refresh_customers()
+        self._submit_sales_action(
+            "add_payment", {"order_id": order_id, "values": dialog.values()}
+        )
 
     def cancel_order(self) -> None:
         order_id = self.selected_order_id()
@@ -767,12 +964,7 @@ class SalesPage(QWidget):
         )
         if answer != QMessageBox.StandardButton.Yes:
             return
-        try:
-            self.database.cancel_sales_order(order_id)
-        except (sqlite3.Error, ValueError) as error:
-            self._show_error(error)
-            return
-        self.refresh_orders()
+        self._submit_sales_action("cancel_sales_order", {"order_id": order_id})
 
     def _show_error(self, error: Exception) -> None:
         detail = str(error)

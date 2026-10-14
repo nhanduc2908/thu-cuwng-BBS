@@ -4,17 +4,25 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#176344">
-  <meta name="description" content="Bản nháp yêu cầu mua hàng lưu trên thiết bị.">
-  <title>Yêu cầu đã lưu | Bông Bông Pet Care</title>
+  <meta name="description" content="Tra cứu trạng thái đơn hàng cửa hàng Bông Bông Pet Care.">
+  <title>Kiểm tra đơn hàng | Bông Bông Pet Care</title>
   <link rel="stylesheet" href="styles/store.css">
   <script src="scripts/store.js" defer></script>
 </head>
 <body data-page="confirmation">
   <header id="store-header" class="site-header"></header>
   <main class="container">
-    <section data-order-confirmation aria-live="polite"><div class="empty-state">Đang tải bản nháp…</div></section>
+    <section class="section panel" aria-labelledby="order-lookup-title">
+      <h1 class="page-title" id="order-lookup-title">Kiểm tra đơn hàng</h1>
+      <p class="page-lead">Nhập mã tham chiếu BBR trên xác nhận đặt hàng để xem trạng thái thanh toán và xuất kho.</p>
+      <form class="order-lookup-form" data-order-lookup>
+        <input class="field" name="code" type="text" required maxlength="40" pattern="[A-Za-z0-9-]+" placeholder="Ví dụ: BBR-20261013-1234ABCD" aria-label="Mã tham chiếu đơn hàng">
+        <button class="button" type="submit">Tra cứu đơn hàng</button>
+      </form>
+    </section>
+    <section data-order-confirmation aria-live="polite"><div class="empty-state">Đang tải xác nhận yêu cầu…</div></section>
   </main>
-  <footer class="site-footer"><div class="container footer-inner"><div><strong>BÔNG BÔNG PET CARE</strong><p>Bản nháp lưu cục bộ trên trình duyệt.</p></div><p>Chưa có đơn hàng thật nào được gửi đến cửa hàng.</p></div></footer>
+  <footer class="site-footer"><div class="container footer-inner"><div><strong>BÔNG BÔNG PET CARE</strong><p>Kiểm tra trạng thái đơn bằng mã tham chiếu.</p></div><p>Đơn hàng chỉ được xác nhận thanh toán khi cửa hàng ghi nhận thanh toán.</p></div></footer>
   <div id="store-toast" class="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>

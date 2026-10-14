@@ -1,0 +1,21 @@
+services:
+  petcare-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    restart: unless-stopped
+    environment:
+      PETCARE_DATABASE_PATH: /var/lib/petcare/pet_store.db
+      PETCARE_JWT_SECRET: ${PETCARE_JWT_SECRET:?Set PETCARE_JWT_SECRET in the deployment environment}
+      PETCARE_BOOTSTRAP_ADMIN_USERNAME: ${PETCARE_BOOTSTRAP_ADMIN_USERNAME:-}
+      PETCARE_BOOTSTRAP_ADMIN_PASSWORD: ${PETCARE_BOOTSTRAP_ADMIN_PASSWORD:-}
+      PETCARE_BOOTSTRAP_ADMIN_DISPLAY_NAME: ${PETCARE_BOOTSTRAP_ADMIN_DISPLAY_NAME:-Quản trị viên}
+      PETCARE_TRUSTED_HOSTS: ${PETCARE_TRUSTED_HOSTS:-localhost,127.0.0.1}
+      PETCARE_WEB_ORIGINS: ${PETCARE_WEB_ORIGINS:-}
+    volumes:
+      - petcare-data:/var/lib/petcare
+    ports:
+      - "127.0.0.1:${PETCARE_API_PORT:-8000}:8000"
+
+volumes:
+  petcare-data:

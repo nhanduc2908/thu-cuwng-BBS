@@ -33,7 +33,8 @@ class AuthRepository:
     def list_users(self) -> list[sqlite3.Row]:
         return self.connection.execute(
             """
-            SELECT id, username, display_name, role, is_active, created_at
+            SELECT id, username, display_name, role, is_active, sales_approver,
+                   created_at
             FROM users ORDER BY username COLLATE NOCASE
             """
         ).fetchall()
@@ -215,13 +216,35 @@ class AuthRepository:
 
     def has_permission(self, user_id: int, permission: str) -> bool:
         row = self.connection.execute(
-            "SELECT role, is_active FROM users WHERE id = ?", (user_id,)
+            "SELECT role, is_active, sales_approver FROM users WHERE id = ?",
+            (user_id,),
         ).fetchone()
         return bool(
             row
             and row["is_active"]
-            and permission in ROLE_PERMISSIONS.get(row["role"], frozenset())
+            and (
+                permission in ROLE_PERMISSIONS.get(row["role"], frozenset())
+                or (
+                    permission == "sales.approve"
+                    and row["role"] == "SALES"
+                    and row["sales_approver"]
+                )
+            )
         )
+
+    def set_sales_approver(self, user_id: int, enabled: bool) -> None:
+        with self.connection:
+            user = self.connection.execute(
+                "SELECT role FROM users WHERE id = ?", (user_id,)
+            ).fetchone()
+            if user is None:
+                raise ValueError("Không tìm thấy tài khoản.")
+            if enabled and user["role"] != "SALES":
+                raise ValueError("Chỉ tài khoản Nhân viên bán hàng mới được làm trưởng ca.")
+            self.connection.execute(
+                "UPDATE users SET sales_approver = ? WHERE id = ?",
+                (int(enabled), user_id),
+            )
 
     def set_user_role(self, user_id: int, role: str) -> None:
         if role not in ROLE_PERMISSIONS:
@@ -241,7 +264,9 @@ class AuthRepository:
                         "Không thể đổi vai trò của quản trị viên đang hoạt động cuối cùng."
                     )
             updated = self.connection.execute(
-                "UPDATE users SET role = ? WHERE id = ?", (role, user_id)
+                "UPDATE users SET role = ?, sales_approver = CASE "
+                "WHEN ? = 'SALES' THEN sales_approver ELSE 0 END WHERE id = ?",
+                (role, role, user_id),
             )
             if updated.rowcount != 1:
                 raise ValueError("Không tìm thấy tài khoản.")
