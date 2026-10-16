@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Điểm tích hợp WAGGY Pet Health với Pet Care, phòng khám, phòng xét nghiệm, Pet Service và Intelligence."><title>Pet Health | Điểm tích hợp WAGGY</title><link rel="stylesheet" href="../assets/waggy-product.css"></head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner"><a class="brand" href="../index.html"><span class="brand-mark">W</span><span>WAGGY<small>INTEGRATION DETAIL</small></span></a><nav class="top-links" aria-label="Điều hướng"><a href="index.html">Bản đồ tích hợp</a><a href="../workflow/index.html">Workflow</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav></div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../index.html">WAGGY Ecosystem</a><span>/</span><a href="index.html">Tích hợp</a><span>/</span><span>Pet Health</span></nav>
+    <section class="hero"><div class="hero-content"><span class="eyebrow">03 · ĐỀ XUẤT XÂY DỰNG</span><h1>Pet Health <span>connection points</span></h1><p>Pet Health tích hợp danh tính thú cưng, consent, phòng khám và phòng xét nghiệm; kết quả chuyên môn chỉ có hiệu lực khi cơ sở/người có thẩm quyền xác thực.</p><div class="hero-meta"><span class="status proposed">ĐỀ XUẤT</span><span>Clinic/lab adapters</span><span>Signed record &amp; consent</span></div></div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Sở hữu dữ liệu</span><h2>Phân biệt hồ sơ nền và hồ sơ chuyên môn</h2></div></div><div class="facts">
+      <div class="fact"><b>Pet Care sở hữu</b><span>Pet ID và hồ sơ chăm sóc cơ bản; chỉ chia sẻ trường được cho phép.</span></div><div class="fact"><b>Clinic/Health sở hữu</b><span>Encounter, chẩn đoán, chỉ định, kết quả xét nghiệm, chữ ký và lịch sử đính chính.</span></div><div class="fact"><b>Pet Health điều phối</b><span>Referral, lịch, trạng thái hồ sơ và consent; không tự tạo chẩn đoán.</span></div>
+    </div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Điểm kết nối</span><h2>Đúng người nhận, đúng nguồn và đúng mục đích</h2></div></div><div class="integration-list">
+      <div class="integration-row"><strong>Pet Care → Health</strong><span>Pet ID, chủ sở hữu được xác minh, tiền sử/thuốc/dị ứng tối thiểu theo consent cụ thể.</span><span class="integration-label">Pet reference · consent grant</span></div>
+      <div class="integration-row"><strong>Health → Clinic</strong><span>Referral/appointment request, symptom intake do chủ khai, giấy tờ được chọn và consent scope.</span><span class="integration-label">Referral API · appointment payload</span></div>
+      <div class="integration-row"><strong>Clinic → Health</strong><span>Encounter status, practitioner identity, signed diagnosis/plan, prescriptions và follow-up schedule.</span><span class="integration-label">Authenticated clinical record</span></div>
+      <div class="integration-row"><strong>Lab ↔ Clinic/Health</strong><span>Order, specimen accession, custody steps, result status và result đã xác thực.</span><span class="integration-label">Order ID · specimen ID · signed result</span></div>
+      <div class="integration-row"><strong>Health → Pet Care</strong><span>Summary/nhắc lịch/file được phép; nguồn clinic và thời điểm xác thực luôn được giữ.</span><span class="integration-label">Consent-bound summary</span></div>
+      <div class="integration-row"><strong>Health → Service/Intelligence</strong><span>Service chỉ nhận eligibility/safety signal cần thiết; Intelligence chỉ nhận cohort đã duyệt, giảm định danh.</span><span class="integration-label">Minimal signal · approved dataset</span></div>
+    </div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Workflow kết nối</span><h2>Consent trước khi hồ sơ rời miền</h2></div></div><ol class="steps">
+      <li><strong>Tạo referral với ID tham chiếu</strong><p>Pet Health gửi pet ID, clinic ID, purpose, các trường cần và thời hạn truy cập; chưa truyền bệnh án.</p></li>
+      <li><strong>Xác minh người dùng và consent</strong><p>Pet Care/consent service xác nhận quan hệ với thú cưng và cấp grant có scope; thiếu grant thì connector từ chối.</p></li>
+      <li><strong>Clinic chấp nhận và mở encounter</strong><p>Clinic xác thực provider, xác nhận lịch và trả encounter ID; tránh tạo encounter trùng khi retry cùng idempotency key.</p></li>
+      <li><strong>Lab xử lý theo specimen ID</strong><p>Order liên kết encounter; mỗi custody event có actor/time/location; result trả về chỉ sau xác minh nguồn/chữ ký.</p></li>
+      <li><strong>Provider xác nhận hồ sơ</strong><p>Bác sĩ ký/xác thực; cập nhật/đính chính bằng amendment liên kết bản gốc, giữ version và audit.</p></li>
+      <li><strong>Chia sẻ summary và thu hồi</strong><p>Health gửi summary/reminder đúng scope về Care; consent revoke dừng các lần chia sẻ kế tiếp và bắt đầu xử lý bản sao theo chính sách.</p></li>
+    </ol></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">An toàn &amp; lỗi</span><h2>Không có ghi đè hoặc chia sẻ rộng</h2></div></div><div class="two-col">
+      <article class="panel"><h3>Sai patient / owner mismatch</h3><p>Quarantine record, ngăn hiển thị cho chủ nuôi, xác minh bằng kênh clinic trước khi liên kết.</p></article><article class="panel"><h3>Kết quả chưa ký</h3><p>Chỉ hiển thị pending; không tạo reminder/chẩn đoán hoặc đẩy về Care như kết quả hoàn tất.</p></article><article class="panel"><h3>Consent hết hạn/thu hồi</h3><p>Chặn query và export mới; phát revoke notice, lưu audit và xin grant mới nếu cần tiếp tục.</p></article><article class="panel"><h3>Urgent triage</h3><p>Không chờ đồng bộ liên hệ; hiển thị hướng dẫn liên hệ clinic/cấp cứu, không sinh khuyến nghị điều trị.</p></article>
+    </div><div class="callout"><strong>Rào chắn chuyên môn:</strong> hệ thống WAGGY không xác nhận lâm sàng thay provider. Clinic là nguồn hồ sơ khám, lab là nguồn kết quả xét nghiệm đã phát hành.</div></section>
+    <nav class="page-nav" aria-label="Điều hướng"><a href="pet-service.html">← Pet Service</a><a href="index.html">Bản đồ kết nối</a><a href="pet-commerce.html">Pet Commerce →</a></nav>
+  </main><footer class="footer"><div class="shell footer-inner"><span>WAGGY Pet Health · Integration design</span><span>Đề xuất xây dựng · dữ liệu y tế cần kiểm soát nghiêm ngặt.</span></div></footer><script src="../assets/waggy-product.js"></script>
+</body></html>

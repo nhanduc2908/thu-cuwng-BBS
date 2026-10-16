@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Bộ dữ liệu demo liên thông tám hệ thống WAGGY với thực thể chuẩn hóa, mã tham chiếu, quyền chiếu dữ liệu, sự kiện và kiểm soát phiên bản.">
+  <title>WAGGY · Trung tâm đồng bộ demo</title>
+  <link rel="stylesheet" href="assets/demo.css">
+  <style>
+    .sync-page { --accent:#176747; min-height:100vh; background:var(--page); }
+    .sync-page-main { width:min(1360px,calc(100% - 40px)); margin:0 auto; padding:30px 0 48px; }
+    .sync-page-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:18px; margin:0 0 16px; }
+    .sync-page-heading h1 { margin:4px 0; font-size:clamp(26px,4vw,40px); letter-spacing:-.06em; }
+    .sync-page-heading p { max-width:680px; margin:0; color:var(--muted); font-size:12px; }
+    .sync-page-heading a { flex:0 0 auto; color:var(--green); font-size:11px; font-weight:850; }
+    .sync-notice { min-height:20px; margin:12px 0; color:var(--green); font-size:11px; font-weight:750; }
+    @media(max-width:620px) {
+      .directory-top { min-height:60px; padding:0 16px; }
+      .directory-top nav { gap:12px; font-size:10px; }
+      .sync-page-main { width:calc(100% - 24px); padding-top:18px; }
+      .sync-page-heading { display:block; }
+      .sync-page-heading a { display:inline-flex; margin-top:10px; }
+    }
+  </style>
+</head>
+<body class="sync-page">
+  <header class="directory-top">
+    <a class="demo-brand" href="Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/index.html"><span class="brand-icon">W</span><span>WAGGY <small>SYNC SANDBOX</small></span></a>
+    <nav><a href="../../data/connection-map.html">Sơ đồ kết nối bảng ↗</a><a href="../../data/record-access.html">Quyền CRUD ↗</a><a href="../../data/flow-control.html">Mini-map ↗</a><a href="../../data/data-map.html">Bản đồ dữ liệu ↗</a><a href="Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/index.html">8 hệ thống</a><a href="../index.html">Workflow ↗</a></nav>
+  </header>
+  <main class="sync-page-main">
+    <section class="sync-page-heading"><div><span class="directory-eyebrow">WAGGY ECOSYSTEM · LOCAL DEMO</span><h1>Dữ liệu chung &amp; trung tâm đồng bộ</h1><p>Tra cứu bộ dữ liệu giả lập có liên kết giữa tám hệ thống, kiểm tra projection theo quyền, xuất dữ liệu JSON, mô phỏng sự kiện và phân xử xung đột phiên bản. Trạng thái chỉ lưu cục bộ trong trình duyệt.</p></div><a href="Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/index.html">← Quay lại chọn hệ thống</a></section>
+    <p id="syncNotice" class="sync-notice" role="status" aria-live="polite"></p>
+    <section class="sync-center" id="syncCenter" aria-labelledby="sync-title"></section>
+  </main>
+  <script src="../../data/pet-business.js"></script>
+  <script src="../../data/pet-care.js"></script>
+  <script src="../../data/pet-commerce.js"></script>
+  <script src="../../data/pet-community.js"></script>
+  <script src="../../data/pet-connect.js"></script>
+  <script src="../../data/pet-health.js"></script>
+  <script src="../../data/pet-intelligence.js"></script>
+  <script src="../../data/pet-service.js"></script>
+  <script src="../../data/waggy-shared-demo-data.js"></script>
+  <script src="assets/sync.js"></script>
+  <script>
+    (() => {
+      const systems = ["pet-care", "pet-service", "pet-health", "pet-commerce", "pet-business", "pet-community", "pet-connect", "pet-intelligence"];
+      const requestedSystem = new URLSearchParams(window.location.search).get("system") || "pet-care";
+      const system = systems.includes(requestedSystem) ? requestedSystem : "pet-care";
+      const notice = document.getElementById("syncNotice");
+      if (system !== requestedSystem) notice.textContent = "Hệ thống được yêu cầu không hợp lệ; đang hiển thị Pet Care.";
+      window.WaggyDemoSync.mount(document.getElementById("syncCenter"), system, (message) => {
+        notice.textContent = message;
+      });
+    })();
+  </script>
+</body>
+</html>

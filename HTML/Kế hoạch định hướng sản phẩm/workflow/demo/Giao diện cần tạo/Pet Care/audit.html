@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Nhật ký thay đổi Pet Care: actor, action, đối tượng, timestamp, lý do, request ID và lọc PII.">
+  <title>Nhật ký thay đổi · WAGGY Pet Care</title>
+  <link rel="stylesheet" href="../../assets/demo.css">
+</head>
+<body data-demo="pet-care" data-demo-page="audit" data-system-folder="true">
+  <a class="skip-link" href="#demoApp">Bỏ qua điều hướng, đến nội dung Pet Care</a>
+  <div id="demoApp" role="region" aria-label="Ứng dụng Pet Care" aria-busy="true" tabindex="-1"><div class="demo-boot" role="status" aria-live="polite"><span class="demo-boot-mark" aria-hidden="true">W</span><span class="demo-boot-copy"><strong>Đang mở nhật ký thay đổi</strong><small>Nạp sự kiện audit và request reference mẫu...</small></span><span class="demo-boot-spinner" aria-hidden="true"></span></div></div>
+  <noscript><main class="demo-noscript-page"><header><span class="workspace-kicker">PET CARE · AUDIT TRAIL</span><h1>Nhật ký thay đổi</h1><p>Truy vết actor, hành động, đối tượng, thời gian, lý do và request/correlation ID.</p></header><section><h2>Trường bắt buộc</h2><ol><li>Actor và vai trò theo scope.</li><li>Action, subject ID/version và timestamp.</li><li>Lý do cho thay đổi nhạy cảm.</li><li>Request ID và kết quả đã che thông tin phù hợp.</li></ol></section><section><h2>Nguyên tắc</h2><p>Không ghi secret/PII không cần thiết; không sửa event gốc. Lỗi audit phải chặn hành động nhạy cảm trong hệ thống thật.</p></section><nav aria-label="Màn hình liên quan"><a href="customers.html">Khách hàng</a><a href="health-records.html">Sức khỏe</a><a href="settings.html">Cấu hình</a><a href="integrations.html">Tích hợp</a></nav><p class="demo-noscript-note">Bật JavaScript để sử dụng prototype; log trên thiết bị không phải audit production.</p></main></noscript>
+  <script src="js/pet-care-algorithms.js" defer></script>
+  <script src="../../../../data/pet-business.js" defer></script>
+  <script src="../../../../data/pet-care.js" defer></script>
+  <script src="../../../../data/pet-commerce.js" defer></script>
+  <script src="../../../../data/pet-community.js" defer></script>
+  <script src="../../../../data/pet-connect.js" defer></script>
+  <script src="../../../../data/pet-health.js" defer></script>
+  <script src="../../../../data/pet-intelligence.js" defer></script>
+  <script src="../../../../data/pet-service.js" defer></script>
+  <script src="../../../../data/waggy-shared-demo-data.js" defer></script>
+  <script src="../../assets/sync.js" defer></script>
+  <script src="../../assets/demo.js" defer></script>
+</body>
+</html>

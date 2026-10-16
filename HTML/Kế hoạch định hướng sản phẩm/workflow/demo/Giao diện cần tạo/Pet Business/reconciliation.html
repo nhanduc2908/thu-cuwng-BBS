@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Workbench đối soát Pet Business: ghép PO, GRN, invoice, payout và ledger; phân loại unmatched, variance và SLA xử lý.">
+  <meta name="theme-color" content="#176747">
+  <meta name="color-scheme" content="light dark">
+  <title>Đối soát · WAGGY Pet Business</title>
+  <link rel="stylesheet" href="../../assets/demo.css">
+</head>
+<body data-demo="pet-business" data-demo-page="reconciliation" data-system-folder="true">
+  <a class="skip-link" href="#demoApp">Bỏ qua tải, đến nội dung Pet Business</a>
+  <div id="demoApp" role="region" aria-label="Ứng dụng Pet Business" aria-busy="true" tabindex="-1">
+    <div class="demo-boot" role="status" aria-live="polite"><span class="demo-boot-mark" aria-hidden="true">W</span><span class="demo-boot-copy"><strong>Đang mở Đối soát</strong><small>Nạp nguồn chứng từ và các case sai lệch...</small></span><span class="demo-boot-spinner" aria-hidden="true"></span></div>
+  </div>
+  <noscript>
+    <main class="demo-noscript-page">
+      <header><span class="workspace-kicker">RECONCILIATION · EXCEPTION WORKBENCH</span><h1>Workbench đối soát</h1><p>Ghép hai nguồn theo khóa giao dịch, đồng tiền và phiên bản; phân loại residual, unmatched, duplicate và sai lệch cần reviewer.</p></header>
+      <section><h2>Quy trình đối soát</h2><ol><li>Chụp nguồn và chuẩn hóa timezone/đơn vị.</li><li>Ghép exact reference trước; không tái sử dụng cùng một dòng.</li><li>Tính residual theo tolerance đã cấu hình.</li><li>Chuyển fuzzy candidate và unmatched sang review queue.</li></ol></section>
+      <section><h2>Nguyên tắc xử lý</h2><p>Không xóa phí hoặc residual để ép khớp; không tự tạo journal. Case cần owner, evidence, lý do và trạng thái xử lý.</p></section>
+      <nav aria-label="Màn hình liên quan"><a href="receiving.html">Nhập hàng</a><a href="finance.html">Tài chính</a><a href="integrations.html">Tích hợp</a><a href="audit.html">Nhật ký kiểm soát</a></nav>
+      <p class="demo-noscript-note">Bản demo tương tác cần JavaScript; dữ liệu đối soát là fixtures, không phải nguồn giao dịch thật.</p>
+    </main>
+  </noscript>
+  <script src="pet-business-config.js" defer></script>
+  <script src="js/pet-business-algorithms.js" defer></script>
+  <script src="../../../../data/pet-business.js" defer></script>
+  <script src="../../../../data/pet-care.js" defer></script>
+  <script src="../../../../data/pet-commerce.js" defer></script>
+  <script src="../../../../data/pet-community.js" defer></script>
+  <script src="../../../../data/pet-connect.js" defer></script>
+  <script src="../../../../data/pet-health.js" defer></script>
+  <script src="../../../../data/pet-intelligence.js" defer></script>
+  <script src="../../../../data/pet-service.js" defer></script>
+  <script src="../../../../data/waggy-shared-demo-data.js" defer></script>
+  <script src="../../assets/sync.js" defer></script>
+  <script src="../../assets/demo.js" defer></script>
+  <script src="pet-business.js" defer></script>
+</body>
+</html>

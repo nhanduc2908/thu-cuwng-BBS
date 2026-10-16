@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Workflow WAGGY Pet Commerce: các bước nghiệp vụ, trạng thái, ngoại lệ và kiểm soát.">
+  <title>WAGGY Pet Commerce | Workflow chi tiết WAGGY</title>
+  <link rel="stylesheet" href="../assets/waggy-product.css">
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">W</span><span>WAGGY<small>WORKFLOW DETAIL</small></span></a>
+    <nav class="top-links" aria-label="Điều hướng"><a href="../index.html">Tổng quan</a><a href="index.html">8 workflow</a><a href="../integration/pet-commerce.html">Điểm tích hợp</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav>
+  </div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../../index.html">Cổng HTML</a><span>/</span><a href="../index.html">WAGGY Ecosystem</a><span>/</span><a href="index.html">Workflow</a><span>/</span><span>Pet Commerce</span></nav>
+    <section class="hero"><div class="hero-content"><span class="eyebrow">04 · ĐỀ XUẤT XÂY DỰNG</span><h1>WAGGY Pet Commerce <span>Workflow</span></h1><p>Quy trình đề xuất từ duyệt catalog đến checkout, thanh toán, fulfillment, giao nhận, đổi trả và đối soát.</p><div class="hero-meta"><span class="status proposed">ĐỀ XUẤT</span><span>Luồng nghiệp vụ chi tiết</span><span>Ngoại lệ &amp; kiểm soát</span></div></div></section>
+    <aside class="callout"><strong>Trạng thái hệ thống:</strong> Đây là workflow đề xuất, chưa phải tính năng đã triển khai độc lập trong WAGGY.</aside>
+    <section class="section" id="workflow"><div class="section-head"><div><span class="kicker">Workflow đề xuất</span><h2>Từ sản phẩm đến hậu mãi</h2></div><p>Tách trạng thái đơn hàng, trạng thái thanh toán và trạng thái fulfillment để tránh báo sai hoặc trừ tồn lặp.</p></div>
+      <ol class="steps">
+        <li><strong>Đăng ký và duyệt catalog</strong><p>Nhập SKU, nguồn gốc, mô tả, quy cách, giá, thuế, hạn dùng/cảnh báo, hình ảnh và điều kiện bán; người phụ trách duyệt trước khi phát hành.</p></li>
+        <li><strong>Khám phá và chọn sản phẩm</strong><p>Khách tìm/lọc theo loài và nhu cầu, đọc thông tin/điều kiện; đề xuất cá nhân hóa nếu có phải giải thích và không đưa ra tuyên bố y tế thiếu căn cứ.</p></li>
+        <li><strong>Kiểm tra giá, vùng giao và tồn</strong><p>Tính ưu đãi theo quy tắc hiện hành; kiểm tra khả dụng theo chi nhánh/vùng giao, đơn vị, giới hạn số lượng và mặt hàng bị hạn chế.</p></li>
+        <li><strong>Tạo giỏ và rà soát đơn</strong><p>Khách xác nhận sản phẩm, số lượng, giá, phí vận chuyển, địa chỉ, thời gian và chính sách; hệ thống báo thay đổi giá/tồn trước khi khách đặt.</p></li>
+        <li><strong>Gửi đơn và chống trùng</strong><p>Phát mã đơn và request ID idempotent; giữ tồn tạm thời theo TTL và hiển thị trạng thái chờ thanh toán/xác nhận.</p></li>
+        <li><strong>Thanh toán và xác nhận</strong><p>Thanh toán qua nhà cung cấp hoặc phương thức được duyệt; xác minh webhook/giao dịch và đối soát mã; chỉ xác nhận paid một lần.</p></li>
+        <li><strong>Phân bổ kho và lấy hàng</strong><p>Pet Business/fulfillment chọn kho, ưu tiên lô phù hợp hạn dùng, quét SKU/quantity; thay thế hàng cần khách đồng ý trước.</p></li>
+        <li><strong>Đóng gói và giao hàng</strong><p>Kiểm tra hàng, bao bì và điều kiện bảo quản; ghi vận đơn, người giao nhận, mốc bàn giao và cập nhật theo dõi cho khách.</p></li>
+        <li><strong>Xác nhận hoàn tất và chăm sóc sau bán</strong><p>Ghi nhận giao thành công/nhận tại cửa hàng; phát hành hóa đơn/chứng từ, mời đánh giá và cung cấp kênh hỗ trợ.</p></li>
+        <li><strong>Đổi trả, hoàn tiền và đóng đơn</strong><p>Tiếp nhận lý do, kiểm tra điều kiện và tình trạng; duyệt trả/hoàn; cập nhật tồn và thanh toán tương ứng, đối soát rồi đóng hồ sơ.</p></li>
+      </ol><div class="state-line"><b>Đơn hàng:</b><span>Nháp</span><span>Chờ thanh toán</span><span>Đã xác nhận</span><span>Đang xử lý</span><span>Đang giao</span><span>Đã giao</span><span>Đổi trả / hoàn tiền</span><span>Đã đóng</span></div>
+    </section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Ngoại lệ &amp; kiểm soát</span><h2>Giữ đúng tiền, hàng và cam kết</h2></div></div><div class="two-col">
+      <article class="panel"><h3>Thanh toán không rõ kết quả</h3><p>Tra cứu mã giao dịch trước retry; không tạo đơn thu tiền trùng. Webhook phải xác thực chữ ký, số tiền, tiền tệ và mã đơn.</p></article>
+      <article class="panel"><h3>Hết hàng sau checkout</h3><p>Đưa dòng bị ảnh hưởng vào xử lý ngoại lệ; báo khách chọn chờ, bỏ dòng hoặc hoàn tiền. Không tự thay sản phẩm.</p></article>
+      <article class="panel"><h3>Giao thất bại / khách từ chối</h3><p>Ghi bằng chứng và lý do; quyết định giao lại, hoàn kho hoặc hoàn tiền theo chính sách; ngăn xuất kho trùng.</p></article>
+      <article class="panel"><h3>Thu hồi hoặc lô lỗi</h3><p>Khóa SKU/lô bán, truy vết đơn bị ảnh hưởng, cách ly hàng và kích hoạt quy trình thông báo/thu hồi.</p></article>
+    </div></section>
+    <section class="section">
+      <div class="section-head"><div><span class="kicker">Đặc tả giao dịch</span><h2>Chi tiết từ catalog đến đối soát đơn</h2></div><p>Mỗi đơn có vòng đời đơn hàng, thanh toán và fulfillment riêng; tiền và tồn chỉ đổi theo sự kiện xác thực, có thể đối chiếu.</p></div>
+      <div class="facts">
+        <div class="fact"><b>Điều kiện mở bán</b><span>SKU được duyệt, giá/thuế và chính sách có phiên bản; hàng đủ điều kiện bán theo chi nhánh; nội dung mô tả, cảnh báo và hạn dùng không gây hiểu nhầm.</span></div>
+        <div class="fact"><b>Định danh giao dịch</b><span>Order ID và line ID ổn định; payment/refund ID từ provider; reservation/fulfillment ID từ kho; correlation ID nối các hệ thống và thao tác retry.</span></div>
+        <div class="fact"><b>Chủ sở hữu dữ liệu</b><span>Commerce sở hữu đơn online; payment provider xác minh giao dịch; Business/kho sở hữu tồn và xuất nhập; vận chuyển cung cấp bằng chứng giao.</span></div>
+      </div>
+      <h3>Quy trình kiểm soát đơn hàng</h3>
+      <ol class="steps">
+        <li><strong>Duyệt và phát hành sản phẩm</strong><p>Catalog manager nhập SKU, barcode, đơn vị, nguồn gốc, thành phần, ảnh có quyền sử dụng, hướng dẫn/cảnh báo, giá và thuế; reviewer xác nhận nguồn, độ đầy đủ và điều kiện bán trước khi đặt trạng thái hoạt động.</p></li>
+        <li><strong>Rà soát giỏ và khóa phiên bản giá</strong><p>Checkout tính lại giá, ưu đãi, thuế, phí giao theo địa chỉ và thời điểm; hiển thị tổng tiền, hàng có hạn chế, ngày giao dự kiến và điều khoản. Mọi thay đổi kể từ lúc thêm giỏ phải được báo để khách xác nhận lại.</p></li>
+        <li><strong>Tạo đơn chờ và giữ hàng</strong><p>Tạo order cùng snapshot từng dòng, địa chỉ giao, giá/thuế đã chấp thuận và idempotency key. Kho giữ lượng có TTL; nếu không giữ đủ tất cả dòng, chỉ tiếp tục sau khi khách chọn phương án xử lý.</p></li>
+        <li><strong>Xác minh kết quả thanh toán</strong><p>Kiểm tra webhook/chữ ký hoặc tra cứu giao dịch từ provider; đối chiếu order ID, số tiền, tiền tệ và trạng thái. Callback trùng được xử lý idempotent; trạng thái mơ hồ giữ chờ, không tự tạo lần thu thứ hai.</p></li>
+        <li><strong>Phân bổ, lấy hàng và đóng gói</strong><p>Fulfillment chọn kho đủ tồn, ưu tiên lô phù hợp nguyên tắc hạn dùng; người lấy quét SKU, lô, số lượng và tình trạng. Sai lệch cách ly; hàng thay thế chỉ được thực hiện sau khi khách đồng ý và giá/đơn được cập nhật có vết.</p></li>
+        <li><strong>Bàn giao vận chuyển và cập nhật tracking</strong><p>Đóng gói theo yêu cầu bảo quản; ghi số kiện, vận đơn, đơn vị giao và thời điểm bàn giao. Cập nhật trạng thái theo event có phiên bản; các trạng thái không hợp lệ/out-of-order được đối chiếu trước khi áp dụng.</p></li>
+        <li><strong>Xác nhận giao và ghi nhận hậu mãi</strong><p>Lưu bằng chứng giao/nhận, người nhận hoặc lý do giao thất bại; gửi biên nhận và kênh hỗ trợ. Chỉ chuyển hoàn tất khi có bằng chứng theo quy tắc giao nhận được công bố.</p></li>
+        <li><strong>Trả hàng, hoàn tiền và cập nhật tồn</strong><p>Tạo case RMA gắn order/line, lý do và ảnh/chứng từ; kiểm tra thời hạn, tình trạng và chính sách. Người có quyền duyệt hoàn/đổi; kho quyết định hàng có thể bán lại, cách ly hay tiêu hủy; payment refund được đối chiếu trước khi đóng case.</p></li>
+        <li><strong>Đối soát và đóng kỳ</strong><p>Đối chiếu tổng đơn, giao dịch provider, phí, hoàn tiền, vận đơn và sự kiện xuất kho theo mã tham chiếu. Chênh lệch mở case có owner/SLA; không sửa trực tiếp order gốc để làm khớp báo cáo.</p></li>
+      </ol>
+      <div class="two-col">
+        <article class="panel"><h3>Phân quyền phê duyệt</h3><ul><li>Catalog editor tạo/sửa nháp; reviewer duyệt mở bán.</li><li>Nhân viên kho pick/pack; adjustment cần quyền khác và lý do.</li><li>Thu ngân/hỗ trợ xem giao dịch theo phạm vi; refund vượt hạn mức cần cấp duyệt.</li><li>Khách chỉ xem đơn thuộc tài khoản/định danh đã xác minh.</li></ul></article>
+        <article class="panel"><h3>Điểm dừng bắt buộc</h3><ul><li>Giá/tồn thay đổi: yêu cầu khách chấp thuận lại.</li><li>Payment pending/unknown: tra cứu trước retry.</li><li>Thiếu hàng hoặc hàng lỗi: giữ đơn ở ngoại lệ, không tự thay.</li><li>Giao không thành công/đổi trả: ghi bằng chứng và duyệt theo chính sách.</li></ul></article>
+      </div>
+      <div class="callout"><strong>Không trừ tồn hai lần:</strong> đặt giữ hàng, xuất kho, trả kho và hoàn tiền là các giao dịch riêng có ID bất biến; consumer phải chống duplicate và kiểm tra thứ tự/version trước cập nhật.</div>
+    </section>
+    <nav class="page-nav" aria-label="Điều hướng workflow"><a href="index.html">← Danh mục 8 workflow</a><a href="../pet-commerce.html#workflow">Trang hệ thống</a><a href="../integration/pet-commerce.html">Điểm tích hợp →</a></nav>
+  </main>
+  <footer class="footer"><div class="shell footer-inner"><span>WAGGY Pet Commerce · Workflow</span><span>ĐỀ XUẤT · Chi tiết tích hợp ở trang riêng.</span></div></footer>
+  <script src="../assets/waggy-product.js"></script>
+</body>
+</html>

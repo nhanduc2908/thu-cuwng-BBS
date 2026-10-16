@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Workflow WAGGY Pet Health: các bước nghiệp vụ, trạng thái, ngoại lệ và kiểm soát.">
+  <title>WAGGY Pet Health | Workflow chi tiết WAGGY</title>
+  <link rel="stylesheet" href="../assets/waggy-product.css">
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">W</span><span>WAGGY<small>WORKFLOW DETAIL</small></span></a>
+    <nav class="top-links" aria-label="Điều hướng"><a href="../index.html">Tổng quan</a><a href="index.html">8 workflow</a><a href="../integration/pet-health.html">Điểm tích hợp</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav>
+  </div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../../index.html">Cổng HTML</a><span>/</span><a href="../index.html">WAGGY Ecosystem</a><span>/</span><a href="index.html">Workflow</a><span>/</span><span>Pet Health</span></nav>
+    <section class="hero"><div class="hero-content"><span class="eyebrow">03 · ĐỀ XUẤT XÂY DỰNG</span><h1>WAGGY Pet Health <span>Workflow</span></h1><p>Quy trình đề xuất cho yêu cầu khám, điều phối cơ sở, consent, ghi nhận chuyên môn, kết quả xác thực và theo dõi.</p><div class="hero-meta"><span class="status proposed">ĐỀ XUẤT</span><span>Luồng nghiệp vụ chi tiết</span><span>Ngoại lệ &amp; kiểm soát</span></div></div></section>
+    <aside class="callout"><strong>Trạng thái hệ thống:</strong> Đây là workflow đề xuất, chưa phải tính năng đã triển khai độc lập trong WAGGY.</aside>
+    <section class="section" id="workflow"><div class="section-head"><div><span class="kicker">Workflow đề xuất</span><h2>Từ yêu cầu đến theo dõi chuyên môn</h2></div><p>Nội dung chẩn đoán/điều trị phải được lập và xác nhận bởi người có thẩm quyền chuyên môn.</p></div>
+      <ol class="steps">
+        <li><strong>Tạo yêu cầu sức khỏe</strong><p>Chủ nuôi chọn thú cưng và nhu cầu khám/tiêm/xét nghiệm/tái khám; mô tả dấu hiệu và thời điểm xuất hiện thay vì tự chẩn đoán.</p></li>
+        <li><strong>Sàng lọc tình huống khẩn cấp</strong><p>Hệ thống hiển thị dấu hiệu cần liên hệ cơ sở thú y ngay; tình huống nguy cấp không bị giữ lại trong hàng đợi đặt lịch thường.</p></li>
+        <li><strong>Chọn cơ sở và thời gian</strong><p>Điều phối theo chuyên khoa, vị trí, năng lực, thời gian và ngôn ngữ phù hợp; phòng khám xác nhận hoặc đề xuất lịch khác.</p></li>
+        <li><strong>Xin consent và xác định phạm vi</strong><p>Chủ nuôi chọn rõ dữ liệu nào, cho cơ sở nào, mục đích nào và trong thời hạn nào; consent có thể được xem lại/thu hồi.</p></li>
+        <li><strong>Chuẩn bị và tiếp nhận</strong><p>Gửi hướng dẫn trước lịch; phòng khám xác minh chủ sở hữu/thú cưng, thuốc/dị ứng và tài liệu được phép xem; ghi nhận tình trạng ban đầu.</p></li>
+        <li><strong>Khám và quyết định chuyên môn</strong><p>Bác sĩ thực hiện thăm khám, ghi nhận phát hiện, kết luận và kế hoạch; nền tảng chỉ cung cấp cấu trúc ghi nhận, không sinh/chốt chẩn đoán thay bác sĩ.</p></li>
+        <li><strong>Chỉ định xét nghiệm/điều trị</strong><p>Nếu cần, lập chỉ định có người duyệt, thời gian và trạng thái; với mẫu xét nghiệm ghi mã mẫu, người lấy, điều kiện bảo quản và từng điểm bàn giao.</p></li>
+        <li><strong>Xác thực kết quả và phát hành hồ sơ</strong><p>Phòng xét nghiệm/cơ sở xác nhận nguồn; bác sĩ ký hoặc xác thực kết quả và hướng dẫn; chủ nuôi nhận thông báo khi hồ sơ hoàn chỉnh.</p></li>
+        <li><strong>Lập lịch nhắc và tái khám</strong><p>Tạo nhắc vaccine/tái khám theo chỉ định; chủ nuôi xác nhận đã nhận thông tin và cập nhật tình trạng theo kênh an toàn.</p></li>
+        <li><strong>Đính chính và kết thúc đợt</strong><p>Đóng đợt khi bác sĩ/cơ sở xác nhận; thông tin đã ký không bị ghi đè mà được đính chính bằng phiên bản mới có lý do và liên kết bản gốc.</p></li>
+      </ol><div class="state-line"><b>Trạng thái đề xuất:</b><span>Yêu cầu mới</span><span>Đang điều phối</span><span>Đã đặt lịch</span><span>Đã tiếp nhận</span><span>Đang khám/xét nghiệm</span><span>Chờ xác thực</span><span>Đã phát hành</span><span>Theo dõi / đóng</span></div>
+    </section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Nhánh &amp; ngoại lệ</span><h2>Bảo vệ bệnh nhân và tính đúng hồ sơ</h2></div></div><div class="two-col">
+      <article class="panel"><h3>Cấp cứu</h3><p>Hiển thị hướng dẫn đi khám trực tiếp/liên hệ cơ sở phù hợp; không đưa khuyến nghị tự điều trị để thay việc đánh giá chuyên môn.</p></article>
+      <article class="panel"><h3>Sai định danh hoặc tranh chấp</h3><p>Đóng băng liên kết/phát hành, xác minh chủ sở hữu và nguồn; không để kết quả nhạy cảm xuất hiện trên hồ sơ sai.</p></article>
+      <article class="panel"><h3>Mẫu không đạt / kết quả chậm</h3><p>Phòng xét nghiệm ghi lý do và quyết định chuyên môn về lấy lại mẫu; trạng thái chờ được thông báo, không tự điền kết quả.</p></article>
+      <article class="panel"><h3>Thu hồi consent</h3><p>Dừng chia sẻ mới và thu hồi quyền truy cập khi có thể; giữ log và bản lưu bắt buộc theo chính sách/lawful basis áp dụng.</p></article>
+    </div></section>
+    <section class="section">
+      <div class="section-head"><div><span class="kicker">Đặc tả chuyên môn</span><h2>Chi tiết luồng tiếp nhận, khám và theo dõi</h2></div><p>Pet Health điều phối hồ sơ và quyền truy cập; bác sĩ/cơ sở chịu trách nhiệm mọi kết luận, chỉ định và chữ ký chuyên môn.</p></div>
+      <div class="facts">
+        <div class="fact"><b>Điều kiện trước xử lý</b><span>Đúng thú cưng/chủ nuôi; cơ sở và người hành nghề được xác minh; mục đích chia sẻ và consent còn hiệu lực; yêu cầu được phân loại thường hay khẩn cấp.</span></div>
+        <div class="fact"><b>Gói hồ sơ lâm sàng</b><span>Encounter ID, nguồn và thời điểm, người lập/duyệt, triệu chứng do chủ nuôi mô tả, khám, chỉ định, kết quả, tài liệu đính kèm, chữ ký/xác thực và phiên bản.</span></div>
+        <div class="fact"><b>Ranh giới quyền</b><span>Chủ nuôi xem/tải hồ sơ được phép; lễ tân điều phối lịch; bác sĩ ghi/xác thực chuyên môn; lab cập nhật kết quả của mẫu; kiểm soát dữ liệu quản lý truy cập/audit.</span></div>
+      </div>
+      <h3>Các cổng nghiệp vụ bắt buộc</h3>
+      <ol class="steps">
+        <li><strong>Tiếp nhận và sàng lọc mức độ khẩn</strong><p>Ghi dấu hiệu, thời điểm bắt đầu, thay đổi gần đây và thông tin liên hệ; không yêu cầu người dùng tự chọn chẩn đoán. Nếu mô tả cho thấy nguy cơ khẩn, hướng dẫn liên hệ/cấp cứu trực tiếp và đánh dấu đã chuyển hướng, không để yêu cầu nằm ở hàng đợi thường.</p></li>
+        <li><strong>Xác minh bệnh nhân và quyền đại diện</strong><p>Đối chiếu pet ID/đặc điểm định danh, chủ nuôi hoặc người được ủy quyền trước khi đính kèm hồ sơ. Sai khác làm yêu cầu tạm dừng; mọi bản ghi nhập từ ngoài phải kèm nguồn, ngày và người xác nhận.</p></li>
+        <li><strong>Điều phối cơ sở và xin consent cụ thể</strong><p>Chọn cơ sở theo chuyên khoa, năng lực, thời gian và khu vực. Consent nêu rõ trường dữ liệu, bên nhận, mục đích và thời hạn; xác nhận quyền xem trước khi gửi referral, cho phép thu hồi cho các lần chia sẻ tiếp theo.</p></li>
+        <li><strong>Đặt lịch và chuẩn bị lần khám</strong><p>Cơ sở xác nhận slot và hướng dẫn chuẩn bị; lễ tân tiếp nhận hồ sơ tối thiểu. Ghi người đặt, kênh liên hệ, trạng thái nhắc lịch, việc khách đã nhận hướng dẫn và lý do đổi/hủy.</p></li>
+        <li><strong>Khám và ghi encounter</strong><p>Bác sĩ ghi tiền sử đã xem, khám lâm sàng, nhận định, chẩn đoán, kế hoạch/chỉ định, thời điểm và người thực hiện vào encounter; nội dung đang nháp chưa được trình bày là kết quả cuối. Chủ nuôi xác nhận đã nhận giải thích/đồng ý các bước cần thiết theo quy trình cơ sở.</p></li>
+        <li><strong>Đặt xét nghiệm và theo dõi mẫu</strong><p>Chỉ định ghi loại xét nghiệm, mẫu, người lấy, thời điểm và điều kiện bảo quản; cấp mã specimen/accession, ghi từng lần bàn giao/nhận, trạng thái chấp nhận/từ chối và lý do. Kết quả lab gắn đúng mẫu và nguồn phát hành.</p></li>
+        <li><strong>Rà soát, xác thực và phát hành</strong><p>Bác sĩ/cơ sở đối chiếu kết quả, xác nhận phiên bản cuối và ký theo quy trình; hệ thống lưu ai tạo, ai duyệt, thời điểm và tài liệu nguồn. Chỉ hồ sơ đã phát hành mới được chia sẻ hoặc tạo nhắc theo chỉ định.</p></li>
+        <li><strong>Hướng dẫn sau khám và tái khám</strong><p>Tạo kế hoạch theo dõi, vaccine/tái khám cùng thời hạn, người chịu trách nhiệm và kênh nhắc; chủ nuôi có thể xác nhận, yêu cầu liên hệ hoặc báo dấu hiệu mới. Cảnh báo đến hạn không tự xem là đã thực hiện khám/tiêm.</p></li>
+        <li><strong>Đính chính và đóng đợt</strong><p>Đợt chỉ đóng theo xác nhận cơ sở; lỗi hồ sơ đã ký được sửa bằng bản đính chính liên kết bản cũ, người sửa, lý do và thông báo bên đã nhận. Không xóa/ghi đè dữ liệu chuyên môn đã phát hành.</p></li>
+      </ol>
+      <div class="two-col">
+        <article class="panel"><h3>Người bệnh không đến / hoãn điều trị</h3><p>Ghi no-show hoặc quyết định hoãn cùng người xác nhận và lý do; cập nhật lịch, thông báo khách và kế hoạch theo dõi. Không diễn giải vắng mặt thành đồng ý hoặc hoàn tất.</p></article>
+        <article class="panel"><h3>Thiếu mẫu, kết quả bất thường hoặc tranh chấp</h3><p>Giữ trạng thái chờ xác minh; lab/cơ sở nêu rõ bước tiếp theo. Điều phối liên hệ người có chuyên môn, khóa chia sẻ bản nghi sai và duy trì audit cho tới khi xử lý xong.</p></article>
+      </div>
+      <div class="callout"><strong>Không tự động chẩn đoán/điều trị:</strong> phần mềm không suy ra kết luận từ triệu chứng, không tự thay đổi thuốc/chỉ định và không chuyển cảnh báo tự động thành hồ sơ lâm sàng đã xác nhận.</div>
+    </section>
+    <nav class="page-nav" aria-label="Điều hướng workflow"><a href="index.html">← Danh mục 8 workflow</a><a href="../pet-health.html#workflow">Trang hệ thống</a><a href="../integration/pet-health.html">Điểm tích hợp →</a></nav>
+  </main>
+  <footer class="footer"><div class="shell footer-inner"><span>WAGGY Pet Health · Workflow</span><span>ĐỀ XUẤT · Chi tiết tích hợp ở trang riêng.</span></div></footer>
+  <script src="../assets/waggy-product.js"></script>
+</body>
+</html>

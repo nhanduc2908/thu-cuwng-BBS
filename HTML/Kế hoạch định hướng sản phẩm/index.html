@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10241d">
+  <meta name="description" content="Định hướng hệ sinh thái WAGGY: một hệ thống Pet Care hiện có và bảy hệ thống đề xuất, cùng workflow liên kết và thứ tự ưu tiên triển khai.">
+  <title>WAGGY Ecosystem | Kế hoạch định hướng sản phẩm</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f3f6f2;
+      --surface: #fff;
+      --surface-soft: #f8faf7;
+      --ink: #14271f;
+      --muted: #64746b;
+      --line: #dfe8e1;
+      --green: #176747;
+      --green-dark: #102c22;
+      --mint: #d9f18c;
+      --gold: #e9bd64;
+      --blue: #dceefa;
+      --blue-ink: #275978;
+      --shadow: 0 12px 36px rgba(15, 45, 32, .08);
+      --radius: 20px;
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0c1712;
+      --surface: #14231b;
+      --surface-soft: #192a21;
+      --ink: #e8f1eb;
+      --muted: #a0b0a6;
+      --line: #2a3e32;
+      --green: #74d5a4;
+      --green-dark: #102c22;
+      --mint: #d9f18c;
+      --gold: #e9bd64;
+      --blue: #1d3441;
+      --blue-ink: #a8d5ed;
+      --shadow: 0 12px 36px rgba(0, 0, 0, .22);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 12% 0%, rgba(217, 241, 140, .16), transparent 34rem),
+        var(--bg);
+      color: var(--ink);
+      font: 15px/1.65 "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { color: inherit; font: inherit; }
+    .shell { width: min(1160px, calc(100% - 40px)); margin: auto; }
+    .topbar {
+      position: sticky; top: 0; z-index: 10;
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 84%, transparent);
+      background: color-mix(in srgb, var(--surface) 88%, transparent);
+      backdrop-filter: blur(16px);
+    }
+    .topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 66px; }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 900; letter-spacing: -.03em; }
+    .brand-mark {
+      display: grid; place-items: center; width: 38px; height: 38px;
+      border-radius: 13px 13px 13px 5px; background: linear-gradient(140deg, #103126, #258259);
+      color: var(--mint); font-size: 18px;
+    }
+    .brand small { display: block; color: var(--muted); font-size: 10px; font-weight: 750; letter-spacing: .12em; }
+    .top-actions { display: flex; align-items: center; gap: 8px; }
+    .top-actions a, .icon-button {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 38px;
+      padding: 0 13px; border: 1px solid var(--line); border-radius: 999px;
+      background: var(--surface); font-size: 12px; font-weight: 800;
+    }
+    .top-actions a:hover, .icon-button:hover { border-color: var(--green); color: var(--green); }
+    .hero {
+      position: relative; overflow: hidden; margin: 28px auto 20px; padding: clamp(28px, 6vw, 68px);
+      border-radius: 30px; color: #f5faf6;
+      background:
+        radial-gradient(circle at 85% 8%, rgba(217, 241, 140, .22), transparent 19rem),
+        linear-gradient(125deg, #10261d, #164b36 70%, #1b6445);
+      box-shadow: var(--shadow);
+    }
+    .hero::after {
+      content: ""; position: absolute; right: -100px; bottom: -240px; width: 420px; height: 420px;
+      border: 1px solid rgba(255,255,255,.16); border-radius: 50%;
+      box-shadow: 0 0 0 36px rgba(255,255,255,.025), 0 0 0 74px rgba(255,255,255,.02);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 830px; }
+    .eyebrow, .status {
+      display: inline-flex; align-items: center; gap: 7px; padding: 6px 11px;
+      border: 1px solid rgba(217,241,140,.3); border-radius: 999px;
+      color: var(--mint); background: rgba(217,241,140,.09);
+      font-size: 10px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase;
+    }
+    h1 { margin: 17px 0 12px; font-size: clamp(38px, 7vw, 72px); line-height: .99; letter-spacing: -.065em; }
+    h1 span { color: var(--mint); }
+    .hero p { max-width: 720px; margin: 0; color: #d7e8dc; font-size: clamp(15px, 2vw, 18px); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .hero-actions a { padding: 11px 16px; border-radius: 999px; background: var(--mint); color: #12261d; font-weight: 850; font-size: 13px; }
+    .hero-actions a.secondary { border: 1px solid rgba(255,255,255,.26); background: rgba(255,255,255,.08); color: white; }
+    .truth-banner {
+      display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;
+      margin: 20px auto 36px; padding: 18px 20px; border: 1px solid #c5ddca;
+      border-radius: 16px; background: color-mix(in srgb, var(--surface) 88%, #e6f5e9);
+    }
+    .truth-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; background: #e3f3d9; color: #246a42; font-weight: 950; }
+    html[data-theme="dark"] .truth-icon { background: #263b2a; color: var(--mint); }
+    .truth-banner strong { display: block; margin-bottom: 2px; }
+    .truth-banner p { margin: 0; color: var(--muted); font-size: 13px; }
+    .section { margin: 48px auto; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 18px; padding-bottom: 13px; border-bottom: 1px solid var(--line); }
+    .kicker { color: var(--green); font-size: 10px; font-weight: 950; letter-spacing: .15em; text-transform: uppercase; }
+    h2 { margin: 3px 0 0; font-size: clamp(25px, 4vw, 36px); line-height: 1.15; letter-spacing: -.045em; }
+    .section-head p { max-width: 410px; margin: 0; color: var(--muted); font-size: 13px; }
+    .system-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .system-card {
+      position: relative; overflow: hidden; padding: 21px; border: 1px solid var(--line);
+      border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow);
+      transition: transform .2s ease, border-color .2s ease;
+    }
+    .system-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--green) 45%, var(--line)); }
+    .system-card.current { border-color: color-mix(in srgb, var(--green) 45%, var(--line)); }
+    .system-card.current::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: linear-gradient(var(--green), var(--mint)); }
+    .system-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .system-number { color: var(--muted); font: 800 11px/1.3 ui-monospace, Consolas, monospace; }
+    .system-card h3 { margin: 8px 0 5px; font-size: 21px; letter-spacing: -.035em; line-height: 1.2; }
+    .system-card p { margin: 0; color: var(--muted); font-size: 13px; }
+    .system-card .status { flex: none; border-color: #b8d9c1; background: #edf8ef; color: #21663e; letter-spacing: .04em; }
+    html[data-theme="dark"] .system-card .status { border-color: #34563c; background: #1d3425; color: #a7e4b2; }
+    .system-card.proposed .status { border-color: #c8dce9; background: var(--blue); color: var(--blue-ink); }
+    .system-flow { margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line); }
+    .system-flow b { display: block; margin-bottom: 4px; font-size: 11px; }
+    .system-flow span { color: var(--muted); font-size: 12px; }
+    .current-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; color: var(--green); font-size: 12px; font-weight: 900; }
+    .current-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .workflow-jump { display: inline-flex; align-items: center; gap: 6px; margin: 12px 0 0 12px; color: var(--muted); font-size: 11px; font-weight: 850; }
+    .workflow-jump:hover { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }
+    .workflow-list { display: grid; gap: 12px; }
+    .workflow-detail { overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); }
+    .workflow-detail[open] { border-color: color-mix(in srgb, var(--green) 40%, var(--line)); }
+    .workflow-detail > summary { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto 20px; gap: 12px; align-items: center; padding: 17px 19px; cursor: pointer; list-style: none; }
+    .workflow-detail > summary::-webkit-details-marker { display: none; }
+    .workflow-detail > summary::after { content: "+"; color: var(--green); font-size: 22px; font-weight: 700; text-align: center; }
+    .workflow-detail[open] > summary::after { content: "−"; }
+    .workflow-detail > summary:focus-visible { outline: 3px solid var(--green); outline-offset: -3px; border-radius: 16px; }
+    .workflow-index { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 13px; background: var(--green-dark); color: var(--mint); font: 900 12px ui-monospace, Consolas, monospace; }
+    .workflow-title { min-width: 0; }
+    .workflow-title strong { display: block; font-size: 16px; letter-spacing: -.02em; }
+    .workflow-title small { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; }
+    .workflow-detail .status { border-color: #c8dce9; background: var(--blue); color: var(--blue-ink); letter-spacing: .04em; }
+    .workflow-detail.current-workflow .status { border-color: #b8d9c1; background: #edf8ef; color: #21663e; }
+    html[data-theme="dark"] .workflow-detail.current-workflow .status { border-color: #34563c; background: #1d3425; color: #a7e4b2; }
+    .workflow-body { padding: 0 20px 22px; border-top: 1px solid var(--line); }
+    .workflow-intro { margin: 16px 0; color: var(--muted); font-size: 13px; }
+    .workflow-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; margin: 14px 0 20px; }
+    .workflow-fact { padding: 12px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface-soft); }
+    .workflow-fact b { display: block; margin-bottom: 3px; color: var(--green); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+    .workflow-fact span { display: block; color: var(--muted); font-size: 12px; }
+    .workflow-body h4 { margin: 18px 0 9px; font-size: 14px; }
+    .workflow-steps { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; counter-reset: wf-step; }
+    .workflow-steps li { position: relative; min-height: 54px; padding: 10px 12px 10px 48px; border: 1px solid var(--line); border-radius: 13px; counter-increment: wf-step; }
+    .workflow-steps li::before { content: counter(wf-step, decimal-leading-zero); position: absolute; top: 11px; left: 12px; color: var(--green); font: 900 11px ui-monospace, Consolas, monospace; }
+    .workflow-steps strong { display: block; font-size: 12px; }
+    .workflow-steps p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    .workflow-states { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 12px 0 17px; }
+    .workflow-states b { margin-right: 3px; font-size: 11px; }
+    .workflow-states span { padding: 4px 8px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-soft); color: var(--muted); font-size: 10px; font-weight: 750; }
+    .workflow-guards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+    .workflow-guard { padding: 12px; border-radius: 12px; background: var(--surface-soft); }
+    .workflow-guard strong { display: block; margin-bottom: 3px; font-size: 11px; }
+    .workflow-guard p { margin: 0; color: var(--muted); font-size: 12px; }
+    .workflow-exceptions { margin-top: 10px; padding: 12px 14px; border-left: 3px solid var(--gold); border-radius: 0 12px 12px 0; background: color-mix(in srgb, var(--surface) 88%, #fff1cf); }
+    .workflow-exceptions strong { display: block; margin-bottom: 3px; font-size: 11px; }
+    .workflow-exceptions p { margin: 0; color: var(--muted); font-size: 12px; }
+    .workflow-output { margin-top: 10px; padding: 12px 14px; border-radius: 12px; background: color-mix(in srgb, var(--surface) 88%, #e7f5e9); }
+    .workflow-output strong { font-size: 11px; }
+    .workflow-output p { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+    .flow-track { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .flow-step {
+      position: relative; min-height: 140px; padding: 16px; border: 1px solid var(--line);
+      border-radius: 16px; background: var(--surface);
+    }
+    .flow-step:not(:last-child)::after { content: "→"; position: absolute; right: -15px; top: 18px; z-index: 1; color: var(--green); font-weight: 950; }
+    .step-no { color: var(--green); font: 900 11px ui-monospace, Consolas, monospace; }
+    .flow-step h3 { margin: 7px 0 4px; font-size: 15px; }
+    .flow-step p { margin: 0; color: var(--muted); font-size: 12px; }
+    .swimlane { overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
+    .lane { display: grid; grid-template-columns: 180px 1fr; border-bottom: 1px solid var(--line); }
+    .lane:last-child { border-bottom: 0; }
+    .lane-label { padding: 15px 17px; background: var(--surface-soft); font-size: 12px; font-weight: 900; }
+    .lane-content { padding: 14px 17px; color: var(--muted); font-size: 13px; }
+    .lane-content strong { color: var(--ink); }
+    .priority-list { display: grid; gap: 10px; }
+    .priority-row {
+      display: grid; grid-template-columns: 46px minmax(150px, .8fr) 1.6fr auto; gap: 14px;
+      align-items: center; padding: 13px 16px; border: 1px solid var(--line);
+      border-radius: 15px; background: var(--surface);
+    }
+    .priority-number { display: grid; place-items: center; width: 35px; height: 35px; border-radius: 12px; background: var(--green-dark); color: var(--mint); font-weight: 950; }
+    .priority-row strong { font-size: 14px; }
+    .priority-row p { margin: 0; color: var(--muted); font-size: 12px; }
+    .priority-stage { color: var(--green); font-size: 10px; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }
+    .principles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .principle { padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+    .principle .icon { font-size: 19px; }
+    .principle h3 { margin: 8px 0 4px; font-size: 14px; }
+    .principle p { margin: 0; color: var(--muted); font-size: 12px; }
+    .callout { margin-top: 15px; padding: 15px 18px; border-left: 4px solid var(--gold); border-radius: 0 12px 12px 0; background: color-mix(in srgb, var(--surface) 90%, #fff1cf); color: var(--muted); font-size: 13px; }
+    .footer { margin-top: 56px; padding: 24px 0 36px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .to-top { position: fixed; right: 18px; bottom: 18px; z-index: 9; display: none; padding: 10px 14px; border-radius: 999px; background: var(--green-dark); color: var(--mint); font-weight: 900; box-shadow: var(--shadow); }
+    .to-top.visible { display: block; }
+    @media (max-width: 780px) {
+      .flow-track { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .flow-step:nth-child(2)::after { display: none; }
+      .priority-row { grid-template-columns: 42px 1fr auto; }
+      .priority-row p { grid-column: 2 / -1; }
+      .principles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 560px) {
+      .shell { width: min(100% - 28px, 1160px); }
+      .topbar-inner { min-height: 58px; }
+      .top-actions a { display: none; }
+      .hero { margin-top: 16px; border-radius: 22px; }
+      .section { margin: 38px auto; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 8px; }
+      .system-grid, .principles, .flow-track { grid-template-columns: 1fr; }
+      .workflow-detail > summary { grid-template-columns: 38px minmax(0, 1fr) 18px; gap: 9px; padding: 14px; }
+      .workflow-detail > summary .status { grid-column: 2; grid-row: 2; justify-self: start; }
+      .workflow-detail > summary::after { grid-column: 3; grid-row: 1 / span 2; }
+      .workflow-facts, .workflow-guards { grid-template-columns: 1fr; }
+      .workflow-body { padding-right: 14px; padding-left: 14px; }
+      .flow-step { min-height: unset; }
+      .flow-step:not(:last-child)::after { content: "↓"; display: block; right: 16px; top: auto; bottom: -17px; }
+      .lane { grid-template-columns: 1fr; }
+      .lane-label { padding-bottom: 5px; }
+      .lane-content { padding-top: 5px; }
+      .priority-row { grid-template-columns: 40px 1fr; gap: 9px 12px; }
+      .priority-stage { grid-column: 2; }
+      .priority-row p { grid-column: 2; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+    @media print {
+      :root { color-scheme: light; --bg: #fff; --surface: #fff; --surface-soft: #f5f7f5; --ink: #111; --muted: #444; --line: #ccc; }
+      .topbar, .hero-actions, .to-top { display: none !important; }
+      .hero { margin: 0 0 18px; padding: 25px; print-color-adjust: exact; }
+      .system-card, .flow-step, .priority-row, .principle { break-inside: avoid; box-shadow: none; }
+      .workflow-detail { break-inside: avoid; box-shadow: none; }
+      .workflow-detail:not([open]) > .workflow-body { display: block !important; }
+      .workflow-detail > summary::after { display: none; }
+      .section { margin: 25px auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <a class="brand" href="../index.html" aria-label="Quay về cổng HTML PetCare">
+        <span class="brand-mark">W</span>
+        <span>WAGGY <small>PRODUCT DIRECTION</small></span>
+      </a>
+      <nav class="top-actions" aria-label="Điều hướng trang">
+        <a href="#ecosystem">Hệ sinh thái</a>
+        <a href="workflow/index.html">Thư mục workflow</a>
+        <a href="integration/index.html">Thư mục tích hợp</a>
+        <a href="#interface-direction">Định hướng giao diện</a>
+        <a href="data/connection-map.html">Quản trị dữ liệu</a>
+        <a href="#full-workflows">8 workflow</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#roadmap">Thứ tự ưu tiên</a>
+        <button class="icon-button" id="themeToggle" type="button" aria-label="Đổi giao diện sáng tối" title="Đổi giao diện">◐</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-content">
+        <span class="eyebrow">ĐỊNH HƯỚNG SẢN PHẨM · BẢN ĐỀ XUẤT</span>
+        <h1>WAGGY <span>Ecosystem</span></h1>
+        <p>
+          Từ hệ thống Pet Care đang có đến một hệ sinh thái dịch vụ cho thú cưng:
+          quản lý vận hành, chăm sóc, sức khỏe, thương mại và kết nối cộng đồng —
+          phát triển theo từng giai đoạn, không đánh đồng ý tưởng với sản phẩm đã triển khai.
+        </p>
+        <div class="hero-actions">
+          <a href="#ecosystem">Khám phá 8 hệ thống</a>
+          <a class="secondary" href="#full-workflows">Đọc đủ 8 workflow</a>
+          <a class="secondary" href="workflow/index.html">Mở thư mục workflow</a>
+          <a class="secondary" href="integration/index.html">Mở thư mục tích hợp</a>
+          <a class="secondary" href="#interface-direction">Nâng cấp giao diện 8 hệ thống</a>
+          <a class="secondary" href="data/connection-map.html">Mở bản đồ dữ liệu</a>
+          <a class="secondary" href="#roadmap">Xem lộ trình đề xuất</a>
+        </div>
+      </div>
+    </section>
+
+    <aside class="truth-banner" aria-label="Tình trạng triển khai hiện tại">
+      <span class="truth-icon" aria-hidden="true">i</span>
+      <div>
+        <strong>Trạng thái hiện tại: WAGGY có hệ thống Pet Care.</strong>
+        <p>
+          Pet Service, Pet Health, Pet Commerce, Pet Business, Pet Community,
+          Pet Connect và Pet Intelligence là các hệ thống đề xuất xây dựng —
+          chưa được xem là sản phẩm WAGGY đã triển khai độc lập. Một số nghiệp vụ
+          có thể xuất hiện trong Pet Care hiện tại nhưng không làm thay đổi trạng thái này.
+        </p>
+      </div>
+    </aside>
+
+    <section class="section" id="ecosystem">
+      <div class="section-head">
+        <div><span class="kicker">01 / Danh mục hệ thống</span><h2>1 hiện có · 7 đề xuất</h2></div>
+        <p>Mỗi hệ thống có phạm vi riêng; trạng thái được ghi rõ để tránh hiểu nhầm giữa năng lực hiện tại và định hướng tương lai.</p>
+      </div>
+      <div class="system-grid">
+        <article class="system-card current">
+          <div class="system-top"><span class="system-number">01 · NỀN TẢNG ĐANG CÓ</span><span class="status">ĐANG CÓ</span></div>
+          <h3>WAGGY Pet Care</h3>
+          <p>Hệ thống đầu tiên của WAGGY: hồ sơ thú cưng, thông tin chủ nuôi, lịch chăm sóc và theo dõi quá trình phát triển.</p>
+          <div class="system-flow"><b>Vai trò trong hệ sinh thái</b><span>Điểm khởi đầu cho hồ sơ và lịch sử chăm sóc; các kết nối tương lai chỉ thực hiện khi có quy tắc chia sẻ dữ liệu và sự đồng ý phù hợp.</span></div>
+          <a class="current-link" href="../TRrang chính/petcare_system.html">Mở trang Pet Care hiện tại <span aria-hidden="true">↗</span></a>
+          <a class="workflow-jump" href="pet-care.html">Mở trang workflow riêng →</a>
+        </article>
+        <article class="system-card proposed">
+          <div class="system-top"><span class="system-number">02 · ĐỀ XUẤT XÂY DỰNG</span><span class="status">ĐỀ XUẤT</span></div>
+          <h3>WAGGY Pet Service</h3>
+          <p>Đặt lịch spa, tắm, cắt tỉa, khách sạn và dịch vụ chăm sóc.</p>
+          <div class="system-flow"><b>Workflow đề xuất</b><span>Chọn thú cưng &amp; dịch vụ → chọn cơ sở/khung giờ → xác nhận giá và điều kiện → đặt lịch → tiếp nhận → thực hiện → bàn giao và đánh giá.</span></div>
+          <a class="workflow-jump" href="pet-service.html">Mở trang workflow riêng →</a>
+        </article>
+        <article class="system-card proposed">
+          <div class="system-top"><span class="system-number">03 · ĐỀ XUẤT XÂY DỰNG</span><span class="status">ĐỀ XUẤT</span></div>
+          <h3>WAGGY Pet Health</h3>
+          <p>Hồ sơ khám chữa bệnh, tiêm phòng, xét nghiệm và kết nối phòng khám.</p>
+          <div class="system-flow"><b>Workflow đề xuất</b><span>Chủ nuôi đồng ý chia sẻ → tiếp nhận yêu cầu → phòng khám xác nhận → khám/xét nghiệm → chuyên môn ghi hồ sơ → lịch tiêm/tái khám và theo dõi sau điều trị.</span></div>
+          <a class="workflow-jump" href="pet-health.html">Mở trang workflow riêng →</a>
+        </article>
+        <article class="system-card proposed">
+          <div class="system-top"><span class="system-number">04 · ĐỀ XUẤT XÂY DỰNG</span><span class="status">ĐỀ XUẤT</span></div>
+          <h3>WAGGY Pet Commerce</h3>
+          <p>Mua bán thức ăn, phụ kiện, sản phẩm chăm sóc và quản lý đơn hàng.</p>
+          <div class="system-flow"><b>Workflow đề xuất</b><span>Khám phá catalog → kiểm tra giá/tồn → giỏ hàng → đặt và thanh toán → xác nhận → lấy/đóng gói/giao → đổi trả và hỗ trợ.</span></div>
+          <a class="workflow-jump" href="pet-commerce.html">Mở trang workflow riêng →</a>
+        </article>
+        <article class="system-card proposed">
+          <div class="system-top"><span class="system-number">05 · ĐỀ XUẤT XÂY DỰNG</span><span class="status">ĐỀ XUẤT</span></div>
+          <h3>WAGGY Pet Business</h3>
+          <p>Quản lý cửa hàng, chuỗi chi nhánh, kho, nhân viên, khách hàng và doanh thu.</p>
+          <div class="system-flow"><b>Workflow đề xuất</b><span>Thiết lập tổ chức &amp; chi nhánh → phân quyền → nhập hàng và quản lý tồn → bán hàng/dịch vụ → đối soát → báo cáo và kiểm soát vận hành.</span></div>
+          <a class="workflow-jump" href="pet-business.html">Mở trang workflow riêng →</a>
+        </article>
+        <article class="system-card proposed">
+          <div class="system-top"><span class="system-number">06 · ĐỀ XUẤT XÂY DỰNG</span><span class="status">ĐỀ XUẤT</span></div>
+          <h3>WAGGY Pet Community</h3>
+          <p>Cộng đồng chủ nuôi, chia sẻ kinh nghiệm, sự kiện và hoạt động thú cưng.</p>
+          <div class="system-flow"><b>Workflow đề xuất</b><span>Tạo hồ sơ cộng đồng → đăng nội dung → kiểm duyệt/an toàn → tương tác → đăng ký sự kiện → báo cáo vi phạm và xử lý bởi điều phối viên.</span></div>
+          <a class="workflow-jump" href="pet-community.html">Mở trang workflow riêng →</a>
+        </article>
+        <article class="system-card proposed">
+          <div class="system-top"><span class="system-number">07 · ĐỀ XUẤT XÂY DỰNG</span><span class="status">ĐỀ XUẤT</span></div>
+          <h3>WAGGY Pet Connect</h3>
+          <p>Tìm thú cưng thất lạc, kết nối nhận nuôi và các tổ chức cứu hộ.</p>
+          <div class="system-flow"><b>Workflow đề xuất</b><span>Báo mất/tìm thấy hoặc đăng hồ sơ nhận nuôi → xác minh → ghép kết quả/kết nối cứu hộ → liên hệ an toàn → bàn giao có xác nhận → đóng hồ sơ.</span></div>
+          <a class="workflow-jump" href="pet-connect.html">Mở trang workflow riêng →</a>
+        </article>
+        <article class="system-card proposed">
+          <div class="system-top"><span class="system-number">08 · ĐỀ XUẤT XÂY DỰNG</span><span class="status">ĐỀ XUẤT</span></div>
+          <h3>WAGGY Pet Intelligence</h3>
+          <p>AI, phân tích dữ liệu, gợi ý chăm sóc và hỗ trợ quyết định kinh doanh.</p>
+          <div class="system-flow"><b>Workflow đề xuất</b><span>Thu thập dữ liệu được phép → kiểm tra chất lượng → phân tích → đưa gợi ý có giải thích → con người xem xét → đo kết quả và cải thiện.</span></div>
+          <a class="workflow-jump" href="pet-intelligence.html">Mở trang workflow riêng →</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="interface-direction">
+      <div class="section-head">
+        <div><span class="kicker">Định hướng thiết kế sản phẩm</span><h2>Giao diện chung một ngôn ngữ, mỗi hệ một trọng tâm</h2></div>
+        <p>Ưu tiên nâng cấp trải nghiệm thao tác thực tế, khả năng dùng trên mobile, trạng thái dữ liệu và tính an toàn; không chỉ thay màu hoặc trang trí.</p>
+      </div>
+      <div class="callout"><strong>Nguyên tắc:</strong> dùng chung app shell, design tokens, điều hướng, component và tiêu chuẩn accessibility; tùy biến dashboard, bảng, biểu mẫu và workflow theo nhiệm vụ của từng hệ thống. Các giao diện demo là concept/baseline cho đến khi được người dùng và chủ nghiệp vụ nghiệm thu.</div>
+      <div class="system-grid">
+        <article class="system-card current"><div class="system-top"><span class="system-number">01 · HỒ SƠ &amp; CHĂM SÓC</span><span class="status">ĐANG CÓ · NÂNG CẤP</span></div><h3>Pet Care</h3><p>Ưu tiên hồ sơ thú cưng, timeline, tìm kiếm nhanh, lịch/task và thao tác mobile cho nhân viên.</p><a class="workflow-jump" href="workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Care/index.html">Xem baseline giao diện →</a></article>
+        <article class="system-card proposed"><div class="system-top"><span class="system-number">02 · LỊCH &amp; THỰC HIỆN</span><span class="status proposed">CONCEPT</span></div><h3>Pet Service</h3><p>Lịch năng lực theo cơ sở/nhân viên, booking từng bước, check-in, timeline và bàn giao.</p><a class="workflow-jump" href="workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Service/index.html">Xem concept giao diện →</a></article>
+        <article class="system-card proposed"><div class="system-top"><span class="system-number">03 · AN TOÀN CHUYÊN MÔN</span><span class="status proposed">CONCEPT</span></div><h3>Pet Health</h3><p>Hàng đợi chuyên môn, hồ sơ theo timeline, consent, kết quả xét nghiệm và đính chính có audit.</p><a class="workflow-jump" href="workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Health/index.html">Xem concept giao diện →</a></article>
+        <article class="system-card proposed"><div class="system-top"><span class="system-number">04 · CATALOG &amp; ĐƠN HÀNG</span><span class="status proposed">CONCEPT</span></div><h3>Pet Commerce</h3><p>Catalog dễ tìm, giá/tồn minh bạch, checkout an toàn, timeline đơn và quy trình đổi trả.</p><a class="workflow-jump" href="workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Commerce/index.html">Xem concept giao diện →</a></article>
+        <article class="system-card proposed"><div class="system-top"><span class="system-number">05 · VẬN HÀNH CHUỖI</span><span class="status proposed">CONCEPT</span></div><h3>Pet Business</h3><p>Control tower theo phạm vi cơ sở, tồn kho có drill-down, maker-checker và đối soát ngoại lệ.</p><a class="workflow-jump" href="workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Business/index.html">Xem concept giao diện →</a></article>
+        <article class="system-card proposed"><div class="system-top"><span class="system-number">06 · CỘNG ĐỒNG AN TOÀN</span><span class="status proposed">CONCEPT</span></div><h3>Pet Community</h3><p>Feed dễ đọc, moderation có ngữ cảnh, giải thích quyết định, appeal và bảo vệ thành viên.</p><a class="workflow-jump" href="workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Community/index.html">Xem concept giao diện →</a></article>
+        <article class="system-card proposed"><div class="system-top"><span class="system-number">07 · CASE &amp; CỨU HỘ</span><span class="status proposed">CONCEPT</span></div><h3>Pet Connect</h3><p>Case thất lạc có timeline, bản đồ theo quyền, vị trí được giảm chính xác và bàn giao an toàn.</p><a class="workflow-jump" href="workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Connect/index.html">Xem concept giao diện →</a></article>
+        <article class="system-card proposed"><div class="system-top"><span class="system-number">08 · DATA GOVERNANCE</span><span class="status proposed">CONCEPT</span></div><h3>Pet Intelligence</h3><p>Lineage dễ truy vết, model card, chất lượng/drift, phê duyệt con người và rollback.</p><a class="workflow-jump" href="workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Intelligence/index.html">Xem concept giao diện →</a></article>
+      </div>
+      <div class="callout"><strong>Chi tiết thiết kế, yêu cầu riêng từng hệ thống và tiêu chí nghiệm thu:</strong> <a href="UI-UX-UPGRADE-PLAN.md"><strong>Mở định hướng thiết kế &amp; nâng cấp UI/UX →</strong></a></div>
+    </section>
+
+    <section class="section" id="data-governance">
+      <div class="section-head">
+        <div><span class="kicker">Bộ công cụ · Quản trị dữ liệu</span><h2>Kiểm soát dữ liệu từ bảng đến luồng</h2></div>
+        <p>Bộ công cụ demo để nhân viên và quản lý xem kết nối, quyền thao tác và trạng thái đồng bộ. Dữ liệu vẫn là giả lập trên trình duyệt.</p>
+      </div>
+      <div class="system-grid">
+        <article class="system-card current">
+          <div class="system-top"><span class="system-number">DATA MAP · 14 BẢNG</span><span class="status">SƠ ĐỒ</span></div>
+          <h3>Sơ đồ kết nối từng bảng</h3>
+          <p>Xem bảng trung tâm, khóa tham chiếu, hệ nhận projection và kiểm tra toàn vẹn cho từng bảng.</p>
+          <a class="current-link" href="data/connection-map.html">Mở sơ đồ tư duy →</a>
+        </article>
+        <article class="system-card">
+          <div class="system-top"><span class="system-number">ACCESS · RBAC DEMO</span><span class="status proposed">MÔ PHỎNG</span></div>
+          <h3>Kiểm tra quyền bản ghi</h3>
+          <p>Thử quyền xem/thêm/sửa/xóa mềm theo vai trò, hệ sở hữu và phạm vi cửa hàng.</p>
+          <a class="current-link" href="data/record-access.html">Mở kiểm tra quyền →</a>
+        </article>
+        <article class="system-card">
+          <div class="system-top"><span class="system-number">FLOW · 8 HỆ THỐNG</span><span class="status proposed">MÔ PHỎNG</span></div>
+          <h3>Theo dõi luồng dữ liệu</h3>
+          <p>Lọc tuyến chia sẻ theo hệ thống/cơ sở, xem hàng đợi sự kiện và audit lưu cục bộ.</p>
+          <a class="current-link" href="data/flow-control.html">Mở mini-map vận hành →</a>
+        </article>
+        <article class="system-card">
+          <div class="system-top"><span class="system-number">ROADMAP · TRIỂN KHAI</span><span class="status proposed">ĐỀ XUẤT</span></div>
+          <h3>Lộ trình nâng cấp hệ thống</h3>
+          <p>Đọc các giai đoạn chuyển từ prototype sang backend có xác thực, phân quyền, API, đồng bộ và giám sát.</p>
+          <a class="current-link" href="UPGRADE-PLAN.md">Mở phương án nâng cấp →</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="full-workflows">
+      <div class="section-head">
+        <div><span class="kicker">02 / Đặc tả nghiệp vụ</span><h2>Tổng hợp 8 workflow</h2></div>
+        <p>Mỗi hệ thống có một trang riêng trình bày quy trình, ngoại lệ, hướng tích hợp và lộ trình phát triển. Có thể mở trực tiếp từ thẻ tương ứng; các luồng dưới đây là bản đọc nhanh trên cùng trang.</p>
+      </div>
+      <div class="callout"><strong>Điều hướng theo tài liệu:</strong> dùng <a href="workflow/index.html"><strong>Thư mục workflow</strong></a> để xem các quy trình theo hệ thống; dùng <a href="integration/index.html"><strong>Thư mục tích hợp</strong></a> để xem bản đồ điểm kết nối, chiều dữ liệu và hợp đồng trao đổi.</div>
+      <div class="workflow-list">
+        <details class="workflow-detail current-workflow" id="workflow-pet-care" open>
+          <summary>
+            <span class="workflow-index">01</span>
+            <span class="workflow-title"><strong>WAGGY Pet Care</strong><small>Tiếp nhận chủ nuôi → lập hồ sơ thú cưng → ghi nhận và theo dõi chăm sóc</small></span>
+            <span class="status">ĐANG CÓ</span>
+          </summary>
+          <div class="workflow-body">
+            <p class="workflow-intro">Luồng nền tảng hiện có để quản lý hồ sơ và các hoạt động chăm sóc. Các nhánh dịch vụ, sức khỏe, bán hàng và báo cáo phụ thuộc phân hệ, quyền tài khoản và cấu hình đang bật; đây không phải cam kết rằng mọi kết nối của hệ sinh thái tương lai đã được tích hợp.</p>
+            <div class="workflow-facts">
+              <div class="workflow-fact"><b>Kích hoạt</b><span>Chủ nuôi cần được ghi nhận, thú cưng mới tiếp nhận hoặc đến hạn một hoạt động theo dõi.</span></div>
+              <div class="workflow-fact"><b>Vai trò</b><span>Nhân viên tiếp nhận/bán hàng, quản lý, nhân viên chăm sóc và người có quyền chuyên môn theo nghiệp vụ.</span></div>
+              <div class="workflow-fact"><b>Điều kiện đầu vào</b><span>Đăng nhập hợp lệ; thông tin được thu thập đúng mục đích; phân quyền cho phép thao tác tương ứng.</span></div>
+            </div>
+            <h4>Luồng chính</h4>
+            <ol class="workflow-steps">
+              <li><strong>Khởi chạy và xác thực</strong><p>Mở Pet Care trên desktop hoặc mobile, kết nối nguồn dữ liệu, đăng nhập; đổi mật khẩu tạm nếu được yêu cầu.</p></li>
+              <li><strong>Kiểm tra quyền và vào phân hệ</strong><p>Hệ thống hiển thị khu vực phù hợp với vai trò. Người dùng không có quyền chỉ được xem phần được cấp; thao tác ghi vẫn phải qua kiểm tra quyền ở máy chủ/cơ sở dữ liệu.</p></li>
+              <li><strong>Tìm hoặc tạo hồ sơ chủ nuôi</strong><p>Tra cứu theo mã, tên hoặc thông tin liên hệ; đối chiếu hồ sơ trùng trước khi tạo mới; cập nhật thông tin và ghi chú cần thiết.</p></li>
+              <li><strong>Tạo hoặc chọn hồ sơ thú cưng</strong><p>Liên kết thú cưng đúng chủ nuôi; ghi mã nhận diện, tên, loài, giống, giới tính và thông tin cần thiết; xác minh lại nếu phát hiện trùng hoặc thiếu dữ liệu.</p></li>
+              <li><strong>Ghi nhận nhu cầu và trạng thái ban đầu</strong><p>Nhân viên chọn đúng nhánh: chăm sóc thường ngày, theo dõi sức khỏe, đặt dịch vụ/giữ chỗ hoặc nghiệp vụ bán hàng trong các phân hệ liên quan.</p></li>
+              <li><strong>Lập lịch và phân công công việc</strong><p>Tạo nhiệm vụ chăm sóc hoặc lịch hẹn, ghi người phụ trách, thời điểm, ghi chú và điều kiện tiếp nhận; dùng checklist phù hợp với công việc.</p></li>
+              <li><strong>Thực hiện và cập nhật kết quả</strong><p>Nhân viên ghi hoàn thành/chưa hoàn thành, quan sát, chỉ số hoặc hồ sơ sức khỏe phù hợp; nội dung y tế phải do người đủ chuyên môn ghi nhận.</p></li>
+              <li><strong>Theo dõi, nhắc việc và cập nhật</strong><p>Xem lịch sử theo hồ sơ thú cưng; xử lý cảnh báo hoặc lịch sắp đến hạn; bổ sung thông tin mới mà không xóa dấu vết nghiệp vụ đã phát sinh.</p></li>
+              <li><strong>Đóng lượt và kiểm tra lịch sử</strong><p>Xác nhận công việc/lịch hẹn đã hoàn tất, ghi kết quả bàn giao; người có quyền xem báo cáo và nhật ký để đối soát hoặc tiếp tục chăm sóc.</p></li>
+            </ol>
+            <div class="workflow-states"><b>Vòng đời tham chiếu:</b><span>Chưa có hồ sơ</span><span>Đã ghi nhận</span><span>Đang theo dõi</span><span>Có lịch/công việc</span><span>Đã cập nhật kết quả</span><span>Tiếp tục chăm sóc / lưu lịch sử</span></div>
+            <div class="workflow-guards">
+              <div class="workflow-guard"><strong>Nhánh cần chú ý</strong><p>Nếu thông tin chủ nuôi hoặc thú cưng chưa đủ, lưu ở trạng thái cần bổ sung theo chính sách; không tạo hồ sơ y tế hoặc tư vấn như một chẩn đoán thay thế bác sĩ thú y.</p></div>
+              <div class="workflow-guard"><strong>Bàn giao</strong><p>Hồ sơ Pet Care là điểm tham chiếu để nhân viên tiếp tục xử lý. Chuyển sang một hệ thống WAGGY khác chỉ là định hướng, cần tích hợp và consent riêng.</p></div>
+            </div>
+            <div class="workflow-exceptions"><strong>Ngoại lệ và kiểm soát</strong><p>Đăng nhập/quyền không hợp lệ: dừng thao tác; phát hiện hồ sơ trùng: đối chiếu trước khi tạo; mất kết nối: chỉ hiển thị cache đọc nếu có, không giả báo thao tác ghi thành công; nhập sai dữ liệu: sửa theo quyền và lưu lịch sử; có dấu hiệu cấp cứu: hướng dẫn liên hệ cơ sở thú y phù hợp thay vì chờ quy trình thường.</p></div>
+            <div class="workflow-output"><strong>Đầu ra</strong><p>Hồ sơ chủ nuôi–thú cưng có liên kết, lịch sử chăm sóc/nghiệp vụ, các việc còn mở, thông báo cần xử lý và thông tin phục vụ báo cáo theo quyền.</p></div>
+          </div>
+        </details>
+
+        <details class="workflow-detail" id="workflow-pet-service">
+          <summary>
+            <span class="workflow-index">02</span>
+            <span class="workflow-title"><strong>WAGGY Pet Service</strong><small>Đặt spa, tắm, cắt tỉa, lưu trú và dịch vụ chăm sóc</small></span>
+            <span class="status">ĐỀ XUẤT</span>
+          </summary>
+          <div class="workflow-body">
+            <p class="workflow-intro">Đề xuất xây dựng luồng dịch vụ đầu-cuối kết nối nhu cầu của chủ nuôi với năng lực, lịch làm việc, cơ sở và nhân viên thực hiện; cần có chính sách cụ thể theo từng loại dịch vụ.</p>
+            <div class="workflow-facts">
+              <div class="workflow-fact"><b>Kích hoạt</b><span>Chủ nuôi tạo lịch hẹn trực tuyến hoặc nhân viên lập lịch thay khách.</span></div>
+              <div class="workflow-fact"><b>Vai trò</b><span>Chủ nuôi, lễ tân/điều phối, nhân viên dịch vụ, quản lý cơ sở và kế toán/thu ngân.</span></div>
+              <div class="workflow-fact"><b>Điều kiện đầu vào</b><span>Hồ sơ thú cưng và dịch vụ hợp lệ; cơ sở có sức chứa, nhân sự và khung giờ phù hợp.</span></div>
+            </div>
+            <h4>Luồng chính</h4>
+            <ol class="workflow-steps">
+              <li><strong>Chọn thú cưng và dịch vụ</strong><p>Chủ nuôi chọn hồ sơ, loại dịch vụ, thời lượng và cơ sở; hệ thống kiểm tra loài, kích thước, điều kiện tuổi/sức khỏe và giới hạn tiếp nhận của gói dịch vụ.</p></li>
+              <li><strong>Thu thập yêu cầu và điều kiện</strong><p>Ghi mong muốn chăm sóc, lưu ý hành vi/dị ứng, thông tin liên hệ khẩn cấp và các yêu cầu bắt buộc; chỉ hỏi dữ liệu cần thiết.</p></li>
+              <li><strong>Kiểm tra lịch và sức chứa</strong><p>Đối chiếu lịch nhân viên, thiết bị, phòng/khu lưu trú và thời lượng; giữ chỗ tạm thời trong thời hạn cấu hình để tránh đặt trùng.</p></li>
+              <li><strong>Báo giá và công bố điều khoản</strong><p>Tính giá theo dịch vụ, phụ phí đã công bố, thời lượng và quyền lợi hội viên; hiển thị điều kiện hủy, trễ giờ, đặt cọc và lưu trú trước xác nhận.</p></li>
+              <li><strong>Chủ nuôi xác nhận đặt lịch</strong><p>Khách xác nhận thông tin, điều khoản và khoản cần thanh toán; hệ thống phát mã lịch, gửi biên nhận và nhắc lịch theo kênh đã đồng ý.</p></li>
+              <li><strong>Tiếp nhận tại cơ sở</strong><p>Nhân viên đối chiếu mã lịch, chủ sở hữu và thú cưng; kiểm tra tình trạng ban đầu, vật dụng/thuốc bàn giao và xác nhận phạm vi dịch vụ.</p></li>
+              <li><strong>Thực hiện theo checklist</strong><p>Phân công nhân viên, bắt đầu phiên làm việc, đánh dấu các hạng mục; ghi thời gian và tình trạng. Thay đổi ngoài phạm vi phải báo giá và xin xác nhận trước.</p></li>
+              <li><strong>Kiểm tra chất lượng và bàn giao</strong><p>Nhân viên/giám sát kiểm tra đầu ra, cập nhật ảnh hoặc ghi chú phù hợp, thông báo chủ nuôi; xác nhận người nhận và thời điểm bàn giao.</p></li>
+              <li><strong>Thu tiền, phản hồi và đóng lịch</strong><p>Đối soát dịch vụ/phụ phí với báo giá đã chấp thuận, phát hành chứng từ theo quy định, ghi phản hồi và đóng hồ sơ lịch hẹn.</p></li>
+            </ol>
+            <div class="workflow-states"><b>Trạng thái đề xuất:</b><span>Nháp</span><span>Chờ xác nhận</span><span>Đã đặt</span><span>Đã check-in</span><span>Đang thực hiện</span><span>Chờ bàn giao</span><span>Hoàn tất</span></div>
+            <div class="workflow-guards">
+              <div class="workflow-guard"><strong>Đổi lịch / hủy</strong><p>Kiểm tra chính sách và mốc thời gian; giải phóng năng lực, tính khoản hoàn/phí nếu có, gửi xác nhận cho khách và lưu lý do.</p></div>
+              <div class="workflow-guard"><strong>Vắng mặt / đến trễ</strong><p>Đánh dấu no-show hoặc đến trễ sau thời gian ân hạn; nhân viên liên hệ theo quy trình và không tự ý chuyển thành đã thực hiện.</p></div>
+            </div>
+            <div class="workflow-exceptions"><strong>Ngoại lệ và kiểm soát</strong><p>Không còn slot: đề xuất thời gian/cơ sở khác, không nhận quá công suất; thú cưng không đạt điều kiện: dừng nhận, giải thích và chuyển tư vấn phù hợp; phát hiện vấn đề sức khỏe/hành vi: dừng dịch vụ khi cần và chuyển chủ nuôi tới chuyên gia; sự cố trong lưu trú: kích hoạt liên hệ khẩn cấp, ghi nhận sự kiện và người xử lý.</p></div>
+            <div class="workflow-output"><strong>Đầu ra và bàn giao</strong><p>Lịch hẹn có mã, báo giá được xác nhận, phân công/checklist, biên nhận và biên bản bàn giao; dữ liệu cần thiết có thể chuyển sang Pet Business để đối soát khi tích hợp.</p></div>
+          </div>
+        </details>
+
+        <details class="workflow-detail" id="workflow-pet-health">
+          <summary>
+            <span class="workflow-index">03</span>
+            <span class="workflow-title"><strong>WAGGY Pet Health</strong><small>Tiếp nhận nhu cầu → khám/xét nghiệm → hồ sơ chuyên môn và theo dõi</small></span>
+            <span class="status">ĐỀ XUẤT</span>
+          </summary>
+          <div class="workflow-body">
+            <p class="workflow-intro">Đề xuất luồng sức khỏe kết nối chủ nuôi với phòng khám/bác sĩ thú y. Nội dung chẩn đoán, chỉ định và điều trị thuộc thẩm quyền chuyên môn; ứng dụng chỉ hỗ trợ ghi chép, lịch hẹn và theo dõi.</p>
+            <div class="workflow-facts">
+              <div class="workflow-fact"><b>Kích hoạt</b><span>Chủ nuôi yêu cầu khám, tiêm phòng, xét nghiệm, tái khám hoặc nhập hồ sơ từ đơn vị khám.</span></div>
+              <div class="workflow-fact"><b>Vai trò</b><span>Chủ nuôi, điều phối viên, bác sĩ thú y/nhân viên y tế được xác minh và phòng xét nghiệm liên quan.</span></div>
+              <div class="workflow-fact"><b>Điều kiện đầu vào</b><span>Định danh thú cưng, thông tin người chịu trách nhiệm và consent cho mục đích chia sẻ cụ thể.</span></div>
+            </div>
+            <h4>Luồng chính</h4>
+            <ol class="workflow-steps">
+              <li><strong>Tạo yêu cầu và chọn hồ sơ</strong><p>Chọn thú cưng, cơ sở mong muốn và lý do khám/tiêm/xét nghiệm; mô tả triệu chứng và thời điểm xuất hiện, không yêu cầu khách tự kết luận bệnh.</p></li>
+              <li><strong>Sàng lọc mức độ khẩn cấp</strong><p>Hiển thị hướng dẫn dấu hiệu cần đi cấp cứu ngay và kênh liên hệ cơ sở thú y; yêu cầu thông thường mới tiếp tục đặt lịch.</p></li>
+              <li><strong>Xin và ghi nhận consent</strong><p>Giải thích hồ sơ nào sẽ được chia sẻ với đơn vị nào, cho mục đích gì và trong thời hạn nào; ghi nhận lựa chọn và phiên bản điều khoản.</p></li>
+              <li><strong>Điều phối cơ sở và lịch khám</strong><p>Đối chiếu chuyên khoa, địa điểm, năng lực tiếp nhận và thời gian; xác nhận lịch, hướng dẫn chuẩn bị và yêu cầu giấy tờ/xét nghiệm trước đó.</p></li>
+              <li><strong>Tiếp nhận và xác minh bệnh nhân</strong><p>Phòng khám xác minh chủ nuôi, thú cưng, lịch sử dị ứng/thuốc và hồ sơ được phép truy cập; ghi nhận tình trạng ban đầu và người tiếp nhận.</p></li>
+              <li><strong>Khám lâm sàng và chỉ định</strong><p>Bác sĩ khám, ghi nhận phát hiện chuyên môn và quyết định có cần xét nghiệm/thuốc/thủ thuật; mỗi chỉ định có người thực hiện và thời điểm.</p></li>
+              <li><strong>Thực hiện xét nghiệm hoặc điều trị</strong><p>Nếu có mẫu xét nghiệm, gắn mã mẫu, người lấy, thời gian và điểm bàn giao; kết quả được liên kết đúng hồ sơ và xác thực nguồn.</p></li>
+              <li><strong>Phê duyệt và phát hành hồ sơ</strong><p>Bác sĩ ký/xác thực kết luận, hướng dẫn điều trị và lịch theo dõi; chủ nuôi được thông báo khi hồ sơ sẵn sàng và có quyền tải/xem theo consent.</p></li>
+              <li><strong>Theo dõi, tiêm nhắc và tái khám</strong><p>Tạo lịch nhắc theo chỉ định chuyên môn; chủ nuôi phản hồi tình trạng; phòng khám cập nhật lượt tái khám hoặc kết thúc theo dõi.</p></li>
+            </ol>
+            <div class="workflow-states"><b>Trạng thái đề xuất:</b><span>Yêu cầu mới</span><span>Đang điều phối</span><span>Đã đặt lịch</span><span>Đã tiếp nhận</span><span>Đang khám/xét nghiệm</span><span>Chờ bác sĩ xác nhận</span><span>Đã phát hành</span><span>Theo dõi / đóng</span></div>
+            <div class="workflow-guards">
+              <div class="workflow-guard"><strong>Sửa hồ sơ chuyên môn</strong><p>Không ghi đè dấu vết đã ký; bổ sung phụ lục/đính chính có người lập, lý do, thời điểm và liên kết phiên bản gốc.</p></div>
+              <div class="workflow-guard"><strong>Thu hồi chia sẻ</strong><p>Thu hồi quyền truy cập tương lai khi consent bị rút; lưu dấu vết truy cập đã xảy ra theo chính sách lưu trữ và pháp luật.</p></div>
+            </div>
+            <div class="workflow-exceptions"><strong>Ngoại lệ và kiểm soát</strong><p>Dấu hiệu nguy kịch: ưu tiên hướng dẫn cấp cứu, không xếp hàng thường; không xác định được thú cưng/chủ sở hữu: tạm dừng liên kết hồ sơ; kết quả lỗi hoặc mẫu không đạt: cơ sở quyết định lấy lại và ghi lý do; nghi sai bệnh nhân: khóa phát hành, xác minh trước khi mở quyền truy cập; nền tảng không tự chẩn đoán hay khuyên đổi phác đồ.</p></div>
+            <div class="workflow-output"><strong>Đầu ra và bàn giao</strong><p>Hồ sơ lần khám đã xác thực, chỉ định/kết quả, lịch theo dõi và hóa đơn của đơn vị cung cấp; chỉ phần được phép mới được đưa về Pet Care hoặc chia sẻ cho đơn vị tiếp theo.</p></div>
+          </div>
+        </details>
+
+        <details class="workflow-detail" id="workflow-pet-commerce">
+          <summary>
+            <span class="workflow-index">04</span>
+            <span class="workflow-title"><strong>WAGGY Pet Commerce</strong><small>Quản trị catalog → đặt mua → thanh toán → giao hàng và hậu mãi</small></span>
+            <span class="status">ĐỀ XUẤT</span>
+          </summary>
+          <div class="workflow-body">
+            <p class="workflow-intro">Đề xuất nền tảng giao dịch cho thức ăn, phụ kiện và sản phẩm chăm sóc. Quy trình tách catalog thương mại khỏi quyết định mua sắm của khách, đồng thời đối soát đơn, tiền và tồn kho với Pet Business.</p>
+            <div class="workflow-facts">
+              <div class="workflow-fact"><b>Kích hoạt</b><span>Nhân viên phát hành catalog hợp lệ hoặc khách bắt đầu tạo đơn hàng.</span></div>
+              <div class="workflow-fact"><b>Vai trò</b><span>Quản trị catalog, khách hàng, nhân viên xử lý đơn, kho/fulfillment, đơn vị vận chuyển và kế toán.</span></div>
+              <div class="workflow-fact"><b>Điều kiện đầu vào</b><span>Sản phẩm có nguồn gốc/thông tin/giá và chính sách bán rõ; tồn có thể bán được từ kho.</span></div>
+            </div>
+            <h4>Luồng chính</h4>
+            <ol class="workflow-steps">
+              <li><strong>Quản lý và duyệt catalog</strong><p>Tạo SKU, mô tả, quy cách, loài phù hợp, hướng dẫn, ảnh, giá, thuế và trạng thái; sản phẩm yêu cầu kiểm chứng không được đưa ra bán trước khi duyệt.</p></li>
+              <li><strong>Khách tìm và đánh giá sản phẩm</strong><p>Lọc/tìm theo nhu cầu; xem thành phần, cảnh báo, giá, tồn và điều kiện giao; nội dung tư vấn không được trình bày như chẩn đoán thú y.</p></li>
+              <li><strong>Thêm giỏ và kiểm tra điều kiện</strong><p>Kiểm tra số lượng tối đa, vùng giao, tuổi/loài hoặc điều kiện bắt buộc; hiển thị rõ phí vận chuyển, ưu đãi và tổng tạm tính.</p></li>
+              <li><strong>Xác nhận người nhận và đơn</strong><p>Thu địa chỉ, liên hệ và ghi chú cần thiết; khách xác nhận chính sách, chọn giao/nhận tại cửa hàng và gửi đơn với mã tham chiếu/idempotency chống gửi trùng.</p></li>
+              <li><strong>Giữ tồn và xác nhận thanh toán</strong><p>Đơn được tạo theo trạng thái chờ; hệ thống giữ tồn có thời hạn theo chính sách. Chỉ đánh dấu thanh toán khi cổng thanh toán hoặc nhân viên có thẩm quyền xác nhận được giao dịch.</p></li>
+              <li><strong>Phân bổ và lấy hàng</strong><p>Chọn kho/chi nhánh, lô theo FEFO khi có hạn dùng; quét SKU, số lượng và tình trạng; không thay thế hàng nếu chưa có khách chấp thuận.</p></li>
+              <li><strong>Đóng gói và bàn giao vận chuyển</strong><p>Kiểm tra bao bì, chứng từ và điều kiện bảo quản; ghi mã vận đơn, đơn vị giao và trạng thái bàn giao; gửi cập nhật cho khách.</p></li>
+              <li><strong>Giao thành công hoặc xử lý thất bại</strong><p>Ghi bằng chứng giao theo chính sách; nếu giao không thành công, lập lịch giao lại/hoàn kho và thông báo khách, tránh trừ tồn lặp.</p></li>
+              <li><strong>Đổi trả, hoàn tiền và đối soát</strong><p>Tiếp nhận yêu cầu, kiểm tra điều kiện và tình trạng hàng, duyệt quyết định; phát sinh trả hàng/hoàn tiền theo thẩm quyền và khép đơn bằng đối soát.</p></li>
+            </ol>
+            <div class="workflow-states"><b>Trạng thái đề xuất:</b><span>Nháp</span><span>Chờ thanh toán</span><span>Đã xác nhận</span><span>Đang lấy hàng</span><span>Đang giao</span><span>Đã giao</span><span>Đổi trả / hoàn tiền</span><span>Đã đóng</span></div>
+            <div class="workflow-guards">
+              <div class="workflow-guard"><strong>Thanh toán không rõ kết quả</strong><p>Tra cứu mã giao dịch trước khi gửi lại; không tạo giao dịch trùng hoặc gán trạng thái paid chỉ từ thông báo phía trình duyệt.</p></div>
+              <div class="workflow-guard"><strong>Thiếu hàng / hư hỏng</strong><p>Dừng đóng gói dòng hàng bị ảnh hưởng, đề xuất hoàn tiền hoặc lựa chọn khác và chỉ cập nhật đơn sau khi khách/nhân viên có quyền xác nhận.</p></div>
+            </div>
+            <div class="workflow-exceptions"><strong>Ngoại lệ và kiểm soát</strong><p>Tồn thay đổi khi checkout: báo mặt hàng/giá mới và yêu cầu khách xác nhận lại; mặt hàng thu hồi/hết hạn: khóa bán, truy vết lô và thông báo chủ thể liên quan; giao dịch đáng ngờ: giữ xử lý để rà soát; yêu cầu hoàn tiền: cần kiểm soát hai bước theo ngưỡng rủi ro.</p></div>
+            <div class="workflow-output"><strong>Đầu ra và bàn giao</strong><p>Đơn thương mại truy vết được từ checkout đến giao/đổi trả, trạng thái tiền và các lần xuất/hoàn kho; số liệu được đối soát với Pet Business.</p></div>
+          </div>
+        </details>
+
+        <details class="workflow-detail" id="workflow-pet-business">
+          <summary>
+            <span class="workflow-index">05</span>
+            <span class="workflow-title"><strong>WAGGY Pet Business</strong><small>Quản trị doanh nghiệp → mua hàng/kho → nhân sự → bán hàng → đối soát</small></span>
+            <span class="status">ĐỀ XUẤT</span>
+          </summary>
+          <div class="workflow-body">
+            <p class="workflow-intro">Đề xuất hệ thống vận hành B2B cho một cửa hàng hoặc chuỗi nhiều chi nhánh. Một số nghiệp vụ quản lý hiện có thể xuất hiện trong Pet Care; Pet Business ở đây là sản phẩm/phạm vi riêng cần thiết kế đa tổ chức, đa chi nhánh và đối soát thống nhất.</p>
+            <div class="workflow-facts">
+              <div class="workflow-fact"><b>Kích hoạt</b><span>Doanh nghiệp được khởi tạo hoặc phát sinh chu kỳ vận hành/đối soát tại một chi nhánh.</span></div>
+              <div class="workflow-fact"><b>Vai trò</b><span>Chủ doanh nghiệp, quản lý chi nhánh, mua hàng, kho, nhân viên bán hàng, kế toán và kiểm toán.</span></div>
+              <div class="workflow-fact"><b>Điều kiện đầu vào</b><span>Cơ cấu tổ chức, tài khoản, chính sách phê duyệt, danh mục hàng hóa và dữ liệu chi nhánh được thiết lập.</span></div>
+            </div>
+            <h4>Luồng chính</h4>
+            <ol class="workflow-steps">
+              <li><strong>Onboard tổ chức và chi nhánh</strong><p>Xác minh thông tin doanh nghiệp, pháp nhân/đơn vị thanh toán, địa chỉ, múi giờ, kho và phạm vi hoạt động; thiết lập mã định danh dùng xuyên suốt.</p></li>
+              <li><strong>Cấu hình vai trò và kiểm soát</strong><p>Mời nhân viên, gán vai trò theo nguyên tắc ít quyền nhất; đặt người duyệt độc lập cho nhập hàng, điều chỉnh tồn, giảm giá lớn, hoàn tiền và đóng kỳ.</p></li>
+              <li><strong>Thiết lập danh mục và nhà cung cấp</strong><p>Chuẩn hóa SKU/đơn vị/thuế, mức tồn an toàn và giá; xác minh nhà cung cấp, điều khoản, chứng từ, chất lượng và mặt hàng được phép mua.</p></li>
+              <li><strong>Lập nhu cầu và đơn mua</strong><p>Đề xuất mua dựa trên tồn khả dụng, đơn chờ, định mức và hạn dùng; người có thẩm quyền duyệt nhà cung cấp, số lượng, giá và ngân sách.</p></li>
+              <li><strong>Nhận hàng và ghi nhận lô</strong><p>Đối chiếu đơn mua, số lượng thực nhận, chứng từ, chất lượng và ngày hết hạn; tách hàng đạt/kiểm tra/cách ly, ghi chênh lệch và người xác nhận.</p></li>
+              <li><strong>Phân phối và kiểm soát tồn</strong><p>Nhập vị trí kho, chuyển giữa chi nhánh bằng phiếu hai đầu, theo dõi điều chỉnh/hao hụt/thu hồi; mọi biến động có lý do, người tạo và người duyệt.</p></li>
+              <li><strong>Vận hành nhân viên và dịch vụ</strong><p>Lập ca/việc, phân công dịch vụ, ghi nhận hoàn tất và bàn giao; hệ thống cảnh báo thiếu năng lực, hàng hoặc thiết bị trước khi xác nhận lịch.</p></li>
+              <li><strong>Bán hàng và xử lý đơn</strong><p>Tiếp nhận đơn từ Commerce/cửa hàng, xác nhận giá và thanh toán, xuất hàng hoặc thực hiện dịch vụ; đồng bộ trạng thái mà không ghi giảm tồn lặp.</p></li>
+              <li><strong>Đóng ca, đối soát và báo cáo</strong><p>Đối chiếu tiền mặt/cổng thanh toán/đơn hàng, kiểm kê chênh lệch, phê duyệt bút toán; đóng kỳ và phát hành báo cáo theo cửa hàng/chuỗi.</p></li>
+            </ol>
+            <div class="workflow-states"><b>Vòng đời nghiệp vụ:</b><span>Khởi tạo</span><span>Chờ duyệt</span><span>Đã duyệt</span><span>Đang thực hiện</span><span>Đối soát</span><span>Đã đóng kỳ</span></div>
+            <div class="workflow-guards">
+              <div class="workflow-guard"><strong>Phân tách nhiệm vụ</strong><p>Người tạo giao dịch rủi ro cao không tự duyệt và không tự đóng đối soát; mọi thao tác đặc quyền có nhật ký không thể sửa tùy tiện.</p></div>
+              <div class="workflow-guard"><strong>Dữ liệu chuỗi nhiều cơ sở</strong><p>Phân vùng quyền theo tổ chức/chi nhánh; báo cáo hợp nhất chỉ dành cho vai trò được cấp và không làm lộ dữ liệu khách vượt mục đích.</p></div>
+            </div>
+            <div class="workflow-exceptions"><strong>Ngoại lệ và kiểm soát</strong><p>Nhận thừa/thiếu hoặc hàng không đạt: lập biên bản và tách tồn; sai lệch tiền/tồn: mở vụ việc đối soát, giữ nguyên chứng từ gốc; mất mạng: ghi nhận thao tác chờ đồng bộ có mã duy nhất, phát hiện xung đột trước khi áp dụng; khóa kỳ sau khi đã đóng, chỉ điều chỉnh bằng bút toán được duyệt.</p></div>
+            <div class="workflow-output"><strong>Đầu ra và bàn giao</strong><p>Hồ sơ vận hành có trách nhiệm, giao dịch mua/bán, biến động tồn, lịch sử duyệt, báo cáo doanh thu và đối soát; chia sẻ sang Service/Commerce theo API và quyền đã thỏa thuận.</p></div>
+          </div>
+        </details>
+
+        <details class="workflow-detail" id="workflow-pet-community">
+          <summary>
+            <span class="workflow-index">06</span>
+            <span class="workflow-title"><strong>WAGGY Pet Community</strong><small>Tham gia cộng đồng → đăng/chia sẻ → kiểm duyệt → sự kiện và an toàn</small></span>
+            <span class="status">ĐỀ XUẤT</span>
+          </summary>
+          <div class="workflow-body">
+            <p class="workflow-intro">Đề xuất nền tảng tương tác chủ nuôi với cơ chế bảo vệ quyền riêng tư và an toàn cộng đồng; nội dung do người dùng tạo cần kiểm duyệt, có khiếu nại và có người chịu trách nhiệm.</p>
+            <div class="workflow-facts">
+              <div class="workflow-fact"><b>Kích hoạt</b><span>Người dùng đăng ký tham gia, tạo nội dung, bình luận hoặc tổ chức sự kiện.</span></div>
+              <div class="workflow-fact"><b>Vai trò</b><span>Thành viên, người tổ chức, kiểm duyệt viên, điều phối viên và bộ phận xử lý khiếu nại.</span></div>
+              <div class="workflow-fact"><b>Điều kiện đầu vào</b><span>Tài khoản được xác thực ở mức phù hợp, quy tắc cộng đồng đã chấp nhận và thiết lập quyền riêng tư.</span></div>
+            </div>
+            <h4>Luồng chính</h4>
+            <ol class="workflow-steps">
+              <li><strong>Đăng ký và thiết lập danh tính cộng đồng</strong><p>Chọn tên hiển thị, khu vực và tùy chọn liên hệ; liên kết hồ sơ thú cưng là tùy chọn, mặc định riêng tư và không công khai thông tin nhận diện nhạy cảm.</p></li>
+              <li><strong>Chấp nhận nguyên tắc an toàn</strong><p>Hiển thị quy tắc về tôn trọng, thông tin y tế, mua bán, hình ảnh, spam và quấy rối; yêu cầu người dùng xác nhận trước khi đăng/tương tác.</p></li>
+              <li><strong>Tạo bài đăng hoặc sự kiện</strong><p>Chọn nhóm/chủ đề, nhập nội dung và ảnh, đặt phạm vi hiển thị; với sự kiện, bổ sung địa điểm, năng lực, độ tuổi/loài phù hợp và điều kiện tham dự.</p></li>
+              <li><strong>Kiểm tra nội dung trước công khai</strong><p>Lọc spam/thông tin cá nhân/ngôn từ nguy cơ; nội dung nghiêm trọng chuyển hàng đợi người kiểm duyệt, không gắn nhãn AI là kết luận chuyên môn.</p></li>
+              <li><strong>Phát hành và phân phối</strong><p>Khi đạt điều kiện, bài/sự kiện được đăng theo phạm vi; thông báo cho nhóm liên quan theo cài đặt, giới hạn tần suất và quyền từ chối nhận tin.</p></li>
+              <li><strong>Tương tác và đăng ký tham dự</strong><p>Thành viên bình luận, lưu/chia sẻ trong phạm vi cho phép hoặc đăng ký sự kiện; người tổ chức theo dõi số chỗ, danh sách cần thiết và cập nhật thay đổi.</p></li>
+              <li><strong>Báo cáo và xử lý nội dung</strong><p>Thành viên gửi lý do báo cáo; kiểm duyệt viên phân loại mức nguy cơ, ẩn tạm khi cần, liên hệ các bên và ghi lại bằng chứng/tác vụ.</p></li>
+              <li><strong>Quyết định, khiếu nại và phục hồi</strong><p>Người kiểm duyệt có thẩm quyền cảnh báo, giới hạn, gỡ nội dung hoặc khóa tài khoản; người dùng nhận lý do và có kênh khiếu nại độc lập.</p></li>
+              <li><strong>Đóng sự kiện và đánh giá</strong><p>Người tổ chức đánh dấu hoàn tất/hủy, gửi thông tin hậu sự kiện; thành viên phản hồi, nội dung vi phạm còn mở tiếp tục được theo dõi.</p></li>
+            </ol>
+            <div class="workflow-states"><b>Trạng thái nội dung đề xuất:</b><span>Bản nháp</span><span>Chờ duyệt</span><span>Đang hiển thị</span><span>Bị báo cáo</span><span>Ẩn / gỡ</span><span>Khiếu nại</span><span>Đóng</span></div>
+            <div class="workflow-guards">
+              <div class="workflow-guard"><strong>Thông tin thú cưng</strong><p>Không công khai địa chỉ nhà, định vị chính xác hoặc thông tin liên hệ nếu chủ sở hữu chưa chọn chia sẻ; có công cụ gỡ và báo lộ dữ liệu.</p></div>
+              <div class="workflow-guard"><strong>Tư vấn sức khỏe</strong><p>Gắn cảnh báo nội dung cộng đồng không phải chẩn đoán; báo cáo đề xuất điều trị nguy hiểm được chuyển kiểm duyệt và hướng người đọc tới bác sĩ thú y.</p></div>
+            </div>
+            <div class="workflow-exceptions"><strong>Ngoại lệ và kiểm soát</strong><p>Nguy cơ gây hại/đe dọa tức thời: ẩn nội dung và chuyển người phụ trách khẩn cấp theo chính sách; tài khoản bị chiếm dụng: khóa phiên và hỗ trợ khôi phục; sự kiện quá chỗ hoặc thay đổi địa điểm: dừng đăng ký, thông báo người tham dự và hoàn xử lý phí theo điều khoản.</p></div>
+            <div class="workflow-output"><strong>Đầu ra</strong><p>Nội dung/sự kiện có lịch sử kiểm duyệt, phạm vi riêng tư, danh sách đăng ký tối thiểu cần thiết và hồ sơ khiếu nại đã phân công/đóng.</p></div>
+          </div>
+        </details>
+
+        <details class="workflow-detail" id="workflow-pet-connect">
+          <summary>
+            <span class="workflow-index">07</span>
+            <span class="workflow-title"><strong>WAGGY Pet Connect</strong><small>Báo mất/tìm thấy và kết nối nhận nuôi, cứu hộ có xác minh</small></span>
+            <span class="status">ĐỀ XUẤT</span>
+          </summary>
+          <div class="workflow-body">
+            <p class="workflow-intro">Đề xuất workflow hỗ trợ tìm kiếm và phúc lợi động vật. Thông tin công khai được giới hạn để chống lừa đảo, chiếm đoạt thú cưng và khai thác người đang tìm thú cưng.</p>
+            <div class="workflow-facts">
+              <div class="workflow-fact"><b>Kích hoạt</b><span>Chủ nuôi báo mất, người dân báo tìm thấy, tổ chức cứu hộ đăng ca hỗ trợ hoặc người dùng gửi đề nghị nhận nuôi.</span></div>
+              <div class="workflow-fact"><b>Vai trò</b><span>Người báo tin/chủ nuôi, người tìm thấy, điều phối viên, tổ chức cứu hộ và người nhận nuôi.</span></div>
+              <div class="workflow-fact"><b>Điều kiện đầu vào</b><span>Tài khoản liên hệ được, mô tả/thời gian/khu vực đủ để ghép; bằng chứng sở hữu không công khai.</span></div>
+            </div>
+            <h4>Luồng chính</h4>
+            <ol class="workflow-steps">
+              <li><strong>Chọn loại hồ sơ kết nối</strong><p>Người dùng chọn báo mất, báo tìm thấy, tìm kiếm cứu hộ hoặc nhận nuôi; hệ thống giải thích dữ liệu nào sẽ công khai và thời hạn hiển thị.</p></li>
+              <li><strong>Gửi thông tin và bằng chứng</strong><p>Ghi loài, đặc điểm nhận dạng, thời gian, khu vực gần đúng, ảnh và kênh liên hệ; giữ chi tiết định danh bí mật làm câu hỏi xác minh.</p></li>
+              <li><strong>Xác minh và kiểm duyệt</strong><p>Điều phối viên kiểm tra trùng lặp, dấu hiệu giả mạo, quyền đăng ảnh/thông tin và tính an toàn; trường hợp nghi ngờ được giữ chờ xác minh.</p></li>
+              <li><strong>Phát hành phạm vi phù hợp</strong><p>Đăng hồ sơ theo vùng và thời hạn; không công khai địa chỉ chính xác, giấy tờ sở hữu, số điện thoại cá nhân hoặc nơi trú ẩn nhạy cảm.</p></li>
+              <li><strong>Ghép kết quả và gửi kết nối</strong><p>Gợi ý hồ sơ trùng theo đặc điểm/khoảng cách/thời điểm; người báo tin xem kết quả, chủ thể nhận yêu cầu liên hệ qua kênh trung gian.</p></li>
+              <li><strong>Xác minh quyền nhận thú cưng</strong><p>Hai bên trao đổi bằng chứng không công khai; điều phối viên/cứu hộ hỗ trợ đối chiếu ảnh, giấy tờ hoặc đặc điểm bí mật trước khi xác nhận.</p></li>
+              <li><strong>Chuyển tuyến cứu hộ hoặc nhận nuôi</strong><p>Đánh giá nhu cầu an toàn và năng lực tiếp nhận; tổ chức cứu hộ xác nhận chỗ/điều kiện; ứng viên nhận nuôi cung cấp thông tin cần thiết và đồng ý quy trình.</p></li>
+              <li><strong>Bàn giao có xác nhận</strong><p>Hẹn nơi an toàn, lập biên bản/thời điểm/người giao nhận; cập nhật trạng thái đoàn tụ, cứu hộ tiếp nhận hoặc hoàn tất nhận nuôi.</p></li>
+              <li><strong>Theo dõi và đóng hồ sơ</strong><p>Chủ thể xác nhận kết quả; hệ thống dừng thông báo, ẩn thông tin liên hệ và lưu hồ sơ theo thời hạn; có thể mở lại nếu kết quả chưa đúng.</p></li>
+            </ol>
+            <div class="workflow-states"><b>Trạng thái đề xuất:</b><span>Bản nháp</span><span>Chờ xác minh</span><span>Đang tìm kết nối</span><span>Có kết quả tiềm năng</span><span>Đang xác minh</span><span>Đã đoàn tụ/tiếp nhận</span><span>Đã đóng</span></div>
+            <div class="workflow-guards">
+              <div class="workflow-guard"><strong>Bảo vệ người dùng</strong><p>Che thông tin định danh và dùng kênh liên lạc trung gian; khuyến cáo không chuyển tiền/giấy tờ cho người chưa xác minh và không gặp tại địa điểm riêng tư.</p></div>
+              <div class="workflow-guard"><strong>Phúc lợi động vật</strong><p>Không tự động ghép/trao thú cưng chỉ theo điểm tương đồng; việc nhận nuôi cần đánh giá người nhận, điều kiện chăm sóc và quy trình bàn giao của tổ chức.</p></div>
+            </div>
+            <div class="workflow-exceptions"><strong>Ngoại lệ và kiểm soát</strong><p>Nhiều báo cáo cùng thú cưng: gộp có kiểm toán và xác minh người sở hữu; nghi chiếm đoạt/tranh chấp: ẩn thông tin, chuyển điều phối viên và không tự phân xử pháp lý; nguy hiểm tức thời: hướng dẫn liên hệ cơ quan/cứu hộ tại địa phương; sai kết quả ghép: cho phép báo sai và khóa gợi ý đó.</p></div>
+            <div class="workflow-output"><strong>Đầu ra</strong><p>Một hồ sơ kết nối có trạng thái, người chịu trách nhiệm, bằng chứng được bảo vệ, lịch sử liên hệ và kết quả bàn giao hoặc lý do đóng.</p></div>
+          </div>
+        </details>
+
+        <details class="workflow-detail" id="workflow-pet-intelligence">
+          <summary>
+            <span class="workflow-index">08</span>
+            <span class="workflow-title"><strong>WAGGY Pet Intelligence</strong><small>Quản trị dữ liệu → phân tích/AI → con người xem xét → đo hiệu quả</small></span>
+            <span class="status">ĐỀ XUẤT</span>
+          </summary>
+          <div class="workflow-body">
+            <p class="workflow-intro">Đề xuất lớp phân tích và hỗ trợ quyết định, không phải nguồn dữ liệu gốc hay tác nhân tự thực hiện quyết định rủi ro cao. Tính năng chỉ được triển khai khi có căn cứ sử dụng dữ liệu, đánh giá sai lệch và cơ chế giám sát.</p>
+            <div class="workflow-facts">
+              <div class="workflow-fact"><b>Kích hoạt</b><span>Doanh nghiệp yêu cầu báo cáo/gợi ý hoặc một tác vụ định kỳ được chủ sở hữu dữ liệu phê duyệt.</span></div>
+              <div class="workflow-fact"><b>Vai trò</b><span>Chủ dữ liệu, quản trị dữ liệu, chuyên gia nghiệp vụ, nhà khoa học dữ liệu, người duyệt và kiểm toán.</span></div>
+              <div class="workflow-fact"><b>Điều kiện đầu vào</b><span>Mục đích hợp pháp, nguồn dữ liệu được phép, chất lượng đo được, quyền truy cập và tiêu chí đánh giá được duyệt.</span></div>
+            </div>
+            <h4>Luồng chính</h4>
+            <ol class="workflow-steps">
+              <li><strong>Đăng ký câu hỏi và mục đích</strong><p>Nêu quyết định cần hỗ trợ, người sử dụng, đối tượng ảnh hưởng, lợi ích/rủi ro và tiêu chí thành công; từ chối use-case không có chủ sở hữu.</p></li>
+              <li><strong>Duyệt nguồn và căn cứ sử dụng dữ liệu</strong><p>Lập data inventory, xác nhận quyền/consent, mục đích, thời hạn lưu, giới hạn chia sẻ và hợp đồng xử lý; loại dữ liệu nhạy cảm không cần thiết.</p></li>
+              <li><strong>Thu nhận, giảm định danh và kiểm tra chất lượng</strong><p>Chuẩn hóa schema, phát hiện thiếu/trùng/sai thời gian, ghi nguồn và lineage; phân quyền môi trường và tách dữ liệu nhận diện khi có thể.</p></li>
+              <li><strong>Phân tích nền và xác lập baseline</strong><p>Định nghĩa cohort, cửa sổ thời gian, chỉ số, giới hạn thống kê và nhóm so sánh; rà soát dữ liệu lệch vùng/loài/nhóm người dùng.</p></li>
+              <li><strong>Phát triển và thử nghiệm mô hình</strong><p>Kiểm định trên tập dữ liệu phù hợp, đánh giá độ chính xác/hiệu chuẩn, false positive/negative, bias, robustness và khả năng giải thích; ghi version, dữ liệu và cấu hình.</p></li>
+              <li><strong>Rà soát nghiệp vụ, chuyên môn và quyền riêng tư</strong><p>Chuyên gia độc lập đánh giá tác hại và ngưỡng sử dụng; kiểm tra thông điệp giải thích, giới hạn và hướng dẫn người dùng; phê duyệt go/no-go có lưu biên bản.</p></li>
+              <li><strong>Phát hành có kiểm soát</strong><p>Bắt đầu shadow mode hoặc nhóm thử nghiệm nhỏ; giới hạn người dùng và phạm vi; không tự động áp dụng đề xuất lên hồ sơ, điều trị, giá, tuyển dụng, tài chính hay nhận nuôi.</p></li>
+              <li><strong>Người dùng xem xét và ghi quyết định</strong><p>Hiển thị nguồn, lý do, độ tin cậy và cảnh báo; người có thẩm quyền chấp nhận, sửa hoặc từ chối, ghi lý do và có đường chuyển xử lý thủ công.</p></li>
+              <li><strong>Theo dõi drift, phản hồi và kiểm toán</strong><p>Đo chất lượng/kết quả theo nhóm, tỉ lệ bỏ qua, sự cố và phản hồi; phát hiện drift, đánh giá lại sau thay đổi dữ liệu/mô hình và định kỳ rà soát quyền truy cập.</p></li>
+              <li><strong>Duy trì, rollback hoặc ngừng</strong><p>Nếu chỉ số vượt ngưỡng hoặc phát hiện rủi ro, tắt đề xuất, quay về quy trình thủ công, thông báo người phụ trách và lưu hồ sơ điều tra; chỉ tái phát hành sau phê duyệt mới.</p></li>
+            </ol>
+            <div class="workflow-states"><b>Vòng đời đề xuất:</b><span>Ý tưởng</span><span>Đang xét duyệt</span><span>Đang thử nghiệm</span><span>Đã phê duyệt giới hạn</span><span>Đang giám sát</span><span>Tạm dừng</span><span>Rollback / ngừng</span></div>
+            <div class="workflow-guards">
+              <div class="workflow-guard"><strong>Human-in-the-loop</strong><p>Con người chịu trách nhiệm quyết định; không đưa gợi ý ra ngoài phạm vi được phê duyệt và không trình bày xác suất như sự thật/chẩn đoán chắc chắn.</p></div>
+              <div class="workflow-guard"><strong>Quản trị mô hình</strong><p>Mỗi phiên bản có chủ sở hữu, card/rủi ro, lineage, ngưỡng chặn, log đầu vào/đầu ra phù hợp và ngày rà soát; dữ liệu kiểm thử không bị rò vào huấn luyện.</p></div>
+            </div>
+            <div class="workflow-exceptions"><strong>Ngoại lệ và kiểm soát</strong><p>Consent/căn cứ thiếu: không chạy; dữ liệu chất lượng thấp: trả kết quả “không đủ cơ sở” và chuyển người xem xét; bias/drift hoặc kết quả bất thường: ngừng phát hành, đánh giá tác động và rollback; rò rỉ dữ liệu: kích hoạt quy trình ứng phó sự cố, thu hồi quyền và thông báo theo nghĩa vụ áp dụng.</p></div>
+            <div class="workflow-output"><strong>Đầu ra</strong><p>Báo cáo hoặc gợi ý có nguồn, giới hạn, version, người duyệt và bằng chứng đánh giá; cùng chỉ số giám sát, phản hồi, quyết định của con người và lịch sử rollback.</p></div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="section" id="workflow">
+      <div class="section-head">
+        <div><span class="kicker">02 / Workflow toàn hệ sinh thái</span><h2>Hành trình xuyên suốt</h2></div>
+        <p>Đây là luồng mục tiêu để định hướng thiết kế. Các bước ngoài Pet Care hiện tại là workflow đề xuất, chưa phải cam kết tính năng đang hoạt động.</p>
+      </div>
+      <div class="flow-track" aria-label="Các chặng workflow mục tiêu">
+        <article class="flow-step"><span class="step-no">01 / NỀN TẢNG</span><h3>Nhận diện</h3><p>Chủ nuôi tạo tài khoản và hồ sơ thú cưng trong Pet Care.</p></article>
+        <article class="flow-step"><span class="step-no">02 / DOANH NGHIỆP</span><h3>Vận hành</h3><p>Pet Business quản lý cơ sở, nhân sự, năng lực phục vụ và nguồn lực.</p></article>
+        <article class="flow-step"><span class="step-no">03 / DỊCH VỤ</span><h3>Chăm sóc</h3><p>Đặt dịch vụ; nhu cầu sức khỏe được chuyển đến đơn vị chuyên môn phù hợp.</p></article>
+        <article class="flow-step"><span class="step-no">04 / GIAO DỊCH</span><h3>Mua sắm</h3><p>Commerce xử lý đơn hàng; Business đối soát bán hàng và tồn kho.</p></article>
+        <article class="flow-step"><span class="step-no">05 / CỘNG ĐỒNG</span><h3>Kết nối</h3><p>Chủ nuôi tham gia hoạt động cộng đồng hoặc yêu cầu hỗ trợ tìm/nhận nuôi.</p></article>
+        <article class="flow-step"><span class="step-no">06 / PHÂN TÍCH</span><h3>Cải thiện</h3><p>Intelligence cung cấp chỉ số và gợi ý; người có trách nhiệm quyết định.</p></article>
+      </div>
+      <div class="callout">
+        <strong>Ranh giới an toàn:</strong> hồ sơ sức khỏe không thay thế chẩn đoán của bác sĩ thú y;
+        AI không tự ra quyết định điều trị, tài chính hoặc nhận nuôi; dữ liệu cá nhân chỉ được
+        chia sẻ giữa hệ thống theo mục đích, quyền truy cập và sự đồng ý đã xác định.
+      </div>
+    </section>
+
+    <section class="section" id="operations">
+      <div class="section-head">
+        <div><span class="kicker">03 / Quy trình vận hành</span><h2>Vai trò và điểm bàn giao</h2></div>
+        <p>Phân định rõ chủ thể chịu trách nhiệm và dữ liệu tối thiểu cần trao đổi ở mỗi chặng.</p>
+      </div>
+      <div class="swimlane">
+        <div class="lane"><div class="lane-label">Chủ nuôi</div><div class="lane-content"><strong>Pet Care:</strong> quản lý hồ sơ cơ bản → <strong>Service:</strong> yêu cầu lịch → <strong>Health:</strong> chủ động cho phép chia sẻ → <strong>Commerce:</strong> đặt hàng → <strong>Community/Connect:</strong> tham gia hoặc gửi yêu cầu trợ giúp.</div></div>
+        <div class="lane"><div class="lane-label">Cơ sở / nhân viên</div><div class="lane-content">Tiếp nhận yêu cầu → kiểm tra lịch, tồn và năng lực → xác nhận trách nhiệm → thực hiện nghiệp vụ → cập nhật trạng thái và biên nhận → xử lý ngoại lệ theo quyền.</div></div>
+        <div class="lane"><div class="lane-label">Chuyên gia / đối tác</div><div class="lane-content">Phòng khám, cứu hộ và nhà cung cấp chỉ nhận phần dữ liệu cần thiết theo vai trò; xác nhận kết quả, hồ sơ chuyên môn hoặc bàn giao trong phạm vi được cấp.</div></div>
+        <div class="lane"><div class="lane-label">Nền tảng / kiểm soát</div><div class="lane-content">Xác thực danh tính → kiểm tra quyền và consent → ghi nhật ký → gửi thông báo → theo dõi SLA, đối soát và xử lý tranh chấp; phân tích chỉ dùng nguồn dữ liệu đã được phê duyệt.</div></div>
+      </div>
+    </section>
+
+    <section class="section" id="roadmap">
+      <div class="section-head">
+        <div><span class="kicker">04 / Lộ trình đề xuất</span><h2>Thứ tự xây dựng ưu tiên</h2></div>
+        <p>Ưu tiên theo nền tảng vận hành và khả năng tạo giá trị; mỗi giai đoạn cần được xác nhận bằng phạm vi, nguồn lực và điều kiện go/no-go.</p>
+      </div>
+      <div class="priority-list">
+        <article class="priority-row"><span class="priority-number">1</span><strong>Pet Business</strong><p>Quản lý hoạt động, chi nhánh, nhân sự, kho và doanh thu doanh nghiệp.</p><span class="priority-stage">Ưu tiên đầu</span></article>
+        <article class="priority-row"><span class="priority-number">2</span><strong>Pet Service</strong><p>Đưa danh mục dịch vụ, lịch hẹn, thực hiện và bàn giao vào một quy trình.</p><span class="priority-stage">Giai đoạn 2</span></article>
+        <article class="priority-row"><span class="priority-number">3</span><strong>Pet Health</strong><p>Mở rộng hồ sơ sức khỏe, tiêm phòng, xét nghiệm và kết nối phòng khám.</p><span class="priority-stage">Giai đoạn 3</span></article>
+        <article class="priority-row"><span class="priority-number">4</span><strong>Pet Commerce</strong><p>Phát triển catalog, mua hàng, thanh toán, giao nhận và hậu mãi.</p><span class="priority-stage">Giai đoạn 4</span></article>
+        <article class="priority-row"><span class="priority-number">5</span><strong>Pet Community</strong><p>Xây dựng cộng đồng chủ nuôi, nội dung an toàn và hoạt động sự kiện.</p><span class="priority-stage">Giai đoạn 5</span></article>
+        <article class="priority-row"><span class="priority-number">6</span><strong>Pet Connect</strong><p>Kết nối cứu hộ, nhận nuôi và tìm thú cưng thất lạc có xác minh.</p><span class="priority-stage">Giai đoạn 6</span></article>
+        <article class="priority-row"><span class="priority-number">7</span><strong>Pet Intelligence</strong><p>Phân tích và AI trên nền dữ liệu có chất lượng, quyền và mục đích sử dụng rõ ràng.</p><span class="priority-stage">Giai đoạn 7</span></article>
+      </div>
+    </section>
+
+    <section class="section" id="principles">
+      <div class="section-head">
+        <div><span class="kicker">05 / Nguyên tắc triển khai</span><h2>Xây theo nền tảng, mở theo kiểm soát</h2></div>
+        <p>Chỉ mở rộng khi workflow, trách nhiệm, dữ liệu và mức sẵn sàng vận hành đã được thống nhất.</p>
+      </div>
+      <div class="principles">
+        <article class="principle"><span class="icon">◉</span><h3>Một hồ sơ chuẩn</h3><p>Định danh chủ nuôi và thú cưng thống nhất; không tự động nhân bản hồ sơ qua các hệ thống.</p></article>
+        <article class="principle"><span class="icon">⌑</span><h3>Consent &amp; quyền tối thiểu</h3><p>Chỉ chia sẻ đúng mục đích, đúng vai trò, có thể thu hồi và có lịch sử truy cập.</p></article>
+        <article class="principle"><span class="icon">↔</span><h3>Workflow có chủ sở hữu</h3><p>Mỗi trạng thái, ngoại lệ, SLA và điểm bàn giao cần có đơn vị chịu trách nhiệm.</p></article>
+        <article class="principle"><span class="icon">✓</span><h3>Kiểm soát giao dịch</h3><p>Đơn hàng, thanh toán, tồn kho và hoàn tiền có đối soát, nhật ký và xử lý lỗi.</p></article>
+        <article class="principle"><span class="icon">✚</span><h3>An toàn chuyên môn</h3><p>Quyết định y tế do chuyên gia đủ năng lực thực hiện; nội dung cộng đồng có cơ chế báo cáo.</p></article>
+        <article class="principle"><span class="icon">⌁</span><h3>AI có con người giám sát</h3><p>Gợi ý phải có giới hạn, giải thích và đường chuyển tiếp cho người có thẩm quyền.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer-inner">
+      <span><strong>WAGGY Ecosystem</strong> · Kế hoạch định hướng sản phẩm</span>
+      <span>01 hệ thống đang có · 07 hệ thống đề xuất · Tài liệu định hướng, không phải xác nhận triển khai</span>
+    </div>
+  </footer>
+  <button class="to-top" id="toTop" type="button" aria-label="Về đầu trang">↑ Đầu trang</button>
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const themeButton = document.getElementById('themeToggle');
+      const toTop = document.getElementById('toTop');
+      const savedTheme = localStorage.getItem('waggy-product-theme');
+      if (savedTheme === 'dark') root.dataset.theme = 'dark';
+      themeButton?.addEventListener('click', () => {
+        const dark = root.dataset.theme !== 'dark';
+        if (dark) root.dataset.theme = 'dark';
+        else delete root.dataset.theme;
+        localStorage.setItem('waggy-product-theme', dark ? 'dark' : 'light');
+      });
+      const updateToTop = () => toTop?.classList.toggle('visible', window.scrollY > 500);
+      window.addEventListener('scroll', updateToTop, { passive: true });
+      updateToTop();
+      toTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    })();
+  </script>
+</body>
+</html>

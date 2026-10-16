@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Hàng đợi phê duyệt Pet Business: maker-checker độc lập, phạm vi branch, hạn mức, SLA, bằng chứng và lịch sử quyết định.">
+  <meta name="theme-color" content="#176747">
+  <meta name="color-scheme" content="light dark">
+  <title>Phê duyệt · WAGGY Pet Business</title>
+  <link rel="stylesheet" href="../../assets/demo.css">
+</head>
+<body data-demo="pet-business" data-demo-page="approvals" data-system-folder="true">
+  <a class="skip-link" href="#demoApp">Bỏ qua tải, đến nội dung Pet Business</a>
+  <div id="demoApp" role="region" aria-label="Ứng dụng Pet Business" aria-busy="true" tabindex="-1">
+    <div class="demo-boot" role="status" aria-live="polite"><span class="demo-boot-mark" aria-hidden="true">W</span><span class="demo-boot-copy"><strong>Đang mở Phê duyệt</strong><small>Nạp hàng đợi checker, quyền và SLA demo...</small></span><span class="demo-boot-spinner" aria-hidden="true"></span></div>
+  </div>
+  <noscript>
+    <main class="demo-noscript-page">
+      <header><span class="workspace-kicker">KIỂM SOÁT · MAKER–CHECKER</span><h1>Hàng đợi phê duyệt</h1><p>Rà soát yêu cầu theo giá trị, chi nhánh, nhóm hàng, phiên bản và trạng thái kỳ. Mỗi quyết định phải có người chịu trách nhiệm và lý do.</p></header>
+      <section><h2>Quy trình xử lý</h2><ol><li>Kiểm tra người lập, phạm vi branch và phiên bản request.</li><li>Đối chiếu hạn mức, ngân sách, chứng từ và policy có hiệu lực.</li><li>Giao checker độc lập đủ thẩm quyền.</li><li>Ghi quyết định cùng lý do; yêu cầu đã đổi phải duyệt lại.</li></ol></section>
+      <section><h2>Cổng kiểm soát</h2><p>Người lập không tự duyệt. Chặn nếu vượt hạn mức, request cũ hoặc kỳ khóa; demo không phát hành PO hay ghi sổ.</p></section>
+      <nav aria-label="Màn hình liên quan"><a href="procurement.html">Đề nghị mua</a><a href="adjustments.html">Điều chỉnh tồn</a><a href="finance.html">Tài chính</a><a href="audit.html">Nhật ký kiểm soát</a></nav>
+      <p class="demo-noscript-note">Bản demo tương tác cần JavaScript. Không có quyết định phê duyệt thật được thực hiện tại đây.</p>
+    </main>
+  </noscript>
+  <script src="pet-business-config.js" defer></script>
+  <script src="js/pet-business-algorithms.js" defer></script>
+  <script src="../../../../data/pet-business.js" defer></script>
+  <script src="../../../../data/pet-care.js" defer></script>
+  <script src="../../../../data/pet-commerce.js" defer></script>
+  <script src="../../../../data/pet-community.js" defer></script>
+  <script src="../../../../data/pet-connect.js" defer></script>
+  <script src="../../../../data/pet-health.js" defer></script>
+  <script src="../../../../data/pet-intelligence.js" defer></script>
+  <script src="../../../../data/pet-service.js" defer></script>
+  <script src="../../../../data/waggy-shared-demo-data.js" defer></script>
+  <script src="../../assets/sync.js" defer></script>
+  <script src="../../assets/demo.js" defer></script>
+  <script src="pet-business.js" defer></script>
+</body>
+</html>

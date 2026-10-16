@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Điểm tích hợp Pet Connect với Pet Care, Community, rescue partners, Pet Business và Intelligence."><title>Pet Connect | Điểm tích hợp WAGGY</title><link rel="stylesheet" href="../assets/waggy-product.css"></head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner"><a class="brand" href="../index.html"><span class="brand-mark">W</span><span>WAGGY<small>INTEGRATION DETAIL</small></span></a><nav class="top-links" aria-label="Điều hướng"><a href="index.html">Bản đồ tích hợp</a><a href="../workflow/index.html">Workflow</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav></div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../index.html">WAGGY Ecosystem</a><span>/</span><a href="index.html">Tích hợp</a><span>/</span><span>Pet Connect</span></nav>
+    <section class="hero"><div class="hero-content"><span class="eyebrow">07 · ĐỀ XUẤT XÂY DỰNG</span><h1>Pet Connect <span>connection points</span></h1><p>Connect giữ case tìm thú cưng/cứu hộ/nhận nuôi riêng tư; chỉ chia sẻ alert public-safe ra Community, còn định danh, bằng chứng và vị trí chính xác nằm sau quyền của case.</p><div class="hero-meta"><span class="status proposed">ĐỀ XUẤT</span><span>Case-centric API</span><span>Location privacy</span><span>Verified handoff</span></div></div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Sở hữu dữ liệu</span><h2>Connect là nguồn chuẩn của case</h2></div></div><div class="facts">
+      <div class="fact"><b>Connect sở hữu</b><span>Case ID/type, trạng thái, báo cáo/match, xác minh, liên hệ relay và biên bản bàn giao.</span></div><div class="fact"><b>Pet Care sở hữu</b><span>Hồ sơ chủ nuôi/thú cưng; Connect chỉ giữ external pet reference/evidence cần thiết.</span></div><div class="fact"><b>Rescue partner</b><span>Chỉ xem case được phân công và vùng thông tin cần xử lý trong thời hạn cấp quyền.</span></div>
+    </div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Điểm kết nối</span><h2>Case riêng, alert công khai có kiểm soát</h2></div></div><div class="integration-list">
+      <div class="integration-row"><strong>Pet Care → Connect</strong><span>Pet ID/badge xác minh và đặc điểm đã chọn; không đồng bộ lịch sử bệnh hoặc địa chỉ owner.</span><span class="integration-label">Verified reference · consent grant</span></div>
+      <div class="integration-row"><strong>Connect → Community</strong><span>Thông báo tìm kiếm được kiểm duyệt, khu vực gần đúng, public case token và thời điểm hết hạn.</span><span class="integration-label">Public-safe alert · expiry</span></div>
+      <div class="integration-row"><strong>Community → Connect</strong><span>Report/tip/match candidate gửi vào case inbox; danh tính người báo tip bị ẩn theo policy.</span><span class="integration-label">Tip endpoint · abuse report</span></div>
+      <div class="integration-row"><strong>Connect ↔ Rescue partner</strong><span>Case assignment, năng lực nhận, status cập nhật, appointment bàn giao và biên bản theo quyền.</span><span class="integration-label">Partner case API · scoped token</span></div>
+      <div class="integration-row"><strong>Business → Connect</strong><span>Yêu cầu hỗ trợ vật tư/dịch vụ được duyệt, fulfillment status và chứng từ; không truyền PII người báo tin.</span><span class="integration-label">Aid request · approved fulfillment</span></div>
+      <div class="integration-row"><strong>Connect → Intelligence</strong><span>Aggregate coarse region/time/outcome cho báo cáo hiệu quả; không export chính xác vị trí hoặc case identity.</span><span class="integration-label">Privacy-reviewed aggregate</span></div>
+    </div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Workflow tích hợp</span><h2>Phát alert sau xác minh, đóng chia sẻ khi case kết thúc</h2></div></div><ol class="steps">
+      <li><strong>Tạo case và định danh riêng</strong><p>Connect cấp case ID, chọn trường private/public, coarse location, expiry và contact relay.</p></li>
+      <li><strong>Kiểm duyệt/xác minh bằng chứng</strong><p>Moderator kiểm tra duplicate, quyền đăng ảnh, quyền sở hữu và rủi ro lừa đảo; chi tiết xác minh giữ private.</p></li>
+      <li><strong>Publish alert an toàn</strong><p>Connect gửi public-safe projection sang Community với public token, phạm vi vùng và TTL; không gửi contact/evidence.</p></li>
+      <li><strong>Nhận tip và match candidate</strong><p>Community tip về Connect inbox; hệ thống tạo candidate link nhưng người dùng/điều phối viên phải xác minh match.</p></li>
+      <li><strong>Phân công partner</strong><p>Connect cấp scoped token cho rescue partner đã duyệt; partner chỉ truy cập case cụ thể và cập nhật theo status/version.</p></li>
+      <li><strong>Xác nhận bàn giao và revoke</strong><p>Hai bên xác nhận kết quả; Connect phát case.closed, Community ẩn alert, partner token bị thu hồi và liên hệ relay dừng.</p></li>
+    </ol></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Rủi ro tích hợp</span><h2>Bảo vệ location, người báo tin và phúc lợi</h2></div></div><div class="two-col">
+      <article class="panel"><h3>Tranh chấp chủ sở hữu</h3><p>Không tự chuyển case/animal; đóng băng bàn giao, giới hạn truy cập và chuyển điều phối viên.</p></article><article class="panel"><h3>Public alert stale</h3><p>TTL hết hạn tự ẩn; case closed/reopened phát event có version, Community loại bỏ alert cũ.</p></article><article class="panel"><h3>Partner credential bị lộ</h3><p>Thu hồi token theo partner/case, ghi incident và không ảnh hưởng quyền của đối tác khác.</p></article><article class="panel"><h3>Định vị quá chính xác</h3><p>API public trả vùng coarse; chính xác chỉ cấp tạm thời, có lý do, cho assignee đã xác thực.</p></article>
+    </div><div class="callout"><strong>Nguyên tắc:</strong> Mọi match là gợi ý; chỉ xác minh có người và bàn giao an toàn mới kết thúc case.</div></section>
+    <nav class="page-nav" aria-label="Điều hướng"><a href="pet-community.html">← Pet Community</a><a href="index.html">Bản đồ kết nối</a><a href="pet-intelligence.html">Pet Intelligence →</a></nav>
+  </main><footer class="footer"><div class="shell footer-inner"><span>WAGGY Pet Connect · Integration design</span><span>Đề xuất xây dựng · vị trí chính xác mặc định không công khai.</span></div></footer><script src="../assets/waggy-product.js"></script>
+</body></html>

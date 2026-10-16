@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Nhận hàng Pet Business: đối chiếu purchase order, số lượng và hóa đơn; theo dõi lô, sai lệch và cổng xác nhận nhận hàng.">
+  <meta name="theme-color" content="#176747">
+  <meta name="color-scheme" content="light dark">
+  <title>Nhập hàng · WAGGY Pet Business</title>
+  <link rel="stylesheet" href="../../assets/demo.css">
+</head>
+<body data-demo="pet-business" data-demo-page="receiving" data-system-folder="true">
+  <a class="skip-link" href="#demoApp">Bỏ qua tải, đến nội dung Pet Business</a>
+  <div id="demoApp" role="region" aria-label="Ứng dụng Pet Business" aria-busy="true" tabindex="-1">
+    <div class="demo-boot" role="status" aria-live="polite"><span class="demo-boot-mark" aria-hidden="true">W</span><span class="demo-boot-copy"><strong>Đang mở Nhập hàng</strong><small>Nạp PO, phiếu nhận và trạng thái đối chiếu...</small></span><span class="demo-boot-spinner" aria-hidden="true"></span></div>
+  </div>
+  <noscript>
+    <main class="demo-noscript-page">
+      <header><span class="workspace-kicker">RECEIVING · THREE-WAY MATCH</span><h1>Nhập hàng &amp; xác minh receipt</h1><p>Đối chiếu purchase order, số giao/nhận, hàng bị từ chối và hóa đơn trước khi xem xét tăng tồn hoặc ghi công nợ.</p></header>
+      <section><h2>Quy trình nhận hàng</h2><ol><li>Xác minh PO, chi nhánh nhận và dòng hàng.</li><li>Ghi số lượng, lô, hạn dùng và tình trạng chất lượng.</li><li>So qty/đơn giá trên PO với receipt và invoice.</li><li>Checker xác nhận; cách ly sai lệch trước khi cập nhật sổ.</li></ol></section>
+      <section><h2>Điều kiện chặn</h2><p>Thiếu invoice, sai unit mapping, lô không hợp lệ hoặc variance vượt tolerance phải được rà soát; không tự cộng tồn.</p></section>
+      <nav aria-label="Màn hình liên quan"><a href="procurement.html">Đề nghị mua</a><a href="suppliers.html">Nhà cung cấp</a><a href="inventory.html">Tồn kho</a><a href="finance.html">Tài chính</a></nav>
+      <p class="demo-noscript-note">Bản demo tương tác cần JavaScript; phiếu nhận không tạo bút toán hay cập nhật kho thật.</p>
+    </main>
+  </noscript>
+  <script src="pet-business-config.js" defer></script>
+  <script src="js/pet-business-algorithms.js" defer></script>
+  <script src="../../../../data/pet-business.js" defer></script>
+  <script src="../../../../data/pet-care.js" defer></script>
+  <script src="../../../../data/pet-commerce.js" defer></script>
+  <script src="../../../../data/pet-community.js" defer></script>
+  <script src="../../../../data/pet-connect.js" defer></script>
+  <script src="../../../../data/pet-health.js" defer></script>
+  <script src="../../../../data/pet-intelligence.js" defer></script>
+  <script src="../../../../data/pet-service.js" defer></script>
+  <script src="../../../../data/waggy-shared-demo-data.js" defer></script>
+  <script src="../../assets/sync.js" defer></script>
+  <script src="../../assets/demo.js" defer></script>
+  <script src="pet-business.js" defer></script>
+</body>
+</html>

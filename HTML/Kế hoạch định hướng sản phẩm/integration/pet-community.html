@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Điểm tích hợp Pet Community với Pet Care, Pet Connect, Pet Service và Pet Intelligence."><title>Pet Community | Điểm tích hợp WAGGY</title><link rel="stylesheet" href="../assets/waggy-product.css"></head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner"><a class="brand" href="../index.html"><span class="brand-mark">W</span><span>WAGGY<small>INTEGRATION DETAIL</small></span></a><nav class="top-links" aria-label="Điều hướng"><a href="index.html">Bản đồ tích hợp</a><a href="../workflow/index.html">Workflow</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav></div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../index.html">WAGGY Ecosystem</a><span>/</span><a href="index.html">Tích hợp</a><span>/</span><span>Pet Community</span></nav>
+    <section class="hero"><div class="hero-content"><span class="eyebrow">06 · ĐỀ XUẤT XÂY DỰNG</span><h1>Pet Community <span>connection points</span></h1><p>Community kết nối hoạt động công khai, nội dung đã kiểm duyệt và nhóm người dùng; không biến hồ sơ chủ nuôi/thú cưng riêng tư thành hồ sơ mạng xã hội.</p><div class="hero-meta"><span class="status proposed">ĐỀ XUẤT</span><span>Moderated content</span><span>Privacy boundaries</span></div></div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Sở hữu dữ liệu</span><h2>Community sở hữu nội dung và quyết định moderation</h2></div></div><div class="facts">
+      <div class="fact"><b>Community sở hữu</b><span>Bài đăng, bình luận, nhóm, RSVP, báo cáo nội dung, quyết định kiểm duyệt và appeal.</span></div><div class="fact"><b>Pet Care sở hữu</b><span>Hồ sơ cá nhân/thú cưng; chỉ trả verified badge hoặc profile reference khi chủ nuôi opt-in.</span></div><div class="fact"><b>Không công khai</b><span>Địa chỉ, số liên hệ, health record, ID xác thực và vị trí cá nhân chính xác.</span></div>
+    </div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Điểm kết nối</span><h2>Chia sẻ nội dung công khai đã lọc</h2></div></div><div class="integration-list">
+      <div class="integration-row"><strong>Pet Care → Community</strong><span>Verified owner/pet badge, tên hiển thị hoặc loài theo opt-in; không chuyển ghi chú riêng tư.</span><span class="integration-label">Opt-in badge token · revoke status</span></div>
+      <div class="integration-row"><strong>Community ↔ Connect</strong><span>Connect gửi alert public-safe để moderation; Community trả post link/status/abuse report, không trả case PII.</span><span class="integration-label">Moderated alert · case reference</span></div>
+      <div class="integration-row"><strong>Service/Business → Community</strong><span>Sự kiện công khai, thông tin tổ chức, số slot còn lại và điều kiện tham gia; sponsorship phải công bố.</span><span class="integration-label">Public event listing · RSVP link</span></div>
+      <div class="integration-row"><strong>Community → Service</strong><span>Chuyển booking intent khi thành viên tự chọn dịch vụ; Community không lưu payment/medical details của booking.</span><span class="integration-label">Deep link · consented handoff</span></div>
+      <div class="integration-row"><strong>Community → Intelligence</strong><span>Metric tổng hợp nội dung/tương tác/an toàn; không chấm điểm thành viên hoặc export social graph.</span><span class="integration-label">Aggregates · no individual profiling</span></div>
+    </div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Workflow tích hợp</span><h2>Kiểm duyệt trước, kết nối sau</h2></div></div><ol class="steps">
+      <li><strong>Hệ nguồn gửi nội dung/sự kiện</strong><p>Service/Connect gửi payload công khai đã giới hạn trường, owner, expiry và source reference.</p></li>
+      <li><strong>Community kiểm tra permission và policy</strong><p>Xác minh caller, audience, tài liệu consent/rights, an toàn nội dung và duplicate key.</p></li>
+      <li><strong>Moderation duyệt phát hành</strong><p>Auto-filter hỗ trợ phân luồng; moderator quyết định theo policy, ghi actor/reason và tạo public URL/status.</p></li>
+      <li><strong>Người dùng tương tác/RSVP</strong><p>RSVP được gửi tới Service/Business qua ID tham chiếu; chỉ chia sẻ tên/contact khi chủ thể chấp thuận và cần thiết.</p></li>
+      <li><strong>Report/revoke đồng bộ</strong><p>Community phát moderation status/appeal result; nếu nguồn rút sự kiện hoặc consent, ẩn nội dung và ngừng phân phối.</p></li>
+    </ol></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">An toàn kết nối</span><h2>Không tái sử dụng dữ liệu ngoài ngữ cảnh</h2></div></div><div class="two-col">
+      <article class="panel"><h3>Badges và liên kết pet</h3><p>Dùng token có scope/expiry; revoke không làm lộ owner identity trên public feed.</p></article><article class="panel"><h3>Case Connect công khai</h3><p>Community chỉ phát nội dung đã được Connect/Moderator lọc; liên hệ/bằng chứng luôn ở case riêng.</p></article><article class="panel"><h3>Event hủy/quá tải</h3><p>Business/Service event hủy làm Community dừng RSVP, cập nhật người tham dự và ẩn link cũ.</p></article><article class="panel"><h3>Abuse report</h3><p>Giữ evidence có quyền truy cập hạn chế; moderation API trả trạng thái tối thiểu, không phơi danh tính người báo cáo.</p></article>
+    </div><div class="callout"><strong>Nguyên tắc:</strong> Không cho connector đọc toàn bộ bài riêng tư; public alert cần expiration; member identity luôn thuộc hệ nguồn và quyền cộng đồng.</div></section>
+    <nav class="page-nav" aria-label="Điều hướng"><a href="pet-business.html">← Pet Business</a><a href="index.html">Bản đồ kết nối</a><a href="pet-connect.html">Pet Connect →</a></nav>
+  </main><footer class="footer"><div class="shell footer-inner"><span>WAGGY Pet Community · Integration design</span><span>Đề xuất xây dựng · public sharing có kiểm duyệt.</span></div></footer><script src="../assets/waggy-product.js"></script>
+</body></html>

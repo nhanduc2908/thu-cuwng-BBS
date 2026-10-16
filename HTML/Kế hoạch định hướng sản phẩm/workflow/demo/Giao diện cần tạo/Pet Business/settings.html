@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Cấu hình tổ chức Pet Business: quản lý policy có phiên bản, phạm vi hiệu lực, kiểm tra dry-run và phê duyệt độc lập.">
+  <meta name="theme-color" content="#176747">
+  <meta name="color-scheme" content="light dark">
+  <title>Cấu hình tổ chức · WAGGY Pet Business</title>
+  <link rel="stylesheet" href="../../assets/demo.css">
+</head>
+<body data-demo="pet-business" data-demo-page="settings" data-system-folder="true">
+  <a class="skip-link" href="#demoApp">Bỏ qua tải, đến nội dung Pet Business</a>
+  <div id="demoApp" role="region" aria-label="Ứng dụng Pet Business" aria-busy="true" tabindex="-1">
+    <div class="demo-boot" role="status" aria-live="polite"><span class="demo-boot-mark" aria-hidden="true">W</span><span class="demo-boot-copy"><strong>Đang mở Cấu hình tổ chức</strong><small>Nạp policy, phạm vi và version hiện hành...</small></span><span class="demo-boot-spinner" aria-hidden="true"></span></div>
+  </div>
+  <noscript>
+    <main class="demo-noscript-page">
+      <header><span class="workspace-kicker">PLATFORM GOVERNANCE · VERSIONED POLICY</span><h1>Cấu hình tổ chức</h1><p>Quản lý policy theo tenant/branch scope, schema, ngưỡng, thời điểm hiệu lực và version; không ghi đè cấu hình đã được duyệt.</p></header>
+      <section><h2>Quy trình thay đổi</h2><ol><li>Khai báo owner, phạm vi và lý do kinh doanh.</li><li>Validate kiểu dữ liệu, giới hạn và tương thích.</li><li>Chạy dry-run trên snapshot/fixtures, xem diff và lỗi.</li><li>Checker độc lập phê duyệt; lưu rollback về version ổn định.</li></ol></section>
+      <section><h2>Điều kiện chặn</h2><p>Thiếu owner/reviewer, lỗi dry-run, schema không hợp lệ hoặc chưa có phương án rollback thì không tạo version hiệu lực.</p></section>
+      <nav aria-label="Màn hình liên quan"><a href="audit.html">Nhật ký kiểm soát</a><a href="approvals.html">Phê duyệt</a><a href="integrations.html">Tích hợp</a><a href="index.html">Control tower</a></nav>
+      <p class="demo-noscript-note">Bản demo tương tác cần JavaScript; không áp dụng policy vào hệ thống thật.</p>
+    </main>
+  </noscript>
+  <script src="pet-business-config.js" defer></script>
+  <script src="js/pet-business-algorithms.js" defer></script>
+  <script src="../../../../data/pet-business.js" defer></script>
+  <script src="../../../../data/pet-care.js" defer></script>
+  <script src="../../../../data/pet-commerce.js" defer></script>
+  <script src="../../../../data/pet-community.js" defer></script>
+  <script src="../../../../data/pet-connect.js" defer></script>
+  <script src="../../../../data/pet-health.js" defer></script>
+  <script src="../../../../data/pet-intelligence.js" defer></script>
+  <script src="../../../../data/pet-service.js" defer></script>
+  <script src="../../../../data/waggy-shared-demo-data.js" defer></script>
+  <script src="../../assets/sync.js" defer></script>
+  <script src="../../assets/demo.js" defer></script>
+  <script src="pet-business.js" defer></script>
+</body>
+</html>

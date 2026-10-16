@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Tích hợp Pet Business: giám sát connector, contract/schema version, độ trễ, retry, dead-letter queue và correlation ID.">
+  <meta name="theme-color" content="#176747">
+  <meta name="color-scheme" content="light dark">
+  <title>Tích hợp · WAGGY Pet Business</title>
+  <link rel="stylesheet" href="../../assets/demo.css">
+</head>
+<body data-demo="pet-business" data-demo-page="integrations" data-system-folder="true">
+  <a class="skip-link" href="#demoApp">Bỏ qua tải, đến nội dung Pet Business</a>
+  <div id="demoApp" role="region" aria-label="Ứng dụng Pet Business" aria-busy="true" tabindex="-1">
+    <div class="demo-boot" role="status" aria-live="polite"><span class="demo-boot-mark" aria-hidden="true">W</span><span class="demo-boot-copy"><strong>Đang mở Tích hợp</strong><small>Nạp connector, contract version và trạng thái queue...</small></span><span class="demo-boot-spinner" aria-hidden="true"></span></div>
+  </div>
+  <noscript>
+    <main class="demo-noscript-page">
+      <header><span class="workspace-kicker">PLATFORM · CONTRACT &amp; CONNECTOR HEALTH</span><h1>Tích hợp &amp; chất lượng luồng dữ liệu</h1><p>Kiểm tra producer/consumer, schema, owner, tenant scope, độ trễ, retry và dead-letter queue.</p></header>
+      <section><h2>Cổng tiếp nhận event</h2><ol><li>Xác minh contract và schema version được hỗ trợ.</li><li>Kiểm tra tenant, purpose và allowlist trường.</li><li>Khử trùng lặp bằng event ID; giới hạn retry.</li><li>Cách ly event lỗi vào DLQ và gắn owner/correlation ID.</li></ol></section>
+      <section><h2>Nguyên tắc vận hành</h2><p>Schema lạ, tenant mismatch hoặc purpose không hợp lệ phải bị chặn, không chuyển thành thành công. Retry phải có giới hạn và dấu vết audit.</p></section>
+      <nav aria-label="Màn hình liên quan"><a href="settings.html">Cấu hình</a><a href="reconciliation.html">Đối soát</a><a href="audit.html">Nhật ký kiểm soát</a><a href="index.html">Control tower</a></nav>
+      <p class="demo-noscript-note">Bản demo tương tác cần JavaScript; connector tại đây không kết nối dịch vụ ngoài.</p>
+    </main>
+  </noscript>
+  <script src="pet-business-config.js" defer></script>
+  <script src="js/pet-business-algorithms.js" defer></script>
+  <script src="../../../../data/pet-business.js" defer></script>
+  <script src="../../../../data/pet-care.js" defer></script>
+  <script src="../../../../data/pet-commerce.js" defer></script>
+  <script src="../../../../data/pet-community.js" defer></script>
+  <script src="../../../../data/pet-connect.js" defer></script>
+  <script src="../../../../data/pet-health.js" defer></script>
+  <script src="../../../../data/pet-intelligence.js" defer></script>
+  <script src="../../../../data/pet-service.js" defer></script>
+  <script src="../../../../data/waggy-shared-demo-data.js" defer></script>
+  <script src="../../assets/sync.js" defer></script>
+  <script src="../../assets/demo.js" defer></script>
+  <script src="pet-business.js" defer></script>
+</body>
+</html>

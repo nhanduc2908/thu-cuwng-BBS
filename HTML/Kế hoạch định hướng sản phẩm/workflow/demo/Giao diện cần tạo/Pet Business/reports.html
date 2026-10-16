@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Báo cáo Pet Business theo chi nhánh và kỳ: theo dõi KPI có định nghĩa, độ phủ dữ liệu, freshness và drill-down tới nguồn.">
+  <meta name="theme-color" content="#176747">
+  <meta name="color-scheme" content="light dark">
+  <title>Báo cáo chi nhánh · WAGGY Pet Business</title>
+  <link rel="stylesheet" href="../../assets/demo.css">
+</head>
+<body data-demo="pet-business" data-demo-page="reports" data-system-folder="true">
+  <a class="skip-link" href="#demoApp">Bỏ qua tải, đến nội dung Pet Business</a>
+  <div id="demoApp" role="region" aria-label="Ứng dụng Pet Business" aria-busy="true" tabindex="-1">
+    <div class="demo-boot" role="status" aria-live="polite"><span class="demo-boot-mark" aria-hidden="true">W</span><span class="demo-boot-copy"><strong>Đang mở Báo cáo chi nhánh</strong><small>Nạp KPI, coverage và kỳ so sánh mẫu...</small></span><span class="demo-boot-spinner" aria-hidden="true"></span></div>
+  </div>
+  <noscript>
+    <main class="demo-noscript-page">
+      <header><span class="workspace-kicker">BUSINESS INTELLIGENCE · BRANCH SNAPSHOT</span><h1>Báo cáo chi nhánh</h1><p>Tổng hợp KPI theo chi nhánh và kỳ, kèm định nghĩa, mẫu số, độ phủ, freshness và liên kết drill-down về nguồn.</p></header>
+      <section><h2>Quy trình phát hành</h2><ol><li>Chọn khoảng ngày, timezone, currency và branch scope.</li><li>Loại bản ghi trùng/test theo khóa đã xác định.</li><li>Kiểm tra coverage, tuổi snapshot và mẫu số từng KPI.</li><li>So sánh cùng kỳ; gắn nguồn và thời điểm tạo báo cáo.</li></ol></section>
+      <section><h2>Nguyên tắc báo cáo</h2><p>Dữ liệu thiếu hoặc stale phải hiển thị N/A, không thay bằng 0. Chỉ phát hành khi công thức và phạm vi so sánh đồng nhất.</p></section>
+      <nav aria-label="Màn hình liên quan"><a href="branches.html">Chi nhánh</a><a href="inventory.html">Tồn kho</a><a href="finance.html">Tài chính</a><a href="index.html">Control tower</a></nav>
+      <p class="demo-noscript-note">Bản demo tương tác cần JavaScript; số liệu và biểu đồ là minh họa.</p>
+    </main>
+  </noscript>
+  <script src="pet-business-config.js" defer></script>
+  <script src="js/pet-business-algorithms.js" defer></script>
+  <script src="../../../../data/pet-business.js" defer></script>
+  <script src="../../../../data/pet-care.js" defer></script>
+  <script src="../../../../data/pet-commerce.js" defer></script>
+  <script src="../../../../data/pet-community.js" defer></script>
+  <script src="../../../../data/pet-connect.js" defer></script>
+  <script src="../../../../data/pet-health.js" defer></script>
+  <script src="../../../../data/pet-intelligence.js" defer></script>
+  <script src="../../../../data/pet-service.js" defer></script>
+  <script src="../../../../data/waggy-shared-demo-data.js" defer></script>
+  <script src="../../assets/sync.js" defer></script>
+  <script src="../../assets/demo.js" defer></script>
+  <script src="pet-business.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Workflow WAGGY Pet Connect: các bước nghiệp vụ, trạng thái, ngoại lệ và kiểm soát.">
+  <title>WAGGY Pet Connect | Workflow chi tiết WAGGY</title>
+  <link rel="stylesheet" href="../assets/waggy-product.css">
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">W</span><span>WAGGY<small>WORKFLOW DETAIL</small></span></a>
+    <nav class="top-links" aria-label="Điều hướng"><a href="../index.html">Tổng quan</a><a href="index.html">8 workflow</a><a href="../integration/pet-connect.html">Điểm tích hợp</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav>
+  </div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../../index.html">Cổng HTML</a><span>/</span><a href="../index.html">WAGGY Ecosystem</a><span>/</span><a href="index.html">Workflow</a><span>/</span><span>Pet Connect</span></nav>
+    <section class="hero"><div class="hero-content"><span class="eyebrow">07 · ĐỀ XUẤT XÂY DỰNG</span><h1>WAGGY Pet Connect <span>Workflow</span></h1><p>Quy trình đề xuất xử lý case thú cưng thất lạc, tìm thấy, cứu hộ hoặc nhận nuôi với xác minh và bàn giao an toàn.</p><div class="hero-meta"><span class="status proposed">ĐỀ XUẤT</span><span>Luồng nghiệp vụ chi tiết</span><span>Ngoại lệ &amp; kiểm soát</span></div></div></section>
+    <aside class="callout"><strong>Trạng thái hệ thống:</strong> Đây là workflow đề xuất, chưa phải tính năng đã triển khai độc lập trong WAGGY.</aside>
+    <section class="section" id="workflow"><div class="section-head"><div><span class="kicker">Workflow đề xuất</span><h2>Từ báo tin đến bàn giao xác nhận</h2></div><p>Tìm kiếm/ghép kết quả chỉ tạo gợi ý; người có trách nhiệm phải xác minh trước khi chuyển giao.</p></div>
+      <ol class="steps">
+        <li><strong>Chọn loại case</strong><p>Người dùng chọn báo mất, báo tìm thấy, yêu cầu cứu hộ hoặc tìm nhận nuôi; hệ thống hiển thị quy tắc sử dụng và mức thông tin sẽ công khai.</p></li>
+        <li><strong>Nhập mô tả và bằng chứng</strong><p>Ghi loài, ngoại hình/đặc điểm nhận dạng, thời gian, khu vực gần đúng, ảnh có quyền sử dụng; nhập đặc điểm bí mật để xác minh riêng.</p></li>
+        <li><strong>Xác minh tài khoản và rà trùng</strong><p>Kiểm tra kênh liên hệ, bằng chứng sở hữu phù hợp, case trùng và nguy cơ giả mạo; giữ hồ sơ nhạy cảm ở trạng thái chờ kiểm duyệt.</p></li>
+        <li><strong>Phê duyệt phạm vi công khai</strong><p>Điều phối viên loại địa chỉ chính xác, giấy tờ, số điện thoại cá nhân và vị trí trú ẩn; đặt thời hạn công khai và đối tượng được xem.</p></li>
+        <li><strong>Phát hành thông báo theo vùng</strong><p>Đăng case đã kiểm tra với khu vực gần đúng; gửi thông báo có giới hạn tần suất, người nhận phù hợp và đường dẫn báo tin an toàn.</p></li>
+        <li><strong>Tiếp nhận kết quả và ghép hồ sơ</strong><p>Người tìm thấy gửi tọa độ riêng, thời điểm và ảnh; hệ thống đề xuất match theo đặc điểm/vị trí/thời gian nhưng không tự khẳng định chủ sở hữu.</p></li>
+        <li><strong>Liên lạc trung gian và xác minh</strong><p>Hai bên trao đổi qua kênh relay; chủ nuôi cung cấp đặc điểm hoặc bằng chứng bí mật; điều phối viên hỗ trợ khi có tranh chấp/độ tin cậy thấp.</p></li>
+        <li><strong>Đánh giá phương án cứu hộ/nhận nuôi</strong><p>Tổ chức xác nhận năng lực tiếp nhận, điều kiện chăm sóc và quy trình; ứng viên được thẩm định theo tiêu chí minh bạch trước khi kết nối.</p></li>
+        <li><strong>Bàn giao tại địa điểm an toàn</strong><p>Xác nhận người giao/nhận, thời gian, tình trạng thú cưng và giấy tờ cần thiết; lập biên bản hoặc xác nhận hai bên, không công khai dữ liệu định danh.</p></li>
+        <li><strong>Đóng case và hậu kiểm</strong><p>Chủ sở hữu/tổ chức xác nhận đoàn tụ, cứu hộ hoặc nhận nuôi; dừng thông báo, ẩn thông tin liên hệ, lưu kết quả và cho phép báo lại nếu chưa thành công.</p></li>
+      </ol><div class="state-line"><b>Trạng thái đề xuất:</b><span>Nháp</span><span>Chờ xác minh</span><span>Đang tìm kết nối</span><span>Có match tiềm năng</span><span>Đang xác minh</span><span>Đã đoàn tụ/tiếp nhận</span><span>Đã đóng</span></div>
+    </section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Ngoại lệ &amp; kiểm soát</span><h2>Không để kết nối tạo thêm rủi ro</h2></div></div><div class="two-col">
+      <article class="panel"><h3>Tranh chấp quyền sở hữu</h3><p>Tạm dừng chuyển giao, ẩn liên hệ, bảo toàn bằng chứng và chuyển điều phối viên; nền tảng không tự phán quyết quyền sở hữu.</p></article>
+      <article class="panel"><h3>Lừa đảo hoặc yêu cầu tiền</h3><p>Cảnh báo người dùng, không xử lý thanh toán ngoài nền tảng nếu chưa có quy trình; tiếp nhận báo cáo và khóa kết nối nguy cơ.</p></article>
+      <article class="panel"><h3>Động vật bị thương/nguy hiểm</h3><p>Hướng tới cơ sở thú y/cứu hộ đủ năng lực; chia sẻ vị trí riêng chỉ cho người cần xử lý và được phép.</p></article>
+      <article class="panel"><h3>Nhận nuôi không phù hợp</h3><p>Cho phép cứu hộ từ chối theo tiêu chí rõ; không phát hành công khai dữ liệu người đăng ký và có cơ chế khiếu nại.</p></article>
+    </div></section>
+    <section class="section">
+      <div class="section-head"><div><span class="kicker">Đặc tả case</span><h2>Luồng tìm kiếm, cứu hộ và nhận nuôi</h2></div><p>Connect xử lý thông tin nhạy cảm theo từng case; ghép kết quả chỉ là gợi ý và không tự xác nhận quyền sở hữu hay bàn giao.</p></div>
+      <div class="facts">
+        <div class="fact"><b>Hồ sơ case</b><span>Case ID, loại yêu cầu, thời gian, vùng gần đúng, mô tả/thẻ nhận dạng, bằng chứng riêng, mức công khai, owner, trạng thái và thời hạn rà soát.</span></div>
+        <div class="fact"><b>Vai trò</b><span>Người báo tin/chủ nuôi, người tìm thấy, điều phối viên, đối tác cứu hộ được xác minh, ứng viên nhận nuôi và người kiểm duyệt.</span></div>
+        <div class="fact"><b>Bảo vệ người/thú cưng</b><span>Không công khai số liên hệ, địa chỉ nhà, giấy tờ, vị trí chính xác hoặc đặc điểm bí mật dùng để xác minh.</span></div>
+      </div>
+      <h3>A. Case thất lạc / tìm thấy</h3>
+      <ol class="steps">
+        <li><strong>Tạo case và xác nhận hướng dẫn an toàn</strong><p>Người báo chọn mất hoặc tìm thấy, cung cấp kênh liên hệ đã xác minh, thời điểm và mô tả quan sát được; giao diện cảnh báo về lừa đảo, gặp mặt an toàn và không công khai dữ liệu riêng.</p></li>
+        <li><strong>Nhập thông tin công khai và bí mật tách biệt</strong><p>Phân trường thành public-safe (loài, dấu hiệu nhận dạng không quá đặc thù, vùng rộng) và restricted (tọa độ chính xác, dấu hiệu bí mật, giấy tờ/bằng chứng). Bằng chứng gắn nguồn, người gửi và thời điểm.</p></li>
+        <li><strong>Kiểm duyệt và xác minh quyền báo</strong><p>Điều phối kiểm tra trùng lặp, quyền dùng ảnh, tính hợp lý thời gian/địa điểm và dấu hiệu lừa đảo; khi cần xác minh quyền sở hữu theo bằng chứng không công khai. Case chưa đủ điều kiện ở trạng thái cần bổ sung, không phát tán rộng.</p></li>
+        <li><strong>Phê duyệt phạm vi và thời hạn phát hành</strong><p>Người duyệt xác nhận nội dung an toàn, bán kính/địa bàn, nhóm nhận cảnh báo, ngày hết hạn và kênh phản hồi relay. Mỗi lần gia hạn cần xác nhận case còn hiệu lực.</p></li>
+        <li><strong>Nhận tin và tạo ứng viên ghép</strong><p>Người tìm thấy gửi ảnh/mô tả/vị trí riêng; hệ thống có thể xếp ứng viên theo dấu hiệu, thời gian và vùng nhưng chỉ tạo candidate match. Không hiện dữ liệu liên hệ hai bên hoặc tuyên bố tìm được chủ.</p></li>
+        <li><strong>Xác minh hai phía và điều phối bàn giao</strong><p>Điều phối liên lạc qua relay, yêu cầu đặc điểm bí mật/chứng cứ phù hợp và kiểm tra mâu thuẫn. Khi tin cậy đủ, thống nhất địa điểm công cộng/an toàn, người chứng kiến nếu phù hợp, thời gian và phương án thú y.</p></li>
+        <li><strong>Xác nhận đoàn tụ và đóng case</strong><p>Hai bên/điều phối ghi ai giao nhận, thời điểm, trạng thái thú cưng và kết quả; dừng thông báo, ẩn vị trí/liên hệ, lưu audit theo chính sách và mời phản hồi an toàn. Nếu không xác nhận, giữ case mở hoặc chuyển điều phối.</p></li>
+      </ol>
+      <h3>B. Cứu hộ và nhận nuôi</h3>
+      <ol class="steps">
+        <li><strong>Đánh giá nhu cầu và mức độ nguy cấp</strong><p>Ghi loài, tình trạng quan sát được, vị trí, nguy cơ môi trường và người báo; tình huống nguy hiểm được chuyển tới tổ chức/cơ sở có năng lực, không chờ ghép nhận nuôi.</p></li>
+        <li><strong>Kiểm tra đối tác và khả năng tiếp nhận</strong><p>Điều phối xác nhận tổ chức, người trực, địa bàn, năng lực/chỗ trống, điều kiện vận chuyển và liên hệ khẩn. Chỉ giao dữ liệu case được phân công và trong thời hạn cần thiết.</p></li>
+        <li><strong>Tiếp nhận, chăm sóc tạm thời và nhật ký</strong><p>Đối tác ghi thời điểm nhận, người bàn giao, tình trạng quan sát, vật dụng và nơi tiếp nhận; cập nhật tiến triển, nhu cầu hỗ trợ và mọi lần bàn giao tiếp theo. Hồ sơ sức khỏe chuyên môn do cơ sở thú y tạo/xác thực.</p></li>
+        <li><strong>Sàng lọc người nhận nuôi và quyết định</strong><p>Ứng viên nhận thông tin đã được phép, hoàn tất câu hỏi/điều kiện công khai trước; đối tác đánh giá năng lực, môi trường chăm sóc và cam kết theo tiêu chí minh bạch. Kết quả từ chối ghi lý do ở mức phù hợp, không công khai dữ liệu ứng viên.</p></li>
+        <li><strong>Ký nhận, bàn giao và hậu kiểm</strong><p>Ghi thỏa thuận, người giao/nhận, thời điểm, hồ sơ được chuyển, thông tin liên hệ hậu kiểm và xác nhận hai bên. Sau bàn giao, quyền đối tác tạm thời được thu hồi; case chỉ đóng sau xác nhận và lịch hậu kiểm được chuyển cho đúng owner.</p></li>
+      </ol>
+      <div class="two-col">
+        <article class="panel"><h3>Case giả mạo, tranh chấp hoặc yêu cầu tiền</h3><p>Tạm ẩn thông tin công khai và ngừng kết nối trực tiếp; lưu bằng chứng, chuyển điều phối viên cấp cao, hướng dẫn không gửi tiền/gặp riêng và chỉ mở lại khi đã rà soát.</p></article>
+        <article class="panel"><h3>Quá hạn hoặc không liên lạc được</h3><p>Nhắc owner theo lịch; hết thời hạn thì ngừng broadcast và chuyển trạng thái cần xác nhận/đã hết hạn. Không xóa bằng chứng bắt buộc; giới hạn truy cập và lưu theo chính sách.</p></article>
+      </div>
+      <div class="callout"><strong>Quy tắc vị trí:</strong> vị trí chính xác chỉ hiển thị tạm thời cho người được phân công và phục vụ case cụ thể; public alert chỉ dùng vùng gần đúng, có thời hạn và nút báo tin an toàn.</div>
+    </section>
+    <nav class="page-nav" aria-label="Điều hướng workflow"><a href="index.html">← Danh mục 8 workflow</a><a href="../pet-connect.html#workflow">Trang hệ thống</a><a href="../integration/pet-connect.html">Điểm tích hợp →</a></nav>
+  </main>
+  <footer class="footer"><div class="shell footer-inner"><span>WAGGY Pet Connect · Workflow</span><span>ĐỀ XUẤT · Chi tiết tích hợp ở trang riêng.</span></div></footer>
+  <script src="../assets/waggy-product.js"></script>
+</body>
+</html>

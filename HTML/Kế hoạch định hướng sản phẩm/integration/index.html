@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Bản đồ tích hợp WAGGY: hệ thống nguồn, hệ thống nhận, điểm kết nối, sự kiện và ranh giới dữ liệu cho cả tám hệ thống.">
+  <title>WAGGY Integrations | Bản đồ kết nối</title>
+  <link rel="stylesheet" href="../assets/waggy-product.css">
+  <style>
+    .map-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:16px; background:var(--surface); }
+    .map { width:100%; border-collapse:collapse; min-width:720px; font-size:11px; }
+    .map th,.map td { padding:11px 12px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+    .map th { background:var(--soft); color:var(--green); font-size:9px; letter-spacing:.08em; text-transform:uppercase; }
+    .map tr:last-child td { border-bottom:0; }
+    .map td:first-child { font-weight:850; white-space:nowrap; }
+    .tag-current,.tag-proposed { display:inline-block; margin-left:5px; padding:2px 6px; border-radius:99px; font-size:8px; font-weight:900; }
+    .tag-current { background:#edf8ef; color:#21663e; }
+    .tag-proposed { background:var(--blue); color:var(--blue-ink); }
+    .integration-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:11px; }
+    .integration-card { padding:16px; border:1px solid var(--line); border-radius:15px; background:var(--surface); }
+    .integration-card h3 { margin:0 0 5px; font-size:15px; }
+    .integration-card p { margin:0; color:var(--muted); font-size:11px; }
+    .integration-card a { display:inline-flex; margin-top:10px; color:var(--green); font-size:10px; font-weight:900; }
+    .integration-card a:hover { text-decoration:underline; }
+    .contract-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+    .contract { padding:14px; border:1px solid var(--line); border-radius:14px; background:var(--surface); }
+    .contract b { display:block; color:var(--green); font-size:10px; }
+    .contract p { margin:5px 0 0; color:var(--muted); font-size:11px; }
+    @media(max-width:700px){.integration-grid,.contract-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">W</span><span>WAGGY<small>INTEGRATION DIRECTORY</small></span></a>
+    <nav class="top-links" aria-label="Điều hướng"><a href="../index.html">Tổng quan</a><a href="../workflow/index.html">Workflow</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav>
+  </div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../../index.html">Cổng HTML</a><span>/</span><a href="../index.html">WAGGY Ecosystem</a><span>/</span><span>Tích hợp</span></nav>
+    <section class="hero"><div class="hero-content"><span class="eyebrow">WAGGY ECOSYSTEM · INTEGRATION</span><h1>Bản đồ <span>kết nối</span></h1><p>Chỉ rõ hệ thống nào sở hữu dữ liệu, hệ thống nào gửi/nhận, sự kiện nào kích hoạt workflow và cách xử lý khi kết nối lỗi. Toàn bộ kết nối dưới đây là kiến trúc đề xuất, chưa phải trạng thái triển khai hiện tại.</p><div class="hero-meta"><span>Pet Care đang có</span><span>7 hệ thống đề xuất</span><span>API / event / ownership</span></div></div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Quy ước hiện trạng</span><h2>Không đồng nhất kết nối với triển khai</h2></div><p>Pet Care hiện tồn tại; các sản phẩm còn lại và kết nối giữa chúng cần được xây dựng, phê duyệt và kiểm chứng theo giai đoạn.</p></div><div class="contract-grid">
+      <article class="contract"><b>Hệ thống nguồn (source of truth)</b><p>Chỉ hệ thống sở hữu nghiệp vụ mới được phép tạo/sửa dữ liệu gốc của miền đó. Hệ nhận dùng tham chiếu hoặc bản sao giới hạn có nguồn/version.</p></article>
+      <article class="contract"><b>API đồng bộ và sự kiện</b><p>API cho tra cứu/lệnh có quyền; event cho thay đổi trạng thái. Mỗi request/event có ID, tenant/branch, version và timestamp.</p></article>
+      <article class="contract"><b>Trạng thái triển khai</b><p>“Đề xuất” nghĩa là điểm kết nối cần thiết kế. Không được trình bày như API, chức năng hoặc chia sẻ dữ liệu đang hoạt động.</p></article>
+    </div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Ma trận hệ thống</span><h2>Điểm giao tiếp và chiều dữ liệu</h2></div><p>Mỗi dòng là một luồng tích hợp dự kiến. Mở trang của từng hệ thống để xem trigger, payload tối thiểu, xác nhận và nhánh lỗi.</p></div>
+      <div class="map-wrap"><table class="map">
+        <thead><tr><th>Luồng</th><th>Điểm kết nối</th><th>Dữ liệu / sự kiện</th><th>Ranh giới nguồn</th><th>Chi tiết</th></tr></thead>
+        <tbody>
+          <tr><td>Pet Care <span class="tag-current">HIỆN CÓ</span> → Pet Service</td><td>Pet ID + consent tại bước tạo booking</td><td>Loài, quy mô, lưu ý an toàn tối thiểu; lịch đặt/check-in/kết thúc</td><td>Pet Care sở hữu hồ sơ; Service sở hữu booking</td><td><a href="pet-care.html">Pet Care</a> · <a href="pet-service.html">Service</a></td></tr>
+          <tr><td>Pet Care → Pet Health</td><td>Pet reference + consent khám/đơn vị</td><td>Tiền sử tối thiểu; referral, lịch khám, nhắc tái khám</td><td>Health/clinic sở hữu hồ sơ chuyên môn</td><td><a href="pet-care.html">Pet Care</a> · <a href="pet-health.html">Health</a></td></tr>
+          <tr><td>Pet Business → Pet Commerce</td><td>Catalog/price/stock API</td><td>SKU, giá phiên bản, tồn khả dụng, đơn, thanh toán đã xác minh, fulfillment</td><td>Business sở hữu catalog vận hành/tồn; Commerce sở hữu đơn trực tuyến</td><td><a href="pet-business.html">Business</a> · <a href="pet-commerce.html">Commerce</a></td></tr>
+          <tr><td>Pet Business ↔ Pet Service</td><td>Chi nhánh, lịch, nguồn lực, phiên dịch vụ</td><td>Availability, appointment, usage, invoice và reconciliation</td><td>Business sở hữu nguồn lực/tài chính; Service sở hữu booking/phiên thực hiện</td><td><a href="pet-business.html">Business</a> · <a href="pet-service.html">Service</a></td></tr>
+          <tr><td>Pet Health → Pet Care</td><td>Consent-scoped record summary</td><td>Trạng thái đã phát hành, lịch tiêm/tái khám, tài liệu được phép</td><td>Health/clinic vẫn là nguồn chuyên môn</td><td><a href="pet-health.html">Pet Health</a></td></tr>
+          <tr><td>Community ↔ Connect</td><td>Moderated public alert + case ref</td><td>Thông báo tìm kiếm đã lọc; trạng thái case không gồm dữ liệu liên hệ riêng tư</td><td>Connect sở hữu case; Community sở hữu bài/kiểm duyệt</td><td><a href="pet-community.html">Community</a> · <a href="pet-connect.html">Connect</a></td></tr>
+          <tr><td>Pet Care / Business / Service / Health → Intelligence</td><td>Data contracts, governed read-only dataset</td><td>Schema, lineage, consent/purpose, aggregate metrics, data quality</td><td>Mỗi miền giữ source of truth; Intelligence chỉ dẫn xuất</td><td><a href="pet-intelligence.html">Intelligence</a></td></tr>
+          <tr><td>Intelligence → hệ nghiệp vụ</td><td>Recommendation API + human approval</td><td>Gợi ý có version, rationale, confidence và expiration; không ghi trực tiếp nghiệp vụ</td><td>Hệ nhận quyết định/ghi dữ liệu sau người duyệt</td><td><a href="pet-intelligence.html">Intelligence</a></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Chi tiết mỗi hệ thống</span><h2>Điểm kết nối theo chủ sở hữu</h2></div><p>Mỗi trang ghi rõ outbound, inbound, dữ liệu không chia sẻ và workflow khi kết nối thành công/thất bại.</p></div>
+      <div class="integration-grid">
+        <article class="integration-card"><h3>01 · Pet Care <span class="tag-current">HIỆN CÓ</span></h3><p>Hồ sơ nền và consent; tích hợp outbound có kiểm soát sang Service, Health và dataset được duyệt cho Intelligence.</p><a href="pet-care.html">Mở điểm tích hợp Pet Care →</a></article>
+        <article class="integration-card"><h3>02 · Pet Service</h3><p>Nhận tham chiếu hồ sơ và năng lực cơ sở; trả booking, kết quả thực hiện và bàn giao.</p><a href="pet-service.html">Mở điểm tích hợp Pet Service →</a></article>
+        <article class="integration-card"><h3>03 · Pet Health</h3><p>Tiếp nhận consent/referral; kết nối clinic/lab; trả summary/nhắc lịch có quyền.</p><a href="pet-health.html">Mở điểm tích hợp Pet Health →</a></article>
+        <article class="integration-card"><h3>04 · Pet Commerce</h3><p>Nhận catalog/tồn; gửi order/payment/fulfillment/return để Business đối soát.</p><a href="pet-commerce.html">Mở điểm tích hợp Pet Commerce →</a></article>
+        <article class="integration-card"><h3>05 · Pet Business · Ưu tiên 1</h3><p>Hub vận hành doanh nghiệp: giữ nguồn chi nhánh, nhân sự, catalog vận hành, kho và tài chính.</p><a href="pet-business.html">Mở điểm tích hợp Pet Business →</a></article>
+        <article class="integration-card"><h3>06 · Pet Community</h3><p>Liên kết hồ sơ opt-in, sự kiện công khai và cảnh báo đã moderation; không chia sẻ PII tự do.</p><a href="pet-community.html">Mở điểm tích hợp Pet Community →</a></article>
+        <article class="integration-card"><h3>07 · Pet Connect</h3><p>Quản lý case nhạy cảm; relay liên lạc, xác minh, phối hợp cứu hộ và xuất thông báo công khai đã lọc.</p><a href="pet-connect.html">Mở điểm tích hợp Pet Connect →</a></article>
+        <article class="integration-card"><h3>08 · Pet Intelligence</h3><p>Đọc dataset có governance, phát hành recommendation chỉ sau review của con người.</p><a href="pet-intelligence.html">Mở điểm tích hợp Intelligence →</a></article>
+      </div>
+    </section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Mẫu workflow tích hợp</span><h2>Luồng chuẩn cho mọi kết nối</h2></div><p>Áp dụng cho API request/response, event-driven workflow và đồng bộ định kỳ.</p></div>
+      <ol class="steps">
+        <li><strong>Đăng ký kết nối và mục đích</strong><p>Chủ hai miền phê duyệt use-case, dữ liệu tối thiểu, owner, SLA, retention và quyền truy cập.</p></li>
+        <li><strong>Xác thực, cấp quyền và consent</strong><p>Caller/service account được xác thực; kiểm tra tenant, vai trò, scope, consent và trạng thái dữ liệu.</p></li>
+        <li><strong>Kiểm tra schema và version</strong><p>Validate required fields, ID tham chiếu, schema version, event ID và điều kiện nghiệp vụ trước khi ghi nhận.</p></li>
+        <li><strong>Gửi với correlation/idempotency ID</strong><p>Retry cùng request ID không tạo bản ghi hoặc thanh toán lặp; event có sequence/version để phát hiện đến sai thứ tự.</p></li>
+        <li><strong>Ghi nhận tiếp nhận và trạng thái</strong><p>Hệ nhận trả accepted/rejected/pending kèm mã theo dõi; nguồn chỉ đánh dấu hoàn tất sau xác nhận theo hợp đồng.</p></li>
+        <li><strong>Đối soát và xử lý lỗi</strong><p>Retry lỗi tạm thời có giới hạn; lỗi schema/quyền vào dead-letter/manual review; đối chiếu trạng thái bằng ID trước retry.</p></li>
+        <li><strong>Audit, cảnh báo và thu hồi</strong><p>Ghi actor, purpose, data scope và kết quả; giám sát SLA; có thể revoke credential/consent hoặc disable connector.</p></li>
+      </ol>
+    </section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Nguyên tắc nền tảng</span><h2>Hợp đồng tích hợp trước khi viết connector</h2></div></div><div class="contract-grid">
+      <article class="contract"><b>Identity mapping</b><p>WAGGY ID ổn định và external ID theo namespace; không ghép theo tên/điện thoại đơn thuần.</p></article>
+      <article class="contract"><b>Least data / least privilege</b><p>Chỉ gửi trường cần; credential theo service và scope, tách môi trường, tenant, chi nhánh.</p></article>
+      <article class="contract"><b>Idempotency &amp; ordering</b><p>Retry không nhân đôi; event version/sequence phát hiện duplicate, stale hoặc out-of-order.</p></article>
+      <article class="contract"><b>Consent &amp; purpose</b><p>Consent ràng buộc người nhận/mục đích; thu hồi dừng chia sẻ tương lai và audit giữ theo chính sách.</p></article>
+      <article class="contract"><b>Observability</b><p>Correlation ID, trạng thái connector, độ trễ, tỷ lệ lỗi, replay và dead-letter có owner.</p></article>
+      <article class="contract"><b>Versioning &amp; rollback</b><p>Schema/API có version, tương thích lùi, sandbox, feature flag, kill switch và migration plan.</p></article>
+    </div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Lộ trình tích hợp</span><h2>Đi từng cặp hệ thống, kiểm soát điểm mở rộng</h2></div></div><div class="roadmap">
+      <article><b>Giai đoạn 0 · nền tảng</b><strong>Chuẩn hóa danh tính và quyền</strong><p>WAGGY ID, tenant/branch, consent, API gateway, event envelope, audit và ownership.</p></article>
+      <article><b>Giai đoạn 1 · ưu tiên vận hành</b><strong>Pet Business ↔ Commerce / Service</strong><p>Catalog, tồn, đơn, lịch dịch vụ, thanh toán/đối soát; pilot một cơ sở và reconciliation thủ công dự phòng.</p></article>
+      <article><b>Giai đoạn 2 · chuyên môn &amp; cộng đồng</b><strong>Pet Care ↔ Health / Connect / Community</strong><p>Chỉ bật use-case có consent, vai trò đối tác, quy trình moderation và xử lý quyền riêng tư.</p></article>
+      <article><b>Giai đoạn 3 · phân tích</b><strong>Pet Intelligence</strong><p>Dataset đọc có governance, đánh giá chất lượng, shadow mode, human review và khả năng rollback.</p></article>
+      <article><b>Go / no-go</b><strong>Đạt kiểm tra trước mở rộng</strong><p>Đối soát dữ liệu/tài chính, kiểm thử retry/duplicate, security review, SLA, chủ vận hành và runbook sự cố.</p></article>
+    </div></section>
+    <nav class="page-nav" aria-label="Điều hướng"><a href="../workflow/index.html">← Thư mục workflow</a><a href="../index.html">Tổng quan WAGGY →</a></nav>
+  </main>
+  <footer class="footer"><div class="shell footer-inner"><span>WAGGY Integration Directory</span><span>Mọi connector nêu trên là định hướng cho tới khi được thiết kế và triển khai riêng.</span></div></footer>
+  <script src="../assets/waggy-product.js"></script>
+</body>
+</html>

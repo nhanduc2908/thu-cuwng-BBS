@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Cấu hình Pet Care: clinic scope, owner/reviewer, schema, dry-run, tương thích và rollback.">
+  <title>Cấu hình · WAGGY Pet Care</title>
+  <link rel="stylesheet" href="../../assets/demo.css">
+</head>
+<body data-demo="pet-care" data-demo-page="settings" data-system-folder="true">
+  <a class="skip-link" href="#demoApp">Bỏ qua điều hướng, đến nội dung Pet Care</a>
+  <div id="demoApp" role="region" aria-label="Ứng dụng Pet Care" aria-busy="true" tabindex="-1"><div class="demo-boot" role="status" aria-live="polite"><span class="demo-boot-mark" aria-hidden="true">W</span><span class="demo-boot-copy"><strong>Đang mở cấu hình Pet Care</strong><small>Nạp clinic scope, policy version và trạng thái kiểm tra...</small></span><span class="demo-boot-spinner" aria-hidden="true"></span></div></div>
+  <noscript><main class="demo-noscript-page"><header><span class="workspace-kicker">PET CARE · CONFIG GOVERNANCE</span><h1>Cấu hình Pet Care</h1><p>Quản lý clinic scope, vai trò, consent policy và cấu hình dịch vụ theo version.</p></header><section><h2>Quy trình thay đổi</h2><ol><li>Khai báo owner, phạm vi và lý do.</li><li>Validate schema và scope truy cập.</li><li>Chạy dry-run trên fixtures, rà lỗi và tương thích.</li><li>Checker độc lập review; xác minh rollback trước publish.</li></ol></section><section><h2>Điều kiện chặn</h2><p>Thiếu owner/reviewer, scope sai, lỗi dry-run hoặc thiếu rollback thì giữ cấu hình hiện hành. Không tự cấp quyền hay áp dụng policy.</p></section><nav aria-label="Màn hình liên quan"><a href="health-records.html">Hồ sơ sức khỏe</a><a href="integrations.html">Tích hợp</a><a href="audit.html">Nhật ký</a><a href="services.html">Dịch vụ</a></nav><p class="demo-noscript-note">Bật JavaScript để sử dụng prototype; cấu hình không áp vào clinic thật.</p></main></noscript>
+  <script src="js/pet-care-algorithms.js" defer></script>
+  <script src="../../../../data/pet-business.js" defer></script>
+  <script src="../../../../data/pet-care.js" defer></script>
+  <script src="../../../../data/pet-commerce.js" defer></script>
+  <script src="../../../../data/pet-community.js" defer></script>
+  <script src="../../../../data/pet-connect.js" defer></script>
+  <script src="../../../../data/pet-health.js" defer></script>
+  <script src="../../../../data/pet-intelligence.js" defer></script>
+  <script src="../../../../data/pet-service.js" defer></script>
+  <script src="../../../../data/waggy-shared-demo-data.js" defer></script>
+  <script src="../../assets/sync.js" defer></script>
+  <script src="../../assets/demo.js" defer></script>
+</body>
+</html>

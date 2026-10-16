@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Điểm tích hợp đề xuất của WAGGY Pet Service với Pet Care, Pet Business, Pet Health và Intelligence."><title>Pet Service | Điểm tích hợp WAGGY</title><link rel="stylesheet" href="../assets/waggy-product.css"></head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner"><a class="brand" href="../index.html"><span class="brand-mark">W</span><span>WAGGY<small>INTEGRATION DETAIL</small></span></a><nav class="top-links" aria-label="Điều hướng"><a href="index.html">Bản đồ tích hợp</a><a href="../workflow/index.html">Workflow</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav></div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../index.html">WAGGY Ecosystem</a><span>/</span><a href="index.html">Tích hợp</a><span>/</span><span>Pet Service</span></nav>
+    <section class="hero"><div class="hero-content"><span class="eyebrow">02 · ĐỀ XUẤT XÂY DỰNG</span><h1>Pet Service <span>connection points</span></h1><p>Pet Service kết nối booking, cơ sở và thực hiện dịch vụ với hồ sơ thú cưng và năng lực vận hành doanh nghiệp; dữ liệu chuyên môn chỉ chia sẻ khi cần, có consent.</p><div class="hero-meta"><span class="status proposed">ĐỀ XUẤT</span><span>Booking API</span><span>Availability &amp; fulfillment events</span></div></div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Sở hữu dữ liệu</span><h2>Service sở hữu vòng đời booking</h2></div></div><div class="facts">
+      <div class="fact"><b>Service sở hữu</b><span>Booking, slot giữ tạm, checklist, phiên dịch vụ, bàn giao, no-show và đánh giá.</span></div><div class="fact"><b>Business sở hữu</b><span>Chi nhánh, nhân lực/ca, tài nguyên, bảng giá vận hành, kho vật tư và sổ tài chính.</span></div><div class="fact"><b>Care sở hữu</b><span>Hồ sơ chủ nuôi/thú cưng; Service giữ pet reference thay vì sao chép hồ sơ.</span></div>
+    </div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Điểm kết nối</span><h2>Connector, chiều dữ liệu và sự kiện</h2></div><p>Các kết nối này cần được xây dựng; không hàm ý sản phẩm hiện tại đã có API tương ứng.</p></div><div class="integration-list">
+      <div class="integration-row"><strong>Pet Care → Service</strong><span>Đọc pet reference và trường an toàn tối thiểu theo consent khi bắt đầu booking.</span><span class="integration-label">Pet ID · species · approved care notes</span></div>
+      <div class="integration-row"><strong>Pet Business → Service</strong><span>Đồng bộ danh mục dịch vụ, giá version, chi nhánh, giờ mở cửa, roster, năng lực và tài nguyên.</span><span class="integration-label">Service catalog · availability · capacity</span></div>
+      <div class="integration-row"><strong>Service → Business</strong><span>Gửi booking confirmed/cancelled, invoice lines, vật tư sử dụng, khoản thu/refund và completion.</span><span class="integration-label">Service order · inventory usage · settlement</span></div>
+      <div class="integration-row"><strong>Service → Pet Care</strong><span>Gửi appointment reference, kết quả chăm sóc và ghi chú bàn giao được phép.</span><span class="integration-label">Appointment ID · permitted summary</span></div>
+      <div class="integration-row"><strong>Health → Service (conditional)</strong><span>Chỉ gửi điều kiện dịch vụ/safety status cần thiết; Service không xem bệnh án đầy đủ.</span><span class="integration-label">Minimum eligibility · consent ref</span></div>
+    </div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Workflow kết nối</span><h2>Kiểm tra năng lực trước khi xác nhận lịch</h2></div></div><ol class="steps">
+      <li><strong>Chủ nuôi chọn dịch vụ</strong><p>Service nhận pet ID, service/package ID, location, requested window và consent reference.</p></li>
+      <li><strong>Đọc thông tin và nguồn lực</strong><p>Service truy vấn Care cho thuộc tính được phép và Business cho giá/lịch/công suất phiên bản hiện tại.</p></li>
+      <li><strong>Giữ slot có thời hạn</strong><p>Business cấp capacity token/hold ID có expiry; Service báo giá/điều khoản, khách xác nhận và đặt cọc nếu quy định.</p></li>
+      <li><strong>Xác nhận booking và phát sự kiện</strong><p>Service phát appointment.confirmed; Business ghi lịch vận hành và nghĩa vụ tài chính bằng event ID idempotent.</p></li>
+      <li><strong>Thực hiện và cập nhật trạng thái</strong><p>Check-in/start/completed/handoff được phát theo version; Service giữ checklist, Business cập nhật sử dụng vật tư/charge.</p></li>
+      <li><strong>Đối soát, đóng và thông báo</strong><p>Business xác nhận invoice/settlement; Service đóng booking, gửi kết quả được phép về Care và gửi thông báo khách.</p></li>
+    </ol></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Xung đột &amp; phục hồi</span><h2>Không xác nhận trên slot cũ</h2></div></div><div class="two-col">
+      <article class="panel"><h3>Giá/lịch thay đổi</h3><p>Version mismatch làm yêu cầu pending; đọc giá/slot mới và xin khách xác nhận lại.</p></article><article class="panel"><h3>Hủy hoặc no-show</h3><p>Service phát cancellation/no-show reason; Business giải phóng capacity và tính hoàn/phí theo chính sách đã đồng ý.</p></article><article class="panel"><h3>Mất event</h3><p>Outbox + replay theo event ID; đối soát booking status trước khi gửi lại để không tạo lịch hoặc invoice trùng.</p></article><article class="panel"><h3>Phát hiện nguy cơ sức khỏe</h3><p>Dừng/đổi lịch theo chính sách, hỏi consent để chuyển referral; không gửi chi tiết y tế sang Business.</p></article>
+    </div><div class="callout"><strong>Ranh giới:</strong> Service không sửa số dư kho/tài chính trực tiếp; gửi command/event qua API Business và chờ xác nhận.</div></section>
+    <nav class="page-nav" aria-label="Điều hướng"><a href="pet-care.html">← Pet Care</a><a href="index.html">Bản đồ kết nối</a><a href="pet-health.html">Pet Health →</a></nav>
+  </main><footer class="footer"><div class="shell footer-inner"><span>WAGGY Pet Service · Integration design</span><span>Đề xuất xây dựng · connector chưa triển khai.</span></div></footer><script src="../assets/waggy-product.js"></script>
+</body></html>

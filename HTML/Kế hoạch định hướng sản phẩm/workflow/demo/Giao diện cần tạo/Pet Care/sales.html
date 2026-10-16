@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Đơn bán hàng Pet Care: đối chiếu tổng tiền, currency, trạng thái thanh toán và version nguồn ở chế độ chỉ đọc.">
+  <title>Đơn bán hàng · WAGGY Pet Care</title>
+  <link rel="stylesheet" href="../../assets/demo.css">
+</head>
+<body data-demo="pet-care" data-demo-page="sales" data-system-folder="true">
+  <a class="skip-link" href="#demoApp">Bỏ qua điều hướng, đến nội dung Pet Care</a>
+  <div id="demoApp" role="region" aria-label="Ứng dụng Pet Care" aria-busy="true" tabindex="-1"><div class="demo-boot" role="status" aria-live="polite"><span class="demo-boot-mark" aria-hidden="true">W</span><span class="demo-boot-copy"><strong>Đang mở đơn bán hàng</strong><small>Nạp đơn, trạng thái xử lý và tham chiếu thanh toán mẫu...</small></span><span class="demo-boot-spinner" aria-hidden="true"></span></div></div>
+  <noscript><main class="demo-noscript-page"><header><span class="workspace-kicker">PET CARE · READ-ONLY SALES REFERENCES</span><h1>Đơn bán hàng</h1><p>Theo dõi order ID, dòng hàng, khách tham chiếu và trạng thái thực hiện từ nguồn đơn.</p></header><section><h2>Quy trình kiểm tra</h2><ol><li>Đọc order snapshot và kiểm tra version hiện hành.</li><li>Đối chiếu tổng tiền, currency và reference nguồn.</li><li>Xác minh riêng trạng thái thanh toán.</li><li>Chuyển variance sang đối soát; không tự đổi trạng thái.</li></ol></section><section><h2>Bảo vệ thanh toán</h2><p>Không lưu PAN/token thanh toán, không capture hoặc hoàn tiền; đơn hủy không được đưa về trạng thái thành công.</p></section><nav aria-label="Màn hình liên quan"><a href="customers.html">Khách hàng</a><a href="inventory.html">Tồn kho</a><a href="suppliers.html">Nhà cung cấp</a><a href="reports.html">Báo cáo</a></nav><p class="demo-noscript-note">Bật JavaScript để dùng prototype; không kết nối cổng thanh toán.</p></main></noscript>
+  <script src="js/pet-care-algorithms.js" defer></script>
+  <script src="../../../../data/pet-business.js" defer></script>
+  <script src="../../../../data/pet-care.js" defer></script>
+  <script src="../../../../data/pet-commerce.js" defer></script>
+  <script src="../../../../data/pet-community.js" defer></script>
+  <script src="../../../../data/pet-connect.js" defer></script>
+  <script src="../../../../data/pet-health.js" defer></script>
+  <script src="../../../../data/pet-intelligence.js" defer></script>
+  <script src="../../../../data/pet-service.js" defer></script>
+  <script src="../../../../data/waggy-shared-demo-data.js" defer></script>
+  <script src="../../assets/sync.js" defer></script>
+  <script src="../../assets/demo.js" defer></script>
+</body>
+</html>

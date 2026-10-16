@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Đề nghị mua Pet Business: quản lý nhu cầu hàng, báo giá, hạn mức ngân sách, maker-checker và trạng thái PO draft.">
+  <meta name="theme-color" content="#176747">
+  <meta name="color-scheme" content="light dark">
+  <title>Đề nghị mua hàng · WAGGY Pet Business</title>
+  <link rel="stylesheet" href="../../assets/demo.css">
+</head>
+<body data-demo="pet-business" data-demo-page="procurement" data-system-folder="true">
+  <a class="skip-link" href="#demoApp">Bỏ qua tải, đến nội dung Pet Business</a>
+  <div id="demoApp" role="region" aria-label="Ứng dụng Pet Business" aria-busy="true" tabindex="-1">
+    <div class="demo-boot" role="status" aria-live="polite"><span class="demo-boot-mark" aria-hidden="true">W</span><span class="demo-boot-copy"><strong>Đang mở Đề nghị mua hàng</strong><small>Nạp requisition, báo giá và hạn mức demo...</small></span><span class="demo-boot-spinner" aria-hidden="true"></span></div>
+  </div>
+  <noscript>
+    <main class="demo-noscript-page">
+      <header><span class="workspace-kicker">PROCUREMENT · REQUISITION TO PO DRAFT</span><h1>Đề nghị mua hàng</h1><p>Tính nhu cầu theo tồn khả dụng, lead time, safety stock và đơn đang mở; kiểm nhà cung cấp, báo giá và ngân sách.</p></header>
+      <section><h2>Quy trình mua hàng</h2><ol><li>Tính suggested quantity sau khi trừ tồn khả dụng và hàng đang đặt.</li><li>Áp MOQ/quy cách đóng gói và tham chiếu vendor đủ điều kiện.</li><li>So chi phí dự kiến với ngân sách và policy version.</li><li>Gửi checker độc lập; chỉ tạo PO draft sau khi duyệt.</li></ol></section>
+      <section><h2>Điều kiện chặn</h2><p>Thiếu báo giá, vượt ngân sách hoặc maker trùng checker phải giữ ở trạng thái chờ. Không tự gửi đơn mua hay cam kết thanh toán.</p></section>
+      <nav aria-label="Màn hình liên quan"><a href="inventory.html">Tồn kho</a><a href="suppliers.html">Nhà cung cấp</a><a href="approvals.html">Phê duyệt</a><a href="receiving.html">Nhập hàng</a></nav>
+      <p class="demo-noscript-note">Bản demo tương tác cần JavaScript; đề nghị không gửi tới nhà cung cấp thật.</p>
+    </main>
+  </noscript>
+  <script src="pet-business-config.js" defer></script>
+  <script src="js/pet-business-algorithms.js" defer></script>
+  <script src="../../../../data/pet-business.js" defer></script>
+  <script src="../../../../data/pet-care.js" defer></script>
+  <script src="../../../../data/pet-commerce.js" defer></script>
+  <script src="../../../../data/pet-community.js" defer></script>
+  <script src="../../../../data/pet-connect.js" defer></script>
+  <script src="../../../../data/pet-health.js" defer></script>
+  <script src="../../../../data/pet-intelligence.js" defer></script>
+  <script src="../../../../data/pet-service.js" defer></script>
+  <script src="../../../../data/waggy-shared-demo-data.js" defer></script>
+  <script src="../../assets/sync.js" defer></script>
+  <script src="../../assets/demo.js" defer></script>
+  <script src="pet-business.js" defer></script>
+</body>
+</html>

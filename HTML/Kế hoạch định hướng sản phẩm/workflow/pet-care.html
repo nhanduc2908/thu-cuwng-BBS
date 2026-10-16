@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Workflow WAGGY Pet Care: các bước nghiệp vụ, trạng thái, ngoại lệ và kiểm soát.">
+  <title>WAGGY Pet Care | Workflow chi tiết WAGGY</title>
+  <link rel="stylesheet" href="../assets/waggy-product.css">
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">W</span><span>WAGGY<small>WORKFLOW DETAIL</small></span></a>
+    <nav class="top-links" aria-label="Điều hướng"><a href="../index.html">Tổng quan</a><a href="index.html">8 workflow</a><a href="../integration/pet-care.html">Điểm tích hợp</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav>
+  </div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../../index.html">Cổng HTML</a><span>/</span><a href="../index.html">WAGGY Ecosystem</a><span>/</span><a href="index.html">Workflow</a><span>/</span><span>Pet Care</span></nav>
+    <section class="hero"><div class="hero-content"><span class="eyebrow">01 · NỀN TẢNG ĐANG CÓ</span><h1>WAGGY Pet Care <span>Workflow</span></h1><p>Quy trình hiện có để tiếp nhận hồ sơ, ghi nhận nhu cầu chăm sóc và theo dõi lịch sử; thao tác tùy theo phân hệ và quyền đang hoạt động.</p><div class="hero-meta"><span class="status current">ĐANG CÓ</span><span>Luồng nghiệp vụ chi tiết</span><span>Ngoại lệ &amp; kiểm soát</span></div></div></section>
+    <aside class="callout"><strong>Trạng thái hệ thống:</strong> Pet Care là hệ thống hiện có. Các bước dưới đây mô tả luồng đang có theo phạm vi và quyền được cấu hình.</aside>
+    <section class="section" id="workflow"><div class="section-head"><div><span class="kicker">Workflow chính · hiện có</span><h2>Vận hành Pet Care qua các phân hệ desktop</h2></div><p>Luồng hiện có được triển khai theo các trang chức năng, dữ liệu SQLite và quyền truy cập; không phải mọi vai trò đều thấy hoặc sửa được mọi phân hệ.</p></div>
+      <ol class="steps">
+        <li><strong>Khởi chạy, kết nối dữ liệu và đăng nhập</strong><p>Nhân viên mở ứng dụng desktop, kết nối cơ sở dữ liệu Pet Care được cấu hình và đăng nhập bằng tài khoản cá nhân; khi không xác thực được thì dừng, không dùng chung tài khoản để vượt quyền.</p></li>
+        <li><strong>Hiển thị phân hệ theo quyền</strong><p>Ứng dụng dựng các tuyến chức năng theo quyền xem/quản lý được gán. Nếu không có quyền xem hoặc ghi, người dùng không được thực hiện hành động đó; các quyền quản trị người dùng và audit nằm trong nhóm quản trị.</p></li>
+        <li><strong>Chọn đúng loại hồ sơ/nghiệp vụ</strong><p>Phân biệt khách hàng và thú cưng thuộc khách; hồ sơ động vật tiếp nhận/kinh doanh tại cửa hàng; nhiệm vụ chăm sóc; hồ sơ sức khỏe; lịch dịch vụ; đơn hàng; tồn kho; báo cáo. Không gộp các loại đối tượng này thành một bản ghi.</p></li>
+        <li><strong>Tìm kiếm và kiểm tra điều kiện</strong><p>Tìm theo khóa phù hợp trong phân hệ; kiểm tra hồ sơ hiện có, trạng thái, tồn, quyền người dùng và trường bắt buộc trước thao tác. Các bước chi tiết và nhánh từ chối theo từng miền được mô tả bên dưới.</p></li>
+        <li><strong>Ghi thay đổi qua chức năng được cấp phép</strong><p>Người dùng tạo/cập nhật đối tượng nghiệp vụ, xác nhận hành động và dùng trạng thái do phân hệ hỗ trợ. Nếu dữ liệu/điều kiện không hợp lệ hoặc thao tác bị từ chối, dừng và sửa đầu vào theo quyền; không đánh dấu hoàn tất thủ công.</p></li>
+        <li><strong>Theo dõi, đối soát và bàn giao</strong><p>Vai trò phụ trách mở danh sách/báo cáo phù hợp, rà soát công việc còn lại và chuyển cho người tiếp theo. Nội dung y tế do người có chuyên môn lập; thu tiền, xuất tồn, duyệt và báo cáo có phân quyền riêng.</p></li>
+      </ol>
+      <div class="state-line"><b>Vai trò được định nghĩa:</b><span>Admin</span><span>Manager</span><span>Veterinarian</span><span>Caregiver</span><span>Sales</span><span>Inventory Manager</span><span>Service Coordinator</span><span>Customer Support</span><span>Report Analyst</span><span>Auditor</span></div>
+      <div class="callout"><strong>Nguyên tắc đọc trang này:</strong> các mục dưới đây phản ánh các luồng được xác nhận có UI/repository trong ứng dụng. Trạng thái/tính năng cụ thể chỉ được nêu khi có căn cứ trong module; chức năng không được tìm thấy không được suy diễn là đang có.</div>
+    </section>
+    <nav class="callout" aria-label="Đi nhanh tới workflow Pet Care"><strong>Đi nhanh tới luồng:</strong> <a href="#accounts">Tài khoản &amp; quyền</a> · <a href="#profiles">Hồ sơ khách/thú cưng</a> · <a href="#care-tasks">Chăm sóc</a> · <a href="#health-records">Sức khỏe</a> · <a href="#service-booking">Dịch vụ</a> · <a href="#sales-orders">Bán hàng</a> · <a href="#inventory">Tồn kho</a> · <a href="#cages">Chuồng/lồng</a> · <a href="#intake">Nhập &amp; kiểm định</a> · <a href="#memberships">Hội viên</a> · <a href="#recommendations">Gợi ý sản phẩm</a> · <a href="#customer-portal">Portal khách</a> · <a href="#data-catalog">Catalog dữ liệu</a> · <a href="#reports-admin">Báo cáo</a></nav>
+    <section class="section"><div class="section-head"><div><span class="kicker">Ngoại lệ &amp; kiểm soát</span><h2>Không làm mất an toàn dữ liệu</h2></div></div>
+      <div class="two-col">
+        <article class="panel"><h3>Hồ sơ chưa đủ hoặc bị trùng</h3><p>Đánh dấu cần bổ sung, đối chiếu chủ nuôi/thú cưng trước khi liên kết hoặc tạo hồ sơ mới. Không ghép hai hồ sơ chỉ dựa trên tên giống nhau.</p></article>
+        <article class="panel"><h3>Không có quyền hoặc mất kết nối</h3><p>Dừng thao tác ghi khi quyền/API lỗi; cache đọc chỉ là bản tham khảo có thời điểm. Không báo thành công nếu yêu cầu chưa được máy chủ xác nhận.</p></article>
+        <article class="panel"><h3>Nhu cầu sức khỏe cấp bách</h3><p>Chuyển ngay tới cơ sở thú y phù hợp theo hướng dẫn; Pet Care không thay bác sĩ, không tự tạo chẩn đoán hay điều trị.</p></article>
+        <article class="panel"><h3>Chỉnh sửa sau khi hoàn tất</h3><p>Giữ lịch sử và người sửa; dữ liệu chuyên môn đã xác thực cần quy trình đính chính, không ghi đè im lặng.</p></article>
+      </div>
+      <div class="callout"><strong>Phân biệt hiện trạng:</strong> các điểm trên là hướng xử lý an toàn nghiệp vụ; chúng không khẳng định ứng dụng hiện đã có cache đọc, workflow đính chính hồ sơ y tế hoặc audit cho mọi thao tác. Chỉ các ràng buộc được nêu trong từng phân hệ bên dưới là chi tiết đã xác nhận.</div>
+    </section>
+    <section class="section" id="accounts">
+      <div class="section-head"><div><span class="kicker">Luồng hiện có 01</span><h2>Tài khoản, vai trò và quyền truy cập</h2></div><p>Tài khoản cá nhân gắn với vai trò; menu/trang và nút quản lý được kiểm tra theo quyền xem hoặc quyền quản lý tương ứng.</p></div>
+      <div class="facts">
+        <div class="fact"><b>Người tham gia</b><span>Admin quản trị hệ thống; Manager quản lý; Veterinarian, Caregiver, Sales, Inventory Manager, Service Coordinator, Customer Support, Report Analyst và Auditor dùng phạm vi tác nghiệp được cấp.</span></div>
+        <div class="fact"><b>Đầu vào</b><span>Tên đăng nhập, tên hiển thị, vai trò hợp lệ; với thay đổi tài khoản cần chọn đúng người dùng và quyền thao tác của người thực hiện.</span></div>
+        <div class="fact"><b>Điểm chặn</b><span>Không hiện route khi thiếu quyền xem; không cho thao tác quản lý chỉ vì người dùng thấy trang; không vô hiệu hóa Admin hoạt động cuối cùng.</span></div>
+      </div>
+      <ol class="steps">
+        <li><strong>Người quản trị mở quản lý người dùng</strong><p>Chỉ người có quyền quản trị đi vào màn hình; tra cứu tài khoản hiện có để tránh tạo trùng.</p></li>
+        <li><strong>Tạo hoặc cập nhật tài khoản</strong><p>Khi tạo, nhập username và display name, chọn role hợp lệ; với tài khoản hiện hữu có thể đổi role, thay mật khẩu hoặc bật/tắt trạng thái theo quyền.</p></li>
+        <li><strong>Kiểm tra an toàn quản trị</strong><p>Hệ thống chặn việc vô hiệu hóa Admin hoạt động cuối cùng. Thay đổi vai trò/tình trạng chỉ hoàn tất sau kiểm tra nghiệp vụ và lưu thông tin cập nhật.</p></li>
+        <li><strong>Đăng nhập và truy cập theo quyền</strong><p>Người dùng xác thực, sau đó main window tạo các route theo quyền xem. Mỗi trang/điều khiển quản lý tiếp tục kiểm tra quyền manage độc lập.</p></li>
+        <li><strong>Rà soát quyền và thu hồi</strong><p>Admin/Manager được ủy quyền rà soát vai trò, trạng thái và quyền cần thiết; vô hiệu hóa tài khoản khi không còn nhu cầu, không xóa người dùng thay cho thu hồi truy cập.</p></li>
+      </ol>
+      <div class="callout"><strong>Quyền bán hàng:</strong> hệ thống có cờ sales-approver và tab yêu cầu phê duyệt. Hạn mức, ngưỡng và tất cả quyết định cụ thể cần theo cấu hình/flow tương ứng; không mặc định mọi giao dịch đều cần cấp duyệt.</div>
+    </section>
+    <section class="section" id="profiles">
+      <div class="section-head"><div><span class="kicker">Luồng hiện có 02</span><h2>Hồ sơ khách hàng, thú cưng của khách và động vật cửa hàng</h2></div><p>Ba đối tượng có mục đích khác nhau: customer, customer-owned pet và animal intake/store record.</p></div>
+      <div class="two-col">
+        <article class="panel"><h3>Khách hàng và thú cưng thuộc khách</h3><p>Được quản lý trong giao diện hồ sơ khách hàng của phân hệ bán hàng; hồ sơ thú cưng liên kết với customer, không phải hồ sơ con vật đang nhập kho/cửa hàng.</p></article>
+        <article class="panel"><h3>Động vật tiếp nhận/kinh doanh tại cửa hàng</h3><p>Được quản lý riêng trong phân hệ animals; bản ghi mới mặc định ở PENDING_INSPECTION, có kiểm tra tương thích loài/lồng trước khi lưu.</p></article>
+      </div>
+      <ol class="steps">
+        <li><strong>Tìm customer hiện có trước khi tạo</strong><p>Tra cứu bằng tên, điện thoại, email hoặc customer code. Khi lưu mới phải có customer code và tên; thông tin không đủ thì bổ sung trước khi xác nhận.</p></li>
+        <li><strong>Tạo hồ sơ thú cưng của customer</strong><p>Chọn đúng customer rồi nhập pet name và species bắt buộc; có thể ghi breed, ngày sinh, giới tính, cân nặng, tình trạng sức khỏe/cơ thể, microchip và ghi chú theo trường giao diện.</p></li>
+        <li><strong>Kiểm tra liên kết và sửa hồ sơ</strong><p>Đối chiếu đúng chủ nuôi trước khi cập nhật thông tin; giữ quan hệ customer-pet có ý nghĩa xuyên suốt bán hàng/dịch vụ. Không gán pet vào customer chỉ do trùng tên.</p></li>
+        <li><strong>Tiếp nhận animal record của cửa hàng</strong><p>Người có quyền quản lý động vật nhập dữ liệu và điều kiện chuồng/lồng; hệ thống kiểm tra sự phù hợp loài-lồng. Bản ghi mới bắt đầu ở PENDING_INSPECTION để chờ kiểm tra.</p></li>
+        <li><strong>Chuyển sang nghiệp vụ tiếp theo</strong><p>Hồ sơ customer-pet được dùng trong tác vụ khách hàng; animal record cửa hàng được theo dõi trong phạm vi inventory/sales liên quan. Trạng thái sẵn sàng bán/giữ chỗ phải dựa vào kiểm tra của phân hệ, không tự suy từ việc tạo hồ sơ.</p></li>
+      </ol>
+      <div class="two-col">
+        <article class="panel"><h3>Lỗi thường gặp và phản hồi</h3><p>Thiếu code/tên customer hoặc pet name/species: không lưu cho đến khi đủ trường bắt buộc. Chọn hồ sơ trùng: tra cứu/đối chiếu trước, không tạo thêm để lách kiểm tra.</p></article>
+        <article class="panel"><h3>Ranh giới hồ sơ</h3><p>Không nhập một hồ sơ thú cưng của khách thành animal stock record; không dùng trạng thái kiểm tra hàng như chẩn đoán sức khỏe thú cưng.</p></article>
+      </div>
+    </section>
+    <section class="section" id="care-tasks">
+      <div class="section-head"><div><span class="kicker">Luồng hiện có 03</span><h2>Nhiệm vụ chăm sóc và checklist theo ngày</h2></div><p>Care task là việc được giao; checklist 25 mục ghi nhận đánh giá hằng ngày, hai chức năng có trạng thái riêng.</p></div>
+      <div class="facts">
+        <div class="fact"><b>Task cần có</b><span>Animal đã tồn tại, tiêu đề không rỗng; ngày/giờ dự kiến, người được giao và ghi chú là dữ liệu điều phối.</span></div>
+        <div class="fact"><b>Checklist</b><span>25 mục theo animal/date; mỗi mục có trạng thái OK, NEEDS_ATTENTION hoặc NOT_APPLICABLE.</span></div>
+        <div class="fact"><b>Quyền</b><span>Nhân viên được phân công cập nhật công việc trong phạm vi; người có quyền manage mới tạo/sửa tác vụ tương ứng.</span></div>
+      </div>
+      <ol class="steps">
+        <li><strong>Chọn đúng animal và ngày chăm sóc</strong><p>Nhân viên mở hồ sơ động vật cửa hàng cần chăm sóc, kiểm tra khu vực/trạng thái và chọn ngày của lần chăm sóc để gắn checklist.</p></li>
+        <li><strong>Tạo nhiệm vụ cụ thể</strong><p>Người được phép tạo tiêu đề công việc, lịch ngày/giờ, assignee và note. Thiếu animal hoặc tiêu đề rỗng thì giao diện không tạo task.</p></li>
+        <li><strong>Thực hiện checklist từng mục</strong><p>Nhân viên ghi OK nếu hoàn tất/không thấy vấn đề, NEEDS_ATTENTION khi cần theo dõi/escalate, NOT_APPLICABLE nếu mục không áp dụng; không dùng trạng thái không áp dụng để che việc chưa làm.</p></li>
+        <li><strong>Lưu hoặc cập nhật checklist ngày đó</strong><p>Lưu checklist cho cặp animal/date. Lưu lại cùng ngày cập nhật checklist hiện có; khóa trạng thái/item key không hợp lệ thay vì tạo bản ghi rác.</p></li>
+        <li><strong>Ghi hoàn tất task đúng một lần</strong><p>Sau khi thực hiện, người chịu trách nhiệm đánh dấu task hoàn tất. Task đã hoàn tất không được hoàn tất lặp; việc cần làm tiếp phải thành tác vụ/ghi nhận mới phù hợp, không giả đổi lịch sử cũ.</p></li>
+        <li><strong>Chuyển mục cần chú ý</strong><p>NEEDS_ATTENTION hoặc task không hoàn thành được bàn giao cho caregiver/manager theo quy trình tại cơ sở, kèm ghi chú và thời điểm; vấn đề sức khỏe chuyển người có chuyên môn, không tự ghi chẩn đoán.</p></li>
+      </ol>
+      <div class="state-line"><b>Task:</b><span>Chưa hoàn tất</span><span>Hoàn tất</span><b>Checklist:</b><span>OK</span><span>NEEDS_ATTENTION</span><span>NOT_APPLICABLE</span></div>
+    </section>
+    <section class="section" id="health-records">
+      <div class="section-head"><div><span class="kicker">Luồng hiện có 04</span><h2>Khám, bệnh và tiêm phòng</h2></div><p>Phân hệ sức khỏe có hồ sơ khám, mục bệnh và lịch vaccine gợi ý; ghi khám/tiêm cập nhật tình trạng sức khỏe/tiêm chủng tương ứng.</p></div>
+      <ol class="steps">
+        <li><strong>Mở danh sách và chọn đúng animal</strong><p>Người có quyền xem sức khỏe tìm con vật trong danh sách; nếu chưa có animal record thì dừng thao tác ghi nhận, không gắn hồ sơ vào đối tượng khác.</p></li>
+        <li><strong>Ghi hồ sơ khám</strong><p>Vai trò phù hợp mở chức năng thêm hồ sơ, nhập nội dung khám theo trường được cung cấp và xác nhận lưu. Thao tác quản lý sức khỏe bị ẩn/chặn nếu thiếu health.manage.</p></li>
+        <li><strong>Cập nhật tình trạng sức khỏe</strong><p>Sau khi ghi exam, repository cập nhật health status của animal. Người dùng xem lại danh sách/hồ sơ để xác nhận bản ghi gắn đúng đối tượng.</p></li>
+        <li><strong>Ghi nhận vaccine</strong><p>Chọn animal, ghi loại vaccine và thông tin theo form; sau lưu, vaccination status được cập nhật tương ứng. Lịch gợi ý dùng để hỗ trợ theo dõi, không phải bằng chứng vaccine đã tiêm.</p></li>
+        <li><strong>Theo dõi bệnh và lịch gợi ý</strong><p>Xem disease entries và suggested vaccination schedule cùng hồ sơ hiện có; nhân viên chỉ đưa ra thông tin theo vai trò, chuyển nội dung chuyên môn cho veterinarian khi cần.</p></li>
+        <li><strong>Đóng và bàn giao</strong><p>Xác nhận bản ghi đã lưu trên đúng animal, cập nhật công việc theo dõi nếu cần và bàn giao. Lỗi cơ sở dữ liệu/thao tác được hiển thị; không báo thành công khi lưu thất bại.</p></li>
+      </ol>
+      <div class="callout"><strong>Giới hạn chuyên môn:</strong> hồ sơ ghi nhận trong ứng dụng không tự chứng minh chẩn đoán/điều trị lâm sàng; tình trạng cấp cứu cần được xử lý bởi cơ sở/bác sĩ thú y.</div>
+    </section>
+    <section class="section" id="service-booking">
+      <div class="section-head"><div><span class="kicker">Luồng hiện có 05</span><h2>Gói dịch vụ, báo giá và lịch hẹn</h2></div><p>Phân hệ dịch vụ hỗ trợ quản lý gói, booking, đổi lịch và cập nhật trạng thái appointment; repository còn có quote, membership và service bill.</p></div>
+      <ol class="steps">
+        <li><strong>Quản lý danh mục gói</strong><p>Người có quyền cập nhật package/service; kiểm tra tên, cấu hình và trạng thái trước khi dùng cho báo giá hoặc đặt lịch.</p></li>
+        <li><strong>Lập báo giá khi cần</strong><p>Gắn yêu cầu với khách/thú cưng và gói/dịch vụ, xem kết quả quote, membership và service bill theo nghiệp vụ; báo rõ giá/điều kiện trước khi khách xác nhận.</p></li>
+        <li><strong>Tạo appointment</strong><p>Chọn khách/thú cưng, dịch vụ, lịch và thông tin cần thiết; repository tạo appointment. Chỉ thông báo lịch đã xác nhận khi lưu thành công và nhận được mã/trạng thái hợp lệ.</p></li>
+        <li><strong>Đổi lịch hoặc cập nhật trạng thái</strong><p>Người điều phối tra đúng appointment, chọn lịch mới hoặc trạng thái phù hợp qua UI; lưu lịch sử/đầu ra của thao tác. Không tạo lịch song song khi chưa biết kết quả của yêu cầu đổi trước đó.</p></li>
+        <li><strong>Đối chiếu dịch vụ và chứng từ</strong><p>Rà soát bill/quote với appointment và khách; trường hợp giá hoặc lịch cần thay đổi phải trao đổi/xác nhận theo chính sách trước khi hoàn tất.</p></li>
+        <li><strong>Bàn giao hoặc hủy theo trạng thái được phép</strong><p>Cập nhật appointment qua thao tác UI/repository; giữ liên kết báo giá, membership và service bill có liên quan để hỗ trợ tra cứu, chăm sóc khách và báo cáo.</p></li>
+      </ol>
+      <div class="callout"><strong>Phạm vi xác nhận:</strong> các màn hình và repository hiện có chức năng gói/báo giá/booking/reschedule/status; không suy diễn rằng ứng dụng hiện có mọi tiện ích như giữ công suất nhiều nguồn, nhắc lịch tự động hoặc cổng đặt lịch khách hàng.</div>
+    </section>
+    <section class="section" id="sales-orders">
+      <div class="section-head"><div><span class="kicker">Luồng hiện có 06</span><h2>Giữ chỗ, đơn hàng, thu tiền và phê duyệt</h2></div><p>Sales hiện có nghiệp vụ động vật, sản phẩm/combo, khách hàng, đặt cọc/thanh toán, hủy và khu vực yêu cầu phê duyệt.</p></div>
+      <h3>A. Giữ chỗ và đơn động vật</h3>
+      <ol class="steps">
+        <li><strong>Kiểm tra khách hàng và hàng được giữ</strong><p>Chọn customer tồn tại và animal đang khả dụng; reservation không được tạo nếu thiếu customer hoặc animal không còn khả dụng.</p></li>
+        <li><strong>Nhập khoản đặt cọc hợp lệ</strong><p>Deposit phải không âm và không vượt giá bán. Lưu reservation gắn khách, animal, giá, tiền cọc và trạng thái.</p></li>
+        <li><strong>Đưa animal sang trạng thái Reserved</strong><p>Reservation đang hiệu lực làm animal chuyển RESERVED, tránh bán/giữ đồng thời. Nhân viên kiểm tra reservation trước khi tạo giao dịch khác.</p></li>
+        <li><strong>Thu các khoản thanh toán</strong><p>Nhập số tiền dương, phương thức được phép và giao dịch tham chiếu; không cho vượt số dư còn phải thu. Khi thanh toán đủ, đơn chuyển PAID; một phần chưa được xem là đã thanh toán hết.</p></li>
+        <li><strong>Giải phóng reservation khi hủy/hết hạn</strong><p>Chọn RELEASED hoặc EXPIRED theo luồng release hiện có; deposit phải được hoàn đủ trước khi release thành công. Sau đó xác nhận animal được trả lại khả dụng theo trạng thái kho.</p></li>
+      </ol>
+      <h3>B. Đơn sản phẩm/combo, hủy và duyệt</h3>
+      <ol class="steps">
+        <li><strong>Tạo đơn theo customer và dòng hàng</strong><p>Chọn khách, sản phẩm/combo, số lượng và thông tin giá; kiểm tra dữ liệu dòng hàng trước khi ghi đơn.</p></li>
+        <li><strong>Ghi lần thanh toán và số dư</strong><p>Chỉ nhận số tiền > 0, phương thức thuộc tập cho phép và không lớn hơn số dư; truy lại order/payment để tránh ghi cùng khoản nhiều lần khi phản hồi chưa rõ.</p></li>
+        <li><strong>Hủy hoặc hoàn theo giao dịch liên quan</strong><p>Chọn đúng đơn/reservation, kiểm tra khoản đã thu/cọc và điều kiện nghiệp vụ; ghi hoàn tiền/liên quan trước khi giải phóng hàng giữ. Không xóa order để xử lý hủy.</p></li>
+        <li><strong>Xử lý yêu cầu phê duyệt</strong><p>Nhân viên mở tab approval requests để xem/gửi yêu cầu theo luồng được cấp. Người duyệt phù hợp, bao gồm tài khoản có cờ sales-approver theo cấu hình, xử lý quyết định; lưu trạng thái và lý do để người tạo theo dõi.</p></li>
+        <li><strong>Đóng đơn và đối chiếu</strong><p>Rà soát trạng thái đơn, payment, refund/deposit, animal/product liên quan rồi mới kết thúc; đơn đủ tiền có trạng thái PAID, còn thiếu được giữ ở trạng thái chưa hoàn tất thanh toán.</p></li>
+      </ol>
+      <div class="callout"><strong>Điểm bất biến:</strong> tiền cọc không được âm/vượt giá bán; khoản thanh toán phải dương, đúng phương thức và không vượt dư nợ; giải phóng giữ chỗ yêu cầu hoàn đủ deposit.</div>
+    </section>
+    <section class="section" id="inventory">
+      <div class="section-head"><div><span class="kicker">Luồng hiện có 07</span><h2>Tồn kho, lô hàng và tiêu thụ vật tư</h2></div><p>Inventory theo dõi hàng khả dụng, hết hạn, lô và biến động; thao tác tiêu thụ chỉ được ghi khi đủ điều kiện.</p></div>
+      <ol class="steps">
+        <li><strong>Chọn item và xem lượng sử dụng được</strong><p>Đối chiếu active item, lượng tồn, lượng khả dụng và lượng hết hạn; không dùng số tồn tổng để mặc định toàn bộ hàng còn dùng được.</p></li>
+        <li><strong>Ghi giao dịch nhập/xuất/biến động</strong><p>Giao dịch kho gắn mặt hàng/lô và loại movement theo repository; xem trạng thái sau ghi để xác nhận đúng mặt hàng và số lượng.</p></li>
+        <li><strong>Tiêu thụ lượng hợp lệ</strong><p>Consumption yêu cầu số lượng dương, item đang active và usable stock đủ đáp ứng. Nếu thiếu hàng/đã hết hạn/item inactive thì dừng, không tạo số dư âm.</p></li>
+        <li><strong>Đối chiếu lô và lịch sử</strong><p>Tra movement/batch và số dư sau giao dịch để xác định nguồn biến động; điều chỉnh sai lệch theo quyền, có lý do và kiểm tra ảnh hưởng tới giao dịch bán/chăm sóc.</p></li>
+        <li><strong>Dùng dữ liệu tồn cho bán hàng</strong><p>Kiểm tra khả dụng trước khi cam kết; khi có giữ chỗ/đơn liên quan, tránh trừ hoặc tiêu thụ lặp bằng cùng nghiệp vụ. Xác nhận thay đổi số lượng và đơn nguồn trước retry.</p></li>
+      </ol>
+      <div class="two-col">
+        <article class="panel"><h3>Public storefront catalog</h3><p>Catalog web được tạo chỉ đọc từ active inventory items/combos; không đưa cost nội bộ hoặc dữ liệu khách hàng ra công khai. Số lượng khả dụng tính theo stock dùng được và trừ lượng trong product orders còn mở/chưa fulfillment.</p></article>
+        <article class="panel"><h3>Phân biệt tồn, giữ chỗ và đơn</h3><p>Giá/tồn hiển thị storefront là ảnh chụp dữ liệu tại lúc đọc; trước khi xác nhận đơn phải kiểm tra lại. Sales order/payment/fulfillment vẫn là nghiệp vụ riêng, không đồng nhất catalog với trừ kho đã hoàn tất.</p></article>
+      </div>
+    </section>
+    <section class="section" id="reports-admin">
+      <div class="section-head"><div><span class="kicker">Luồng hiện có 08</span><h2>Báo cáo, xuất dữ liệu và rà soát quản trị</h2></div><p>Reports có tổng hợp kho, bán hàng, sức khỏe, khách hàng/thú cưng; có điều khiển CSV/PDF và kiểm tra ngày.</p></div>
+      <ol class="steps">
+        <li><strong>Chọn báo cáo phù hợp và thời gian</strong><p>Report Analyst/người có quyền chọn loại báo cáo và khoảng ngày; định dạng ngày sai hoặc ngày bắt đầu sau ngày kết thúc bị từ chối.</p></li>
+        <li><strong>Kiểm tra phạm vi quyền dữ liệu</strong><p>Report page áp quyền theo từng phân hệ; bản customer summary yêu cầu đủ quyền sales, services và health. Thiếu quyền thì không được suy từ báo cáo tổng khác để xem dữ liệu bị hạn chế.</p></li>
+        <li><strong>Xem và đối chiếu kết quả</strong><p>Đọc summary kho, doanh số, sức khỏe hoặc customer/pet theo kỳ; truy về chứng từ/record nguồn khi cần xử lý sai lệch.</p></li>
+        <li><strong>Xuất CSV/PDF có kiểm soát</strong><p>Chỉ xuất loại báo cáo được cung cấp và có quyền; kiểm tra bộ lọc/kỳ trước khi lưu/chia sẻ, không đưa tệp ra ngoài người nhận có thẩm quyền.</p></li>
+        <li><strong>Quản trị và kiểm tra audit</strong><p>Admin home hiển thị tuyến theo permission; người có quyền vào quản lý tài khoản/audit log, rà soát thay đổi, quyền truy cập và sự kiện cần điều tra.</p></li>
+      </ol>
+      <div class="two-col">
+        <article class="panel"><h3>Khi truy vấn hoặc xuất lỗi</h3><p>Hiển thị lỗi truy xuất/tham số và sửa kỳ/bộ lọc; không tạo báo cáo rỗng như kết quả thành công nếu truy vấn thất bại.</p></article>
+        <article class="panel"><h3>Nguyên tắc sử dụng số liệu</h3><p>Ghi rõ kỳ lọc và phân hệ; báo cáo là tổng hợp để xem xét, chứng từ/record nghiệp vụ là nguồn tra cứu chi tiết.</p></article>
+        <article class="panel"><h3>Customer insights</h3><p>Trang insights có thể hiển thị customer/pet và appointment, số lượng/doanh thu/trạng thái khi có quyền services.view; thiếu quyền thì ẩn dữ liệu appointment. Một số biểu đồ health-state/campaign dùng số ví dụ hard-code, không phải analytics trực tiếp từ hồ sơ thật.</p></article>
+        <article class="panel"><h3>Phân biệt báo cáo thật và minh họa</h3><p>Trước khi dùng biểu đồ cho quyết định, truy nguồn và kiểm tra kỳ/số liệu. Không coi các chart ví dụ là số đo vận hành nếu chưa được nối repository và xác nhận nguồn.</p></article>
+      </div>
+    </section>
+    <section class="section" id="cages">
+      <div class="section-head"><div><span class="kicker">Luồng hiện có 09</span><h2>Quản lý chuồng/lồng và lịch sử lưu trú</h2></div><p>StorePage là nghiệp vụ quản lý sức chứa/chỗ ở động vật, không phải catalog bán lẻ hoặc quản lý tồn sản phẩm.</p></div>
+      <div class="facts">
+        <div class="fact"><b>Điều kiện lồng</b><span>Lồng phải hoạt động, đủ chỗ, có capacity dương và tương thích species của animal.</span></div>
+        <div class="fact"><b>Thao tác</b><span>Tạo/sửa/kích hoạt/vô hiệu hóa lồng; xếp, chuyển và gỡ animal; tra cứu lịch sử gán.</span></div>
+        <div class="fact"><b>Ràng buộc</b><span>Không giảm capacity thấp hơn số animal đang ở; không xóa lồng có lịch sử gán.</span></div>
+      </div>
+      <ol class="steps">
+        <li><strong>Thiết lập lồng và sức chứa</strong><p>Người có quyền nhập mã/tên/vị trí, loài phù hợp, capacity và trạng thái. Capacity phải lớn hơn 0; dữ liệu thiếu hoặc không hợp lệ bị từ chối trước khi tạo.</p></li>
+        <li><strong>Chọn animal và kiểm tra điều kiện</strong><p>Đối chiếu animal chưa được gán chỗ không hợp lệ, species tương thích và cage đang hoạt động. Nếu lồng đầy, khác loài hoặc đã ngưng hoạt động, không cho xếp.</p></li>
+        <li><strong>Gán chỗ và ghi lịch sử</strong><p>Ghi nhận animal, cage, người thực hiện và thời điểm qua thao tác assign; xác nhận sức chứa sau gán và không vượt quota khi có thao tác đồng thời.</p></li>
+        <li><strong>Chuyển hoặc gỡ animal</strong><p>Chọn đúng animal và vị trí mới; kiểm tra sức chứa/loài của lồng đích trước khi hoàn tất chuyển. Gỡ chỗ khi animal rời khu vực, giữ lại sự kiện gán/gỡ trong lịch sử.</p></li>
+        <li><strong>Bảo trì hoặc ngưng lồng</strong><p>Đổi trạng thái theo quyền. Không hạ sức chứa dưới số đang ở; không xóa lồng có assignment history, dùng trạng thái inactive thay cho xóa để giữ tham chiếu.</p></li>
+      </ol>
+    </section>
+    <section class="section" id="intake">
+      <div class="section-head"><div><span class="kicker">Luồng hiện có 10</span><h2>Nhập động vật theo lô và kiểm tra tiếp nhận</h2></div><p>Imports quản lý nhà cung cấp, lô nhập, nhận từng animal và kiểm tra; khác luồng nhập JSON catalog vào cơ sở dữ liệu staging.</p></div>
+      <div class="facts">
+        <div class="fact"><b>Điều kiện lô</b><span>Chỉ lô đang mở nhận animal mới; lô bị hủy/đóng không nhận thêm.</span></div>
+        <div class="fact"><b>Thông tin tiếp nhận</b><span>Mã, tên, species, nhân viên xác nhận nhận, thông tin kiểm tra và ảnh JPEG/PNG/WebP tối đa 8 MB hợp lệ.</span></div>
+        <div class="fact"><b>Trạng thái kiểm tra</b><span>PASSED → available/normal; QUARANTINE → quarantine/monitor; NEEDS_TREATMENT → treatment.</span></div>
+      </div>
+      <ol class="steps">
+        <li><strong>Chọn hoặc tạo nhà cung cấp/lô nhập</strong><p>Gắn lô với nhà cung cấp và thông tin nguồn, tạo batch ở trạng thái mở; kiểm tra batch chưa bị đóng/hủy trước khi nhận từng con.</p></li>
+        <li><strong>Ghi nhận từng animal được giao</strong><p>Nhập mã, tên, species và nhân viên xác nhận đã nhận; đính kèm ảnh định dạng hỗ trợ có kích thước không vượt giới hạn. Ảnh cần được kiểm tra theo nội dung byte, không chỉ phần mở rộng tên file.</p></li>
+        <li><strong>Đưa hồ sơ vào chờ kiểm tra</strong><p>Lưu animal gắn với batch; bản mới có trạng thái PENDING_INSPECTION. Trước khi kiểm tra, không coi là đã đạt để bán/chuyển sang trạng thái khỏe bình thường.</p></li>
+        <li><strong>Thực hiện kiểm tra và ghi kết quả</strong><p>Nhân viên chọn một kết quả hợp lệ và ghi nhận kiểm tra. PASSED chuyển animal sang available/normal; QUARANTINE chuyển sang quarantine/monitor; NEEDS_TREATMENT chuyển sang treatment để theo dõi xử lý.</p></li>
+        <li><strong>Đóng lô theo tình trạng các animal</strong><p>Khi tất cả animal thuộc lô đã được kiểm tra, batch có thể chuyển COMPLETED. Không kiểm tra lại animal đã sold/transferred/deceased; batch canceled không nhận/kiểm tra như lô đang mở.</p></li>
+      </ol>
+      <div class="callout"><strong>Điểm chặn:</strong> ảnh không đúng định dạng/byte, vượt 8 MB, trường bắt buộc thiếu hoặc lô không mở sẽ bị từ chối; giữ animal ở chờ kiểm tra khi chưa có kết quả, không tự đánh dấu đạt.</div>
+    </section>
+    <section class="section" id="memberships">
+      <div class="section-head"><div><span class="kicker">Luồng hiện có 11</span><h2>Gói hội viên, thẻ, gia hạn và hóa đơn nội bộ</h2></div><p>Membership có quản lý plan, ghi danh customer, renewal, bill và payment history. Đây là sổ nội bộ, chưa tích hợp ngân hàng/QR/e-invoice.</p></div>
+      <div class="facts">
+        <div class="fact"><b>Plan cần cấu hình</b><span>Mã/tên, thời hạn, giá/chiết khấu, giới hạn thú cưng, kiểu thanh toán và lượt trả trước nếu áp dụng.</span></div>
+        <div class="fact"><b>Enrollment</b><span>Cần customer hiện hữu và plan active; membership/card khởi tạo PENDING_PAYMENT, trừ plan giá 0 được kích hoạt ngay.</span></div>
+        <div class="fact"><b>Payment</b><span>Thanh toán một phần/toàn phần; cấm vượt dư nợ, phương thức/ngày không hợp lệ và thanh toán bill đã paid/cancelled.</span></div>
+      </div>
+      <ol class="steps">
+        <li><strong>Tạo hoặc cập nhật gói hội viên</strong><p>Staff nhập mã/tên, thời hạn, giá/discount, số thú cưng tối đa, billing mode và số lượt trả trước nếu dùng; kiểm tra trường/ràng buộc trước khi kích hoạt plan để ghi danh.</p></li>
+        <li><strong>Chọn customer và plan đang hoạt động</strong><p>Tìm customer đã có; chọn plan active và nhập ngày bắt đầu/thông tin cần thiết. Không tự tạo customer ẩn để bypass yêu cầu liên kết.</p></li>
+        <li><strong>Tạo enrollment, card và bill</strong><p>Với plan có phí, tạo membership/card ở PENDING_PAYMENT và hóa đơn nội bộ; plan giá 0 kích hoạt ngay theo quy tắc hiện tại. Hiển thị bill và số phải trả để nhân viên/khách đối chiếu.</p></li>
+        <li><strong>Ghi payment một phần hoặc đủ</strong><p>Chọn bill chưa thanh toán/hủy, ngày và phương thức hợp lệ; số tiền dương không vượt balance. Ghi payment record để tra lịch sử; trả thiếu thì giữ bill/membership ở trạng thái chờ.</p></li>
+        <li><strong>Kích hoạt hoặc gia hạn sau khi đủ tiền</strong><p>Khi tổng thanh toán đủ, membership/card được kích hoạt hoặc gia hạn theo plan. Không gia hạn membership pending payment, suspended, cancelled hoặc khi còn renewal bill chưa trả.</p></li>
+        <li><strong>Tra cứu và xử lý sai lệch</strong><p>Xem lịch sử payment/bill, customer và thời hạn membership; bill paid/cancelled không nhận khoản thu mới. Cần sửa sai thực hiện qua thao tác nghiệp vụ được hỗ trợ, không sửa sổ trực tiếp.</p></li>
+      </ol>
+      <div class="callout"><strong>Giới hạn tích hợp:</strong> payment/bill hiện là ledger nội bộ. Không hiển thị thông điệp “đã thanh toán qua ngân hàng” hoặc “đã xuất hóa đơn điện tử” nếu hệ thống ngoài chưa kết nối/xác nhận.</div>
+    </section>
+    <section class="section" id="recommendations">
+      <div class="section-head"><div><span class="kicker">Luồng hiện có 12</span><h2>Gợi ý sản phẩm, tư vấn và tạo tác vụ chăm sóc</h2></div><p>Công cụ gợi ý hiện có chạy offline/rules-based theo dữ liệu catalog/giá/tồn cục bộ; không phải hệ Pet Intelligence đề xuất cho toàn hệ sinh thái.</p></div>
+      <div class="facts">
+        <div class="fact"><b>Đầu vào</b><span>Hồ sơ nhu cầu thú cưng, tuổi/nhóm sử dụng, sản phẩm và tình trạng tồn/giá cục bộ theo cấu hình.</span></div>
+        <div class="fact"><b>Ranh giới dữ liệu</b><span>Advisor nêu không gửi chat/profile ra ngoài; kết quả không tạo hóa đơn và không tự ghi nhận giao dịch.</span></div>
+        <div class="fact"><b>Quyền ghi tác vụ</b><span>Chỉ actor có care.manage mới tạo care task từ thao tác tư vấn được hỗ trợ.</span></div>
+      </div>
+      <ol class="steps">
+        <li><strong>Mở gợi ý từ sản phẩm/hồ sơ phù hợp</strong><p>Inventory staff hoặc vai trò được phép mở cấu hình hồ sơ sản phẩm và các công cụ gợi ý; chọn đúng animal/customer context nếu tính năng yêu cầu.</p></li>
+        <li><strong>Chạy quy tắc với dữ liệu cục bộ</strong><p>Advisor dùng catalog/giá/tồn local và quy tắc để xếp gợi ý; xem dữ liệu đầu vào/trạng thái availability trước khi tư vấn. Hàng hết/không active không được trình bày như có sẵn.</p></li>
+        <li><strong>Đánh giá hoặc điều chỉnh profile</strong><p>Người dùng xem kết quả gợi ý/evaluation, kiểm tra tiêu chí và giới hạn; thay đổi profile/quy tắc chỉ lưu theo quyền, các gợi ý không được diễn đạt như chẩn đoán hay cam kết y tế.</p></li>
+        <li><strong>Tư vấn khách và ghi tương tác</strong><p>Nhân viên giải thích gợi ý, kiểm chứng giá/tồn hiện tại và trao đổi với khách; công cụ có thể lưu interaction event nhưng không tạo hóa đơn hoặc xác nhận bán thay Sales.</p></li>
+        <li><strong>Tạo care task nếu được phép</strong><p>Nếu chủ thể yêu cầu theo dõi chăm sóc và actor có care.manage, tạo task qua workflow Care; nếu thiếu quyền thì dừng ở mức tham khảo, không báo đã tạo.</p></li>
+        <li><strong>Rà soát phản hồi và chất lượng</strong><p>Nhân viên xem kết quả đánh giá/recommendation và phản hồi liên quan; nếu dữ liệu thiếu, lỗi hoặc không có sản phẩm phù hợp thì báo rõ, không tạo gợi ý có vẻ chắc chắn bằng fallback sai.</p></li>
+      </ol>
+      <div class="callout"><strong>Không nhầm với WAGGY Pet Intelligence:</strong> recommendation hiện có là công cụ cục bộ/rules-based; Pet Intelligence toàn hệ sinh thái vẫn là hệ thống và connector đề xuất, cần governance, kiểm định và human approval.</div>
+    </section>
+    <section class="section" id="customer-portal">
+      <div class="section-head"><div><span class="kicker">Luồng hiện có 13</span><h2>Nhân viên xử lý đăng ký portal và lời mời khách</h2></div><p>Đây là màn hình quản trị nội bộ, không phải bằng chứng rằng khách hàng hiện có workflow tự đăng ký/đăng nhập đầy đủ.</p></div>
+      <ol class="steps">
+        <li><strong>Nhân viên có sales.manage mở màn hình</strong><p>Trang chỉ dành cho staff đăng nhập đủ quyền; kiểm tra hàng đợi registration/invite và trạng thái mới nhất trước khi thao tác.</p></li>
+        <li><strong>Duyệt đăng ký bằng customer có sẵn</strong><p>Chọn registration đang pending, tìm và liên kết một customer record hiện hữu; thao tác approve không tự tạo customer mới. Nếu hồ sơ không khớp thì yêu cầu xử lý riêng, không ghép theo tên sơ sài.</p></li>
+        <li><strong>Từ chối đăng ký có lý do phù hợp</strong><p>Nhân viên dùng hành động reject cho registration cần từ chối; UI/repository báo lỗi nếu trạng thái đã đổi, không chuyển một đăng ký không còn pending thành approved.</p></li>
+        <li><strong>Tạo lời mời dùng một lần</strong><p>Staff tạo invite gắn quy trình phù hợp; invite hết hạn sau 24 giờ và có thể hủy khi còn active. Chỉ chia sẻ token/URL tới người nhận dự kiến qua kênh đã xác minh.</p></li>
+        <li><strong>Tra cứu trạng thái và dọn quyền</strong><p>Kiểm tra invite còn hiệu lực/hết hạn/đã hủy, registration đã duyệt/từ chối; khi quyền nhân viên bị thu hồi thì không tiếp tục thao tác quản trị portal.</p></li>
+      </ol>
+      <div class="callout"><strong>Điểm cần triển khai riêng:</strong> khách hàng-facing signup/login, xác minh email/điện thoại, khôi phục tài khoản và quản lý consent không được suy ra từ trang staff này.</div>
+    </section>
+    <section class="section" id="data-catalog">
+      <div class="section-head"><div><span class="kicker">Luồng hiện có 14</span><h2>Catalog JSON và nhập vào SQLite staging</h2></div><p>Đây là luồng dữ liệu kiểm tra/nghiên cứu, tách khỏi operational database và không mặc định biến nội dung JSON thành dữ liệu nghiệp vụ chuẩn.</p></div>
+      <ol class="steps">
+        <li><strong>Quét nguồn JSON và phân loại</strong><p>Data Catalog đọc các nguồn được cấu hình, hiển thị nhóm dữ liệu, số record, dấu hiệu overlap, tiền tố SHA-256 và preview tối đa 20 dòng.</p></li>
+        <li><strong>Đánh giá nguồn trước import</strong><p>Staff xem nhãn nguồn/tính chất và nội dung preview; dữ liệu synthetic/unverified không dùng làm hồ sơ thật, giá thật hay tư vấn thú y.</p></li>
+        <li><strong>Kiểm tra quyền settings.manage</strong><p>Chỉ người có quyền settings.manage thực hiện import/update. Trang không dùng thay quyền nghiệp vụ ở Sales, Health hay Inventory.</p></li>
+        <li><strong>Xác nhận file staging đích</strong><p>Trước ghi, xác nhận thao tác; repository từ chối đường dẫn trùng operational DB. Nguồn được nhập vào SQLite staging riêng.</p></li>
+        <li><strong>Thay bảng theo nguồn và kiểm tra integrity</strong><p>Import thay nội dung bảng staging tương ứng với nguồn; chạy SQLite quick_check sau ghi. Nếu integrity check thất bại, hiển thị lỗi và không tuyên bố nguồn sẵn sàng.</p></li>
+        <li><strong>Đọc thử hoặc kết thúc</strong><p>Preview và kết quả staging phục vụ kiểm tra dữ liệu; không đồng bộ tự động vào customer, product, pet/animal hay hồ sơ sức khỏe production.</p></li>
+      </ol>
+      <div class="callout"><strong>Remote mode:</strong> main window thay trang data catalog cục bộ bằng thông báo unavailable; không mô tả import staging như chức năng sẵn có trong mọi chế độ vận hành.</div>
+    </section>
+    <nav class="page-nav" aria-label="Điều hướng workflow"><a href="index.html">← Danh mục 8 workflow</a><a href="../pet-care.html#workflow">Trang hệ thống</a><a href="../integration/pet-care.html">Điểm tích hợp →</a></nav>
+  </main>
+  <footer class="footer"><div class="shell footer-inner"><span>WAGGY Pet Care · Workflow</span><span>ĐANG CÓ · Chi tiết tích hợp ở trang riêng.</span></div></footer>
+  <script src="../assets/waggy-product.js"></script>
+</body>
+</html>

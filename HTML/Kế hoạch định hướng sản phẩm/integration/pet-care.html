@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Các điểm kết nối hiện có và tương lai của WAGGY Pet Care, dữ liệu nguồn, consent và workflow trao đổi."><title>Pet Care | Điểm tích hợp WAGGY</title><link rel="stylesheet" href="../assets/waggy-product.css"></head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner"><a class="brand" href="../index.html"><span class="brand-mark">W</span><span>WAGGY<small>INTEGRATION DETAIL</small></span></a><nav class="top-links" aria-label="Điều hướng"><a href="index.html">Bản đồ tích hợp</a><a href="../workflow/index.html">Workflow</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav></div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../index.html">WAGGY Ecosystem</a><span>/</span><a href="index.html">Tích hợp</a><span>/</span><span>Pet Care</span></nav>
+    <section class="hero"><div class="hero-content"><span class="eyebrow">01 · HỆ THỐNG ĐANG CÓ · CONNECTOR LÀ TƯƠNG LAI</span><h1>Pet Care <span>connection points</span></h1><p>Pet Care hiện là hệ thống WAGGY đã có. Các điểm kết nối dưới đây mô tả cách mở rộng an toàn về sau, không khẳng định connector đã được xây dựng.</p><div class="hero-meta"><span class="status current">PET CARE ĐANG CÓ</span><span>Hồ sơ chủ nuôi/thú cưng</span><span>Outbound có consent</span></div></div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Nguồn dữ liệu</span><h2>Pet Care sở hữu hồ sơ nền</h2></div><p>Hệ thống khác dùng WAGGY ID và quyền truy cập; không tự tạo bản ghi nguồn thay Pet Care.</p></div><div class="facts">
+      <div class="fact"><b>Source of truth</b><span>Hồ sơ chủ nuôi/thú cưng và lịch sử chăm sóc thuộc Pet Care trong phạm vi đang quản lý.</span></div>
+      <div class="fact"><b>Inbound có thể chấp nhận</b><span>Chỉ cập nhật do chủ nuôi/nhân viên được phân quyền xác nhận; nguồn ngoài không ghi đè âm thầm.</span></div>
+      <div class="fact"><b>Không chia sẻ mặc định</b><span>Địa chỉ, liên hệ, health detail, ghi chú nội bộ và dữ liệu trẻ em/người nhạy cảm nếu có.</span></div>
+    </div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Điểm kết nối theo cặp</span><h2>Ai gửi gì, Pet Care nhận gì?</h2></div><p>Tất cả các kết nối trong bảng là đề xuất cho giai đoạn sau, cần chủ dữ liệu và kiểm thử.</p></div><div class="integration-list">
+      <div class="integration-row"><strong>Pet Care → Pet Service</strong><span>Gửi pet reference, loài/kích cỡ và lưu ý an toàn được chủ nuôi cho phép khi khách xác nhận booking.</span><span class="integration-label">Pet ID · consent scope · profile version</span></div>
+      <div class="integration-row"><strong>Pet Service → Pet Care</strong><span>Nhận mã booking và bản tóm tắt dịch vụ/bàn giao được phép; không ghi thay Pet Care các kết luận y tế.</span><span class="integration-label">Appointment ref · service summary</span></div>
+      <div class="integration-row"><strong>Pet Care → Pet Health</strong><span>Gửi định danh và tiền sử tối thiểu khi chủ chọn cơ sở và cấp consent theo mục đích.</span><span class="integration-label">Pet reference · authorized history</span></div>
+      <div class="integration-row"><strong>Pet Health → Pet Care</strong><span>Nhận trạng thái hồ sơ đã phát hành, lịch tiêm/tái khám hoặc tài liệu có quyền; clinic vẫn là nguồn record y tế.</span><span class="integration-label">Signed summary · reminder · source ref</span></div>
+      <div class="integration-row"><strong>Pet Care → Community / Connect</strong><span>Chỉ xuất badge xác minh hoặc pet reference opt-in; Connect giữ case riêng, Community không nhận hồ sơ nền.</span><span class="integration-label">Opt-in reference · no direct PII</span></div>
+      <div class="integration-row"><strong>Pet Care → Intelligence</strong><span>Dataset read-only, giảm định danh và có data owner phê duyệt use-case/retention.</span><span class="integration-label">Governed dataset · lineage</span></div>
+    </div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Workflow tích hợp</span><h2>Chủ nuôi kiểm soát dữ liệu được chia sẻ</h2></div></div><ol class="steps">
+      <li><strong>Hệ nhận yêu cầu tham chiếu hồ sơ</strong><p>Service/Health gửi WAGGY pet ID, mục đích, trường yêu cầu, người nhận và thời hạn.</p></li>
+      <li><strong>Pet Care kiểm tra định danh và quyền</strong><p>Kiểm tra user-to-pet relationship, tenant, role, consent hiện hành, scope và trường được phép; từ chối nếu mơ hồ.</p></li>
+      <li><strong>Chủ nuôi xác nhận consent</strong><p>Hiển thị dữ liệu cụ thể, đơn vị nhận, mục đích và thời hạn; lưu phiên bản điều khoản, timestamp và cách thu hồi.</p></li>
+      <li><strong>Gửi bản tối thiểu có nguồn</strong><p>Trả dữ liệu cho connector đã xác thực kèm record ID/version, source timestamp, consent reference và correlation ID.</p></li>
+      <li><strong>Ghi audit và xử lý thu hồi</strong><p>Ghi người yêu cầu, trường xuất, kết quả và thời hạn; khi thu hồi, chặn chia sẻ tiếp theo và phát consent-revoked event.</p></li>
+    </ol></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Hợp đồng &amp; lỗi</span><h2>Không ghép hồ sơ hoặc nhân đôi thay đổi</h2></div></div><div class="two-col">
+      <article class="panel"><h3>Định danh &amp; phiên bản</h3><p>Dùng pet_id/owner_id ổn định theo namespace, ETag/record_version và external reference; không match chỉ bằng tên/điện thoại.</p></article>
+      <article class="panel"><h3>Retry / stale data</h3><p>Connector gửi idempotency key; nếu version nguồn đổi, yêu cầu đọc lại/hiển thị xung đột thay vì overwrite.</p></article>
+      <article class="panel"><h3>Consent bị thu hồi</h3><p>Ngăn lần đọc/chia sẻ tiếp theo; yêu cầu hệ nhận xóa/khóa bản sao khi pháp luật/chính sách cho phép và ghi xác nhận.</p></article>
+      <article class="panel"><h3>Quyền không đủ</h3><p>Fail closed với mã lý do; không chuyển sang dữ liệu cache để tạo cảm giác đã gửi được hồ sơ.</p></article>
+    </div><div class="callout"><strong>Hiện trạng:</strong> trang này là thiết kế tích hợp tương lai. Việc Pet Care hiện có API hoặc nghiệp vụ nội bộ tương tự không có nghĩa các connector WAGGY nêu ở đây đã triển khai.</div></section>
+    <nav class="page-nav" aria-label="Điều hướng"><a href="../pet-care.html#workflow">← Workflow Pet Care</a><a href="index.html">Bản đồ kết nối</a><a href="pet-service.html">Pet Service →</a></nav>
+  </main>
+  <footer class="footer"><div class="shell footer-inner"><span>WAGGY Pet Care · Integration design</span><span>Pet Care hiện có · liên kết liên hệ là đề xuất.</span></div></footer>
+  <script src="../assets/waggy-product.js"></script>
+</body>
+</html>

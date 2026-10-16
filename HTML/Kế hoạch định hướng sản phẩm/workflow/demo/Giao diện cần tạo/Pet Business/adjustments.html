@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kiểm kê và điều chỉnh tồn Pet Business: ghi nhận số đếm, chênh lệch, ảnh bằng chứng, recount và phê duyệt độc lập.">
+  <meta name="theme-color" content="#176747">
+  <meta name="color-scheme" content="light dark">
+  <title>Điều chỉnh tồn · WAGGY Pet Business</title>
+  <link rel="stylesheet" href="../../assets/demo.css">
+</head>
+<body data-demo="pet-business" data-demo-page="adjustments" data-system-folder="true">
+  <a class="skip-link" href="#demoApp">Bỏ qua tải, đến nội dung Pet Business</a>
+  <div id="demoApp" role="region" aria-label="Ứng dụng Pet Business" aria-busy="true" tabindex="-1">
+    <div class="demo-boot" role="status" aria-live="polite"><span class="demo-boot-mark" aria-hidden="true">W</span><span class="demo-boot-copy"><strong>Đang mở Điều chỉnh tồn</strong><small>Nạp phiếu kiểm kê, variance và cổng recount...</small></span><span class="demo-boot-spinner" aria-hidden="true"></span></div>
+  </div>
+  <noscript>
+    <main class="demo-noscript-page">
+      <header><span class="workspace-kicker">KHO &amp; KIỂM SOÁT · HƯỚNG DẪN NGHIỆP VỤ</span><h1>Kiểm kê &amp; điều chỉnh tồn</h1><p>Đối chiếu số đếm thực tế với sổ theo SKU, chi nhánh, vị trí và lô. Điều chỉnh phải tạo movement có tham chiếu, không sửa số dư lịch sử.</p></header>
+      <section><h2>Quy trình xử lý</h2><ol><li>Chọn kỳ, vị trí và lô; chụp số liệu sổ làm mốc.</li><li>Ghi số đếm cùng mã lý do và bằng chứng.</li><li>Yêu cầu recount độc lập khi variance chạm ngưỡng.</li><li>Checker xác nhận; chỉ ghi movement khi kỳ còn mở.</li></ol></section>
+      <section><h2>Cổng kiểm soát</h2><p>Chặn khi thiếu lý do/bằng chứng, maker trùng checker hoặc kỳ đã khóa. Kết quả kiểm đếm không tự động cập nhật tồn.</p></section>
+      <nav aria-label="Màn hình liên quan"><a href="inventory.html">Sổ tồn</a><a href="approvals.html">Phê duyệt</a><a href="audit.html">Nhật ký kiểm soát</a><a href="index.html">Control tower</a></nav>
+      <p class="demo-noscript-note">Bản demo tương tác cần JavaScript. Nội dung trên mô tả quy trình, không kết nối sổ kho thật.</p>
+    </main>
+  </noscript>
+  <script src="pet-business-config.js" defer></script>
+  <script src="js/pet-business-algorithms.js" defer></script>
+  <script src="../../../../data/pet-business.js" defer></script>
+  <script src="../../../../data/pet-care.js" defer></script>
+  <script src="../../../../data/pet-commerce.js" defer></script>
+  <script src="../../../../data/pet-community.js" defer></script>
+  <script src="../../../../data/pet-connect.js" defer></script>
+  <script src="../../../../data/pet-health.js" defer></script>
+  <script src="../../../../data/pet-intelligence.js" defer></script>
+  <script src="../../../../data/pet-service.js" defer></script>
+  <script src="../../../../data/waggy-shared-demo-data.js" defer></script>
+  <script src="../../assets/sync.js" defer></script>
+  <script src="../../assets/demo.js" defer></script>
+  <script src="pet-business.js" defer></script>
+</body>
+</html>

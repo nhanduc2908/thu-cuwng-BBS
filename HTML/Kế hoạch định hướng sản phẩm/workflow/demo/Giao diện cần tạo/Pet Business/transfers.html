@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Điều chuyển Pet Business giữa các chi nhánh: theo dõi nguồn, đích, dispatch, trạng thái in-transit, ETA và xác nhận nhận hàng.">
+  <meta name="theme-color" content="#176747">
+  <meta name="color-scheme" content="light dark">
+  <title>Điều chuyển · WAGGY Pet Business</title>
+  <link rel="stylesheet" href="../../assets/demo.css">
+</head>
+<body data-demo="pet-business" data-demo-page="transfers" data-system-folder="true">
+  <a class="skip-link" href="#demoApp">Bỏ qua tải, đến nội dung Pet Business</a>
+  <div id="demoApp" role="region" aria-label="Ứng dụng Pet Business" aria-busy="true" tabindex="-1">
+    <div class="demo-boot" role="status" aria-live="polite"><span class="demo-boot-mark" aria-hidden="true">W</span><span class="demo-boot-copy"><strong>Đang mở Điều chuyển</strong><small>Nạp phiếu chuyển, chặng vận chuyển và ETA...</small></span><span class="demo-boot-spinner" aria-hidden="true"></span></div>
+  </div>
+  <noscript>
+    <main class="demo-noscript-page">
+      <header><span class="workspace-kicker">INVENTORY MOVEMENT · TWO-STEP TRANSFER</span><h1>Điều chuyển liên chi nhánh</h1><p>Theo dõi yêu cầu, nguồn/đích, số dispatch, ETA, lượng đang vận chuyển, xác nhận nhận và variance.</p></header>
+      <section><h2>Quy trình điều chuyển</h2><ol><li>Kiểm tra tồn khả dụng tại nguồn và tuyến hợp lệ.</li><li>Gửi yêu cầu qua phê duyệt trước khi dispatch.</li><li>Giữ lượng đã xuất ở trạng thái in-transit.</li><li>Chi nhánh đích xác nhận nhận đủ; phần thiếu/hỏng thành exception.</li></ol></section>
+      <section><h2>Nguyên tắc tồn kho</h2><p>In-transit không thuộc available của cả hai kho. Chỉ ghi movement đích khi nhận; source và destination không được trùng.</p></section>
+      <nav aria-label="Màn hình liên quan"><a href="inventory.html">Tồn kho</a><a href="approvals.html">Phê duyệt</a><a href="adjustments.html">Điều chỉnh tồn</a><a href="audit.html">Nhật ký kiểm soát</a></nav>
+      <p class="demo-noscript-note">Bản demo tương tác cần JavaScript; điều chuyển không làm thay đổi số dư kho thật.</p>
+    </main>
+  </noscript>
+  <script src="pet-business-config.js" defer></script>
+  <script src="js/pet-business-algorithms.js" defer></script>
+  <script src="../../../../data/pet-business.js" defer></script>
+  <script src="../../../../data/pet-care.js" defer></script>
+  <script src="../../../../data/pet-commerce.js" defer></script>
+  <script src="../../../../data/pet-community.js" defer></script>
+  <script src="../../../../data/pet-connect.js" defer></script>
+  <script src="../../../../data/pet-health.js" defer></script>
+  <script src="../../../../data/pet-intelligence.js" defer></script>
+  <script src="../../../../data/pet-service.js" defer></script>
+  <script src="../../../../data/waggy-shared-demo-data.js" defer></script>
+  <script src="../../assets/sync.js" defer></script>
+  <script src="../../assets/demo.js" defer></script>
+  <script src="pet-business.js" defer></script>
+</body>
+</html>

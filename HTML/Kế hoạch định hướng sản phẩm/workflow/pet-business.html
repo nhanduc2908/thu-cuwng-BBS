@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Workflow WAGGY Pet Business: các bước nghiệp vụ, trạng thái, ngoại lệ và kiểm soát.">
+  <title>WAGGY Pet Business | Workflow chi tiết WAGGY</title>
+  <link rel="stylesheet" href="../assets/waggy-product.css">
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">W</span><span>WAGGY<small>WORKFLOW DETAIL</small></span></a>
+    <nav class="top-links" aria-label="Điều hướng"><a href="../index.html">Tổng quan</a><a href="index.html">8 workflow</a><a href="../integration/pet-business.html">Điểm tích hợp</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav>
+  </div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../../index.html">Cổng HTML</a><span>/</span><a href="../index.html">WAGGY Ecosystem</a><span>/</span><a href="index.html">Workflow</a><span>/</span><span>Pet Business</span></nav>
+    <section class="hero"><div class="hero-content"><span class="eyebrow">05 · ƯU TIÊN 1 · ĐỀ XUẤT XÂY DỰNG</span><h1>WAGGY Pet Business <span>Workflow</span></h1><p>Quy trình đề xuất quản lý tổ chức, chi nhánh, nhân sự, mua hàng, kho, dịch vụ, bán hàng và khóa sổ.</p><div class="hero-meta"><span class="status proposed">ĐỀ XUẤT</span><span>Luồng nghiệp vụ chi tiết</span><span>Ngoại lệ &amp; kiểm soát</span></div></div></section>
+    <aside class="callout"><strong>Trạng thái hệ thống:</strong> Đây là workflow đề xuất, chưa phải tính năng đã triển khai độc lập trong WAGGY.</aside>
+    <section class="section" id="workflow"><div class="section-head"><div><span class="kicker">Workflow đề xuất</span><h2>Thiết lập → mua/nhập → vận hành → đối soát</h2></div><p>Tách quyền tạo, duyệt, nhận hàng, xuất hàng, thanh toán và khóa sổ.</p></div>
+      <ol class="steps">
+        <li><strong>Đăng ký và xác minh tổ chức</strong><p>Ghi pháp nhân/chủ thể, thông tin thanh toán, địa chỉ, múi giờ, cấu hình thuế và người đại diện; xác nhận quyền quản trị tổ chức.</p></li>
+        <li><strong>Tạo chi nhánh, cơ sở và kho</strong><p>Đặt mã chi nhánh, vùng phục vụ, điểm bán, kho, sức chứa và quy trình vận chuyển nội bộ; ghi ngày bắt đầu/kết thúc hoạt động.</p></li>
+        <li><strong>Thiết lập người dùng và phân quyền</strong><p>Mời nhân viên, gán vai trò/chi nhánh, giới hạn dữ liệu theo phạm vi; bật phê duyệt độc lập cho các thao tác có rủi ro tài chính/tồn kho.</p></li>
+        <li><strong>Chuẩn hóa catalog và nhà cung cấp</strong><p>Quản lý SKU, đơn vị đo, barcode, thuế, lô/hạn dùng, giá vốn/giá bán; xác minh nhà cung cấp và hồ sơ chất lượng.</p></li>
+        <li><strong>Lập nhu cầu mua và duyệt ngân sách</strong><p>Tính nhu cầu theo tồn dùng được, hàng đang về, đơn chờ và ngưỡng an toàn; tạo đơn mua, đính kèm báo giá/chứng từ và gửi đúng cấp duyệt.</p></li>
+        <li><strong>Nhận hàng, kiểm tra và nhập kho</strong><p>Đối chiếu PO, số lượng, lô/hạn dùng, hóa đơn và tình trạng; ghi phần đạt/thiếu/hỏng, cách ly nếu cần, xác nhận người nhận và vị trí kho.</p></li>
+        <li><strong>Điều chuyển và quản lý biến động</strong><p>Tạo phiếu điều chuyển hai đầu, kiểm kê, điều chỉnh, xuất dùng nội bộ/hao hụt; mỗi biến động cần lý do, người lập và phê duyệt.</p></li>
+        <li><strong>Phân công nhân sự và thực hiện dịch vụ</strong><p>Lập ca, năng lực, lịch dịch vụ, nhiệm vụ và checklist; ghi vật tư sử dụng, tình trạng thực hiện, bàn giao và chỉ số vận hành.</p></li>
+        <li><strong>Tiếp nhận đơn và bán hàng</strong><p>Nhận đơn từ các kênh, kiểm tra giá/tồn, xác nhận thanh toán, phân bổ kho và xử lý fulfillment; đồng bộ trạng thái đơn và xuất kho đúng một lần.</p></li>
+        <li><strong>Đóng ca và đối soát giao dịch</strong><p>Đối chiếu tiền mặt/cổng thanh toán, đơn hoàn/hủy, phiếu thu/chi và tồn; người duyệt xử lý chênh lệch, khóa ca/kỳ có biên bản.</p></li>
+        <li><strong>Báo cáo và cải tiến</strong><p>Phát hành báo cáo theo chi nhánh/chuỗi về doanh thu, lãi gộp, tồn, dịch vụ, công nợ, năng suất; phân quyền xem và lưu kỳ báo cáo.</p></li>
+      </ol><div class="state-line"><b>Vòng đời giao dịch:</b><span>Nháp</span><span>Chờ duyệt</span><span>Đã duyệt</span><span>Đang xử lý</span><span>Đối soát</span><span>Đã đóng</span><span>Điều chỉnh có phê duyệt</span></div>
+    </section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Ngoại lệ &amp; kiểm soát</span><h2>Minh bạch quyền, kho và tiền</h2></div></div><div class="two-col">
+      <article class="panel"><h3>Nhận hàng chênh lệch</h3><p>Không nhập chênh lệch vào tồn khả dụng; tạo biên bản, ảnh/chứng từ và yêu cầu xử lý nhà cung cấp.</p></article>
+      <article class="panel"><h3>Điều chỉnh tồn/hao hụt</h3><p>Yêu cầu lý do, bằng chứng và cấp duyệt; giữ cả số liệu trước/sau, người tạo, người duyệt và thời điểm.</p></article>
+      <article class="panel"><h3>Chênh lệch thu chi</h3><p>Mở vụ việc đối soát, tách khoản xác minh khỏi khoản đã chốt; không xóa giao dịch nguồn để khớp số.</p></article>
+      <article class="panel"><h3>Đồng bộ ngoại tuyến</h3><p>Sử dụng request ID duy nhất, kiểm tra phiên bản dữ liệu và xung đột trước áp dụng; lỗi không được báo như thành công.</p></article>
+    </div></section>
+    <section class="section">
+      <div class="section-head"><div><span class="kicker">Đặc tả vận hành</span><h2>Các luồng nghiệp vụ cốt lõi của Pet Business</h2></div><p>Đề xuất tách quyền khởi tạo, phê duyệt, ghi nhận thực tế và khóa kỳ; cấu hình chi tiết theo quy mô doanh nghiệp và quy định áp dụng.</p></div>
+      <div class="facts">
+        <div class="fact"><b>Phạm vi</b><span>Tổ chức, chi nhánh, nhân sự, danh mục, nhà cung cấp, mua hàng, kho, dịch vụ, bán hàng, thu chi và báo cáo quản trị.</span></div>
+        <div class="fact"><b>Khóa dữ liệu</b><span>Tenant ID, branch ID, kho, SKU/lot, nhân viên, ca, chứng từ, actor, thời gian và phiên bản chính sách.</span></div>
+        <div class="fact"><b>Kiểm soát phân tách</b><span>Người lập không tự duyệt các giao dịch vượt ngưỡng/rủi ro; mọi điều chỉnh sau ghi sổ có lý do, người duyệt và audit.</span></div>
+      </div>
+      <h3>A. Mở tổ chức và sẵn sàng vận hành</h3>
+      <ol class="steps">
+        <li><strong>Xác minh tổ chức và người quản trị</strong><p>Thu thông tin pháp nhân/chủ thể, người đại diện, địa chỉ, tiền tệ, múi giờ, cấu hình thuế và kênh nhận chứng từ. Người tạo chứng minh quyền quản trị; hồ sơ chưa đủ ở trạng thái nháp/chờ xác minh.</p></li>
+        <li><strong>Khai báo chi nhánh, kho và phạm vi</strong><p>Tạo mã duy nhất, địa chỉ, giờ hoạt động, vùng phục vụ, kho/điểm bán và người quản lý; xác định quan hệ chi nhánh-kho, đơn vị tiền tệ và chính sách giá. Không cho người dùng đọc chéo tenant/branch ngoài quyền.</p></li>
+        <li><strong>Mời nhân sự và duyệt quyền</strong><p>Gán chức danh, chi nhánh, quyền theo nhiệm vụ và ngày hiệu lực; xác nhận tài khoản đã được kích hoạt. Quyền quản trị, duyệt mua/chi, điều chỉnh kho, hoàn tiền và xem báo cáo tài chính cần cấp riêng.</p></li>
+        <li><strong>Chuẩn hóa danh mục và nhà cung cấp</strong><p>Kiểm tra mã SKU, barcode, đơn vị, thuế, giá vốn/giá bán, lô/hạn dùng, trạng thái hoạt động; lưu hồ sơ và điều khoản nhà cung cấp. Mã trùng/đơn vị không đổi được đưa vào đối chiếu trước khi phát sinh tồn.</p></li>
+      </ol>
+      <h3>B. Mua hàng, nhận hàng và quản trị tồn</h3>
+      <ol class="steps">
+        <li><strong>Lập đề nghị mua</strong><p>Người phụ trách xem tồn khả dụng, hàng đang về, nhu cầu/đơn chờ và mức tồn mục tiêu; tạo đề nghị theo nhà cung cấp, SKU, số lượng, giá dự kiến, lý do và chứng từ so sánh.</p></li>
+        <li><strong>Kiểm tra ngân sách và phê duyệt</strong><p>Quản lý/đúng cấp duyệt kiểm tra ngân sách, giá, số lượng, xung đột lợi ích và lịch sử mua. Trả lại để bổ sung hoặc từ chối phải có lý do; sửa nội dung trọng yếu sau duyệt cần gửi duyệt lại.</p></li>
+        <li><strong>Phát hành đơn mua và nhận hàng</strong><p>Kho đối chiếu mã đơn mua, nhà cung cấp, SKU, số lượng, đơn giá, lô/hạn dùng và hóa đơn; ghi nhận đủ/thiếu/thừa/hỏng theo từng dòng. Người nhận xác nhận thực nhận; phần sai lệch được cách ly, không nhập vào lượng khả dụng.</p></li>
+        <li><strong>Đưa tồn vào sổ và xử lý công nợ</strong><p>Sau xác nhận nhận hàng, lập giao dịch tăng tồn có tham chiếu chứng từ; kế toán đối chiếu hóa đơn, khoản phải trả, hạn thanh toán và chiết khấu. Giao dịch kho và chứng từ phải liên kết nhưng có trạng thái riêng.</p></li>
+        <li><strong>Kiểm kê, chuyển kho và điều chỉnh</strong><p>Lập kỳ/phiếu kiểm kê theo vị trí, đếm thực tế, so sánh sổ và mở phiếu chênh lệch. Điều chuyển ghi xuất tại nguồn và nhận tại đích; điều chỉnh cần lý do, bằng chứng, người duyệt độc lập và lưu số trước/sau.</p></li>
+      </ol>
+      <h3>C. Bán hàng, dịch vụ và kết thúc ca</h3>
+      <ol class="steps">
+        <li><strong>Nhận giao dịch từ kênh được phép</strong><p>Định danh chi nhánh, khách, dòng hàng/dịch vụ, bảng giá và phương thức thanh toán; kiểm tra quyền người bán, tồn khả dụng, số dư đặt cọc và đơn nguồn trước khi xác nhận.</p></li>
+        <li><strong>Giữ hàng, thực hiện và ghi nhận thanh toán</strong><p>Giữ/xuất kho theo chứng từ tham chiếu và chỉ một lần; tách số tiền khách trả, cọc, khoản còn nợ, hoàn/hủy và phí. Giao dịch chờ xác nhận không được hiển thị là đã thu/đã giao.</p></li>
+        <li><strong>Đóng ca và xử lý chênh lệch</strong><p>Thu ngân đối chiếu tiền mặt, cổng thanh toán, đơn, hoàn, khoản giữ và chứng từ; lập biên bản chênh lệch với người chịu trách nhiệm. Quản lý duyệt cách xử lý trước khi khóa ca; không xóa giao dịch để ép cân.</p></li>
+        <li><strong>Khóa kỳ và phát hành báo cáo</strong><p>Kế toán kiểm tra giao dịch treo, công nợ, nhập-xuất-tồn, khoản hoàn và giao dịch chưa đối soát; khóa kỳ với người duyệt và thời điểm. Báo cáo được lọc theo quyền/chi nhánh, có ngày chốt và không thay thế sổ chứng từ gốc.</p></li>
+      </ol>
+      <div class="two-col">
+        <article class="panel"><h3>Luồng lỗi chứng từ</h3><p>Thiếu hóa đơn/mã tham chiếu: treo ở trạng thái chờ; hàng sai/hỏng: cách ly; lệch tiền/tồn: mở case và gán owner/SLA. Chỉ người có quyền mới được ghi điều chỉnh bù có liên kết giao dịch ban đầu.</p></article>
+        <article class="panel"><h3>Hồ sơ audit tối thiểu</h3><p>Tenant/branch, loại chứng từ, ID nguồn, actor, người duyệt, thời điểm, giá trị trước/sau, lý do, tệp chứng minh, phiên bản quy tắc và kết quả đồng bộ.</p></article>
+      </div>
+    </section>
+    <nav class="page-nav" aria-label="Điều hướng workflow"><a href="index.html">← Danh mục 8 workflow</a><a href="../pet-business.html#workflow">Trang hệ thống</a><a href="../integration/pet-business.html">Điểm tích hợp →</a></nav>
+  </main>
+  <footer class="footer"><div class="shell footer-inner"><span>WAGGY Pet Business · Workflow</span><span>ĐỀ XUẤT · Chi tiết tích hợp ở trang riêng.</span></div></footer>
+  <script src="../assets/waggy-product.js"></script>
+</body>
+</html>

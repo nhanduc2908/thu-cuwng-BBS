@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Workflow đề xuất WAGGY Pet Intelligence cho quản trị dữ liệu, phân tích, AI có con người giám sát và tích hợp an toàn.">
+  <title>WAGGY Pet Intelligence | Workflow &amp; hướng tích hợp</title><link rel="stylesheet" href="assets/waggy-product.css">
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner"><a class="brand" href="index.html"><span class="brand-mark">W</span><span>WAGGY<small>PRODUCT DIRECTION</small></span></a><nav class="top-links" aria-label="Điều hướng"><a href="index.html">Tổng quan 8 hệ thống</a><a href="workflow/index.html">Thư mục workflow</a><a href="#workflow">Workflow Pet Intelligence</a><a href="integration/pet-intelligence.html">Điểm tích hợp</a><a href="integration/index.html">Bản đồ kết nối</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav></div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../index.html">Cổng HTML</a><span>/</span><a href="index.html">WAGGY Ecosystem</a><span>/</span><span>Pet Intelligence</span></nav>
+    <section class="hero"><div class="hero-content"><span class="eyebrow">08 · ĐỀ XUẤT XÂY DỰNG · SAU NỀN DỮ LIỆU</span><h1>WAGGY Pet Intelligence</h1><p>Phân tích dữ liệu, hỗ trợ gợi ý chăm sóc và quyết định kinh doanh sau khi các nguồn dữ liệu đủ chất lượng, có căn cứ sử dụng và được quản trị an toàn.</p><div class="hero-meta"><span class="status proposed">ĐỀ XUẤT</span><span>Data governance</span><span>Explainable AI</span><span>Human review</span></div></div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Phạm vi nghiệp vụ</span><h2>Lớp hỗ trợ, không tự quyết định thay người</h2></div><p>Intelligence không là nguồn dữ liệu gốc; không tự thực hiện hành động y tế, tài chính, tuyển dụng hay nhận nuôi.</p></div><div class="facts">
+      <div class="fact"><b>Kích hoạt</b><span>Use-case phân tích/gợi ý được chủ dữ liệu và người chịu trách nhiệm phê duyệt.</span></div><div class="fact"><b>Vai trò</b><span>Data owner, quản trị dữ liệu, chuyên gia nghiệp vụ, nhóm mô hình, reviewer và kiểm toán.</span></div><div class="fact"><b>Đầu vào</b><span>Nguồn hợp lệ, schema/lineage, consent/căn cứ, mục đích, nhóm đánh giá và ngưỡng dừng.</span></div>
+    </div></section>
+    <section class="section" id="workflow"><div class="section-head"><div><span class="kicker">Workflow đề xuất</span><h2>Từ câu hỏi kinh doanh tới giám sát mô hình</h2></div><p>Mỗi gợi ý có version, giới hạn, nguồn và đường quay về quy trình thủ công.</p></div>
+      <ol class="steps">
+        <li><strong>Đăng ký use-case và quyết định được hỗ trợ</strong><p>Nêu người dùng, tác động, lợi ích, đối tượng ảnh hưởng, loại quyết định và cách đo thành công; từ chối mục đích mơ hồ hoặc rủi ro không kiểm soát.</p></li>
+        <li><strong>Chỉ định owner và đánh giá rủi ro</strong><p>Gán người chịu trách nhiệm, phân loại rủi ro, đánh giá tác động dữ liệu cá nhân, chuyên môn, sai lệch, giải thích và phương án fallback.</p></li>
+        <li><strong>Duyệt nguồn dữ liệu và căn cứ</strong><p>Lập inventory/lineage, mục đích, quyền truy cập, consent/contract, thời hạn lưu và giới hạn tái sử dụng; không đưa nguồn không rõ quyền vào pipeline.</p></li>
+        <li><strong>Thu nhận và chuẩn hóa an toàn</strong><p>Áp schema, chất lượng, provenance, pseudonymization/minimization và phân vùng tenant; kiểm soát quyền ở môi trường phát triển, kiểm thử và production.</p></li>
+        <li><strong>Thiết lập baseline và đánh giá dữ liệu</strong><p>Chốt cohort, mốc thời gian, metric và nhóm so sánh; kiểm tra thiếu lệch, data leakage, mẫu nhỏ và đại diện theo loài/địa bàn/nhóm.</p></li>
+        <li><strong>Phát triển mô hình/phân tích</strong><p>Huấn luyện hoặc xây báo cáo có kiểm soát phiên bản; ghi cấu hình, dữ liệu, mục đích, giả định, giới hạn và cách diễn giải đầu ra.</p></li>
+        <li><strong>Kiểm định độc lập và phê duyệt</strong><p>Đánh giá độ chính xác/hiệu chuẩn, sai số theo nhóm, robustness, bảo mật và tác hại; chuyên gia độc lập quyết định pilot/no-go, lưu biên bản.</p></li>
+        <li><strong>Phát hành có giới hạn</strong><p>Bắt đầu shadow mode hoặc nhóm nhỏ; hiển thị giải thích, độ tin cậy/giới hạn, nguồn và ngày cập nhật; người dùng có thể từ chối gợi ý.</p></li>
+        <li><strong>Con người quyết định và phản hồi</strong><p>Người được phân quyền xem xét, chấp nhận/chỉnh/từ chối và ghi lý do; hành động trong hệ nghiệp vụ chỉ chạy sau xác nhận riêng theo quyền.</p></li>
+        <li><strong>Giám sát, rollback hoặc ngừng</strong><p>Theo dõi drift, bias, khiếu nại, tác động và bảo mật; vượt ngưỡng thì dừng model, quay về quy trình thủ công, điều tra và phê duyệt lại trước mở.</p></li>
+      </ol><div class="state-line"><b>Vòng đời đề xuất:</b><span>Ý tưởng</span><span>Đang duyệt</span><span>Đang kiểm định</span><span>Pilot giới hạn</span><span>Đang giám sát</span><span>Tạm dừng</span><span>Rollback / ngừng</span></div>
+    </section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Ngoại lệ &amp; kiểm soát</span><h2>Governance là điều kiện ra mắt</h2></div></div><div class="two-col">
+      <article class="panel"><h3>Thiếu căn cứ/consent</h3><p>Không chạy pipeline; yêu cầu data owner xác định lại mục đích, dữ liệu tối thiểu và căn cứ hợp lệ.</p></article>
+      <article class="panel"><h3>Dữ liệu kém chất lượng</h3><p>Trả “không đủ cơ sở”, ghi vấn đề chất lượng và chuyển quy trình con người; không tạo khuyến nghị giả chắc chắn.</p></article>
+      <article class="panel"><h3>Bias hoặc drift vượt ngưỡng</h3><p>Tạm dừng phát hành, xác định nhóm bị ảnh hưởng, quay về version trước/luồng thủ công và đánh giá độc lập.</p></article>
+      <article class="panel"><h3>Sự cố dữ liệu/mô hình</h3><p>Thu hồi credential, bảo toàn log, đánh giá phạm vi, thông báo owner và xử lý theo quy trình ứng phó sự cố.</p></article>
+    </div></section>
+    <section class="section" id="integration"><div class="section-head"><div><span class="kicker">Hướng tích hợp tương lai</span><h2>Read-only trước, hành động qua API nghiệp vụ</h2></div><p>Tách kho phân tích khỏi hệ thống giao dịch và áp dụng quyền theo use-case/tenant.</p></div>
+      <div class="integration-list">
+        <div class="integration-row"><strong>Pet Care → Intelligence</strong><span>Chỉ dataset được duyệt; giảm định danh; giữ mục đích, consent, lineage và thời hạn retention.</span><span class="integration-label">Governed care cohort</span></div>
+        <div class="integration-row"><strong>Business/Commerce → Intelligence</strong><span>Chỉ số tổng hợp doanh thu, tồn, đơn và vận hành; tách tenant/chi nhánh và quyền xem.</span><span class="integration-label">Read-only metrics · tenant scope</span></div>
+        <div class="integration-row"><strong>Service/Health → Intelligence</strong><span>Sự kiện lịch/hiệu quả dịch vụ hoặc cohort sức khỏe chỉ khi chủ dữ liệu, chuyên gia và quyền riêng tư phê duyệt.</span><span class="integration-label">Purpose-bound feature store</span></div>
+        <div class="integration-row"><strong>Community/Connect → Intelligence</strong><span>Chỉ insight tổng hợp đã loại PII; không tạo scoring cá nhân ngầm, suy đoán sức khỏe hay công khai vị trí.</span><span class="integration-label">Privacy-reviewed aggregates</span></div>
+        <div class="integration-row"><strong>Intelligence → hệ nghiệp vụ</strong><span>Gửi gợi ý kèm version, rationale và confidence; nghiệp vụ nhận qua API nhưng yêu cầu người dùng duyệt trước hành động.</span><span class="integration-label">Recommendation API · human approval</span></div>
+      </div><div class="callout"><strong>Không tự động quyết định:</strong> AI không chẩn đoán/đổi điều trị, không phê duyệt thanh toán/hoàn tiền, không khóa tài khoản, không chọn người nhận nuôi và không thay thế người phụ trách. Mọi model phải có kill switch và đường rollback.</div>
+    </section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Lộ trình đề xuất · sau nền dữ liệu</span><h2>Giá trị trước, tự động hóa sau</h2></div></div><div class="roadmap">
+      <article><b>Giai đoạn 1</b><strong>Data foundation</strong><p>Catalog dữ liệu, quyền, lineage, chất lượng, metric definitions và báo cáo mô tả.</p></article><article><b>Giai đoạn 2</b><strong>Decision support pilot</strong><p>Thử nghiệm gợi ý rủi ro thấp, shadow mode, reviewer, ngưỡng, giải thích và rollback.</p></article><article><b>Giai đoạn 3</b><strong>Scale có kiểm toán</strong><p>Mở thêm use-case sau đánh giá tác động, đo drift/bias và phê duyệt theo từng miền nghiệp vụ.</p></article>
+    </div></section>
+    <nav class="page-nav" aria-label="Chuyển hệ thống"><a href="workflow/index.html">← Thư mục workflow</a><a href="integration/pet-intelligence.html">Điểm tích hợp Pet Intelligence</a><a href="integration/index.html">Bản đồ kết nối →</a></nav>
+  </main>
+  <footer class="footer"><div class="shell footer-inner"><span>WAGGY Pet Intelligence · Đề xuất xây dựng</span><span>Phân tích hỗ trợ quyết định; con người chịu trách nhiệm quyết định cuối.</span></div></footer>
+  <script src="assets/waggy-product.js"></script>
+</body>
+</html>

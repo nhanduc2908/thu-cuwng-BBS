@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Bản thiết kế giao diện, kiến trúc màn hình và tiêu chuẩn code cho WAGGY Pet Business.">
+  <meta name="theme-color" content="#1d3557">
+  <meta name="color-scheme" content="light">
+  <title>WAGGY Pet Business · Bản thiết kế hệ thống</title>
+  <link rel="stylesheet" href="../../assets/demo.css">
+</head>
+<body class="business-design-page">
+  <a class="skip-link" href="#main-content">Bỏ qua điều hướng, đến bản thiết kế</a>
+  <header class="business-design-header">
+    <a class="app-brand" href="index.html"><span class="brand-icon">W</span><span>WAGGY<small>PET BUSINESS · DESIGN BLUEPRINT</small></span></a>
+    <nav aria-label="Điều hướng thiết kế"><a href="index.html">Mở Control tower</a><a href="branches.html">Chi nhánh</a><a href="approvals.html">Phê duyệt</a><a href="integrations.html">Tích hợp</a></nav>
+  </header>
+  <main id="main-content" class="business-design-content" tabindex="-1">
+    <section class="business-design-hero">
+      <span class="business-screen-eyebrow">SYSTEM DESIGN · VERSION 1.0 · 16/10/2026</span>
+      <h1>Pet Business<br><em>Control Tower &amp; Operations</em></h1>
+      <p>Bản thiết kế có thể chuyển thành backlog/code cho ứng dụng quản trị chuỗi thú cưng: đa chi nhánh, kho, mua hàng, đối soát và phê duyệt phân tách. Đây là concept; 15 trang vận hành trong thư mục là prototype tương tác dùng dữ liệu giả.</p>
+      <div class="business-design-tags"><span>01 Control tower</span><span>15 operational routes</span><span>Tenant + branch scope</span><span>Maker ≠ checker</span><span>Responsive · desktop first</span></div>
+      <div class="business-design-cta"><a class="button primary" href="index.html">Mở giao diện demo →</a><a class="button" href="../../../../integration/pet-business.html" target="_blank" rel="noopener">Xem data contracts ↗</a></div>
+    </section>
+
+    <section class="business-design-section">
+      <div class="business-design-section-head"><div><span class="workspace-kicker">01 · INFORMATION ARCHITECTURE</span><h2>Cấu trúc hệ thống &amp; 15 màn hình</h2><p>Điều hướng theo công việc, không trộn vai trò cửa hàng với finance và governance.</p></div><span class="tag blue">5 nhóm · 15 route</span></div>
+      <div class="business-ia-grid">
+        <article><span class="business-ia-number">01</span><h3>Điều hành</h3><p>Chọn phạm vi tổ chức/chi nhánh; xem KPI, freshness, ngoại lệ và SLA.</p><a href="index.html">Control tower ↗</a><a href="branches.html">Portfolio chi nhánh ↗</a><a href="reports.html">Branch performance ↗</a></article>
+        <article><span class="business-ia-number">02</span><h3>Kho &amp; cung ứng</h3><p>Theo chuỗi cung ứng từ mức tồn tới receipt và điều chuyển.</p><a href="inventory.html">Sổ tồn SKU/lot ↗</a><a href="procurement.html">Đề nghị mua ↗</a><a href="suppliers.html">Nhà cung cấp ↗</a><a href="receiving.html">Nhận hàng ↗</a><a href="transfers.html">Điều chuyển ↗</a><a href="adjustments.html">Kiểm kê/điều chỉnh ↗</a></article>
+        <article><span class="business-ia-number">03</span><h3>Kiểm soát</h3><p>Maker-checker, phân quyền, bằng chứng và version của request.</p><a href="approvals.html">Approval queue ↗</a><a href="settings.html">Policy/configuration ↗</a><a href="audit.html">Audit trail ↗</a></article>
+        <article><span class="business-ia-number">04</span><h3>Tài chính</h3><p>Đóng kỳ, settlement, ledger references và exception reconciliation.</p><a href="finance.html">Finance close ↗</a><a href="reconciliation.html">Reconciliation workbench ↗</a></article>
+        <article><span class="business-ia-number">05</span><h3>Nền tảng</h3><p>Connector ownership, event version, health, retry và DLQ.</p><a href="integrations.html">Connector health ↗</a></article>
+      </div>
+    </section>
+
+    <section class="business-design-section">
+      <div class="business-design-section-head"><div><span class="workspace-kicker">01B · INTERACTIVE PROCESS MAP</span><h2>Sơ đồ liên kết màn hình &amp; luồng dữ liệu</h2><p>Mỗi nút là đường dẫn đến đúng trang vận hành. Luồng minh họa thứ tự tham chiếu dữ liệu; không phải tích hợp production.</p></div><span class="tag green">Bấm để mở từng bước</span></div>
+      <div class="business-map-overview"><figure class="business-map-illustration"><svg viewBox="0 0 420 210" role="img" aria-label="Minh họa các nhánh Pet Business hội tụ về control tower"><use href="../../assets/pet-business-illustrations.svg#control-tower"></use></svg><figcaption>Control tower tổng hợp trạng thái từ các domain; dữ liệu có freshness, owner và branch scope.</figcaption></figure><div class="business-map-legend"><b>Quy ước</b><span><i class="business-map-dot source"></i>Nguồn dữ liệu / bản ghi</span><span><i class="business-map-dot gate"></i>Cổng duyệt / kiểm soát</span><span><i class="business-map-dot output"></i>Kết quả / báo cáo</span><p>Trang đích giữ dữ liệu mẫu riêng theo hệ thống; chưa có database/API thật.</p></div></div>
+      <div class="business-map-flows">
+        <div class="business-map-flow"><strong>01 · Bổ sung hàng</strong><div><a class="source" href="inventory.html">Tồn kho</a><i>→</i><a class="source" href="procurement.html">Đề nghị mua</a><i>→</i><a href="suppliers.html">Nhà cung cấp</a><i>→</i><a class="gate" href="approvals.html">Phê duyệt</a><i>→</i><a href="receiving.html">Nhập hàng</a><i>→</i><a class="output" href="finance.html">Tài chính</a></div></div>
+        <div class="business-map-flow"><strong>02 · Kiểm kê &amp; điều chuyển</strong><div><a class="source" href="inventory.html">Tồn kho</a><i>→</i><a href="transfers.html">Điều chuyển</a><i>→</i><a href="adjustments.html">Điều chỉnh tồn</a><i>→</i><a class="gate" href="approvals.html">Phê duyệt</a><i>→</i><a class="output" href="audit.html">Nhật ký kiểm soát</a></div></div>
+        <div class="business-map-flow"><strong>03 · Điều hành &amp; KPI</strong><div><a class="source" href="index.html">Control tower</a><i>→</i><a href="branches.html">Chi nhánh</a><i>→</i><a href="inventory.html">Tồn kho</a><i>→</i><a class="output" href="reports.html">Báo cáo</a><i>→</i><a href="index.html">Control tower</a></div></div>
+        <div class="business-map-flow"><strong>04 · Đóng kỳ &amp; đối soát</strong><div><a class="source" href="receiving.html">Nhập hàng</a><i>→</i><a href="finance.html">Tài chính</a><i>→</i><a class="gate" href="reconciliation.html">Đối soát</a><i>→</i><a class="output" href="reports.html">Báo cáo</a><i>→</i><a href="audit.html">Nhật ký kiểm soát</a></div></div>
+        <div class="business-map-flow"><strong>05 · Cấu hình &amp; dữ liệu</strong><div><a href="settings.html">Cấu hình</a><i>→</i><a class="source" href="integrations.html">Tích hợp</a><i>→</i><a class="gate" href="reconciliation.html">Đối soát</a><i>→</i><a class="output" href="audit.html">Nhật ký kiểm soát</a></div></div>
+      </div>
+      <p class="business-map-note"><b>Ranh giới an toàn:</b> demo chỉ lưu tiến độ luồng trong localStorage của Pet Business; không tự duyệt, post tồn, xác nhận invoice/settlement hay thay đổi policy.</p>
+    </section>
+
+    <section class="business-design-section">
+      <div class="business-design-section-head"><div><span class="workspace-kicker">01C · CROSS-SCREEN DEMO WORKFLOW</span><h2>Từ nút thao tác đến bước xác nhận tiếp theo</h2><p>Các màn hình vận hành dùng chung một process ledger cục bộ; mỗi bước cần mở trang đích và người dùng xác nhận riêng.</p></div><span class="tag gold">localStorage · isolated demo</span></div>
+      <div class="business-workflow-contract">
+        <article><span>01 · START</span><b>Tạo hồ sơ luồng</b><p>Nút nghiệp vụ chính tạo PB-ID, ghi nguồn, loại công việc, danh sách route và bước hiện tại.</p></article>
+        <article><span>02 · ROUTE</span><b>Mở màn hình chịu trách nhiệm</b><p>Bảng quy trình chỉ dẫn tới route kế tiếp; không tự chuyển hoặc sửa trạng thái khi mở trang.</p></article>
+        <article><span>03 · CONFIRM</span><b>Xác nhận thủ công từng chặng</b><p>Người dùng nhấn “Xác nhận bước này”; bước tiếp theo và dấu vết demo được lưu cùng hồ sơ.</p></article>
+        <article><span>04 · COMPLETE</span><b>Kết thúc có audit</b><p>Bước cuối đóng luồng; bản ghi và sự kiện tồn tại trên các tab Pet Business cùng trình duyệt.</p></article>
+      </div>
+      <div class="business-runtime-contract"><div><b>Storage scope</b><code>waggy-system-demo-pet-business-v1</code><span>Schema v2 · tự nâng dữ liệu schema v1 mà giữ nguyên records, audit và simulations.</span></div><div><b>Process fields</b><code>id · sourcePage · steps[] · stageIndex · createdAt</code><span>Tối đa 100 luồng; bảng mỗi màn hình hiển thị 10 luồng gần nhất.</span></div><div><b>Production boundary</b><code>Không phải backend / RBAC / ledger</code><span>Ứng dụng thật phải xác thực actor, kiểm branch scope/version và ghi transaction phía server.</span></div></div>
+      <div class="business-process-start-preview"><a href="index.html">Mở Control tower để bắt đầu quy trình mẫu ↗</a><a href="inventory.html">Thử bổ sung hàng ↗</a><a href="transfers.html">Thử điều chuyển ↗</a><a href="adjustments.html">Thử kiểm kê ↗</a></div>
+    </section>
+
+    <section class="business-design-section">
+      <div class="business-design-section-head"><div><span class="workspace-kicker">02 · DESKTOP WIREFRAME</span><h2>Bố cục chuẩn của một màn hình nghiệp vụ</h2><p>Giữ menu/ngữ cảnh cố định; vùng chính ưu tiên bảng hàng đợi; cột phụ dành cho SLA, owner và tín hiệu kiểm soát.</p></div></div>
+      <div class="business-wireframe">
+        <aside><strong>W · PET BUSINESS</strong><small>ORGANIZATION</small><span>⇄ Branch selector</span><small>OPERATIONS</small><span>▦ Control tower</span><span>⌂ Branches</span><span>▤ Inventory</span><span>▧ Procurement</span><span>✓ Approvals</span><small>FINANCE &amp; CONTROL</small><span>¤ Finance / reconcile</span><span>◎ Audit / integrations</span><footer>Branch scope · Role · Period</footer></aside>
+        <div class="business-wireframe-main"><header><span>Tenant / Branch / Period</span><span>Search · Notifications · User role</span></header><div class="business-wireframe-heading"><div><small>WAGGY / PET BUSINESS / INVENTORY</small><strong>Inventory control</strong><span>Snapshot time · filter chips · data freshness</span></div><b>＋ Create request</b></div><div class="business-wireframe-kpis"><span>Available <b>1,248</b></span><span>Below reorder <b>13</b></span><span>Near expiry <b>4</b></span><span>Data quality <b>98%</b></span></div><div class="business-wireframe-body"><article><header>Work queue · SKU / location / lot / status</header><div>FD-DOG-03　HN-01　On hand 14　Reserved 4　Available 8　<em>Reorder</em></div><div>LT-CAT-05　HCM-02　On hand 24　Reserved 5　Available 17　<em>Watch</em></div><div>FD-CAT-02　CT-01　On hand 8　Reserved 3　Available 4　<em>Reorder</em></div><footer>Pagination · Bulk action gated by permission</footer></article><aside><strong>Priority signals</strong><span>2 SKU below minimum</span><span>1 lot expires soon</span><strong>Owner / SLA</strong><span>Supply operations · 42 min</span><strong>Next safe action</strong><span>Create requisition draft · maker-checker required</span></aside></div><div class="business-wireframe-audit">Policy gate · Source version · Last refresh · Audit reference</div></div>
+      </div>
+      <div class="business-wireframe-notes"><span><b>A</b> Phạm vi tenant/branch luôn nhìn thấy.</span><span><b>B</b> KPI có định nghĩa, đơn vị, kỳ và freshness.</span><span><b>C</b> Trạng thái dùng text + màu, không chỉ màu.</span><span><b>D</b> Action nêu trước cổng duyệt tiếp theo.</span></div>
+    </section>
+
+    <section class="business-design-section">
+      <div class="business-design-section-head"><div><span class="workspace-kicker">03 · VISUAL LANGUAGE</span><h2>Design tokens &amp; thành phần giao diện</h2><p>Phong cách enterprise premium: gọn, rõ thứ bậc, có nhịp thở; màu là tín hiệu trạng thái chứ không thay nội dung.</p></div></div>
+      <div class="business-design-token-grid">
+        <article class="business-design-card"><h3>Palette</h3><div class="business-swatch"><i class="navy"></i><span><b>Control navy</b><small>#1D3557 · sidebar / finance</small></span></div><div class="business-swatch"><i class="blue"></i><span><b>Action blue</b><small>#435E8A · navigation / links</small></span></div><div class="business-swatch"><i class="green"></i><span><b>Success</b><small>#2E7D5B · reconciled / approved</small></span></div><div class="business-swatch"><i class="amber"></i><span><b>Review</b><small>#C48A26 · watch / awaiting</small></span></div><div class="business-swatch"><i class="red"></i><span><b>Exception</b><small>#B94A45 · blocked / variance</small></span></div></article>
+        <article class="business-design-card"><h3>Typography &amp; spacing</h3><p><b>Display / page title:</b> Segoe UI, 28–34px, weight 750; one title per route.</p><p><b>Section:</b> 16–20px, weight 700; sentence-case labels.</p><p><b>Body:</b> 13–14px with 1.5 line height; table 12–13px.</p><p><b>Microcopy:</b> 11–12px; use for metadata only, never critical instructions.</p><p><b>Spacing:</b> 4 / 8 / 12 / 16 / 24 / 32px; card radius 12px; content max 1440px.</p></article>
+        <article class="business-design-card"><h3>Core component states</h3><p><span class="tag green">Approved</span> Confirmed terminal gate, actor/time displayed.</p><p><span class="tag gold">Pending</span> Owner, SLA and next action shown.</p><p><span class="tag red">Blocked</span> Reason, missing evidence and remediation linked.</p><p><span class="tag blue">Read-only</span> Source-of-truth and last-sync visible.</p><p>Table supports search, filters, sort, empty, loading, error and stale states.</p></article>
+        <article class="business-design-card"><h3>Interaction rules</h3><p>Primary action is singular and contextual; destructive/financial changes use confirm + reason.</p><p>Every action shows pending → accepted/rejected → committed; never success-shaped fallback.</p><p>Filters persist in URL/query where practical; selected branch and period remain visible.</p><p>Keyboard focus, labels, contrast and reduced-motion behavior are required.</p></article>
+      </div>
+    </section>
+
+    <section class="business-design-section">
+      <div class="business-design-section-head"><div><span class="workspace-kicker">04 · DOMAIN &amp; AUTHORIZATION</span><h2>Quyền, source of truth và ranh giới dữ liệu</h2><p>Business vận hành chuỗi nhưng không trở thành chủ sở hữu mọi dữ liệu WAGGY.</p></div></div>
+      <div class="business-design-matrix"><div class="business-design-matrix-head"><span>Miền</span><span>Pet Business sở hữu / thao tác</span><span>Không sở hữu</span><span>Vai trò chính</span></div>
+        <div><b>Organization</b><span>Tenant, branch, nhân viên vận hành, scope và trạng thái cơ sở.</span><span>Danh tính chủ nuôi / tài khoản khách gốc.</span><span>Org admin · branch manager</span></div>
+        <div><b>Inventory</b><span>Ledger movement, SKU-location-lot, reservation, transfer và count.</span><span>Order lifecycle thương mại gốc.</span><span>Inventory operator · checker</span></div>
+        <div><b>Procurement</b><span>Vendor, quote ref, requisition, PO, receipt và policy.</span><span>Cam kết thanh toán đã settle từ provider.</span><span>Buyer · finance approver</span></div>
+        <div><b>Finance</b><span>Settlement reference, reconciliation case, period state, journal draft.</span><span>Secret ngân hàng / dữ liệu thẻ / payment token.</span><span>Finance maker · independent checker</span></div>
+        <div><b>Cross-system</b><span>Branch-scoped references, availability, approved aggregate events.</span><span>Clinic record, community post, rescue location, raw model output.</span><span>Connector service identity · data owner</span></div>
+      </div>
+      <div class="business-role-grid"><article><b>Branch operator</b><span>Chỉ branch được cấp; tạo draft, nhận hàng, kiểm đếm.</span></article><article><b>Regional approver</b><span>Duyệt theo threshold/branch; không duyệt request mình tạo.</span></article><article><b>Finance controller</b><span>Settlement, variance, period close; không sửa evidence gốc.</span></article><article><b>Platform admin</b><span>Quản lý connector/config; quyền nhạy cảm cần dual approval.</span></article></div>
+    </section>
+
+    <section class="business-design-section">
+      <div class="business-design-section-head"><div><span class="workspace-kicker">05 · CODE BLUEPRINT</span><h2>Cấu trúc triển khai đề xuất</h2><p>Tách UI, domain logic, repository và integration adapters. Prototype HTML hiện tại chỉ là front-end sandbox; đây là ranh giới cần giữ khi viết ứng dụng thật.</p></div></div>
+      <div class="business-code-map"><article><span>01 · PRESENTATION</span><code>business-shell<br>screens/{branches,inventory,...}<br>shared/{data-table,filters,approval-card}</code><p>Render trạng thái rõ ràng; không chứa credential hoặc quyết định quyền.</p></article><article><span>02 · APPLICATION</span><code>commands/{create-requisition,<br>approve-adjustment,reconcile-batch}<br>queries/{branch-kpis,stock-ledger}</code><p>Validate inputs, authorize use case, idempotency key, request correlation.</p></article><article><span>03 · DOMAIN</span><code>inventory-ledger<br>maker-checker-policy<br>period-close · reconciliation</code><p>Pure functions + invariants; append-only movements; state transitions có version.</p></article><article><span>04 · ADAPTERS</span><code>repositories · outbox/inbox<br>commerce · service · ERP<br>payment settlement · identity</code><p>Transactional outbox, dedupe, retry/DLQ, schema contract, tenant isolation.</p></article></div>
+      <div class="business-design-section-head compact"><div><span class="workspace-kicker">PRODUCTION API CONTRACT EXAMPLE</span><h3>Approve requisition</h3></div></div>
+      <pre class="business-code-sample"><code>POST /api/v1/business/requisitions/PR-0084/approve
+Idempotency-Key: 01J...unique-command-id
+If-Match: "request-version-3"
+
+{
+  "tenantId": "tenant-demo",
+  "branchId": "HN-01",
+  "decision": "approve",
+  "reasonCode": "BUDGET_CONFIRMED",
+  "comment": "Báo giá và ngân sách đã đối chiếu"
+}
+
+// Server verifies role + branch scope + request version
+// + checkerId != makerId + period open before commit.
+// Return commandId, new version, auditId and outbox event ref.
+// The browser demo does not send this request.</code></pre>
+    </section>
+
+    <section class="business-design-section">
+      <div class="business-design-section-head"><div><span class="workspace-kicker">06 · DELIVERY &amp; DEFINITION OF DONE</span><h2>Tiêu chí để đội phát triển bắt đầu code</h2><p>Không coi một màn hình là hoàn tất chỉ vì dựng xong khung và bảng.</p></div></div>
+      <div class="business-done-grid"><article><b>Data &amp; permission</b><span>Tenant isolation test; branch scope filter ở server; maker/checker không trùng; sensitive fields masked.</span></article><article><b>Workflow integrity</b><span>State machine kiểm version; idempotent command; append-only correction; no negative stock; period lock enforced.</span></article><article><b>Operational UI</b><span>Loading/empty/error/stale states; table search/filter/sort/pagination; keyboard and mobile behavior tested.</span></article><article><b>Integration &amp; audit</b><span>Contract tests; outbox retry/DLQ owner; reconciliation replay; audit links request, actor, decision, movement.</span></article><article><b>Observability</b><span>Correlation ID; freshness; queue age/SLA; connector lag; alert is explicit and never masked by defaults.</span></article><article><b>Release gate</b><span>Seed fixtures, permission matrix, migration review, rollback and manual fallback tested before branch pilot.</span></article></div>
+      <div class="callout-card business-blueprint-note"><strong>Phạm vi bản hiện tại:</strong> Trang thiết kế này là blueprint cho đội code. Các màn hình vận hành trong 15 route dùng dữ liệu giả/localStorage; chưa có backend, xác thực thật, phân quyền thực thi phía server hay kết nối ERP/payment. Không dùng để ra quyết định kế toán hoặc vận hành thật.</div>
+    </section>
+    <footer class="business-design-footer"><a href="index.html">← Quay về Pet Business</a><span>WAGGY · Pet Business system design · concept / implementation blueprint</span><a href="../../../pet-business.html" target="_blank" rel="noopener">Workflow chi tiết ↗</a></footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Workflow WAGGY Pet Intelligence: các bước nghiệp vụ, trạng thái, ngoại lệ và kiểm soát.">
+  <title>WAGGY Pet Intelligence | Workflow chi tiết WAGGY</title>
+  <link rel="stylesheet" href="../assets/waggy-product.css">
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">W</span><span>WAGGY<small>WORKFLOW DETAIL</small></span></a>
+    <nav class="top-links" aria-label="Điều hướng"><a href="../index.html">Tổng quan</a><a href="index.html">8 workflow</a><a href="../integration/pet-intelligence.html">Điểm tích hợp</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav>
+  </div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../../index.html">Cổng HTML</a><span>/</span><a href="../index.html">WAGGY Ecosystem</a><span>/</span><a href="index.html">Workflow</a><span>/</span><span>Pet Intelligence</span></nav>
+    <section class="hero"><div class="hero-content"><span class="eyebrow">08 · ĐỀ XUẤT XÂY DỰNG</span><h1>WAGGY Pet Intelligence <span>Workflow</span></h1><p>Quy trình đề xuất từ phê duyệt use-case và dữ liệu đến kiểm định, pilot, rà soát con người và giám sát/rollback.</p><div class="hero-meta"><span class="status proposed">ĐỀ XUẤT</span><span>Luồng nghiệp vụ chi tiết</span><span>Ngoại lệ &amp; kiểm soát</span></div></div></section>
+    <aside class="callout"><strong>Trạng thái hệ thống:</strong> Đây là workflow đề xuất, chưa phải tính năng đã triển khai độc lập trong WAGGY.</aside>
+    <section class="section" id="workflow"><div class="section-head"><div><span class="kicker">Workflow đề xuất</span><h2>Từ câu hỏi kinh doanh tới giám sát mô hình</h2></div><p>Mỗi gợi ý có version, giới hạn, nguồn và đường quay về quy trình thủ công.</p></div>
+      <ol class="steps">
+        <li><strong>Đăng ký use-case và quyết định được hỗ trợ</strong><p>Nêu người dùng, tác động, lợi ích, đối tượng ảnh hưởng, loại quyết định và cách đo thành công; từ chối mục đích mơ hồ hoặc rủi ro không kiểm soát.</p></li>
+        <li><strong>Chỉ định owner và đánh giá rủi ro</strong><p>Gán người chịu trách nhiệm, phân loại rủi ro, đánh giá tác động dữ liệu cá nhân, chuyên môn, sai lệch, giải thích và phương án fallback.</p></li>
+        <li><strong>Duyệt nguồn dữ liệu và căn cứ</strong><p>Lập inventory/lineage, mục đích, quyền truy cập, consent/contract, thời hạn lưu và giới hạn tái sử dụng; không đưa nguồn không rõ quyền vào pipeline.</p></li>
+        <li><strong>Thu nhận và chuẩn hóa an toàn</strong><p>Áp schema, chất lượng, provenance, pseudonymization/minimization và phân vùng tenant; kiểm soát quyền ở môi trường phát triển, kiểm thử và production.</p></li>
+        <li><strong>Thiết lập baseline và đánh giá dữ liệu</strong><p>Chốt cohort, mốc thời gian, metric và nhóm so sánh; kiểm tra thiếu lệch, data leakage, mẫu nhỏ và đại diện theo loài/địa bàn/nhóm.</p></li>
+        <li><strong>Phát triển mô hình/phân tích</strong><p>Huấn luyện hoặc xây báo cáo có kiểm soát phiên bản; ghi cấu hình, dữ liệu, mục đích, giả định, giới hạn và cách diễn giải đầu ra.</p></li>
+        <li><strong>Kiểm định độc lập và phê duyệt</strong><p>Đánh giá độ chính xác/hiệu chuẩn, sai số theo nhóm, robustness, bảo mật và tác hại; chuyên gia độc lập quyết định pilot/no-go, lưu biên bản.</p></li>
+        <li><strong>Phát hành có giới hạn</strong><p>Bắt đầu shadow mode hoặc nhóm nhỏ; hiển thị giải thích, độ tin cậy/giới hạn, nguồn và ngày cập nhật; người dùng có thể từ chối gợi ý.</p></li>
+        <li><strong>Con người quyết định và phản hồi</strong><p>Người được phân quyền xem xét, chấp nhận/chỉnh/từ chối và ghi lý do; hành động trong hệ nghiệp vụ chỉ chạy sau xác nhận riêng theo quyền.</p></li>
+        <li><strong>Giám sát, rollback hoặc ngừng</strong><p>Theo dõi drift, bias, khiếu nại, tác động và bảo mật; vượt ngưỡng thì dừng model, quay về quy trình thủ công, điều tra và phê duyệt lại trước mở.</p></li>
+      </ol><div class="state-line"><b>Vòng đời đề xuất:</b><span>Ý tưởng</span><span>Đang duyệt</span><span>Đang kiểm định</span><span>Pilot giới hạn</span><span>Đang giám sát</span><span>Tạm dừng</span><span>Rollback / ngừng</span></div>
+    </section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Ngoại lệ &amp; kiểm soát</span><h2>Governance là điều kiện ra mắt</h2></div></div><div class="two-col">
+      <article class="panel"><h3>Thiếu căn cứ/consent</h3><p>Không chạy pipeline; yêu cầu data owner xác định lại mục đích, dữ liệu tối thiểu và căn cứ hợp lệ.</p></article>
+      <article class="panel"><h3>Dữ liệu kém chất lượng</h3><p>Trả “không đủ cơ sở”, ghi vấn đề chất lượng và chuyển quy trình con người; không tạo khuyến nghị giả chắc chắn.</p></article>
+      <article class="panel"><h3>Bias hoặc drift vượt ngưỡng</h3><p>Tạm dừng phát hành, xác định nhóm bị ảnh hưởng, quay về version trước/luồng thủ công và đánh giá độc lập.</p></article>
+      <article class="panel"><h3>Sự cố dữ liệu/mô hình</h3><p>Thu hồi credential, bảo toàn log, đánh giá phạm vi, thông báo owner và xử lý theo quy trình ứng phó sự cố.</p></article>
+    </div></section>
+    <section class="section">
+      <div class="section-head"><div><span class="kicker">Đặc tả governance</span><h2>Luồng quản trị dữ liệu, mô hình và khuyến nghị</h2></div><p>Đề xuất vận hành theo từng use-case; Intelligence chỉ cung cấp insight/hỗ trợ quyết định, hệ nghiệp vụ và người có quyền vẫn chịu trách nhiệm hành động.</p></div>
+      <div class="facts">
+        <div class="fact"><b>Hồ sơ use-case</b><span>Owner, mục đích, người bị ảnh hưởng, loại quyết định, dữ liệu, căn cứ, giới hạn, metric thành công, rủi ro và ngày rà soát.</span></div>
+        <div class="fact"><b>Vai trò tách biệt</b><span>Data owner duyệt nguồn/mục đích; engineer xử lý pipeline; model owner phát triển; validator rà soát độc lập; nghiệp vụ duyệt sử dụng; auditor kiểm tra dấu vết.</span></div>
+        <div class="fact"><b>Điều kiện từ chối</b><span>Không có căn cứ/consent, không rõ lineage, không đo được tác động, rủi ro không giảm được hoặc thiếu người chịu trách nhiệm thì không đưa vào production.</span></div>
+      </div>
+      <h3>A. Từ ý tưởng đến dữ liệu sẵn sàng</h3>
+      <ol class="steps">
+        <li><strong>Đăng ký use-case và giới hạn quyết định</strong><p>Mô tả người dùng, vấn đề, đầu ra mong muốn, nơi hiển thị, đối tượng chịu tác động và hành động có thể theo sau. Liệt kê quyết định bị cấm tự động hóa và đường xử lý thủ công.</p></li>
+        <li><strong>Đánh giá tác động và phê duyệt owner</strong><p>Phân loại rủi ro riêng tư, sức khỏe, tài chính, an toàn và sai lệch; gán owner, reviewer độc lập, ngưỡng dừng, quy trình khiếu nại và SLA xử lý trước khi cấp dữ liệu.</p></li>
+        <li><strong>Đăng ký nguồn, căn cứ và hợp đồng dữ liệu</strong><p>Data owner chỉ định bảng/API nguồn, schema/version, trường tối thiểu, mục đích, tenant scope, retention, consent/căn cứ, tần suất và người nhận. Từ chối trường không cần hoặc nguồn không chứng minh được quyền dùng.</p></li>
+        <li><strong>Thu nhận, làm sạch và tạo lineage</strong><p>Kiểm tra schema, completeness, duplicate, thời gian, provenance và chất lượng; giảm định danh/pseudonymize theo thiết kế. Mỗi dataset ghi phiên bản nguồn, phép biến đổi, owner và thời hạn hết hiệu lực.</p></li>
+        <li><strong>Kiểm tra quyền, phân vùng và dữ liệu nhạy cảm</strong><p>Áp quyền theo vai trò/tenant, môi trường và mục đích; cấm truy cập production rộng từ sandbox. Kiểm tra trường nhạy cảm, nguy cơ tái định danh, leakage giữa train/test và log truy cập.</p></li>
+      </ol>
+      <h3>B. Xây dựng, kiểm định và phát hành</h3>
+      <ol class="steps">
+        <li><strong>Chốt baseline và metric trước khi thử nghiệm</strong><p>Định nghĩa cohort, khoảng thời gian, metric, ngưỡng tối thiểu và nhóm so sánh; đánh giá độ đại diện, mẫu nhỏ, missingness, leakage và sai số theo các nhóm liên quan.</p></li>
+        <li><strong>Phát triển có thể tái lập</strong><p>Ghi code/config/model version, dataset lineage, tham số, giả định, giới hạn và người thực hiện. Tạo model card/biên bản phân tích, không ghi bí mật hoặc dữ liệu cá nhân vào log thử nghiệm.</p></li>
+        <li><strong>Kiểm định độc lập và go/no-go</strong><p>Validator kiểm tra hiệu năng, calibration, drift/bias, robustness, bảo mật, giải thích và tác hại; chạy test theo tenant/nhóm. Kết quả không đạt ngưỡng hoặc không đủ mẫu là no-go, không được diễn giải “tạm ổn”.</p></li>
+        <li><strong>Pilot giới hạn hoặc shadow mode</strong><p>Chỉ phát hành cho nhóm/chi nhánh và thời hạn đã duyệt; so sánh khuyến nghị với quy trình hiện tại, thu feedback và theo dõi chỉ số an toàn. Có kill switch, version trước và người trực chịu trách nhiệm.</p></li>
+        <li><strong>Hiển thị khuyến nghị và người duyệt</strong><p>Mỗi đầu ra có nguồn/thời điểm, version, rationale, độ tin cậy/giới hạn và ngày hết hạn. Reviewer/người nghiệp vụ chấp nhận, chỉnh hoặc từ chối kèm lý do; thao tác ghi dữ liệu kinh doanh yêu cầu lệnh riêng tới hệ sở hữu dữ liệu.</p></li>
+        <li><strong>Giám sát, rà soát định kỳ và ngừng</strong><p>Theo dõi chất lượng đầu vào, drift, tác động theo nhóm, tỷ lệ từ chối, khiếu nại, lỗi và truy cập; vượt ngưỡng thì dừng luồng khuyến nghị, quay về thủ công/version được duyệt, thông báo owner và điều tra trước mở lại.</p></li>
+      </ol>
+      <div class="two-col">
+        <article class="panel"><h3>Đường rollback</h3><ul><li>Đánh dấu phiên bản bị ảnh hưởng và mốc bắt đầu.</li><li>Dừng phát hành, thu hồi credential/cache đầu ra còn hiệu lực.</li><li>Chuyển sang quy trình thủ công; không tự phát lại quyết định cũ.</li><li>Đánh giá đối tượng bị ảnh hưởng, ghi sự cố và yêu cầu duyệt lại.</li></ul></article>
+        <article class="panel"><h3>Kiểm toán tối thiểu</h3><ul><li>Ai yêu cầu, ai duyệt và mục đích nào.</li><li>Dataset/model version và quyền tại thời điểm chạy.</li><li>Đầu ra đã phát hành, người xem và hành động tiếp theo.</li><li>Kết quả monitoring, ngoại lệ, khiếu nại và quyết định ngừng.</li></ul></article>
+      </div>
+      <div class="callout"><strong>Không giao quyền quyết định cho mô hình:</strong> không tự chẩn đoán/đổi điều trị, duyệt thanh toán/hoàn tiền, khóa tài khoản, chọn người nhận nuôi hay sửa tồn; các hành động này luôn ở workflow của hệ thống sở hữu nghiệp vụ và cần người được phân quyền.</div>
+    </section>
+    <nav class="page-nav" aria-label="Điều hướng workflow"><a href="index.html">← Danh mục 8 workflow</a><a href="../pet-intelligence.html#workflow">Trang hệ thống</a><a href="../integration/pet-intelligence.html">Điểm tích hợp →</a></nav>
+  </main>
+  <footer class="footer"><div class="shell footer-inner"><span>WAGGY Pet Intelligence · Workflow</span><span>ĐỀ XUẤT · Chi tiết tích hợp ở trang riêng.</span></div></footer>
+  <script src="../assets/waggy-product.js"></script>
+</body>
+</html>

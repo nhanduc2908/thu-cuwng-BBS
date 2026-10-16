@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Đóng kỳ tài chính Pet Business: theo dõi trạng thái chứng từ, settlement, sai lệch và các cổng xác nhận trước khi khóa kỳ.">
+  <meta name="theme-color" content="#176747">
+  <meta name="color-scheme" content="light dark">
+  <title>Tài chính · WAGGY Pet Business</title>
+  <link rel="stylesheet" href="../../assets/demo.css">
+</head>
+<body data-demo="pet-business" data-demo-page="finance" data-system-folder="true">
+  <a class="skip-link" href="#demoApp">Bỏ qua tải, đến nội dung Pet Business</a>
+  <div id="demoApp" role="region" aria-label="Ứng dụng Pet Business" aria-busy="true" tabindex="-1">
+    <div class="demo-boot" role="status" aria-live="polite"><span class="demo-boot-mark" aria-hidden="true">W</span><span class="demo-boot-copy"><strong>Đang mở Tài chính</strong><small>Nạp close checklist, kỳ và sai lệch mẫu...</small></span><span class="demo-boot-spinner" aria-hidden="true"></span></div>
+  </div>
+  <noscript>
+    <main class="demo-noscript-page">
+      <header><span class="workspace-kicker">FINANCE · PERIOD CLOSE</span><h1>Tài chính &amp; đóng kỳ</h1><p>Theo dõi settlement, phí, tham chiếu chứng từ, sai lệch và tình trạng khóa kỳ trước khi đề xuất bút toán.</p></header>
+      <section><h2>Quy trình đóng kỳ</h2><ol><li>Chốt snapshot và xác nhận phạm vi kỳ.</li><li>Ghép settlement bằng transaction reference và đồng tiền.</li><li>Phân loại phí, unmatched và residual vào suspense.</li><li>Finance checker rà soát trước khi phát hành journal draft.</li></ol></section>
+      <section><h2>Điều kiện chặn</h2><p>Kỳ khóa không cho backdate; sai lệch vượt tolerance hoặc thiếu chứng từ phải giữ lại để xử lý. Không tự ghi bút toán hay thanh toán.</p></section>
+      <nav aria-label="Màn hình liên quan"><a href="receiving.html">Nhập hàng</a><a href="reconciliation.html">Đối soát</a><a href="approvals.html">Phê duyệt</a><a href="reports.html">Báo cáo</a></nav>
+      <p class="demo-noscript-note">Bản demo tương tác cần JavaScript; không kết nối ngân hàng, kế toán hoặc ERP thật.</p>
+    </main>
+  </noscript>
+  <script src="pet-business-config.js" defer></script>
+  <script src="js/pet-business-algorithms.js" defer></script>
+  <script src="../../../../data/pet-business.js" defer></script>
+  <script src="../../../../data/pet-care.js" defer></script>
+  <script src="../../../../data/pet-commerce.js" defer></script>
+  <script src="../../../../data/pet-community.js" defer></script>
+  <script src="../../../../data/pet-connect.js" defer></script>
+  <script src="../../../../data/pet-health.js" defer></script>
+  <script src="../../../../data/pet-intelligence.js" defer></script>
+  <script src="../../../../data/pet-service.js" defer></script>
+  <script src="../../../../data/waggy-shared-demo-data.js" defer></script>
+  <script src="../../assets/sync.js" defer></script>
+  <script src="../../assets/demo.js" defer></script>
+  <script src="pet-business.js" defer></script>
+</body>
+</html>

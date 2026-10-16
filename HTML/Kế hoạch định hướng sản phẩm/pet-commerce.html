@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Workflow đề xuất WAGGY Pet Commerce từ catalog, giỏ hàng và thanh toán đến fulfillment, đổi trả và tích hợp kho.">
+  <title>WAGGY Pet Commerce | Workflow &amp; hướng tích hợp</title><link rel="stylesheet" href="assets/waggy-product.css">
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner"><a class="brand" href="index.html"><span class="brand-mark">W</span><span>WAGGY<small>PRODUCT DIRECTION</small></span></a><nav class="top-links" aria-label="Điều hướng"><a href="index.html">Tổng quan 8 hệ thống</a><a href="workflow/index.html">Thư mục workflow</a><a href="#workflow">Workflow Pet Commerce</a><a href="integration/pet-commerce.html">Điểm tích hợp</a><a href="integration/index.html">Bản đồ kết nối</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav></div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../index.html">Cổng HTML</a><span>/</span><a href="index.html">WAGGY Ecosystem</a><span>/</span><span>Pet Commerce</span></nav>
+    <section class="hero"><div class="hero-content"><span class="eyebrow">04 · ĐỀ XUẤT XÂY DỰNG</span><h1>WAGGY Pet Commerce</h1><p>Trải nghiệm thương mại cho thức ăn, phụ kiện và sản phẩm chăm sóc; theo dõi đơn từ catalog đến giao nhận, hậu mãi và đối soát.</p><div class="hero-meta"><span class="status proposed">ĐỀ XUẤT</span><span>Catalog &amp; cart</span><span>Orders &amp; payment</span><span>Fulfillment</span></div></div></section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Phạm vi nghiệp vụ</span><h2>Giao dịch minh bạch từ đầu đến cuối</h2></div><p>Commerce quản lý trải nghiệm đơn hàng; Pet Business là nguồn dữ liệu vận hành về hàng, kho, chi nhánh và đối soát.</p></div><div class="facts">
+      <div class="fact"><b>Kích hoạt</b><span>Sản phẩm được duyệt để bán hoặc khách bắt đầu đặt mua.</span></div><div class="fact"><b>Vai trò</b><span>Catalog manager, khách hàng, thanh toán, nhân viên fulfillment, vận chuyển và hậu mãi.</span></div><div class="fact"><b>Đầu vào</b><span>SKU hợp lệ, giá/thuế/chính sách, tồn khả dụng, vùng giao và thông tin nhận hàng.</span></div>
+    </div></section>
+    <section class="section" id="workflow"><div class="section-head"><div><span class="kicker">Workflow đề xuất</span><h2>Từ sản phẩm đến hậu mãi</h2></div><p>Tách trạng thái đơn hàng, trạng thái thanh toán và trạng thái fulfillment để tránh báo sai hoặc trừ tồn lặp.</p></div>
+      <ol class="steps">
+        <li><strong>Đăng ký và duyệt catalog</strong><p>Nhập SKU, nguồn gốc, mô tả, quy cách, giá, thuế, hạn dùng/cảnh báo, hình ảnh và điều kiện bán; người phụ trách duyệt trước khi phát hành.</p></li>
+        <li><strong>Khám phá và chọn sản phẩm</strong><p>Khách tìm/lọc theo loài và nhu cầu, đọc thông tin/điều kiện; đề xuất cá nhân hóa nếu có phải giải thích và không đưa ra tuyên bố y tế thiếu căn cứ.</p></li>
+        <li><strong>Kiểm tra giá, vùng giao và tồn</strong><p>Tính ưu đãi theo quy tắc hiện hành; kiểm tra khả dụng theo chi nhánh/vùng giao, đơn vị, giới hạn số lượng và mặt hàng bị hạn chế.</p></li>
+        <li><strong>Tạo giỏ và rà soát đơn</strong><p>Khách xác nhận sản phẩm, số lượng, giá, phí vận chuyển, địa chỉ, thời gian và chính sách; hệ thống báo thay đổi giá/tồn trước khi khách đặt.</p></li>
+        <li><strong>Gửi đơn và chống trùng</strong><p>Phát mã đơn và request ID idempotent; giữ tồn tạm thời theo TTL và hiển thị trạng thái chờ thanh toán/xác nhận.</p></li>
+        <li><strong>Thanh toán và xác nhận</strong><p>Thanh toán qua nhà cung cấp hoặc phương thức được duyệt; xác minh webhook/giao dịch và đối soát mã; chỉ xác nhận paid một lần.</p></li>
+        <li><strong>Phân bổ kho và lấy hàng</strong><p>Pet Business/fulfillment chọn kho, ưu tiên lô phù hợp hạn dùng, quét SKU/quantity; thay thế hàng cần khách đồng ý trước.</p></li>
+        <li><strong>Đóng gói và giao hàng</strong><p>Kiểm tra hàng, bao bì và điều kiện bảo quản; ghi vận đơn, người giao nhận, mốc bàn giao và cập nhật theo dõi cho khách.</p></li>
+        <li><strong>Xác nhận hoàn tất và chăm sóc sau bán</strong><p>Ghi nhận giao thành công/nhận tại cửa hàng; phát hành hóa đơn/chứng từ, mời đánh giá và cung cấp kênh hỗ trợ.</p></li>
+        <li><strong>Đổi trả, hoàn tiền và đóng đơn</strong><p>Tiếp nhận lý do, kiểm tra điều kiện và tình trạng; duyệt trả/hoàn; cập nhật tồn và thanh toán tương ứng, đối soát rồi đóng hồ sơ.</p></li>
+      </ol><div class="state-line"><b>Đơn hàng:</b><span>Nháp</span><span>Chờ thanh toán</span><span>Đã xác nhận</span><span>Đang xử lý</span><span>Đang giao</span><span>Đã giao</span><span>Đổi trả / hoàn tiền</span><span>Đã đóng</span></div>
+    </section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Ngoại lệ &amp; kiểm soát</span><h2>Giữ đúng tiền, hàng và cam kết</h2></div></div><div class="two-col">
+      <article class="panel"><h3>Thanh toán không rõ kết quả</h3><p>Tra cứu mã giao dịch trước retry; không tạo đơn thu tiền trùng. Webhook phải xác thực chữ ký, số tiền, tiền tệ và mã đơn.</p></article>
+      <article class="panel"><h3>Hết hàng sau checkout</h3><p>Đưa dòng bị ảnh hưởng vào xử lý ngoại lệ; báo khách chọn chờ, bỏ dòng hoặc hoàn tiền. Không tự thay sản phẩm.</p></article>
+      <article class="panel"><h3>Giao thất bại / khách từ chối</h3><p>Ghi bằng chứng và lý do; quyết định giao lại, hoàn kho hoặc hoàn tiền theo chính sách; ngăn xuất kho trùng.</p></article>
+      <article class="panel"><h3>Thu hồi hoặc lô lỗi</h3><p>Khóa SKU/lô bán, truy vết đơn bị ảnh hưởng, cách ly hàng và kích hoạt quy trình thông báo/thu hồi.</p></article>
+    </div></section>
+    <section class="section" id="integration"><div class="section-head"><div><span class="kicker">Hướng tích hợp tương lai</span><h2>Commerce điều phối đơn; Business giữ sổ vận hành</h2></div><p>Hợp đồng tích hợp phải giữ nhất quán xuyên suốt retry, hủy, trả hàng và đồng bộ không liên tục.</p></div>
+      <div class="integration-list">
+        <div class="integration-row"><strong>Pet Business → Commerce</strong><span>Catalog SKU, giá/thuế phiên bản, tồn khả dụng, trạng thái chi nhánh và chính sách thực hiện đơn.</span><span class="integration-label">Catalog API · stock snapshot</span></div>
+        <div class="integration-row"><strong>Commerce → Business</strong><span>Đơn xác nhận, thanh toán đã đối soát, yêu cầu pick/pack, hủy, đổi trả và hoàn tiền.</span><span class="integration-label">Order/payment/return events</span></div>
+        <div class="integration-row"><strong>Business → Commerce</strong><span>Trạng thái lấy hàng, xuất kho, tracking và kết quả giao; event có sequence/version chống áp dụng sai thứ tự.</span><span class="integration-label">Fulfillment events · idempotency key</span></div>
+        <div class="integration-row"><strong>Pet Care → Commerce</strong><span>Tùy chọn dùng pet profile để lọc phù hợp chỉ khi khách bật consent; không tiết lộ hồ sơ riêng cho nhà bán.</span><span class="integration-label">Opt-in attributes · revoke</span></div>
+        <div class="integration-row"><strong>Commerce → Intelligence</strong><span>Chỉ số tổng hợp đơn/giỏ/hoàn trả và chuyển đổi theo mục đích được duyệt, giảm định danh khách.</span><span class="integration-label">Aggregated metrics · retention</span></div>
+      </div><div class="callout"><strong>Ranh giới dữ liệu:</strong> Commerce là nguồn chuẩn cho trải nghiệm và trạng thái đơn trực tuyến; Payment provider là nguồn xác minh giao dịch; Business là nguồn chuẩn cho tồn và sổ đối soát. Mỗi thay đổi cần correlation ID để tra cứu liên hệ.</div>
+    </section>
+    <section class="section"><div class="section-head"><div><span class="kicker">Lộ trình đề xuất</span><h2>Từ storefront tới omnichannel</h2></div></div><div class="roadmap">
+      <article><b>Giai đoạn 1</b><strong>Catalog &amp; đặt hàng</strong><p>Catalog được duyệt, giỏ hàng, mã đơn, tồn khả dụng và checkout rõ chính sách.</p></article><article><b>Giai đoạn 2</b><strong>Payment &amp; fulfillment</strong><p>Webhook, đối soát, phân bổ kho, vận chuyển, đổi trả và bảo vệ khỏi giao dịch lặp.</p></article><article><b>Giai đoạn 3</b><strong>Đa kênh &amp; cá nhân hóa</strong><p>Đồng bộ cửa hàng/chi nhánh với consent và gợi ý minh bạch, có đo lường rủi ro.</p></article>
+    </div></section>
+    <nav class="page-nav" aria-label="Chuyển hệ thống"><a href="workflow/index.html">← Thư mục workflow</a><a href="integration/pet-commerce.html">Điểm tích hợp Pet Commerce</a><a href="integration/index.html">Bản đồ kết nối →</a></nav>
+  </main>
+  <footer class="footer"><div class="shell footer-inner"><span>WAGGY Pet Commerce · Đề xuất xây dựng</span><span>Đơn hàng, thanh toán và tồn kho cần đối soát độc lập.</span></div></footer>
+  <script src="assets/waggy-product.js"></script>
+</body>
+</html>

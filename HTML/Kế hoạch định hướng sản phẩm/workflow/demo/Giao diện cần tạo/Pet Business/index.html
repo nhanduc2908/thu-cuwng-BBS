@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Control tower WAGGY Pet Business: theo dõi vận hành đa chi nhánh, tồn kho, phê duyệt và tài chính bằng dữ liệu demo.">
+  <meta name="theme-color" content="#176747">
+  <meta name="color-scheme" content="light dark">
+  <title>Control tower · WAGGY Pet Business</title>
+  <link rel="stylesheet" href="../../assets/demo.css">
+</head>
+<body data-demo="pet-business" data-demo-page="overview" data-system-folder="true">
+  <a class="skip-link" href="#demoApp">Bỏ qua tải, đến nội dung Pet Business</a>
+  <div id="demoApp" role="region" aria-label="Ứng dụng Pet Business" aria-busy="true" tabindex="-1">
+    <div class="demo-boot" role="status" aria-live="polite">
+      <span class="demo-boot-mark" aria-hidden="true">W</span>
+      <span class="demo-boot-copy"><strong>Đang mở Control tower</strong><small>Nạp dữ liệu demo và các hàng đợi nghiệp vụ...</small></span>
+      <span class="demo-boot-spinner" aria-hidden="true"></span>
+    </div>
+  </div>
+  <noscript>
+    <main class="demo-noscript-page">
+      <header><span class="workspace-kicker">MULTI-BRANCH CONTROL TOWER</span><h1>Điều hành Pet Business</h1><p>Điểm vào cho các luồng mua hàng, tồn kho, điều chuyển, phê duyệt, tài chính và kiểm soát của chuỗi.</p></header>
+      <section><h2>Luồng công việc chính</h2><ol><li>Kiểm tra snapshot, kỳ và phạm vi chi nhánh.</li><li>Mở ngoại lệ tại phân hệ phát sinh và xác minh dữ liệu nguồn.</li><li>Chuyển yêu cầu qua maker–checker độc lập.</li><li>Theo dõi nhận hàng, đối soát và audit đến khi hoàn tất.</li></ol></section>
+      <section><h2>Cổng điều hành</h2><p>Control tower chỉ ưu tiên và điều hướng công việc; không tự duyệt, ghi tồn, post bút toán hay khóa kỳ.</p></section>
+      <nav aria-label="Các phân hệ Pet Business"><a href="branches.html">Chi nhánh</a><a href="inventory.html">Tồn kho</a><a href="procurement.html">Mua hàng</a><a href="approvals.html">Phê duyệt</a><a href="finance.html">Tài chính</a><a href="reports.html">Báo cáo</a></nav>
+      <p class="demo-noscript-note">Bật JavaScript để mở dashboard tương tác. Mọi số liệu trong prototype là dữ liệu minh họa, không phải vận hành thật.</p>
+    </main>
+  </noscript>
+  <script src="pet-business-config.js" defer></script>
+  <script src="js/pet-business-algorithms.js" defer></script>
+  <script src="../../../../data/pet-business.js" defer></script>
+  <script src="../../../../data/pet-care.js" defer></script>
+  <script src="../../../../data/pet-commerce.js" defer></script>
+  <script src="../../../../data/pet-community.js" defer></script>
+  <script src="../../../../data/pet-connect.js" defer></script>
+  <script src="../../../../data/pet-health.js" defer></script>
+  <script src="../../../../data/pet-intelligence.js" defer></script>
+  <script src="../../../../data/pet-service.js" defer></script>
+  <script src="../../../../data/waggy-shared-demo-data.js" defer></script>
+  <script src="../../assets/sync.js" defer></script>
+  <script src="../../assets/demo.js" defer></script>
+  <script src="pet-business.js" defer></script>
+</body>
+</html>
