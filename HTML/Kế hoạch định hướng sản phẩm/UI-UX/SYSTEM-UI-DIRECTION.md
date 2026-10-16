@@ -6,7 +6,7 @@ Xây dựng trải nghiệm WAGGY có chung cách điều hướng, nhận diệ
 
 Tài liệu này là định hướng thiết kế, không phải đặc tả API hay xác nhận hệ thống đã tích hợp. Pet Care là hệ thống hiện có; các hệ thống còn lại và luồng liên kết là đề xuất/demo.
 
-## 1. Ngôn ngữ giao diện dùng chung
+## 1. Ngôn ngữ giao diện dùng chungq
 
 - **Một app shell:** thương hiệu WAGGY, bộ chuyển hệ thống, breadcrumb, tìm kiếm theo quyền, thông báo, tài khoản và trợ giúp.
 - **Một ngữ cảnh nhìn thấy được:** luôn hiển thị hệ thống hiện tại, cơ sở/phạm vi, vai trò nếu phù hợp, bộ lọc đang áp dụng và thời điểm/cập nhật dữ liệu.

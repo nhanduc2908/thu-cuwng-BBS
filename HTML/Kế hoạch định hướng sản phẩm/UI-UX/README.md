@@ -3,7 +3,8 @@
 Thư mục này tập trung vào định hướng nâng cấp giao diện và cách các trải nghiệm của tám hệ thống WAGGY kết nối với nhau.
 
 - [Bản đồ giao diện và lộ trình](./index.html): trang tổng quan trực quan, các điểm bàn giao, thứ tự nâng cấp và liên kết đến từng demo.
-- [Định hướng UI theo hệ thống](./SYSTEM-UI-DIRECTION.md): mục tiêu, màn hình ưu tiên, cách kết nối và đề xuất nâng cấp cho từng hệ thống.
+- [Định hướng UI theo hệ thống — HTML](./SYSTEM-UI-DIRECTION.html): trang trình bày đầy đủ, có điều hướng và liên kết đến tám trang demo.
+- [Định hướng UI theo hệ thống — Markdown](./SYSTEM-UI-DIRECTION.md): bản nguồn dễ chỉnh sửa của nội dung định hướng.
 - [Tiêu chuẩn UI/UX đầy đủ](../UI-UX-UPGRADE-PLAN.md): design system, responsive/accessibility, quy trình thiết kế, tiêu chí nghiệm thu và ranh giới sản phẩm.
 - [Kế hoạch nâng cấp sản phẩm](../UPGRADE-PLAN.md): định hướng rộng hơn về dữ liệu, tích hợp, bảo mật và lộ trình.
 
