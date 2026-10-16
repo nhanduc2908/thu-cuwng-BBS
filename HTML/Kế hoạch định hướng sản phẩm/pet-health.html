@@ -5,13 +5,22 @@
   <meta name="description" content="Workflow đề xuất WAGGY Pet Health cho hồ sơ khám, tiêm phòng, xét nghiệm, kết nối phòng khám và tích hợp có consent.">
   <title>WAGGY Pet Health | Workflow &amp; hướng tích hợp</title><link rel="stylesheet" href="assets/waggy-product.css">
 </head>
-<body>
+<body data-system="health">
   <header class="topbar"><div class="shell topbar-inner"><a class="brand" href="index.html"><span class="brand-mark">W</span><span>WAGGY<small>PRODUCT DIRECTION</small></span></a><nav class="top-links" aria-label="Điều hướng"><a href="index.html">Tổng quan 8 hệ thống</a><a href="workflow/index.html">Thư mục workflow</a><a href="#workflow">Workflow Pet Health</a><a href="integration/pet-health.html">Điểm tích hợp</a><a href="integration/index.html">Bản đồ kết nối</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav></div></header>
   <main class="shell">
     <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../index.html">Cổng HTML</a><span>/</span><a href="index.html">WAGGY Ecosystem</a><span>/</span><span>Pet Health</span></nav>
+    <nav class="ecosystem-rail" aria-label="Chuyển đổi hệ thống WAGGY">
+      <a href="pet-care.html"><small>01 · CARE</small>Hồ sơ &amp; chăm sóc</a><a href="pet-business.html"><small>02 · BUSINESS</small>Vận hành chuỗi</a><a href="pet-service.html"><small>03 · SERVICE</small>Lịch &amp; dịch vụ</a><a href="pet-health.html" aria-current="page"><small>04 · HEALTH</small>Hồ sơ chuyên môn</a><a href="pet-commerce.html"><small>05 · COMMERCE</small>Catalog &amp; đơn</a><a href="pet-community.html"><small>06 · COMMUNITY</small>Cộng đồng</a><a href="pet-connect.html"><small>07 · CONNECT</small>Cứu hộ &amp; kết nối</a><a href="pet-intelligence.html"><small>08 · INTELLIGENCE</small>Dữ liệu &amp; insight</a>
+    </nav>
     <section class="hero"><div class="hero-content"><span class="eyebrow">03 · ĐỀ XUẤT XÂY DỰNG</span><h1>WAGGY Pet Health</h1><p>Hồ sơ khám chữa bệnh, tiêm phòng, xét nghiệm và kết nối phòng khám với trọng tâm là tính toàn vẹn hồ sơ, quyền chia sẻ và an toàn chuyên môn.</p><div class="hero-meta"><span class="status proposed">ĐỀ XUẤT</span><span>Medical record</span><span>Clinic workflow</span><span>Consent-first</span></div></div></section>
     <section class="section"><div class="section-head"><div><span class="kicker">Phạm vi nghiệp vụ</span><h2>Hồ sơ sức khỏe có nguồn xác thực</h2></div><p>Pet Health điều phối và lưu dấu hồ sơ; bác sĩ thú y/cơ sở y tế chịu trách nhiệm nội dung chuyên môn.</p></div><div class="facts">
       <div class="fact"><b>Kích hoạt</b><span>Yêu cầu khám, tiêm phòng, xét nghiệm, nhập hồ sơ hoặc lịch tái khám.</span></div><div class="fact"><b>Vai trò</b><span>Chủ nuôi, điều phối, phòng khám, bác sĩ thú y, phòng xét nghiệm và kiểm soát dữ liệu.</span></div><div class="fact"><b>Đầu vào</b><span>ID thú cưng, yêu cầu, hồ sơ tiền sử được phép chia sẻ và consent theo mục đích.</span></div>
+    </div></section>
+    <section class="section" id="ui-upgrade"><div class="upgrade-brief">
+      <div class="upgrade-brief-head"><div><span class="kicker">Định hướng nâng cấp giao diện</span><h3>Pet Health · Trình tự chuyên môn an toàn và có nguồn</h3><p>Đặt nhận diện, cảnh báo và consent đúng chỗ; hỗ trợ ghi chép nhưng không thay thế phán đoán của bác sĩ.</p></div><span class="status proposed">ĐỀ XUẤT</span></div>
+      <div class="upgrade-grid"><div class="upgrade-item"><b>Ưu tiên workspace</b><span>Hàng đợi khám/kết quả; hồ sơ bệnh nhân theo encounter; consent và tái khám.</span></div><div class="upgrade-item"><b>Tương tác tác nghiệp</b><span>Lưu nháp an toàn, ký/xác thực, xem kết quả có đơn vị và đính chính có lịch sử.</span></div><div class="upgrade-item"><b>Phân cấp thông tin</b><span>Tách referral được chia sẻ khỏi bệnh án; làm rõ nguồn, người ghi, thời gian và trạng thái review.</span></div></div>
+      <div class="upgrade-acceptance"><strong>Điều kiện nghiệm thu:</strong><span>Consent trước chia sẻ</span><span>Nguồn &amp; chữ ký rõ</span><span>Không ghi đè hồ sơ đã ký</span><span>Không ngụ ý AI chẩn đoán</span></div>
+      <div class="upgrade-links"><a href="UI-UX/SYSTEM-UI-DIRECTION.html#pet-health">Đặc tả UI Health ↗</a><a href="UI-UX-UPGRADE-PLAN.html#health">Tiêu chí UI ↗</a><a href="MASTER-UPGRADE-ROADMAP.html">Master Roadmap ↗</a></div>
     </div></section>
     <section class="section" id="workflow"><div class="section-head"><div><span class="kicker">Workflow đề xuất</span><h2>Từ yêu cầu đến theo dõi chuyên môn</h2></div><p>Nội dung chẩn đoán/điều trị phải được lập và xác nhận bởi người có thẩm quyền chuyên môn.</p></div>
       <ol class="steps">

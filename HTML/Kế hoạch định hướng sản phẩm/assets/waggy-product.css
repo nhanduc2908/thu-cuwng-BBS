@@ -193,9 +193,10 @@ html[data-theme="dark"] .status.current { border-color:#34563c; background:#1d34
 @media (max-width:520px) {
   .shell { width: min(100% - 26px,1080px); }
   .topbar-inner { min-height:56px; }
-  .top-links a { display:inline-flex; }
-  .top-links { flex-wrap:wrap; justify-content:flex-start; }
-  .top-links a { min-height:32px; padding:0 8px; font-size:9px; }
+  .top-links a { display:none; }
+  body[data-system] .topbar-inner { display:block; padding:9px 0; }
+  body[data-system] .top-links { flex-wrap:wrap; justify-content:flex-start; margin-top:8px; }
+  body[data-system] .top-links a { display:inline-flex; min-height:32px; padding:0 8px; font-size:9px; }
   .hero { margin-top:14px; border-radius:20px; }
   .two-col { grid-template-columns:1fr; }
   .page-nav a { max-width:48%; }

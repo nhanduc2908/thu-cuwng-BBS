@@ -7,13 +7,16 @@
   <title>WAGGY Pet Care | Workflow &amp; hướng tích hợp</title>
   <link rel="stylesheet" href="assets/waggy-product.css">
 </head>
-<body>
+<body data-system="care">
   <header class="topbar"><div class="shell topbar-inner">
     <a class="brand" href="index.html"><span class="brand-mark">W</span><span>WAGGY<small>PRODUCT DIRECTION</small></span></a>
     <nav class="top-links" aria-label="Điều hướng"><a href="index.html">Tổng quan 8 hệ thống</a><a href="workflow/index.html">Thư mục workflow</a><a href="#workflow">Workflow Pet Care</a><a href="integration/pet-care.html">Điểm tích hợp</a><a href="integration/index.html">Bản đồ kết nối</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav>
   </div></header>
   <main class="shell">
     <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../index.html">Cổng HTML</a><span>/</span><a href="index.html">WAGGY Ecosystem</a><span>/</span><span>Pet Care</span></nav>
+    <nav class="ecosystem-rail" aria-label="Chuyển đổi hệ thống WAGGY">
+      <a href="pet-care.html" aria-current="page"><small>01 · CARE</small>Hồ sơ &amp; chăm sóc</a><a href="pet-business.html"><small>02 · BUSINESS</small>Vận hành chuỗi</a><a href="pet-service.html"><small>03 · SERVICE</small>Lịch &amp; dịch vụ</a><a href="pet-health.html"><small>04 · HEALTH</small>Hồ sơ chuyên môn</a><a href="pet-commerce.html"><small>05 · COMMERCE</small>Catalog &amp; đơn</a><a href="pet-community.html"><small>06 · COMMUNITY</small>Cộng đồng</a><a href="pet-connect.html"><small>07 · CONNECT</small>Cứu hộ &amp; kết nối</a><a href="pet-intelligence.html"><small>08 · INTELLIGENCE</small>Dữ liệu &amp; insight</a>
+    </nav>
     <section class="hero"><div class="hero-content"><span class="eyebrow">01 · NỀN TẢNG HIỆN CÓ</span><h1>WAGGY Pet Care</h1><p>Hệ thống đầu tiên của WAGGY, tập trung vào hồ sơ thú cưng, thông tin chủ nuôi, lịch chăm sóc và theo dõi quá trình phát triển. Đây là nền tảng khởi đầu; các tích hợp hệ sinh thái dưới đây là hướng phát triển tương lai.</p><div class="hero-meta"><span class="status current">ĐANG CÓ</span><span>Hồ sơ chủ nuôi &amp; thú cưng</span><span>Lịch chăm sóc</span><span>Theo dõi lịch sử</span></div></div></section>
     <section class="section"><div class="section-head"><div><span class="kicker">Phạm vi &amp; trách nhiệm</span><h2>Vai trò của Pet Care</h2></div><p>Hồ sơ nguồn phục vụ vận hành chăm sóc hiện tại; không mặc định là cơ sở dữ liệu dùng chung cho mọi hệ thống.</p></div>
       <div class="facts">
@@ -22,6 +25,12 @@
         <div class="fact"><b>Đầu vào</b><span>Thông tin được cung cấp trực tiếp, hồ sơ thú cưng, lịch sử chăm sóc và cập nhật nghiệp vụ.</span></div>
       </div>
     </section>
+    <section class="section" id="ui-upgrade"><div class="upgrade-brief">
+      <div class="upgrade-brief-head"><div><span class="kicker">Định hướng nâng cấp giao diện</span><h3>Pet Care · Hồ sơ nền dễ tra cứu và tiếp tục chăm sóc</h3><p>Ưu tiên tìm đúng hồ sơ, thấy việc cần làm và cập nhật nhanh mà không làm lộ dữ liệu ngoài phạm vi.</p></div><span class="status current">HIỆN CÓ · NÂNG CẤP</span></div>
+      <div class="upgrade-grid"><div class="upgrade-item"><b>Ưu tiên workspace</b><span>Hôm nay, hồ sơ thú cưng theo timeline, lịch/task đến hạn và cảnh báo cần người xử lý.</span></div><div class="upgrade-item"><b>Tương tác tác nghiệp</b><span>Tìm theo mã/tên, đối chiếu trùng; tạo task/lịch theo bước tối ưu cho điện thoại.</span></div><div class="upgrade-item"><b>Phân cấp thông tin</b><span>Tách tổng quan khỏi lịch sử; phân biệt dữ liệu Care sở hữu với tham chiếu từ hệ khác.</span></div></div>
+      <div class="upgrade-acceptance"><strong>Điều kiện nghiệm thu:</strong><span>Hồ sơ trùng dễ nhận biết</span><span>Task tạo trên mobile</span><span>Nguồn dữ liệu rõ</span><span>Ghi chú theo quyền</span></div>
+      <div class="upgrade-links"><a href="UI-UX/SYSTEM-UI-DIRECTION.html#pet-care">Đặc tả UI Pet Care ↗</a><a href="UI-UX-UPGRADE-PLAN.html#care">Tiêu chí UI ↗</a><a href="MASTER-UPGRADE-ROADMAP.html">Master Roadmap ↗</a></div>
+    </div></section>
     <section class="section" id="workflow"><div class="section-head"><div><span class="kicker">Workflow chính · hiện có</span><h2>Từ tiếp nhận đến theo dõi</h2></div><p>Các thao tác cụ thể phụ thuộc phân hệ, vai trò và cấu hình đang hoạt động.</p></div>
       <ol class="steps">
         <li><strong>Khởi chạy và xác thực</strong><p>Người dùng mở ứng dụng desktop/mobile hoặc giao diện được hỗ trợ, kết nối nguồn dữ liệu và đăng nhập; xử lý yêu cầu đổi mật khẩu tạm trước khi tiếp tục.</p></li>

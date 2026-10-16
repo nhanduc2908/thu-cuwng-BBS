@@ -5,13 +5,22 @@
   <meta name="description" content="Workflow đề xuất WAGGY Pet Commerce từ catalog, giỏ hàng và thanh toán đến fulfillment, đổi trả và tích hợp kho.">
   <title>WAGGY Pet Commerce | Workflow &amp; hướng tích hợp</title><link rel="stylesheet" href="assets/waggy-product.css">
 </head>
-<body>
+<body data-system="commerce">
   <header class="topbar"><div class="shell topbar-inner"><a class="brand" href="index.html"><span class="brand-mark">W</span><span>WAGGY<small>PRODUCT DIRECTION</small></span></a><nav class="top-links" aria-label="Điều hướng"><a href="index.html">Tổng quan 8 hệ thống</a><a href="workflow/index.html">Thư mục workflow</a><a href="#workflow">Workflow Pet Commerce</a><a href="integration/pet-commerce.html">Điểm tích hợp</a><a href="integration/index.html">Bản đồ kết nối</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="Đổi giao diện">◐</button></nav></div></header>
   <main class="shell">
     <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../index.html">Cổng HTML</a><span>/</span><a href="index.html">WAGGY Ecosystem</a><span>/</span><span>Pet Commerce</span></nav>
+    <nav class="ecosystem-rail" aria-label="Chuyển đổi hệ thống WAGGY">
+      <a href="pet-care.html"><small>01 · CARE</small>Hồ sơ &amp; chăm sóc</a><a href="pet-business.html"><small>02 · BUSINESS</small>Vận hành chuỗi</a><a href="pet-service.html"><small>03 · SERVICE</small>Lịch &amp; dịch vụ</a><a href="pet-health.html"><small>04 · HEALTH</small>Hồ sơ chuyên môn</a><a href="pet-commerce.html" aria-current="page"><small>05 · COMMERCE</small>Catalog &amp; đơn</a><a href="pet-community.html"><small>06 · COMMUNITY</small>Cộng đồng</a><a href="pet-connect.html"><small>07 · CONNECT</small>Cứu hộ &amp; kết nối</a><a href="pet-intelligence.html"><small>08 · INTELLIGENCE</small>Dữ liệu &amp; insight</a>
+    </nav>
     <section class="hero"><div class="hero-content"><span class="eyebrow">04 · ĐỀ XUẤT XÂY DỰNG</span><h1>WAGGY Pet Commerce</h1><p>Trải nghiệm thương mại cho thức ăn, phụ kiện và sản phẩm chăm sóc; theo dõi đơn từ catalog đến giao nhận, hậu mãi và đối soát.</p><div class="hero-meta"><span class="status proposed">ĐỀ XUẤT</span><span>Catalog &amp; cart</span><span>Orders &amp; payment</span><span>Fulfillment</span></div></div></section>
     <section class="section"><div class="section-head"><div><span class="kicker">Phạm vi nghiệp vụ</span><h2>Giao dịch minh bạch từ đầu đến cuối</h2></div><p>Commerce quản lý trải nghiệm đơn hàng; Pet Business là nguồn dữ liệu vận hành về hàng, kho, chi nhánh và đối soát.</p></div><div class="facts">
       <div class="fact"><b>Kích hoạt</b><span>Sản phẩm được duyệt để bán hoặc khách bắt đầu đặt mua.</span></div><div class="fact"><b>Vai trò</b><span>Catalog manager, khách hàng, thanh toán, nhân viên fulfillment, vận chuyển và hậu mãi.</span></div><div class="fact"><b>Đầu vào</b><span>SKU hợp lệ, giá/thuế/chính sách, tồn khả dụng, vùng giao và thông tin nhận hàng.</span></div>
+    </div></section>
+    <section class="section" id="ui-upgrade"><div class="upgrade-brief">
+      <div class="upgrade-brief-head"><div><span class="kicker">Định hướng nâng cấp giao diện</span><h3>Pet Commerce · Mua hàng rõ giá, rõ trạng thái</h3><p>Rút gọn hành trình mua nhưng không bỏ qua rà soát chi phí, khả dụng hàng và xác nhận giao dịch.</p></div><span class="status proposed">ĐỀ XUẤT</span></div>
+      <div class="upgrade-grid"><div class="upgrade-item"><b>Ưu tiên workspace</b><span>Catalog dễ lọc; checkout từng bước; trang đơn có timeline từ thanh toán đến giao nhận.</span></div><div class="upgrade-item"><b>Tương tác tác nghiệp</b><span>Giữ giỏ khi lỗi, chỉ retry sau khi tra cứu giao dịch; thao tác đổi trả/hoàn tiền có xác nhận.</span></div><div class="upgrade-item"><b>Phân cấp thông tin</b><span>Hiển thị giá/phí/chính sách và trạng thái tồn; tách đơn hàng, thanh toán và fulfillment.</span></div></div>
+      <div class="upgrade-acceptance"><strong>Điều kiện nghiệm thu:</strong><span>Tổng tiền trước xác nhận</span><span>Không trừ tồn lặp</span><span>Giỏ được bảo toàn</span><span>Hoàn tiền có audit</span></div>
+      <div class="upgrade-links"><a href="UI-UX/SYSTEM-UI-DIRECTION.html#pet-commerce">Đặc tả UI Commerce ↗</a><a href="UI-UX-UPGRADE-PLAN.html#commerce">Tiêu chí UI ↗</a><a href="MASTER-UPGRADE-ROADMAP.html">Master Roadmap ↗</a></div>
     </div></section>
     <section class="section" id="workflow"><div class="section-head"><div><span class="kicker">Workflow đề xuất</span><h2>Từ sản phẩm đến hậu mãi</h2></div><p>Tách trạng thái đơn hàng, trạng thái thanh toán và trạng thái fulfillment để tránh báo sai hoặc trừ tồn lặp.</p></div>
       <ol class="steps">
