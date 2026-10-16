@@ -14,6 +14,8 @@ Hiện trạng trong repository:
 
 Trang quản trị hiện tại:
 
+- [Phương án nâng cấp hệ thống — HTML](./UPGRADE-PLAN.html)
+- [Kế hoạch nâng cấp UI/UX — HTML](./UI-UX-UPGRADE-PLAN.html)
 - [Định hướng thiết kế và nâng cấp giao diện 8 hệ thống](./UI-UX-UPGRADE-PLAN.md)
 - [Sơ đồ kết nối bảng](./data/connection-map.html)
 - [Kiểm tra quyền CRUD demo](./data/record-access.html)

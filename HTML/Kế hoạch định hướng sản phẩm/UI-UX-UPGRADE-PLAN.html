@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10241d">
+  <meta name="description" content="Tiêu chuẩn thiết kế, định hướng UI/UX theo 8 hệ thống WAGGY, lộ trình thực hiện và tiêu chí nghiệm thu.">
+  <title>WAGGY · Kế hoạch nâng cấp UI/UX</title>
+  <link rel="stylesheet" href="assets/waggy-product.css">
+  <style>
+    .hero-actions,.toc,.tag-list { display:flex; flex-wrap:wrap; gap:8px; }
+    .hero-actions { margin-top:20px; }
+    .hero-actions a,.toc a { display:inline-flex; align-items:center; min-height:36px; padding:0 12px; border:1px solid var(--line); border-radius:999px; background:var(--surface); color:var(--green); font-size:11px; font-weight:850; }
+    .hero-actions a.primary { border-color:var(--mint); background:var(--mint); color:#12261d; }
+    .truth { display:grid; grid-template-columns:auto 1fr; gap:12px; margin:18px 0 25px; padding:15px; border:1px solid #c5ddca; border-radius:15px; background:var(--surface); }
+    .truth-icon { display:grid; place-items:center; width:30px; height:30px; border-radius:10px; background:#e3f3d9; color:#246a42; font-weight:950; }
+    .truth strong { display:block; margin-bottom:2px; font-size:12px; }
+    .truth p { margin:0; color:var(--muted); font-size:11px; }
+    .toc { margin:0 0 24px; }
+    .layout { display:grid; grid-template-columns:minmax(0,1fr) 235px; gap:24px; align-items:start; }
+    .content { min-width:0; }
+    .side-nav { position:sticky; top:84px; max-height:calc(100vh - 100px); overflow:auto; padding:14px; border:1px solid var(--line); border-radius:15px; background:var(--surface); }
+    .side-nav strong { display:block; margin-bottom:7px; color:var(--green); font-size:11px; }
+    .side-nav a { display:block; padding:5px 0; color:var(--muted); font-size:10px; }
+    .side-nav a:hover { color:var(--green); }
+    .section { scroll-margin-top:80px; }
+    .audience-grid,.principle-grid,.system-grid,.kit-grid { display:grid; gap:9px; }
+    .audience-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .principle-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .system-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .kit-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .audience-card,.principle-card,.system-card,.kit-card { padding:14px; border:1px solid var(--line); border-radius:14px; background:var(--surface); }
+    .audience-card b,.principle-card b,.kit-card b { display:block; margin-bottom:4px; color:var(--green); font-size:11px; }
+    .audience-card p,.principle-card p,.kit-card p { margin:0; color:var(--muted); font-size:11px; }
+    .system-card { scroll-margin-top:82px; }
+    .system-card h3 { margin:0 0 4px; font-size:16px; }
+    .system-card .role { margin:0 0 10px; color:var(--muted); font-size:10px; }
+    .system-card ul { margin:0; padding-left:17px; }
+    .system-card li { margin:5px 0; color:var(--muted); font-size:10px; }
+    .system-card .screens { margin-top:9px; padding-top:8px; border-top:1px solid var(--line); color:var(--green); font-size:10px; font-weight:800; }
+    .system-card a { color:var(--green); }
+    .table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--surface); }
+    table { width:100%; min-width:720px; border-collapse:collapse; font-size:10px; }
+    th,td { padding:10px 11px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+    th { background:var(--soft); color:var(--green); font-size:10px; }
+    td { color:var(--muted); }
+    tr:last-child td { border-bottom:0; }
+    .phase-list { display:grid; gap:8px; }
+    .phase { display:grid; grid-template-columns:155px 1fr 1fr; gap:12px; padding:12px; border:1px solid var(--line); border-radius:13px; background:var(--surface); }
+    .phase b { color:var(--green); font-size:11px; }
+    .phase span { color:var(--muted); font-size:10px; }
+    .priority { display:grid; gap:7px; margin:10px 0 0; padding:0; list-style:none; counter-reset:priority; }
+    .priority li { position:relative; padding:10px 12px 10px 41px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--muted); font-size:11px; counter-increment:priority; }
+    .priority li::before { content:counter(priority,decimal-leading-zero); position:absolute; left:12px; color:var(--green); font:900 10px ui-monospace,Consolas,monospace; }
+    .checklist { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:0; padding:0; list-style:none; }
+    .checklist li { position:relative; padding:11px 12px 11px 33px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--muted); font-size:10px; }
+    .checklist li::before { content:"✓"; position:absolute; left:12px; color:var(--green); font-weight:950; }
+    .related { display:flex; flex-wrap:wrap; gap:8px; }
+    .related a { display:inline-flex; align-items:center; min-height:36px; padding:0 12px; border:1px solid var(--line); border-radius:999px; color:var(--green); font-size:10px; font-weight:850; }
+    @media(max-width:860px) { .layout { grid-template-columns:1fr; } .side-nav { position:static; max-height:none; display:flex; flex-wrap:wrap; gap:6px 12px; } .side-nav strong { flex-basis:100%; } .side-nav a { padding:0; } }
+    @media(max-width:620px) { .audience-grid,.principle-grid,.system-grid,.kit-grid,.checklist { grid-template-columns:1fr; } .phase { grid-template-columns:1fr; gap:5px; } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto !important; transition-duration:.01ms !important; animation-duration:.01ms !important; } }
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">W</span><span>WAGGY<small>PRODUCT DIRECTION</small></span></a>
+    <nav class="top-links" aria-label="Điều hướng tài liệu">
+      <a href="UI-UX/index.html">Không gian UI/UX</a>
+      <a href="UI-UX/SYSTEM-UI-DIRECTION.html">8 hệ thống</a>
+      <a href="UPGRADE-PLAN.html">Kế hoạch hệ thống</a>
+      <a href="index.html">Tổng quan sản phẩm</a>
+    </nav>
+  </div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="index.html">WAGGY Ecosystem</a><span>/</span><a href="UI-UX/index.html">UI/UX</a><span>/</span><span>Tiêu chuẩn nâng cấp</span></nav>
+    <section class="hero"><div class="hero-content">
+      <span class="eyebrow">DESIGN SYSTEM · WORKSPACE · EXPERIENCE</span>
+      <h1>Nâng cấp UI/UX <span>8 hệ thống</span></h1>
+      <p>Tiêu chuẩn chung, yêu cầu thiết kế riêng từng miền, quy trình audit đến phát hành và cổng nghiệm thu đo được. Mục tiêu là giao diện giúp hoàn thành công việc an toàn, không chỉ đổi màu sắc.</p>
+      <div class="hero-actions"><a class="primary" href="#requirements">Đến yêu cầu 8 hệ thống ↓</a><a href="UI-UX/SYSTEM-UI-DIRECTION.html">Mở bản đồ và hồ sơ từng hệ ↗</a><a href="UI-UX-UPGRADE-PLAN.md">Bản Markdown ↗</a></div>
+    </div></section>
+    <aside class="truth"><span class="truth-icon" aria-hidden="true">i</span><div><strong>Trạng thái sản phẩm</strong><p>Đây là định hướng và tiêu chí nghiệm thu, không khẳng định mọi năng lực đã hoạt động. Pet Care là sản phẩm hiện có; các hệ thống còn lại và luồng xuyên hệ thống là concept/demo cho đến khi phát triển và nghiệm thu.</p></div></aside>
+    <div class="layout">
+      <div class="content">
+        <section class="section" id="goals"><div class="section-head"><div><span class="kicker">01 · Mục tiêu</span><h2>Nhất quán ở nền, riêng biệt ở nghiệp vụ</h2></div></div>
+          <div class="two-col"><article class="panel"><h3>Một trải nghiệm nhất quán</h3><p>Nhân viên có thể chuyển hệ thống/cơ sở, tìm kiếm và nhận biết trạng thái mà không phải học lại cách dùng ở mỗi nơi.</p></article><article class="panel"><h3>Giao diện đúng nghiệp vụ</h3><p>Mỗi miền ưu tiên tác vụ, mức độ nhạy cảm, người dùng và tốc độ thao tác đặc thù; không ép tám sản phẩm thành một dashboard hay một bộ bảng biểu.</p></article></div>
+        </section>
+        <section class="section" id="users"><div class="section-head"><div><span class="kicker">02 · Người dùng</span><h2>Thiết kế quanh tác vụ thực tế</h2></div><p>Trước wireframe cần xác nhận vai trò, tần suất, tác vụ rủi ro, thiết bị/môi trường và chỉ số hoàn thành.</p></div>
+          <div class="audience-grid">
+            <article class="audience-card"><b>Nhân viên cửa hàng / chăm sóc</b><p>Tìm đúng khách/thú cưng, làm tác vụ, bàn giao ca. Ưu tiên mobile, tìm kiếm nhanh, hàng đợi và ít nhập lặp.</p></article>
+            <article class="audience-card"><b>Quản lý cơ sở / chuỗi</b><p>So sánh cơ sở, xử lý ngoại lệ, điều phối nguồn lực. Cần phạm vi rõ, KPI có định nghĩa và drill-down từ cảnh báo.</p></article>
+            <article class="audience-card"><b>Bác sĩ / nhân viên chuyên môn</b><p>Xem đúng hồ sơ, ghi nhận chuyên môn, rà kết quả/consent. Cần thứ tự đọc an toàn, nguồn/thời điểm rõ, không ngụ ý AI chẩn đoán.</p></article>
+            <article class="audience-card"><b>Chủ nuôi / khách mua sắm</b><p>Tự phục vụ, đặt dịch vụ/sản phẩm, quản lý hồ sơ và consent. Ngôn ngữ dễ hiểu, giá minh bạch, consent tách mục đích.</p></article>
+            <article class="audience-card"><b>Điều phối viên cộng đồng / cứu hộ</b><p>Xử lý nội dung/case an toàn. Hàng đợi có ngữ cảnh và ưu tiên; liên hệ/vị trí chỉ hiện khi được phép.</p></article>
+            <article class="audience-card"><b>Data owner / quản trị hệ thống</b><p>Theo dõi chất lượng, lineage, quyền, phát hành và sự cố bằng bằng chứng, phiên bản, lịch sử và trạng thái kiểm soát.</p></article>
+          </div>
+        </section>
+        <section class="section" id="standards"><div class="section-head"><div><span class="kicker">03 · Quy chuẩn dùng chung</span><h2>Design system, dữ liệu, trạng thái và an toàn</h2></div></div>
+          <div class="principle-grid">
+            <article class="principle-card"><b>3.1 · Design system &amp; nhận diện</b><p>Duy trì token nền tảng trong <a href="assets/waggy-product.css">waggy-product.css</a>: màu, surface, chữ, trạng thái, spacing, bo góc, typography, elevation. Chuẩn hóa app shell, switcher, branch selector, breadcrumb, global search, page header, KPI, filter, table, badge, empty/error, dialog, toast, audit và form. Màu hệ thống phụ không đổi ý nghĩa trạng thái/độ tương phản; typography tiếng Việt dễ đọc; tránh trang trí lấn tác vụ.</p></article>
+            <article class="principle-card"><b>3.2 · Khung ứng dụng &amp; điều hướng</b><p>Header cho biết hệ thống, phân hệ, cơ sở/phạm vi và trạng thái dữ liệu. Phân biệt điều hướng cấp hệ thống với tab; trang hiện tại có chỉ báo. Trang nghiệp vụ có tiêu đề, breadcrumb và hành động chính ổn định. Global search theo quyền, kết quả có loại đối tượng, mã tham chiếu, nguồn. Form nhiều bước quay lại không mất dữ liệu; đổi phạm vi cảnh báo khi mất ngữ cảnh.</p></article>
+            <article class="principle-card"><b>3.3 · Dữ liệu &amp; bảng biểu</b><p>KPI có đơn vị, cơ sở, mốc thời gian, nguồn và drill-down. Filter đang áp dụng luôn hiển thị; không nhầm toàn chuỗi với cơ sở. Bảng desktop dễ quét; mobile chuyển card hoặc vùng cuộn ngang có nhãn cột. Bản ghi có ID, trạng thái chữ, cập nhật và liên kết nguồn; projection không phải bản có quyền sửa. Cảnh báo có mức, lý do, owner, bước tiếp theo. Form validate tại chỗ, giữ dữ liệu hợp lệ, xác nhận hành động không đảo ngược.</p></article>
+            <article class="principle-card"><b>3.4 · Responsive, accessibility &amp; trạng thái</b><p>Mobile-first cho cửa hàng; kiểm tra 360/390 px, tablet, desktop; không tràn trang ngang ngoài vùng cuộn chủ ý. Bàn phím, focus, thứ tự tab, nhãn form/lỗi; trạng thái không chỉ dựa vào màu. Mục tiêu WCAG 2.2 AA cho luồng lõi, target chính tối thiểu 44×44 CSS px, screen reader labels. Có loading/empty/error-retry/permission/offline-stale/success. Tôn trọng reduced motion; đo hiệu năng và phân trang server-side khi có backend.</p></article>
+            <article class="principle-card"><b>3.5 · Nội dung, an toàn &amp; riêng tư</b><p>Tiếng Việt ngắn, rõ, thống nhất trạng thái. Sức khỏe/vị trí/liên hệ/tài chính được giảm thiểu theo role, mục đích, phạm vi; không lộ qua toast/URL/preview. Consent ghi dữ liệu, mục đích, nơi nhận, thời hạn và thu hồi; không mặc định chọn. Không trình bày yêu cầu đang chờ duyệt/đồng bộ như thành công.</p></article>
+          </div>
+        </section>
+        <section class="section" id="requirements"><div class="section-head"><div><span class="kicker">04 · Theo từng hệ thống</span><h2>8 workspace · 8 hướng nâng cấp</h2></div><p>Chọn thẻ để mở yêu cầu và baseline tương ứng.</p></div>
+          <div class="system-grid">
+            <article class="system-card current" id="care"><h3>4.1 · Pet Care — hồ sơ &amp; chăm sóc</h3><p class="role">Lễ tân, nhân viên chăm sóc, quản lý cơ sở, chủ nuôi.</p><ul><li>Dashboard mở đầu bằng lịch hôm nay, task trễ/chờ giao và cảnh báo cần người xem; nguồn, thời điểm, cơ sở rõ.</li><li>Hồ sơ thống nhất: định danh/chủ nuôi tham chiếu, timeline, trạng thái, ghi chú theo quyền và link y tế theo consent; tách tổng quan khỏi lịch sử dài.</li><li>Tìm theo mã/tên, phân biệt trùng; đối chiếu trước khi tạo mới. Tạo task theo luồng: thú cưng → việc → người → giờ → rà soát → xác nhận.</li><li>Phân biệt dữ liệu Care sở hữu với projection; chỉnh sửa tại nguồn. Mobile có gọi/đặt lịch/ghi task nhưng không để lộ liên hệ.</li></ul><div class="screens">Màn hình: tổng quan, thú cưng, khách hàng, task chăm sóc, lịch, hồ sơ sức khỏe, nhắc việc. <a href="UI-UX/SYSTEM-UI-DIRECTION.html#pet-care">Chi tiết →</a></div></article>
+            <article class="system-card" id="business"><h3>4.2 · Pet Business — vận hành cửa hàng &amp; chuỗi</h3><p class="role">Nhân viên kho/mua hàng, quản lý, kế toán, quản lý chuỗi.</p><ul><li>Ghim tổ chức/cơ sở/kỳ; tách KPI toàn chuỗi khỏi cơ sở.</li><li>Tồn kho có SKU, lô, vị trí, khả dụng/đã giữ, hạn dùng, kiểm đếm; drill-down chứng từ, không sửa ledger trực tiếp.</li><li>Mua/nhận/điều chuyển theo timeline, owner rõ, maker-checker trực quan.</li><li>Đối soát ưu tiên ngoại lệ/bằng chứng/trạng thái kỳ/nguồn/audit; không nhồi kế toán vào dashboard vận hành.</li><li>Quét mã/nhập nhanh; thay đổi số lượng cần đơn vị, lý do, xác nhận. Desktop có saved views; mobile ưu tiên quét/tìm SKU an toàn.</li></ul><div class="screens">Màn hình: control tower, tồn, nhận/mua hàng, điều chuyển, phê duyệt, đối soát, báo cáo, audit. <a href="UI-UX/SYSTEM-UI-DIRECTION.html#pet-business">Chi tiết →</a></div></article>
+            <article class="system-card" id="service"><h3>4.3 · Pet Service — lịch &amp; thực hiện dịch vụ</h3><p class="role">Điều phối viên, lễ tân, nhân viên dịch vụ, quản lý, chủ nuôi.</p><ul><li>Lịch ngày/tuần lọc cơ sở/nhân viên/dịch vụ/nguồn lực; slot kín, buffer, lý do không đặt được.</li><li>Booking theo bước thú cưng/dịch vụ/cơ sở/giờ; kiểm tra năng lực; giá, điều kiện, consent trước tạo.</li><li>Timeline yêu cầu → xác nhận → check-in → đang làm → chờ bàn giao → hoàn tất/hủy/no-show; actor và timestamp.</li><li>Check-in/out một tay trên tablet/mobile; checklist tiếp nhận và đường xử lý trễ/thiếu dữ liệu/cần xác nhận.</li><li>Bàn giao chỉ hiển thị kết quả được phép; không lộ dữ liệu y tế vượt consent.</li></ul><div class="screens">Màn hình: lịch, booking detail, check-in, lịch nhân viên, danh mục dịch vụ, tài nguyên, bàn giao. <a href="UI-UX/SYSTEM-UI-DIRECTION.html#pet-service">Chi tiết →</a></div></article>
+            <article class="system-card" id="health"><h3>4.4 · Pet Health — hồ sơ y tế &amp; an toàn chuyên môn</h3><p class="role">Bác sĩ thú y, điều dưỡng, tiếp nhận, chủ nuôi.</p><ul><li>Hàng đợi ca mới/cần rà soát/kết quả chờ duyệt/tái khám; ưu tiên không thay đánh giá lâm sàng.</li><li>Nhận diện/cảnh báo trước; encounter timeline có người ghi, thời điểm, nguồn, ký/đính chính.</li><li>Consent/mục đích/thời hạn hiện trước trao đổi liên miền; thiếu căn cứ thì từ chối rõ ràng.</li><li>Xét nghiệm có đơn vị, khoảng tham chiếu, thời gian, trạng thái đã xem; không chỉ dùng màu.</li><li>Lưu nháp an toàn; hồ sơ đã ký không ghi đè im lặng; AI không ngụ ý chẩn đoán tự động.</li></ul><div class="screens">Màn hình: patient, encounter, lịch khám, lab, vaccination, follow-up, consent, audit. <a href="UI-UX/SYSTEM-UI-DIRECTION.html#pet-health">Chi tiết →</a></div></article>
+            <article class="system-card" id="commerce"><h3>4.5 · Pet Commerce — catalog, đơn &amp; hậu mãi</h3><p class="role">Khách mua sắm, nhân viên đơn hàng, CS, quản lý catalog.</p><ul><li>Catalog làm rõ thuộc tính, giá hiện hành, tồn và kênh/cơ sở; không coi tồn hiển thị là cam kết giữ hàng.</li><li>Checkout ngắn, tổng/phí/địa chỉ/giao nhận/đổi trả trước xác nhận; lỗi tại trường, giữ giỏ khi lỗi.</li><li>Phân biệt mới/giữ tồn/chờ xác minh/đóng gói/giao/hậu mãi; mỗi trạng thái có bước hợp lệ.</li><li>Timeline đơn, tham chiếu thanh toán không chứa dữ liệu thẻ, liên kết SKU/chi nhánh/fulfillment.</li><li>Đổi trả/hoàn tiền có lý do, bằng chứng, quyền duyệt và trạng thái; tránh thao tác lặp/mơ hồ.</li></ul><div class="screens">Màn hình: catalog, cart/checkout, orders, fulfillment, payments, returns, promotions, analytics. <a href="UI-UX/SYSTEM-UI-DIRECTION.html#pet-commerce">Chi tiết →</a></div></article>
+            <article class="system-card" id="community"><h3>4.6 · Pet Community — cộng đồng &amp; Trust &amp; Safety</h3><p class="role">Thành viên, moderator, điều phối sự kiện, quản lý an toàn.</p><ul><li>Feed dễ đọc, media control rõ, phân biệt quảng bá/thông báo, lọc chủ đề; report dễ tìm.</li><li>Moderation queue có lý do, policy, mức độ, lịch sử, xung đột lợi ích; không tự kết luận từ một tín hiệu.</li><li>Quyết định có lý do chuẩn, giải thích, appeal, SLA và lịch sử.</li><li>Hỗ trợ chặn/tắt thông báo/báo cáo; sự kiện làm rõ địa điểm/sức chứa/điều kiện, giới hạn dữ liệu người tham gia.</li></ul><div class="screens">Màn hình: feed, moderation, reports, appeals, policies, events, member safety. <a href="UI-UX/SYSTEM-UI-DIRECTION.html#pet-community">Chi tiết →</a></div></article>
+            <article class="system-card" id="connect"><h3>4.7 · Pet Connect — thất lạc, cứu hộ &amp; bàn giao</h3><p class="role">Chủ nuôi, điều phối cứu hộ, đối tác, nhân viên hiện trường.</p><ul><li>Tạo case theo bước loại yêu cầu → nhận diện → thời gian/khu vực → bằng chứng → liên hệ an toàn → xác nhận; chỉ thu tối thiểu.</li><li>Độ chính xác vị trí theo role/trạng thái; chỉ người được giao xem vị trí chính xác; có danh sách thay bản đồ.</li><li>Ghép thú hiển thị căn cứ/mức phù hợp cho người xác minh; không tự kết luận hoặc công khai liên hệ.</li><li>Timeline xác minh/phân công/hiện trường/bàn giao/đóng; bằng chứng có quyền và audit.</li><li>Checklist bàn giao, danh tính theo quyền, xác nhận và đường báo nguy cơ/escalate.</li></ul><div class="screens">Màn hình: case, map, evidence, rescue tasks, partners, safety, handoff, notifications. <a href="UI-UX/SYSTEM-UI-DIRECTION.html#pet-connect">Chi tiết →</a></div></article>
+            <article class="system-card" id="intelligence"><h3>4.8 · Pet Intelligence — data governance &amp; insight</h3><p class="role">Data owner, analyst, ML engineer, reviewer nghiệp vụ, approver.</p><ul><li>Landing governance: chất lượng nguồn, dataset đổi, lineage chưa duyệt, evaluation/drift/incidents; KPI có nguồn/thời gian.</li><li>Lineage source → biến đổi → aggregate → consumer, quyền/mục đích/schema/field loại; không lộ PII không cần.</li><li>Model card có owner/version/phạm vi/giới hạn/evaluation/approval; phân biệt shadow/pilot/production.</li><li>Monitoring/drift có baseline/ngưỡng/nhóm ảnh hưởng/bằng chứng/rollback và owner.</li><li>Gợi ý có giải thích, confidence/coverage phù hợp, expiry; người dùng chấp nhận/từ chối, không tự áp dụng.</li></ul><div class="screens">Màn hình: datasets, lineage, use-cases, evaluation, approvals, registry, monitoring, drift, incidents, rollback. <a href="UI-UX/SYSTEM-UI-DIRECTION.html#pet-intelligence">Chi tiết →</a></div></article>
+          </div>
+        </section>
+        <section class="section" id="shared-vs-specific"><div class="section-head"><div><span class="kicker">05 · Dùng chung và tùy biến</span><h2>Thống nhất component, không đồng nhất dashboard</h2></div></div>
+          <div class="table-wrap"><table><thead><tr><th>Dùng chung toàn hệ sinh thái</th><th>Tùy biến theo hệ thống</th></tr></thead><tbody>
+            <tr><td>App shell, đăng nhập, system/branch switcher, breadcrumb, global search</td><td>Thuật ngữ nghiệp vụ, dashboard, KPI</td></tr>
+            <tr><td>Tokens màu/typography/spacing; form, table, badge, dialog, toast</td><td>Workflow, trạng thái, kiểm tra và hành động domain</td></tr>
+            <tr><td>Loading/empty/error/offline/permission/stale states</td><td>Trường dữ liệu, sensitivity, consent, retention</td></tr>
+            <tr><td>Audit metadata, thời gian, nguồn, mã tham chiếu, liên kết</td><td>Mật độ dữ liệu, bố cục desktop/mobile theo tác vụ</td></tr>
+            <tr><td>Accessibility, localization, responsive behavior</td><td>Biểu đồ/map/timeline chuyên biệt tạo giá trị tác vụ</td></tr>
+          </tbody></table></div>
+          <div class="callout"><strong>Nguyên tắc:</strong> Không tạo một dashboard dùng chung để thay các trang công việc. Dùng component thống nhất nhưng giữ workspace và mật độ thông tin phù hợp từng miền.</div>
+        </section>
+        <section class="section" id="process"><div class="section-head"><div><span class="kicker">06 · Quy trình</span><h2>Từ audit đến cải tiến liên tục</h2></div></div>
+          <div class="phase-list">
+            <div class="phase"><b>A · Audit giao diện</b><span>Kiểm kê màn hình 8 demo: người dùng, mục tiêu, hành động, trạng thái, responsive/accessibility, current/demo/concept.</span><span>Đầu ra: screen inventory, ưu tiên theo rủi ro/tần suất, ranh giới production.</span></div>
+            <div class="phase"><b>B · Nghiên cứu tác vụ</b><span>Phỏng vấn/quan sát nhân viên, quản lý, chuyên gia; đo tác vụ và thiết bị/mạng.</span><span>Đầu ra: persona/task có bằng chứng, journey, baseline thời gian/lỗi.</span></div>
+            <div class="phase"><b>C · IA &amp; wireframe</b><span>Chuẩn hóa navigation, hierarchy, table/detail/form, permission state; desktop/mobile.</span><span>Đầu ra: wireframe được data owner/người vận hành duyệt; lỗi nghiêm trọng xử lý trước visual polish.</span></div>
+            <div class="phase"><b>D · UI kit &amp; prototype</b><span>Chốt token/component; prototype tương tác, trạng thái rỗng/lỗi/quyền/đồng bộ, tiếng Việt.</span><span>Đầu ra: component inventory, behavior annotation, responsive variants, accessibility review.</span></div>
+            <div class="phase"><b>E · Usability &amp; lặp</b><span>Test người dùng đại diện trên thiết bị đích; đo tác vụ, lỗi, nhầm trạng thái/quyền.</span><span>Đầu ra: issue log ưu tiên, blocker/high sửa và đo lại cùng kịch bản.</span></div>
+            <div class="phase"><b>F · Triển khai lát cắt</b><span>Workflow end-to-end, feature flag, analytics không PII, support guide, release note.</span><span>Đầu ra: smoke/e2e, keyboard/responsive, content/accessibility sign-off, rollback.</span></div>
+            <div class="phase"><b>G · Theo dõi</b><span>Tác vụ, lỗi form, search zero-result, usage, phản hồi, sự cố quyền.</span><span>Đầu ra: review định kỳ có owner, cải tiến dựa trên dữ liệu/phản hồi.</span></div>
+          </div>
+          <h3>Thứ tự ưu tiên</h3><ol class="priority"><li><strong>Nền chung:</strong> app shell, tokens/components, navigation/search/scope, trạng thái và accessibility baseline.</li><li><strong>Tác nghiệp cửa hàng:</strong> Pet Care → Business/Service theo pilot; hồ sơ, task, lịch, tồn, bàn giao.</li><li><strong>Chuyên môn/giao dịch:</strong> Health và Commerce; consent, quyền, payment/clinical review, trạng thái.</li><li><strong>Cộng đồng/hiện trường:</strong> Community và Connect sau khi kiểm chứng an toàn, vị trí, appeal.</li><li><strong>Quản trị/insight:</strong> Intelligence sau khi lineage, chất lượng, quyền, giới hạn gợi ý rõ.</li></ol>
+          <div class="callout">Thứ tự phụ thuộc rủi ro/readiness; không phải lịch hoặc cam kết phát hành bắt buộc.</div>
+        </section>
+        <section class="section" id="acceptance"><div class="section-head"><div><span class="kicker">07 · Cổng nghiệm thu</span><h2>Tiêu chí cho mỗi màn hình</h2></div></div>
+          <ul class="checklist">
+            <li>Mục tiêu người dùng, vai trò, phạm vi dữ liệu và hành động chính đã được duyệt.</li>
+            <li>Loading/empty/error/retry/permission denied/offline/stale/success được thiết kế rõ.</li>
+            <li>Desktop và mobile hoàn thành cùng tác vụ; không mất context, nhãn hoặc quyền khi reflow.</li>
+            <li>Bàn phím, focus, screen-reader label, tương phản, zoom/reflow được kiểm tra; không chỉ dựa màu.</li>
+            <li>Giá trị/đơn vị/ngày giờ/cơ sở/nguồn chuẩn/người sửa/tính mới rõ khi cần quyết định.</li>
+            <li>Ghi/xóa/duyệt xác nhận đối tượng, tác động, quyền và undo; dữ liệu nhạy cảm không lộ.</li>
+            <li>Usability test người dùng đại diện; mục tiêu sau baseline, đề xuất ban đầu ≥80% hoàn tất luồng ưu tiên không trợ giúp và không lỗi nghiêm trọng.</li>
+            <li>Thiết kế ánh xạ tới component hiện thực và ticket/release; không mặc định backend/API đã có.</li>
+          </ul>
+        </section>
+        <section class="section" id="deliverables"><div class="section-head"><div><span class="kicker">08 · Bộ sản phẩm thiết kế</span><h2>Tài sản thiết kế cần duy trì</h2></div></div>
+          <div class="kit-grid"><article class="kit-card"><b>01 · Nền</b><p>Design principles, token catalog và component library có state/responsive/accessibility notes.</p></article><article class="kit-card"><b>02 · Hệ thống</b><p>Screen inventory 8 hệ thống, đánh dấu current/demo/proposed; flow, wireframe và prototype tác vụ ưu tiên.</p></article><article class="kit-card"><b>03 · Kiểm soát</b><p>Ma trận role × screen × action × data scope, liên kết data owner.</p></article><article class="kit-card"><b>04 · Vận hành</b><p>Nội dung tiếng Việt/glossary; usability scenarios, issue log, accessibility/release checklist.</p></article><article class="kit-card"><b>05 · Quyết định</b><p>Decision log cho các thay đổi ảnh hưởng xuyên hệ sinh thái.</p></article></div>
+        </section>
+        <section class="section" id="boundaries"><div class="section-head"><div><span class="kicker">09 · Ranh giới &amp; quyết định</span><h2>Điều cần xác nhận trước production</h2></div></div>
+          <div class="panel"><ul><li>Các trang HTML demo là baseline kiến trúc/nội dung, không tự đại diện cho UI production được duyệt.</li><li>Chưa chốt thời gian/ngân sách/nền tảng thiết kế/thiết bị cũ/KPI nếu chưa rõ người dùng, tần suất, phạm vi và nguồn lực thiết kế/frontend.</li><li>Chỉ định product owner/designer và đại diện domain từng hệ; cần reviewer chuyên môn cho Health, Business finance, Community/Connect safety.</li><li>Dùng thư viện/framework hiện tại sau audit; không thêm framework/thay toàn UI chỉ để đổi diện mạo.</li></ul></div>
+        </section>
+        <section class="section" id="related"><div class="section-head"><div><span class="kicker">Tài liệu liên quan</span><h2>Đi tiếp trong hệ sinh thái</h2></div></div><div class="related"><a href="UI-UX/SYSTEM-UI-DIRECTION.html">Hồ sơ UI 8 hệ thống ↗</a><a href="UPGRADE-PLAN.html">Kế hoạch nâng cấp sản phẩm ↗</a><a href="UI-UX/index.html">Không gian chuyên đề UI/UX ↗</a><a href="index.html">Tổng quan sản phẩm ↗</a></div></section>
+      </div>
+      <aside class="side-nav"><strong>Mục lục</strong><a href="#goals">Mục tiêu</a><a href="#users">Người dùng</a><a href="#standards">Quy chuẩn UI</a><a href="#requirements">8 hệ thống</a><a href="#shared-vs-specific">Dùng chung / tùy biến</a><a href="#process">Quy trình</a><a href="#acceptance">Nghiệm thu</a><a href="#deliverables">Sản phẩm thiết kế</a><a href="#boundaries">Ranh giới</a><a href="UI-UX/SYSTEM-UI-DIRECTION.html">HTML: định hướng 8 hệ</a></aside>
+    </div>
+  </main>
+  <footer class="footer"><div class="shell footer-inner"><span><strong>WAGGY UI/UX</strong> · Kế hoạch nâng cấp trải nghiệm</span><a href="UI-UX/index.html">Về không gian UI/UX ↑</a></div></footer>
+</body>
+</html>

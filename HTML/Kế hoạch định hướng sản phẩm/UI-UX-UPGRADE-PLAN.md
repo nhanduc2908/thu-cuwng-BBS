@@ -11,6 +11,8 @@ Nâng cấp trải nghiệm giao diện của hệ sinh thái WAGGY theo hai hư
 
 Xem [không gian chuyên đề UI/UX](./UI-UX/index.html) để mở bản đồ giao diện, liên kết giữa tám workspace và baseline demo; yêu cầu riêng từng hệ thống được tổng hợp tại [SYSTEM-UI-DIRECTION.md](./UI-UX/SYSTEM-UI-DIRECTION.md).
 
+Trang trình bày HTML đầy đủ: [Kế hoạch nâng cấp UI/UX](./UI-UX-UPGRADE-PLAN.html).
+
 ## 2. Người dùng và tác vụ cần thiết kế quanh họ
 
 | Nhóm người dùng | Nhu cầu chính | Định hướng giao diện |
