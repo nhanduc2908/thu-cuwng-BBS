@@ -15,3 +15,5 @@ Thư mục này tập trung vào định hướng nâng cấp giao diện và c�
 Pet Care là hệ thống hiện có. Bảy hệ thống còn lại, app shell thống nhất và các điểm chuyển giao xuyên hệ thống là hướng đề xuất/demo; các liên kết đến trang demo không đồng nghĩa với tích hợp nghiệp vụ hoặc quyền truy cập production đã được triển khai.
 
 Các màn hình trong thư mục demo là baseline để rà soát và thử nghiệm. Trước khi triển khai thực tế, cần được chủ nghiệp vụ và người dùng đại diện xác nhận.
+
+Xem [Master Roadmap nâng cấp toàn bộ thư mục sản phẩm](../MASTER-UPGRADE-ROADMAP.html) để theo dõi các chặng phụ thuộc, workstream, quality gates và các quyết định trước khi triển khai.

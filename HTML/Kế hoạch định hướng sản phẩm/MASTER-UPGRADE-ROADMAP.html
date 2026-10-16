@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10241d">
+  <meta name="description" content="Lộ trình tổng thể nâng cấp thư mục kế hoạch WAGGY: sản phẩm, UI/UX, dữ liệu, workflow, tích hợp, nền tảng và vận hành.">
+  <title>WAGGY · Lộ trình nâng cấp tổng thể</title>
+  <link rel="stylesheet" href="assets/waggy-product.css">
+  <style>
+    .hero-actions,.toc,.quick-links,.tag-list { display:flex; flex-wrap:wrap; gap:8px; }
+    .hero-actions { margin-top:20px; }
+    .hero-actions a,.toc a,.quick-links a { display:inline-flex; align-items:center; min-height:36px; padding:0 12px; border:1px solid var(--line); border-radius:999px; background:var(--surface); color:var(--green); font-size:11px; font-weight:850; }
+    .hero-actions a.primary { border-color:var(--mint); background:var(--mint); color:#12261d; }
+    .truth { display:grid; grid-template-columns:auto 1fr; gap:12px; margin:18px 0 24px; padding:15px; border:1px solid #c5ddca; border-radius:15px; background:var(--surface); }
+    .truth-icon { display:grid; place-items:center; width:30px; height:30px; border-radius:10px; background:#e3f3d9; color:#246a42; font-weight:950; }
+    .truth strong { display:block; margin-bottom:2px; font-size:12px; }
+    .truth p { margin:0; color:var(--muted); font-size:11px; }
+    .toc { margin:0 0 22px; }
+    .layout { display:grid; grid-template-columns:minmax(0,1fr) 225px; gap:24px; align-items:start; }
+    .content { min-width:0; }
+    .side-nav { position:sticky; top:84px; max-height:calc(100vh - 100px); overflow:auto; padding:14px; border:1px solid var(--line); border-radius:15px; background:var(--surface); }
+    .side-nav strong { display:block; margin-bottom:7px; color:var(--green); font-size:11px; }
+    .side-nav a { display:block; padding:5px 0; color:var(--muted); font-size:10px; }
+    .side-nav a:hover { color:var(--green); }
+    .section { scroll-margin-top:80px; }
+    .score-grid,.module-grid,.workstream-grid,.phase-grid,.risk-grid { display:grid; gap:9px; }
+    .score-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+    .score,.module,.workstream,.phase,.risk { padding:14px; border:1px solid var(--line); border-radius:14px; background:var(--surface); }
+    .score strong { display:block; color:var(--green); font-size:21px; letter-spacing:-.04em; }
+    .score span { color:var(--muted); font-size:10px; }
+    .module-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .module b,.workstream b,.phase b,.risk b { display:block; margin-bottom:4px; color:var(--green); font-size:11px; }
+    .module p,.workstream p,.phase p,.risk p { margin:0; color:var(--muted); font-size:10px; }
+    .module a { display:inline-flex; margin-top:8px; color:var(--green); font-size:10px; font-weight:850; }
+    .workstream-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .phase-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .phase { scroll-margin-top:80px; }
+    .phase .phase-no { display:block; color:var(--muted); font:850 10px ui-monospace,Consolas,monospace; }
+    .phase h3 { margin:5px 0; font-size:14px; }
+    .phase ul { margin:8px 0; padding-left:17px; }
+    .phase li { margin:4px 0; color:var(--muted); font-size:10px; }
+    .gate { margin-top:9px; padding-top:8px; border-top:1px solid var(--line); color:var(--ink); font-size:10px; }
+    .gate b { display:inline; color:var(--gold); }
+    .tag-list { margin-top:8px; }
+    .tag-list span { padding:4px 7px; border:1px solid var(--line); border-radius:999px; background:var(--soft); color:var(--muted); font-size:9px; }
+    .table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--surface); }
+    table { width:100%; min-width:740px; border-collapse:collapse; font-size:10px; }
+    th,td { padding:10px 11px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+    th { background:var(--soft); color:var(--green); font-size:10px; }
+    td { color:var(--muted); }
+    tr:last-child td { border-bottom:0; }
+    .risk-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .checklist { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:0; padding:0; list-style:none; }
+    .checklist li { position:relative; padding:11px 12px 11px 33px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--muted); font-size:10px; }
+    .checklist li::before { content:"✓"; position:absolute; left:12px; color:var(--green); font-weight:950; }
+    .callout a { color:var(--green); font-weight:850; }
+    @media(max-width:900px) { .layout { grid-template-columns:1fr; } .side-nav { position:static; max-height:none; display:flex; flex-wrap:wrap; gap:6px 12px; } .side-nav strong { flex-basis:100%; } .side-nav a { padding:0; } .module-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media(max-width:650px) { .score-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .workstream-grid,.phase-grid,.risk-grid,.checklist { grid-template-columns:1fr; } .module-grid { grid-template-columns:1fr; } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto !important; transition-duration:.01ms !important; animation-duration:.01ms !important; } }
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">W</span><span>WAGGY<small>MASTER ROADMAP</small></span></a>
+    <nav class="top-links" aria-label="Điều hướng">
+      <a href="index.html">Tổng quan sản phẩm</a>
+      <a href="UI-UX/index.html">Chuyên đề UI/UX</a>
+      <a href="UPGRADE-PLAN.html">Kiến trúc &amp; nâng cấp</a>
+      <a href="integration/index.html">Tích hợp</a>
+      <a href="workflow/index.html">Workflow</a>
+    </nav>
+  </div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="index.html">WAGGY Ecosystem</a><span>/</span><span>Lộ trình nâng cấp tổng thể</span></nav>
+    <section class="hero"><div class="hero-content">
+      <span class="eyebrow">PRODUCT STRATEGY · DELIVERY ROADMAP · QUALITY GATES</span>
+      <h1>Nâng cấp toàn bộ <span>thư mục sản phẩm</span></h1>
+      <p>Biến các kế hoạch, workflow, data demo, bản đồ tích hợp và giao diện thành một bộ hồ sơ sản phẩm có cấu trúc, kiểm chứng được và sẵn sàng để quyết định pilot — không nhầm prototype với hệ thống đang vận hành.</p>
+      <div class="hero-actions"><a class="primary" href="#roadmap">Xem lộ trình theo cổng ↓</a><a href="#directory">Xem cấu trúc thư mục ↗</a><a href="UPGRADE-PLAN.html">Kế hoạch nền tảng ↗</a><a href="UI-UX-UPGRADE-PLAN.html">Kế hoạch UI/UX ↗</a></div>
+    </div></section>
+    <aside class="truth"><span class="truth-icon" aria-hidden="true">i</span><div><strong>Phạm vi của kế hoạch</strong><p>Đây là lộ trình đề xuất cho thư mục kế hoạch/demo, không phải xác nhận rằng 8 hệ thống đã kết nối production. Pet Care là hệ thống hiện có; các hệ thống còn lại và tích hợp xuyên miền cần được phát triển, kiểm thử và nghiệm thu riêng.</p></div></aside>
+    <nav class="toc" aria-label="Mục lục"><a href="#north-star">Đích đến</a><a href="#baseline">Hiện trạng</a><a href="#directory">Cấu trúc</a><a href="#workstreams">Luồng công việc</a><a href="#roadmap">Lộ trình</a><a href="#gates">Cổng nghiệm thu</a><a href="#metrics">Đo lường</a><a href="#decisions">Quyết định</a></nav>
+    <div class="layout">
+      <div class="content">
+        <section class="section" id="north-star"><div class="section-head"><div><span class="kicker">01 · Đích đến</span><h2>Một bộ hồ sơ sản phẩm có thể triển khai theo kiểm soát</h2></div><p>Giá trị “mức cao nhất” ở đây là độ hoàn chỉnh của quy trình quyết định, bằng chứng và chất lượng — không đồng nghĩa phải viết lại mọi trang hoặc chọn sẵn công nghệ.</p></div>
+          <div class="two-col">
+            <article class="panel"><h3>Một cổng điều hướng đáng tin</h3><p>Mọi tài liệu, công cụ và demo có owner, trạng thái, phiên bản, đường dẫn hợp lệ và liên kết đến nguồn chuẩn.</p></article>
+            <article class="panel"><h3>Từ concept đến pilot có cổng</h3><p>Workflow, dữ liệu, UX, quyền, tích hợp, support và rollback được duyệt trước khi bật từng capability.</p></article>
+          </div>
+          <div class="callout"><strong>Nguyên tắc điều hành:</strong> Không thêm hệ thống/màn hình trước khi trả lời được: ai dùng, tác vụ gì, ai sở hữu dữ liệu, ai cho phép, lỗi thì làm gì, và bằng chứng nào đủ để phát hành?</div>
+        </section>
+        <section class="section" id="baseline"><div class="section-head"><div><span class="kicker">02 · Baseline đã kiểm kê</span><h2>Thư mục hiện có nền tảng demo và đặc tả</h2></div><p>Ảnh chụp kiểm kê cấu trúc hiện tại; số lượng có thể đổi khi bổ sung tài liệu/demo.</p></div>
+          <div class="score-grid"><article class="score"><strong>8</strong><span>miền hệ thống</span></article><article class="score"><strong>8</strong><span>mô-đun dữ liệu miền</span></article><article class="score"><strong>14</strong><span>bảng logic mẫu</span></article><article class="score"><strong>8</strong><span>trang đặc tả tích hợp</span></article></div>
+          <div class="callout"><strong>Những gì đang có:</strong> Pet Care; 7 system concept/demo; JSON workflow và trang diễn giải workflow; 8 domain data JS + aggregator; bản đồ dữ liệu/kết nối/quyền/luồng; sync sandbox; 8 integration sheets; bộ demo giao diện và shared assets. Hầu hết dữ liệu/quyền/sync ở các công cụ kiểm soát là giả lập phía trình duyệt. Chưa coi là backend/API/SSO/production sync.</div>
+        </section>
+        <section class="section" id="directory"><div class="section-head"><div><span class="kicker">03 · Bố cục đích</span><h2>Cấu trúc thư mục làm rõ nguồn và trạng thái</h2></div><p>Giữ các tài sản hiện tại, bổ sung quy ước quản trị; không di chuyển/xóa hàng loạt khi chưa kiểm chứng đường dẫn người dùng.</p></div>
+          <div class="table-wrap"><table><thead><tr><th>Khu vực</th><th>Vai trò trong bộ hồ sơ</th><th>Chuẩn cần đạt</th><th>Điểm vào hiện có</th></tr></thead><tbody>
+            <tr><td>Root / index.html</td><td>Cổng điều hướng sản phẩm</td><td>Hiện trạng, trạng thái, roadmap, link kiểm tra hợp lệ</td><td><a href="index.html">Tổng quan</a></td></tr>
+            <tr><td>Pet-*.html</td><td>Đặc tả workflow/domain từng hệ</td><td>Owner, actor, precondition, trạng thái, ngoại lệ, output, ranh giới dữ liệu</td><td>8 trang hệ thống</td></tr>
+            <tr><td>workflow/</td><td>Danh mục workflow và demo màn hình</td><td>Liên kết yêu cầu ↔ workflow ↔ screen ↔ acceptance scenario</td><td><a href="workflow/index.html">Workflow directory</a></td></tr>
+            <tr><td>data/</td><td>Seed domain, schema, references, control prototypes</td><td>Schema version, owner, projection allowlist, synthetic data, integrity checks</td><td><a href="data/README.md">Data README</a></td></tr>
+            <tr><td>integration/</td><td>Bản đồ ranh giới/điểm trao đổi 8 miền</td><td>Contract, direction, authority, consent, failure/replay, owner</td><td><a href="integration/index.html">Integration directory</a></td></tr>
+            <tr><td>UI-UX/</td><td>Design system, system UI, map và acceptance</td><td>Screen inventory, role/task, prototype, responsive/accessibility evidence</td><td><a href="UI-UX/index.html">UI/UX workspace</a></td></tr>
+            <tr><td>assets/</td><td>CSS/JS dùng chung cho bộ hồ sơ</td><td>Token ownership, versioning, regression checks, no duplicate global styles</td><td><a href="assets/waggy-product.css">Shared CSS</a></td></tr>
+            <tr><td>plans/ (đề xuất)</td><td>Master roadmap, decisions, release/operating playbooks nếu được duyệt</td><td>Mỗi tài liệu có owner, status, version/date, upstream/downstream links</td><td>Chưa tạo thư mục riêng; master ở root</td></tr>
+          </tbody></table></div>
+          <div class="callout"><strong>Quy ước trạng thái đề xuất:</strong> CURRENT (đang hiện hữu) · DEMO (prototype chạy cục bộ) · PROPOSED (ý tưởng/chưa triển khai) · PILOT (đang kiểm soát ở phạm vi giới hạn) · PRODUCTION (đã qua go-live gate). Không dùng “đang hoạt động” thay cho bằng chứng release.</div>
+        </section>
+        <section class="section" id="workstreams"><div class="section-head"><div><span class="kicker">04 · Luồng công việc song song</span><h2>8 workstream, một bộ cổng chung</h2></div><p>Các luồng chạy đồng bộ theo phụ thuộc; không thể hoàn thiện UI tách rời dữ liệu, quyền và trạng thái.</p></div>
+          <div class="workstream-grid">
+            <article class="workstream"><b>WS1 · Product &amp; domain</b><p>Vision, persona, task, system owner, scope, KPI và phân biệt current/demo/proposed.</p></article>
+            <article class="workstream"><b>WS2 · UX &amp; accessibility</b><p>Design tokens, app shell, screen inventory, mobile/desktop, usability và WCAG 2.2 AA gates.</p></article>
+            <article class="workstream"><b>WS3 · Workflow</b><p>Actor, precondition, state machine, exception, handoff, audit, SLA và acceptance scenario cho mỗi hệ.</p></article>
+            <article class="workstream"><b>WS4 · Data governance</b><p>Owner/source of truth, schema, stable IDs, lineage, projection, retention, quality và synthetic data.</p></article>
+            <article class="workstream"><b>WS5 · Integration</b><p>Contract/version, consent/purpose, idempotency, retries, conflict, replay, observability và ownership.</p></article>
+            <article class="workstream"><b>WS6 · Platform &amp; security</b><p>SSO/OIDC, API authorization server-side, tenant/branch scope, secrets, encryption, audit, backups.</p></article>
+            <article class="workstream"><b>WS7 · Delivery &amp; operations</b><p>Environments, CI checks, release flags, runbooks, support, incident, restore drill, rollback.</p></article>
+            <article class="workstream"><b>WS8 · Documentation &amp; quality</b><p>Single navigation, link validation, source ownership, decision log, coverage matrix, change history.</p></article>
+          </div>
+        </section>
+        <section class="section" id="roadmap"><div class="section-head"><div><span class="kicker">05 · Roadmap theo phụ thuộc</span><h2>9 chặng từ kiểm kê đến mở rộng có kiểm soát</h2></div><p>Không gán lịch giả định: mỗi chặng qua gate theo bằng chứng và năng lực sẵn sàng.</p></div>
+          <div class="phase-grid">
+            <article class="phase"><span class="phase-no">PHASE 0 · BASELINE</span><h3>Kiểm kê và chuẩn hóa bộ hồ sơ</h3><ul><li>Danh mục file/link, owner, trạng thái, ngày rà soát, nguồn chuẩn.</li><li>Gắn nhãn current/demo/proposed; xác định nội dung trùng/mâu thuẫn và link hỏng.</li><li>Định nghĩa glossary, ID tài liệu, quy ước version và change log.</li></ul><div class="gate"><b>Gate:</b> inventory được owner xác nhận; không có liên kết điều hướng quan trọng hỏng; trạng thái hiện thực rõ.</div></article>
+            <article class="phase"><span class="phase-no">PHASE 1 · DOMAIN READINESS</span><h3>Chốt giá trị, người dùng và phạm vi</h3><ul><li>Chỉ định product/domain owner và đại diện người dùng cho 8 miền.</li><li>Rà soát persona, task frequency/risk, capability boundary, KPI và non-goals.</li><li>Xác định pilot candidates, readiness, dependency và quyết định chưa chốt.</li></ul><div class="gate"><b>Gate:</b> owner, scope, user/task evidence, RACI và success measures được ký duyệt cho pilot.</div></article>
+            <article class="phase"><span class="phase-no">PHASE 2 · WORKFLOW &amp; DATA</span><h3>Đóng hợp đồng nghiệp vụ và dữ liệu</h3><ul><li>Workflow state/exception/handoff map khớp JSON, HTML và demo.</li><li>Data dictionary/schema version, key/FK, source of truth, projection allowlist.</li><li>Phân loại dữ liệu, consent/purpose, retention, quality rules và data lineage.</li></ul><div class="gate"><b>Gate:</b> không có owner/ref mơ hồ; workflows và 14 logical tables qua integrity review.</div></article>
+            <article class="phase"><span class="phase-no">PHASE 3 · EXPERIENCE FOUNDATION</span><h3>Nền UI dùng chung và prototype theo vai trò</h3><ul><li>App shell, tokens, navigation, search/scope, statuses, error/empty/offline states.</li><li>Screen-to-task map cho 8 hệ; ưu tiên Care + Business/Service cho pilot.</li><li>Mobile/desktop, keyboard, focus, contrast, reduced motion, usability baseline.</li></ul><div class="gate"><b>Gate:</b> luồng prototype hoàn tất với người dùng đại diện; blocker accessibility/usability được xử lý.</div></article>
+            <article class="phase"><span class="phase-no">PHASE 4 · SECURITY &amp; PLATFORM</span><h3>Thiết kế backend và kiểm soát production</h3><ul><li>Chốt IdP/SSO, hosting, API boundary, tenant/branch authorization, database/migration.</li><li>Secrets, encryption, audit actor, backup/restore, monitoring, incident response.</li><li>Threat/privacy review và negative tests trước dữ liệu thật.</li></ul><div class="gate"><b>Gate:</b> security architecture, test matrix, restore/RPO/RTO và vận hành được phê duyệt.</div></article>
+            <article class="phase"><span class="phase-no">PHASE 5 · PILOT SLICE</span><h3>Triển khai một lát cắt đầu-cuối</h3><ul><li>Khuyến nghị Care ↔ Service hoặc Care + Business/Service ở một cơ sở.</li><li>Thay localStorage CRUD bằng API/server authorization; audit và conflict control.</li><li>Feature flag, runbook, support owner, reconciliation và rollback rehearsal.</li></ul><div class="gate"><b>Gate:</b> user acceptance, no critical access issues, data reconcile, support/rollback rehearsal pass.</div></article>
+            <article class="phase"><span class="phase-no">PHASE 6 · INTEGRATION HARDENING</span><h3>Độ tin cậy và khả năng phục hồi</h3><ul><li>Versioned contracts/events, outbox, idempotency, retry/backoff, DLQ, replay controls.</li><li>Dashboard lag/error/conflict; alerts and correlation IDs; migration/backfill plan.</li><li>Load/failure tests and privacy/access review for every edge.</li></ul><div class="gate"><b>Gate:</b> duplicate-safe, replay-safe, recoverable, auditable and within approved SLO.</div></article>
+            <article class="phase"><span class="phase-no">PHASE 7 · CONTROLLED EXPANSION</span><h3>Mở từng miền theo readiness</h3><ul><li>Health sau consent/clinical governance; Commerce sau transaction/fulfilment controls.</li><li>Community/Connect sau moderation, appeal, location/identity safety.</li><li>Intelligence sau lineage, minimization, evaluations, human approval and rollback.</li></ul><div class="gate"><b>Gate:</b> domain-specific owner, operating model, safeguards and release acceptance signed.</div></article>
+            <article class="phase"><span class="phase-no">PHASE 8 · OPERATE &amp; IMPROVE</span><h3>Vận hành, đo lường và tái ưu tiên</h3><ul><li>Review KPI/SLO, incidents, support tickets, usability and data quality.</li><li>Regular access reviews, restore drills, dependency/security update and deprecation plan.</li><li>Feed evidence into decision log and next roadmap increment.</li></ul><div class="gate"><b>Gate:</b> continuous improvement owner, cadence, reporting and funding/resource model in place.</div></article>
+          </div>
+        </section>
+        <section class="section" id="gates"><div class="section-head"><div><span class="kicker">06 · Quality gates</span><h2>Không phát hành nếu thiếu bằng chứng</h2></div></div>
+          <ul class="checklist">
+            <li>Product/domain owner, user, business outcome and in/out-of-scope documented.</li>
+            <li>Workflow, states, exception paths, data owner and accepted contract versioned.</li>
+            <li>Authorization enforced server-side; negative permission and cross-branch tests pass.</li>
+            <li>Sensitive data minimization, consent/purpose, retention and audit reviewed.</li>
+            <li>Mobile/desktop, keyboard, accessibility, failure/stale/retry states verified.</li>
+            <li>Data migration/reconciliation, backup/restore, rollback and support runbook rehearsed.</li>
+            <li>Monitoring, alert owner, SLO/error budget and incident escalation defined.</li>
+            <li>User acceptance, release scope, limitations and production/demo status communicated.</li>
+          </ul>
+        </section>
+        <section class="section" id="metrics"><div class="section-head"><div><span class="kicker">07 · Đo lường</span><h2>Chốt baseline trước khi đặt target</h2></div><p>Không tự đặt chỉ số đẹp khi chưa có dữ liệu vận hành, tải và nhóm người dùng thật.</p></div>
+          <div class="table-wrap"><table><thead><tr><th>Miền đo</th><th>Chỉ số cần theo dõi</th><th>Điều kiện đặt target</th></tr></thead><tbody>
+            <tr><td>Product / UX</td><td>Task success, time-on-task, error/rework, search zero-result, mobile completion, accessibility blockers</td><td>Baseline từ người dùng đại diện, cùng kịch bản/thiết bị</td></tr>
+            <tr><td>Data quality</td><td>Reference integrity, duplicate rate, completeness, freshness, source/projection divergence</td><td>Data owner định nghĩa rule và criticality</td></tr>
+            <tr><td>Security / privacy</td><td>Denied requests, access review completion, privacy incident, audit completeness</td><td>Threat model, legal/privacy review, scope of personal data</td></tr>
+            <tr><td>Integration</td><td>Success/lag p95, retry/DLQ, conflict age, duplicate writes, recovery time</td><td>Pilot traffic profile and approved service level</td></tr>
+            <tr><td>Operations</td><td>Availability/latency, incident MTTR, backup success, restore RPO/RTO</td><td>Hosting, business criticality, operating coverage and budget</td></tr>
+          </tbody></table></div>
+        </section>
+        <section class="section" id="risks"><div class="section-head"><div><span class="kicker">08 · Rủi ro trọng yếu</span><h2>Giữ chặt ranh giới demo, quyền và chất lượng</h2></div></div>
+          <div class="risk-grid">
+            <article class="risk"><b>Demo bị hiểu nhầm là production</b><p>Gắn status, owner, last reviewed và capability limitations ở cổng, trang miền và mỗi công cụ.</p></article>
+            <article class="risk"><b>Phân quyền chỉ nằm ở UI</b><p>Server-side authorization, least privilege, scope isolation, negative tests, audit access.</p></article>
+            <article class="risk"><b>Trùng/mất lệch dữ liệu giữa hệ</b><p>One source of truth, stable IDs, versioned contracts, outbox/idempotency, reconciliation.</p></article>
+            <article class="risk"><b>Lộ sức khỏe/vị trí/tài chính</b><p>Classification, consent/purpose, field minimization, masking, retention, security/privacy review.</p></article>
+            <article class="risk"><b>Phạm vi quá lớn / thiếu owner</b><p>Pilot một luồng/cơ sở; RACI, readiness checklist và go/no-go do người chịu trách nhiệm ký.</p></article>
+            <article class="risk"><b>Tài liệu/UI drift khỏi code</b><p>Link/coverage checks, doc owner, release checklist, change history and periodic audit.</p></article>
+          </div>
+        </section>
+        <section class="section" id="decisions"><div class="section-head"><div><span class="kicker">09 · Quyết định trước khi estimate</span><h2>Phụ thuộc cần chủ sở hữu xác nhận</h2></div></div>
+          <div class="table-wrap"><table><thead><tr><th>Quyết định</th><th>Chủ thể đề xuất</th><th>Không chốt trước khi biết</th></tr></thead><tbody>
+            <tr><td>Pilot system/branch/workflow</td><td>Product owner + operations lead</td><td>Task/user demand, readiness, risks, available support</td></tr>
+            <tr><td>Identity/roles/data scopes</td><td>Security + domain/data owner</td><td>Organization model, staff roles, sensitive data, applicable policy</td></tr>
+            <tr><td>Hosting/backend/database/queue</td><td>Engineering + operations</td><td>Team skills, workload, latency/availability, cost, restore requirements</td></tr>
+            <tr><td>Consent, retention, legal basis</td><td>Privacy/legal + domain owner</td><td>Data categories, purposes, recipients, jurisdictions and obligations</td></tr>
+            <tr><td>SLO/KPI/release target</td><td>Product + operations + finance</td><td>Baseline measurements, criticality, budget and support coverage</td></tr>
+          </tbody></table></div>
+          <div class="callout"><strong>Không cam kết thời gian/ngân sách/stack ở tài liệu này.</strong> Tạo estimate sau khi scope, owner, dependencies, user volume, deployment constraints và operating capacity được xác nhận.</div>
+        </section>
+        <section class="section" id="next"><div class="section-head"><div><span class="kicker">10 · Bước thực thi kế tiếp</span><h2>Khởi động gọn, có thể kiểm chứng</h2></div></div>
+          <ol class="priority">
+            <li>Chỉ định sponsor, product owner và owner cho 8 miền; xác nhận CURRENT / DEMO / PROPOSED.</li>
+            <li>Kiểm kê link, screen, workflow, data schema, contract, owner và trạng thái từng artifact; mở issue cho drift/thiếu sót.</li>
+            <li>Chọn một pilot slice và định nghĩa task scenarios, baseline UX, data quality, access scope và success metrics.</li>
+            <li>Phê duyệt workflow + data contract + role matrix + UI states cho lát cắt trước khi lập backlog implementation.</li>
+            <li>Chốt platform/security/operations design; rehearsal migration, restore, support và rollback trước pilot.</li>
+            <li>Go/no-go dựa trên quality gates; sau pilot, cập nhật roadmap và mở miền kế tiếp theo readiness.</li>
+          </ol>
+        </section>
+        <section class="section" id="sources"><div class="section-head"><div><span class="kicker">Nguồn và kế hoạch chi tiết</span><h2>Dùng tài liệu theo đúng vai trò</h2></div></div>
+          <div class="quick-links"><a href="UPGRADE-PLAN.html">Kiến trúc, bảo mật &amp; lộ trình nền tảng</a><a href="UI-UX-UPGRADE-PLAN.html">Tiêu chuẩn UI/UX</a><a href="UI-UX/SYSTEM-UI-DIRECTION.html">Yêu cầu UI 8 hệ thống</a><a href="data/README.md">Data README</a><a href="integration/index.html">Bản đồ tích hợp</a><a href="workflow/index.html">Danh mục workflow</a><a href="index.html">Cổng sản phẩm</a></div>
+          <div class="callout"><strong>Quản trị thay đổi:</strong> Master Roadmap định nghĩa thứ tự/cổng chung; <a href="UPGRADE-PLAN.html">UPGRADE-PLAN.html</a> chi tiết kiến trúc và platform; <a href="UI-UX-UPGRADE-PLAN.html">UI-UX-UPGRADE-PLAN.html</a> chi tiết thiết kế. Khi tài liệu xung đột, owner miền ghi quyết định và cập nhật các liên kết phụ thuộc — không âm thầm duy trì hai nguồn sự thật.</div>
+        </section>
+      </div>
+      <aside class="side-nav"><strong>Điều hướng lộ trình</strong><a href="#north-star">Đích đến</a><a href="#baseline">Hiện trạng</a><a href="#directory">Cấu trúc thư mục</a><a href="#workstreams">Workstreams</a><a href="#roadmap">9 chặng</a><a href="#gates">Quality gates</a><a href="#metrics">Đo lường</a><a href="#risks">Rủi ro</a><a href="#decisions">Quyết định</a><a href="#next">Bước tiếp theo</a></aside>
+    </div>
+  </main>
+  <footer class="footer"><div class="shell footer-inner"><span><strong>WAGGY Ecosystem</strong> · Lộ trình nâng cấp tổng thể thư mục sản phẩm</span><a href="index.html">Về cổng sản phẩm ↑</a></div></footer>
+</body>
+</html>
