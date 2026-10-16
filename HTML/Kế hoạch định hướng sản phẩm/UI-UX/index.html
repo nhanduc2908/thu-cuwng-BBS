@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10241d">
+  <meta name="description" content="Không gian chuyên đề về định hướng nâng cấp giao diện và cách 8 hệ thống WAGGY kết nối trải nghiệm.">
+  <title>WAGGY · Không gian chuyên đề UI/UX</title>
+  <link rel="stylesheet" href="../assets/waggy-product.css">
+  <style>
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
+    .hero-actions a { padding: 9px 13px; border: 1px solid #ffffff35; border-radius: 999px; background: #ffffff12; font-size: 11px; font-weight: 850; }
+    .hero-actions a.primary { border-color: var(--mint); background: var(--mint); color: #12261d; }
+    .truth { display: grid; grid-template-columns: auto 1fr; gap: 12px; margin: 18px auto 30px; padding: 15px; border: 1px solid #c5ddca; border-radius: 15px; background: var(--surface); }
+    .truth-icon { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 10px; background: #e3f3d9; color: #246a42; font-weight: 950; }
+    .truth strong { display: block; margin-bottom: 2px; font-size: 12px; }
+    .truth p { margin: 0; color: var(--muted); font-size: 11px; }
+    .shared-shell { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 9px; margin-bottom: 18px; }
+    .shell-item { padding: 12px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface); }
+    .shell-item b { display: block; color: var(--green); font-size: 11px; }
+    .shell-item span { color: var(--muted); font-size: 10px; }
+    .system-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; }
+    .system-card { display: flex; flex-direction: column; min-height: 215px; padding: 14px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface); transition: transform .18s ease,border-color .18s ease; }
+    .system-card:hover { transform: translateY(-3px); border-color: var(--green); }
+    .system-card.current { border-color: #92bd9d; }
+    .system-no { color: var(--muted); font: 850 10px ui-monospace,Consolas,monospace; }
+    .system-card h3 { margin: 7px 0 4px; font-size: 17px; line-height: 1.2; }
+    .system-card p { margin: 0; color: var(--muted); font-size: 11px; }
+    .system-card .handoff { margin-top: 9px; padding-top: 8px; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; }
+    .system-links { display: flex; flex-wrap: wrap; gap: 7px; margin-top: auto; padding-top: 11px; }
+    .system-links a { display: inline-flex; align-items: center; min-height: 34px; padding: 0 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--green); font-size: 10px; font-weight: 850; }
+    .system-links a:hover { border-color: var(--green); background: var(--soft); }
+    .status-label { align-self: flex-start; margin-top: 7px; padding: 3px 7px; border-radius: 999px; background: var(--blue); color: var(--blue-ink); font-size: 9px; font-weight: 900; }
+    .current .status-label { background: #edf8ef; color: #21663e; }
+    .map-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .map-card { padding: 15px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface); }
+    .map-card h3 { margin: 0 0 6px; font-size: 13px; }
+    .map-card p { margin: 0; color: var(--muted); font-size: 11px; }
+    .map-card .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-top: 10px; }
+    .flow span { padding: 4px 7px; border: 1px solid var(--line); border-radius: 999px; background: var(--soft); font-size: 9px; font-weight: 800; }
+    .flow b { color: var(--green); font-size: 12px; }
+    .handoff-rules { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 9px; }
+    .handoff-rules article { padding: 13px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface); }
+    .handoff-rules b { display: block; margin-bottom: 3px; color: var(--green); font-size: 10px; }
+    .handoff-rules p { margin: 0; color: var(--muted); font-size: 10px; }
+    .roadmap { grid-template-columns: repeat(3,minmax(0,1fr)); }
+    .doc-link { display: inline-flex; margin-top: 12px; color: var(--green); font-size: 11px; font-weight: 900; text-decoration: underline; text-underline-offset: 3px; }
+    @media(max-width:760px) {
+      .topbar-inner { align-items: flex-start; padding: 10px 0; }
+      .top-links { flex-wrap: wrap; justify-content: flex-end; }
+      .top-links a { min-height: 32px; padding: 0 8px; font-size: 9px; }
+      .system-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .shared-shell { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .handoff-rules { grid-template-columns: 1fr; }
+    }
+    @media(max-width:520px) {
+      .topbar-inner { display: block; }
+      .top-links { justify-content: flex-start; margin-top: 8px; }
+      .system-grid,.map-grid,.roadmap { grid-template-columns: 1fr; }
+      .system-card { min-height: 0; }
+    }
+    @media(prefers-reduced-motion:reduce) {
+      *,*::before,*::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">W</span><span>WAGGY<small>UI/UX DIRECTION</small></span></a>
+    <nav class="top-links" aria-label="Điều hướng chuyên đề">
+      <a href="../index.html">Kế hoạch sản phẩm</a>
+      <a href="#systems">8 hệ thống</a>
+      <a href="#connections">Bản đồ kết nối</a>
+      <a href="#roadmap">Lộ trình UI</a>
+    </nav>
+  </div></header>
+  <main class="shell">
+    <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="../index.html">WAGGY Ecosystem</a><span>/</span><span>Chuyên đề UI/UX</span></nav>
+    <section class="hero">
+      <div class="hero-content">
+        <span class="eyebrow">KHÔNG GIAN CHUYÊN ĐỀ · 8 HỆ THỐNG</span>
+        <h1>Nâng cấp giao diện <span>liền mạch</span></h1>
+        <p>Một ngôn ngữ giao diện chung, tám workspace đúng nghiệp vụ, các điểm bàn giao rõ ràng và an toàn. Chọn một hệ thống để xem baseline, hoặc theo dõi bản đồ trải nghiệm từ đầu đến cuối.</p>
+        <div class="hero-actions">
+          <a class="primary" href="#systems">Khám phá 8 hệ thống ↓</a>
+          <a href="SYSTEM-UI-DIRECTION.md">Mở tài liệu định hướng chi tiết ↗</a>
+          <a href="../UI-UX-UPGRADE-PLAN.md">Tiêu chuẩn UI/UX ↗</a>
+        </div>
+      </div>
+    </section>
+    <aside class="truth">
+      <span class="truth-icon" aria-hidden="true">i</span>
+      <div><strong>Phân biệt hiện trạng và đề xuất</strong><p>Pet Care là hệ thống hiện có. Bảy hệ thống còn lại và các điểm tích hợp xuyên hệ thống là concept/demo; bản đồ mô tả định hướng, không xác nhận kết nối production.</p></div>
+    </aside>
+
+    <section class="section" id="shared-ui">
+      <div class="section-head"><div><span class="kicker">Nền tảng chung</span><h2>Khung UI dùng xuyên hệ sinh thái</h2></div><p>Giữ cùng cách định hướng và nhận biết trạng thái, nhưng để từng hệ thống giải quyết tác vụ riêng.</p></div>
+      <div class="shared-shell">
+        <article class="shell-item"><b>WAGGY App Shell</b><span>Brand, bộ chuyển hệ thống, tài khoản và trợ giúp</span></article>
+        <article class="shell-item"><b>Ngữ cảnh rõ</b><span>Hệ thống, cơ sở/phạm vi, breadcrumb và bộ lọc</span></article>
+        <article class="shell-item"><b>Tìm kiếm &amp; thông báo</b><span>Hiển thị theo quyền, nguồn và mã tham chiếu</span></article>
+        <article class="shell-item"><b>Thành phần thống nhất</b><span>Form, bảng/card, trạng thái, timeline và audit</span></article>
+      </div>
+    </section>
+
+    <section class="section" id="systems">
+      <div class="section-head"><div><span class="kicker">Workspace theo domain</span><h2>8 hệ thống · 8 trọng tâm nâng cấp</h2></div><p>Mỗi thẻ mở thẳng trang demo hiện có và phần yêu cầu thiết kế riêng trong tài liệu.</p></div>
+      <div class="system-grid">
+        <article class="system-card current"><span class="system-no">01 · HỒ SƠ &amp; CHĂM SÓC</span><span class="status-label">HIỆN CÓ · CẦN NÂNG CẤP</span><h3>Pet Care</h3><p>Hồ sơ, tìm kiếm, timeline, lịch và tác vụ chăm sóc.</p><div class="handoff">Bàn giao: hồ sơ nền tới Service, Health và các tác vụ được phép.</div><div class="system-links"><a href="../workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Care/index.html">Mở demo ↗</a><a href="SYSTEM-UI-DIRECTION.md#01--pet-care--hồ-sơ-và-chăm-sóc">Yêu cầu UI</a></div></article>
+        <article class="system-card"><span class="system-no">02 · VẬN HÀNH CHUỖI</span><span class="status-label">ĐỀ XUẤT / DEMO</span><h3>Pet Business</h3><p>Cơ sở, nhân sự, kho, mua hàng và đối soát.</p><div class="handoff">Bàn giao: năng lực/tồn cho Service, giao dịch từ Commerce.</div><div class="system-links"><a href="../workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Business/index.html">Mở demo ↗</a><a href="SYSTEM-UI-DIRECTION.md#02--pet-business--vận-hành-cửa-hàng-và-chuỗi">Yêu cầu UI</a></div></article>
+        <article class="system-card"><span class="system-no">03 · LỊCH &amp; DỊCH VỤ</span><span class="status-label">ĐỀ XUẤT / DEMO</span><h3>Pet Service</h3><p>Booking, lịch năng lực, check-in và bàn giao.</p><div class="handoff">Bàn giao: hồ sơ Care và năng lực Business; trả kết quả dịch vụ.</div><div class="system-links"><a href="../workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Service/index.html">Mở demo ↗</a><a href="SYSTEM-UI-DIRECTION.md#03--pet-service--lịch-và-thực-hiện-dịch-vụ">Yêu cầu UI</a></div></article>
+        <article class="system-card"><span class="system-no">04 · CHUYÊN MÔN</span><span class="status-label">ĐỀ XUẤT / DEMO</span><h3>Pet Health</h3><p>Hồ sơ y tế, encounter, xét nghiệm và tái khám.</p><div class="handoff">Bàn giao: referral có consent; trả trạng thái/tóm tắt được phép.</div><div class="system-links"><a href="../workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Health/index.html">Mở demo ↗</a><a href="SYSTEM-UI-DIRECTION.md#04--pet-health--hồ-sơ-sức-khỏe-và-chuyên-môn">Yêu cầu UI</a></div></article>
+        <article class="system-card"><span class="system-no">05 · CATALOG &amp; ĐƠN</span><span class="status-label">ĐỀ XUẤT / DEMO</span><h3>Pet Commerce</h3><p>Danh mục, checkout, đơn hàng và hậu mãi.</p><div class="handoff">Bàn giao: trạng thái đơn/fulfillment với Business.</div><div class="system-links"><a href="../workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Commerce/index.html">Mở demo ↗</a><a href="SYSTEM-UI-DIRECTION.md#05--pet-commerce--catalog-đơn-hàng-và-hậu-mãi">Yêu cầu UI</a></div></article>
+        <article class="system-card"><span class="system-no">06 · CỘNG ĐỒNG</span><span class="status-label">ĐỀ XUẤT / DEMO</span><h3>Pet Community</h3><p>Feed, sự kiện, moderation và bảo vệ thành viên.</p><div class="handoff">Bàn giao: báo cáo/sự kiện cần phối hợp đến Connect.</div><div class="system-links"><a href="../workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Community/index.html">Mở demo ↗</a><a href="SYSTEM-UI-DIRECTION.md#06--pet-community--cộng-đồng-và-trust--safety">Yêu cầu UI</a></div></article>
+        <article class="system-card"><span class="system-no">07 · HIỆN TRƯỜNG &amp; CỨU HỘ</span><span class="status-label">ĐỀ XUẤT / DEMO</span><h3>Pet Connect</h3><p>Case, bản đồ, bằng chứng, cứu hộ và bàn giao.</p><div class="handoff">Bàn giao: case có kiểm soát từ Care/Community; vị trí theo quyền.</div><div class="system-links"><a href="../workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Connect/index.html">Mở demo ↗</a><a href="SYSTEM-UI-DIRECTION.md#07--pet-connect--thất-lạc-cứu-hộ-và-bàn-giao">Yêu cầu UI</a></div></article>
+        <article class="system-card"><span class="system-no">08 · QUẢN TRỊ DỮ LIỆU</span><span class="status-label">ĐỀ XUẤT / DEMO</span><h3>Pet Intelligence</h3><p>Lineage, chất lượng, đánh giá và insight có kiểm soát.</p><div class="handoff">Bàn giao: insight chỉ đọc, có giải thích và nguồn tới workspace.</div><div class="system-links"><a href="../workflow/demo/Giao%20di%E1%BB%87n%20c%E1%BA%A7n%20t%E1%BA%A1o/Pet%20Intelligence/index.html">Mở demo ↗</a><a href="SYSTEM-UI-DIRECTION.md#08--pet-intelligence--governance-và-insight">Yêu cầu UI</a></div></article>
+      </div>
+    </section>
+
+    <section class="section" id="connections">
+      <div class="section-head"><div><span class="kicker">Bản đồ điều hướng &amp; bàn giao</span><h2>Giao diện liên kết với nhau như thế nào?</h2></div><p>Liên kết đúng bản ghi và trạng thái, nhưng mỗi hệ thống vẫn giữ quyền sở hữu và kiểm soát riêng.</p></div>
+      <div class="map-grid">
+        <article class="map-card"><h3>01 · Chăm sóc tại cửa hàng</h3><p>Nhân viên bắt đầu từ hồ sơ/tác vụ, mở booking hoặc kiểm tra điều kiện vận hành, rồi quay lại xem kết quả bàn giao.</p><div class="flow"><span>Pet Care</span><b>→</b><span>Pet Service</span><b>↔</b><span>Pet Business</span></div></article>
+        <article class="map-card"><h3>02 · Nhu cầu sức khỏe</h3><p>Referral mở hồ sơ đúng thú cưng; hệ chuyên môn kiểm tra consent trước khi đọc/ghi và chỉ trả trạng thái được phép.</p><div class="flow"><span>Pet Care</span><b>→ consent</b><span>Pet Health</span><b>→</b><span>Care</span></div></article>
+        <article class="map-card"><h3>03 · Mua và xử lý đơn</h3><p>Khách chọn sản phẩm; tồn/fulfillment được kiểm tra với nơi quản lý vận hành; trạng thái đơn có thể theo dõi xuyên màn hình.</p><div class="flow"><span>Pet Commerce</span><b>↔</b><span>Pet Business</span></div></article>
+        <article class="map-card"><h3>04 · Cộng đồng và cứu hộ</h3><p>Nội dung/case được báo cáo hoặc chuyển thành nhiệm vụ; thông tin nhận dạng và vị trí chỉ mở đúng vai trò.</p><div class="flow"><span>Pet Community</span><b>→</b><span>Pet Connect</span><b>↔</b><span>Pet Care*</span></div></article>
+        <article class="map-card"><h3>05 · Insight có quản trị</h3><p>Chỉ dữ liệu được duyệt mới tạo insight; người dùng quay lại màn hình nghiệp vụ để tự đánh giá và thực hiện hành động hợp lệ.</p><div class="flow"><span>8 nguồn được duyệt</span><b>→</b><span>Pet Intelligence</span><b>→ chỉ đọc</b><span>Workspace</span></div></article>
+        <article class="map-card"><h3>Điều hướng xuyên hệ sinh thái</h3><p>System switcher mở workspace; deep link mở bản ghi bằng mã tham chiếu và giữ bộ lọc phù hợp. Hệ đích kiểm tra quyền độc lập.</p><div class="flow"><span>App shell chung</span><b>→</b><span>Workspace theo quyền</span><b>→</b><span>Bản ghi nguồn/đích</span></div></article>
+      </div>
+      <div class="callout"><strong>* Pet Care chỉ cung cấp dữ liệu tối thiểu khi có mục đích và quyền phù hợp.</strong> Bản đồ không biểu thị quyền truy cập tự động; mọi tích hợp cần consent, phân quyền, nguồn chuẩn, trạng thái đồng bộ và audit.</div>
+      <a class="doc-link" href="SYSTEM-UI-DIRECTION.md#2-bản-đồ-kết-nối-giao-diện-và-điểm-bàn-giao">Đọc quy tắc điều hướng và 5 hành trình đầu-cuối →</a>
+    </section>
+
+    <section class="section" id="roadmap">
+      <div class="section-head"><div><span class="kicker">Lộ trình đề xuất</span><h2>Nâng cấp theo nền tảng rồi theo luồng</h2></div><p>Ưu tiên thống nhất thao tác và trạng thái trước khi làm đẹp từng dashboard riêng lẻ.</p></div>
+      <div class="roadmap">
+        <article><b>Chặng 0 · Nền chung</b><strong>App shell, tokens, trạng thái</strong><p>Audit, điều hướng, tìm kiếm, scope selector, accessibility và responsive baseline.</p></article>
+        <article><b>Chặng 1 · Cửa hàng</b><strong>Care → Business → Service</strong><p>Thử nghiệm hồ sơ, lịch, tiếp nhận, năng lực và bàn giao tại một luồng.</p></article>
+        <article><b>Chặng 2 · Domain</b><strong>Health + Commerce</strong><p>Consent, trạng thái chuyên môn, giao dịch và các ngoại lệ quan trọng.</p></article>
+        <article><b>Chặng 3 · Cộng đồng</b><strong>Community + Connect</strong><p>Moderation, appeal, case hiện trường, quyền riêng tư và an toàn.</p></article>
+        <article><b>Chặng 4 · Insight</b><strong>Pet Intelligence</strong><p>Lineage, dataset được duyệt, giải thích, owner và rollback.</p></article>
+        <article><b>Chặng 5 · Cải tiến</b><strong>Đo lường &amp; nghiệm thu</strong><p>Usability, accessibility, lỗi tác vụ, phản hồi và theo dõi quyền.</p></article>
+      </div>
+      <a class="doc-link" href="SYSTEM-UI-DIRECTION.md#4-lộ-trình-nâng-cấp-giao-diện-đề-xuất">Xem điều kiện hoàn tất từng chặng →</a>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><span class="kicker">Tài liệu liên quan</span><h2>Đi sâu vào tiêu chuẩn và kế hoạch</h2></div></div>
+      <div class="two-col">
+        <article class="panel"><h3>Định hướng UI theo hệ thống</h3><p>Yêu cầu từng hệ thống, các điểm bàn giao, quy tắc điều hướng và tiêu chí nghiệm thu liên kết.</p><a class="doc-link" href="SYSTEM-UI-DIRECTION.md">Mở tài liệu hệ thống →</a></article>
+        <article class="panel"><h3>Tiêu chuẩn UI/UX toàn sản phẩm</h3><p>Design system, responsive, accessibility, quy trình audit → wireframe → test → phát hành.</p><a class="doc-link" href="../UI-UX-UPGRADE-PLAN.md">Mở tiêu chuẩn UI/UX →</a></article>
+      </div>
+    </section>
+  </main>
+  <footer class="footer"><div class="shell footer-inner"><span><strong>WAGGY UI/UX</strong> · Không gian chuyên đề</span><a href="../index.html">Quay lại kế hoạch định hướng sản phẩm ↑</a></div></footer>
+</body>
+</html>

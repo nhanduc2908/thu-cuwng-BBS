@@ -9,6 +9,8 @@ Nâng cấp trải nghiệm giao diện của hệ sinh thái WAGGY theo hai hư
 
 Đây là định hướng và yêu cầu nghiệm thu giao diện, không khẳng định mọi năng lực hiện đã hoạt động. Pet Care là sản phẩm hiện có; các hệ thống còn lại và luồng xuyên hệ thống là concept/demo cho tới khi được phát triển và nghiệm thu.
 
+Xem [không gian chuyên đề UI/UX](./UI-UX/index.html) để mở bản đồ giao diện, liên kết giữa tám workspace và baseline demo; yêu cầu riêng từng hệ thống được tổng hợp tại [SYSTEM-UI-DIRECTION.md](./UI-UX/SYSTEM-UI-DIRECTION.md).
+
 ## 2. Người dùng và tác vụ cần thiết kế quanh họ
 
 | Nhóm người dùng | Nhu cầu chính | Định hướng giao diện |
